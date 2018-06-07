@@ -10,12 +10,6 @@ version "${springSecurityWebAuthnVersion}"
 
 description = "Spring Security WebAuthn sample"
 
-repositories {
-    flatDir {
-        dirs "../libs"
-    }
-}
-
 dependencies {
     // Custom Spring Security
     compile('org.springframework.security:spring-security-core:5.1.0.BUILD-SNAPSHOT')

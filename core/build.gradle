@@ -3,14 +3,8 @@ version "${springSecurityWebAuthnVersion}"
 
 description = "Spring Security WebAuthn Core library"
 
-repositories {
-    flatDir {
-        dirs "../libs"
-    }
-}
-
 dependencies {
-    compile project(':webauthn4j-core')
+    compile("com.webauthn4j:webauthn4j-core:${webauthn4jVersion}")
 
     // Custom Spring Security
     compile('org.springframework.security:spring-security-core:5.1.0.BUILD-SNAPSHOT')

@@ -16,6 +16,7 @@
 
 package net.sharplab.springframework.security.webauthn;
 
+import com.webauthn4j.WebAuthnAuthenticationContext;
 import com.webauthn4j.authenticator.Authenticator;
 import com.webauthn4j.validator.WebAuthnAuthenticationContextValidator;
 import net.sharplab.springframework.security.webauthn.authenticator.WebAuthnAuthenticatorService;
@@ -117,8 +118,20 @@ public class WebAuthnAuthenticationProvider implements AuthenticationProvider {
         boolean isUserVerified = Objects.equals(currentAuthentication.getName(), user.getUsername());
         boolean userVerificationRequired = !isUserVerified; // If user is not verified, user verification is required.
 
+        WebAuthnAuthenticationContext credentials = authenticationToken.getCredentials(); //TODO: introduce new type for credential
+        WebAuthnAuthenticationContext authenticationContext = new WebAuthnAuthenticationContext(
+                credentials.getCredentialId(),
+                credentials.getCollectedClientData(),
+                credentials.getAuthenticatorData(),
+                credentials.getSignature(),
+                credentials.getClientExtensionOutputs(),
+                credentials.getServerProperty(),
+                userVerificationRequired,
+                credentials.getExpectedExtensions()
+        );
+
         try{
-            authenticationContextValidator.validate(authenticationToken.getCredentials(), authenticator, userVerificationRequired);
+            authenticationContextValidator.validate(authenticationContext, authenticator);
         }
         catch (com.webauthn4j.validator.exception.MaliciousDataException e){
             throw new MaliciousDataException("Bad client data type", e);

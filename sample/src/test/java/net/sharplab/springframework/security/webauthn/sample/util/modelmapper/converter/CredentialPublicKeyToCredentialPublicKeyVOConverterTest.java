@@ -29,8 +29,7 @@ public class CredentialPublicKeyToCredentialPublicKeyVOConverterTest {
                 null,
                 Curve.SECP256R1,
                 new byte[]{0x00, 0x01},
-                new byte[]{0x02, 0x03},
-                null
+                new byte[]{0x02, 0x03}
         );
         ECCredentialPublicKeyVO destination = new ECCredentialPublicKeyVO();
 

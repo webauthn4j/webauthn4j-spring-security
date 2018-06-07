@@ -14,6 +14,7 @@ public class WebAuthnRegistrationRequestValidator {
     private ServerPropertyProvider serverPropertyProvider;
 
     private WebAuthnRegistrationContextValidator registrationContextValidator;
+    private boolean userVerificationRequired;
 
     public WebAuthnRegistrationRequestValidator(WebAuthnRegistrationContextValidator registrationContextValidator, ServerPropertyProvider serverPropertyProvider) {
         this.registrationContextValidator = registrationContextValidator;
@@ -35,7 +36,14 @@ public class WebAuthnRegistrationRequestValidator {
         byte[] attestationObjectBytes = Base64UrlUtil.decode(attestationObjectBase64);
         ServerProperty serverProperty = serverPropertyProvider.provide(request, response);
 
-        return new WebAuthnRegistrationContext(clientDataBytes, attestationObjectBytes, serverProperty);
+        return new WebAuthnRegistrationContext(clientDataBytes, attestationObjectBytes, serverProperty, userVerificationRequired);
     }
 
+    public boolean isUserVerificationRequired() {
+        return userVerificationRequired;
+    }
+
+    public void setUserVerificationRequired(boolean userVerificationRequired) {
+        this.userVerificationRequired = userVerificationRequired;
+    }
 }

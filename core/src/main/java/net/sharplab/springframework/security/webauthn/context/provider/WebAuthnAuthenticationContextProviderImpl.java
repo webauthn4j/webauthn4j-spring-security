@@ -58,7 +58,9 @@ public class WebAuthnAuthenticationContextProviderImpl implements WebAuthnAuthen
                 rawClientData,
                 rawAuthenticatorData,
                 signatureBytes,
-                serverProperty);
+                serverProperty,
+                false //TODO: introduce new type
+        );
     }
 
     public ServerPropertyProvider getServerPropertyProvider() {

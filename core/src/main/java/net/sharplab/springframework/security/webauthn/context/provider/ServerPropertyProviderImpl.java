@@ -41,7 +41,7 @@ public class ServerPropertyProviderImpl implements ServerPropertyProvider {
         Origin origin = obtainOrigin(request);
         Challenge savedChallenge = obtainSavedChallenge(request);
 
-        String rpId = origin.getServerName();
+        String rpId = origin.getHost();
         if (this.rpId != null) {
             rpId = this.rpId;
         }
