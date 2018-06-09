@@ -1,14 +1,11 @@
 package net.sharplab.springframework.security.webauthn.sample.domain.dto;
 
-import lombok.Data;
-
 import java.io.Serializable;
 import java.util.List;
 
 /**
  * AuthorityUpdateDto
  */
-@Data
 public class AuthorityUpdateDto implements Serializable {
 
     private int id;
@@ -16,4 +13,27 @@ public class AuthorityUpdateDto implements Serializable {
     private List<Integer> users;
     private List<Integer> groups;
 
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public List<Integer> getUsers() {
+        return users;
+    }
+
+    public void setUsers(List<Integer> users) {
+        this.users = users;
+    }
+
+    public List<Integer> getGroups() {
+        return groups;
+    }
+
+    public void setGroups(List<Integer> groups) {
+        this.groups = groups;
+    }
 }

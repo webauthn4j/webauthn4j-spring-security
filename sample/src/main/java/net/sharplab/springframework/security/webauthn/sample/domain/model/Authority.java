@@ -1,7 +1,5 @@
 package net.sharplab.springframework.security.webauthn.sample.domain.model;
 
-import lombok.Getter;
-import lombok.Setter;
 import org.springframework.security.core.GrantedAuthority;
 
 import java.util.List;
@@ -9,8 +7,6 @@ import java.util.List;
 /**
  * 権限モデル
  */
-@Getter
-@Setter
 public class Authority implements GrantedAuthority {
 
     private int id;
@@ -44,6 +40,38 @@ public class Authority implements GrantedAuthority {
         this.groups = groups;
     }
 
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public List<User> getUsers() {
+        return users;
+    }
+
+    public void setUsers(List<User> users) {
+        this.users = users;
+    }
+
+    public List<Group> getGroups() {
+        return groups;
+    }
+
+    public void setGroups(List<Group> groups) {
+        this.groups = groups;
+    }
+
+    @Override
+    public String getAuthority() {
+        return authority;
+    }
+
+    public void setAuthority(String authority) {
+        this.authority = authority;
+    }
 
     @Override
     public String toString() {

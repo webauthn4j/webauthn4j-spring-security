@@ -84,15 +84,15 @@ public class UserHelper {
         destination.setPassword(passwordEncoder.encode(source.getRawPassword()));
 
         List<AuthenticatorCreateForm> authenticatorCreateForms = source.getNewAuthenticators().stream()
-                .filter(authenticatorCreateForm -> !authenticatorCreateForm.isDelete()).collect(Collectors.toList());
+                .filter(authenticatorCreateForm -> !authenticatorCreateForm.getDelete()).collect(Collectors.toList());
         List<Authenticator> authenticators = new ArrayList<>();
 
         for(AuthenticatorCreateForm authenticatorCreateForm : authenticatorCreateForms){
             authenticators.add(authenticatorHelper.mapForUpdate(authenticatorCreateForm, null));
         }
         destination.setAuthenticators(authenticators);
-        destination.setLocked(source.isLocked());
-        destination.setPasswordAuthenticationAllowed(source.isPasswordAuthenticationAllowed());
+        destination.setLocked(source.getLocked());
+        destination.setPasswordAuthenticationAllowed(source.getPasswordAuthenticationAllowed());
 
         return destination;
 
@@ -116,9 +116,9 @@ public class UserHelper {
         destination.setEmailAddress(source.getEmailAddress());
 
         List<AuthenticatorCreateForm> authenticatorCreateForms = source.getNewAuthenticators().stream()
-                .filter(authenticatorCreateForm -> !authenticatorCreateForm.isDelete()).collect(Collectors.toList());
+                .filter(authenticatorCreateForm -> !authenticatorCreateForm.getDelete()).collect(Collectors.toList());
         List<AuthenticatorUpdateForm> authenticatorUpdateForms = source.getAuthenticators().stream()
-                .filter(authenticatorCreateForm -> !authenticatorCreateForm.isDelete()).collect(Collectors.toList());
+                .filter(authenticatorCreateForm -> !authenticatorCreateForm.getDelete()).collect(Collectors.toList());
         List<Authenticator> originalAuthenticators = destination.getAuthenticators();
         List<Authenticator> authenticators = new ArrayList<>();
 
@@ -135,8 +135,8 @@ public class UserHelper {
             authenticators.add(authenticatorHelper.mapForUpdate(authenticatorCreateForm, null));
         }
         destination.setAuthenticators(authenticators);
-        destination.setLocked(source.isLocked());
-        destination.setPasswordAuthenticationAllowed(source.isPasswordAuthenticationAllowed());
+        destination.setLocked(source.getLocked());
+        destination.setPasswordAuthenticationAllowed(source.getPasswordAuthenticationAllowed());
 
         return destination;
     }

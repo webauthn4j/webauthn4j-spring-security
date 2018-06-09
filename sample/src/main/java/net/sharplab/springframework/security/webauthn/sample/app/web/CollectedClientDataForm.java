@@ -1,7 +1,6 @@
 package net.sharplab.springframework.security.webauthn.sample.app.web;
 
 import com.webauthn4j.client.CollectedClientData;
-import lombok.Data;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
@@ -9,7 +8,6 @@ import javax.validation.constraints.NotNull;
 /**
  * Form for CollectedClientData
  */
-@Data
 public class CollectedClientDataForm {
 
     @NotNull
@@ -19,4 +17,19 @@ public class CollectedClientDataForm {
     @NotNull
     private String clientDataBase64;
 
+    public CollectedClientData getCollectedClientData() {
+        return collectedClientData;
+    }
+
+    public void setCollectedClientData(CollectedClientData collectedClientData) {
+        this.collectedClientData = collectedClientData;
+    }
+
+    public String getClientDataBase64() {
+        return clientDataBase64;
+    }
+
+    public void setClientDataBase64(String clientDataBase64) {
+        this.clientDataBase64 = clientDataBase64;
+    }
 }

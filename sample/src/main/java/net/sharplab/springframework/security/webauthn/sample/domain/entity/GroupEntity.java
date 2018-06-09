@@ -1,7 +1,5 @@
 package net.sharplab.springframework.security.webauthn.sample.domain.entity;
 
-import lombok.Data;
-
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.List;
@@ -9,7 +7,6 @@ import java.util.List;
 /**
  * グループモデル
  */
-@Data
 @Entity
 @Table(name = "m_group")
 public class GroupEntity implements Serializable {
@@ -47,5 +44,35 @@ public class GroupEntity implements Serializable {
         return groupName;
     }
 
+    public Integer getId() {
+        return id;
+    }
 
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public String getGroupName() {
+        return groupName;
+    }
+
+    public void setGroupName(String groupName) {
+        this.groupName = groupName;
+    }
+
+    public List<UserEntity> getUsers() {
+        return users;
+    }
+
+    public void setUsers(List<UserEntity> users) {
+        this.users = users;
+    }
+
+    public List<AuthorityEntity> getAuthorities() {
+        return authorities;
+    }
+
+    public void setAuthorities(List<AuthorityEntity> authorities) {
+        this.authorities = authorities;
+    }
 }

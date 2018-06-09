@@ -38,10 +38,8 @@ dependencies {
     runtime('com.h2database:h2')
     runtime('mysql:mysql-connector-java')
     compile("org.lazyluke:log4jdbc-remix:${log4jdbcVersion}")
-    compileOnly('org.projectlombok:lombok')
 
     //Test
-    testCompile('org.projectlombok:lombok')
     testCompile('org.springframework.boot:spring-boot-starter-test')
     testCompile('org.springframework.security:spring-security-test')
     testCompile('junit:junit')

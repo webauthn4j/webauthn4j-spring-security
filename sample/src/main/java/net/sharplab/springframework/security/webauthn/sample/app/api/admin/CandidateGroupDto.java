@@ -1,12 +1,25 @@
 package net.sharplab.springframework.security.webauthn.sample.app.api.admin;
 
-import lombok.Data;
-
 /**
  * Candidate Group Dto
  */
-@Data
 public class CandidateGroupDto {
     private int id;
     private String groupName;
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public String getGroupName() {
+        return groupName;
+    }
+
+    public void setGroupName(String groupName) {
+        this.groupName = groupName;
+    }
 }

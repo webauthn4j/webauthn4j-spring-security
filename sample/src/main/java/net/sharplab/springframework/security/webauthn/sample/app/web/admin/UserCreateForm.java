@@ -1,6 +1,5 @@
 package net.sharplab.springframework.security.webauthn.sample.app.web.admin;
 
-import lombok.Data;
 import net.sharplab.springframework.security.webauthn.sample.app.util.validator.EqualProperties;
 import net.sharplab.springframework.security.webauthn.sample.app.web.AuthenticatorCreateForm;
 
@@ -13,7 +12,6 @@ import java.util.List;
 /**
  * Form for User
  */
-@Data
 @EqualProperties(property = "rawPassword", comparingProperty = "rawPasswordRetyped")
 public class UserCreateForm {
 
@@ -39,7 +37,81 @@ public class UserCreateForm {
     @Valid
     private List<AuthenticatorCreateForm> newAuthenticators;
 
-    private boolean passwordAuthenticationAllowed;
+    @NotNull
+    private Boolean passwordAuthenticationAllowed;
 
-    private boolean locked;
+    @NotNull
+    private Boolean locked;
+
+    public String getUserHandle() {
+        return userHandle;
+    }
+
+    public void setUserHandle(String userHandle) {
+        this.userHandle = userHandle;
+    }
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+
+    public String getEmailAddress() {
+        return emailAddress;
+    }
+
+    public void setEmailAddress(String emailAddress) {
+        this.emailAddress = emailAddress;
+    }
+
+    public String getRawPassword() {
+        return rawPassword;
+    }
+
+    public void setRawPassword(String rawPassword) {
+        this.rawPassword = rawPassword;
+    }
+
+    public String getRawPasswordRetyped() {
+        return rawPasswordRetyped;
+    }
+
+    public void setRawPasswordRetyped(String rawPasswordRetyped) {
+        this.rawPasswordRetyped = rawPasswordRetyped;
+    }
+
+    public List<AuthenticatorCreateForm> getNewAuthenticators() {
+        return newAuthenticators;
+    }
+
+    public void setNewAuthenticators(List<AuthenticatorCreateForm> newAuthenticators) {
+        this.newAuthenticators = newAuthenticators;
+    }
+
+    public Boolean getPasswordAuthenticationAllowed() {
+        return passwordAuthenticationAllowed;
+    }
+
+    public void setPasswordAuthenticationAllowed(Boolean passwordAuthenticationAllowed) {
+        this.passwordAuthenticationAllowed = passwordAuthenticationAllowed;
+    }
+
+    public Boolean getLocked() {
+        return locked;
+    }
+
+    public void setLocked(Boolean locked) {
+        this.locked = locked;
+    }
 }

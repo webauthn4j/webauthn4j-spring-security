@@ -18,10 +18,10 @@ public class ProfileFormValidator implements Validator {
 
         int authenticatorCount = 0;
         if(form.getNewAuthenticators() != null){
-            authenticatorCount += form.getNewAuthenticators().stream().filter(item -> !item.isDelete()).count();
+            authenticatorCount += form.getNewAuthenticators().stream().filter(item -> !item.getDelete()).count();
         }
         if(form.getAuthenticators() != null){
-            authenticatorCount += form.getAuthenticators().stream().filter(item -> !item.isDelete()).count();
+            authenticatorCount += form.getAuthenticators().stream().filter(item -> !item.getDelete()).count();
         }
 
         if(!form.isPasswordAuthenticationAllowed() && authenticatorCount == 0){

@@ -74,8 +74,8 @@ public class UserHelperTest {
         assertThat(result.getFirstName()).isEqualTo("John");
         assertThat(result.getLastName()).isEqualTo("Doe");
         assertThat(result.getEmailAddress()).isEqualTo("john.doe@example.com");
-        assertThat(result.isLocked()).isTrue();
-        assertThat(result.isPasswordAuthenticationAllowed()).isTrue();
+        assertThat(result.getLocked()).isTrue();
+        assertThat(result.getPasswordAuthenticationAllowed()).isTrue();
     }
 
     @Test

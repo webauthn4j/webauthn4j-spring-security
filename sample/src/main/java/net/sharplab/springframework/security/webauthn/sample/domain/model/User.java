@@ -1,7 +1,5 @@
 package net.sharplab.springframework.security.webauthn.sample.domain.model;
 
-import lombok.Getter;
-import lombok.Setter;
 import net.sharplab.springframework.security.webauthn.userdetails.WebAuthnUserDetails;
 
 import java.util.List;
@@ -9,8 +7,6 @@ import java.util.List;
 /**
  * ユーザーモデル
  */
-@Getter
-@Setter
 public class User implements WebAuthnUserDetails {
 
     private Integer id;
@@ -127,4 +123,81 @@ public class User implements WebAuthnUserDetails {
         return true;
     }
 
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public byte[] getUserHandle() {
+        return userHandle;
+    }
+
+    public void setUserHandle(byte[] userHandle) {
+        this.userHandle = userHandle;
+    }
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+
+    public String getEmailAddress() {
+        return emailAddress;
+    }
+
+    public void setEmailAddress(String emailAddress) {
+        this.emailAddress = emailAddress;
+    }
+
+    @Override
+    public List<Authority> getAuthorities() {
+        return authorities;
+    }
+
+    public void setAuthorities(List<Authority> authorities) {
+        this.authorities = authorities;
+    }
+
+    public List<Group> getGroups() {
+        return groups;
+    }
+
+    public void setGroups(List<Group> groups) {
+        this.groups = groups;
+    }
+
+    @Override
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public void setAuthenticators(List<Authenticator> authenticators) {
+        this.authenticators = authenticators;
+    }
+
+    public boolean isLocked() {
+        return locked;
+    }
+
+    public void setLocked(boolean locked) {
+        this.locked = locked;
+    }
 }

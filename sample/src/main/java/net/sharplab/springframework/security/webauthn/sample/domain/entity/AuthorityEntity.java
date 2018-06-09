@@ -1,7 +1,5 @@
 package net.sharplab.springframework.security.webauthn.sample.domain.entity;
 
-import lombok.Getter;
-import lombok.Setter;
 import org.springframework.security.core.GrantedAuthority;
 
 import javax.persistence.*;
@@ -12,8 +10,6 @@ import java.util.List;
  */
 @SuppressWarnings("WeakerAccess")
 @Entity
-@Getter
-@Setter
 @Table(name = "m_authority")
 public class AuthorityEntity implements GrantedAuthority {
 
@@ -47,6 +43,39 @@ public class AuthorityEntity implements GrantedAuthority {
 
     public AuthorityEntity(int id, String authority) {
         this.id = id;
+        this.authority = authority;
+    }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public List<UserEntity> getUsers() {
+        return users;
+    }
+
+    public void setUsers(List<UserEntity> users) {
+        this.users = users;
+    }
+
+    public List<GroupEntity> getGroups() {
+        return groups;
+    }
+
+    public void setGroups(List<GroupEntity> groups) {
+        this.groups = groups;
+    }
+
+    @Override
+    public String getAuthority() {
+        return authority;
+    }
+
+    public void setAuthority(String authority) {
         this.authority = authority;
     }
 

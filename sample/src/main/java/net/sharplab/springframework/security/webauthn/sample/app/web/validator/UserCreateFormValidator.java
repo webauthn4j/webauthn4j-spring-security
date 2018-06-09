@@ -18,10 +18,10 @@ public class UserCreateFormValidator implements Validator {
 
         int authenticatorCount = 0;
         if(form.getNewAuthenticators() != null){
-            authenticatorCount += form.getNewAuthenticators().stream().filter(item -> !item.isDelete()).count();
+            authenticatorCount += form.getNewAuthenticators().stream().filter(item -> !item.getDelete()).count();
         }
 
-        if(!form.isPasswordAuthenticationAllowed() && authenticatorCount == 0){
+        if(!form.getPasswordAuthenticationAllowed() && authenticatorCount == 0){
             errors.rejectValue("newAuthenticators",
                     "e.UserCreateFormValidator.noAuthenticator",
                     "To disable password authentication, at least one authenticator must be registered.");

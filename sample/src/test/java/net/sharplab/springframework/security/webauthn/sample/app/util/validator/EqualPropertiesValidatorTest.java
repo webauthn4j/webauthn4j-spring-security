@@ -1,6 +1,5 @@
 package net.sharplab.springframework.security.webauthn.sample.app.util.validator;
 
-import lombok.Data;
 import net.sharplab.springframework.security.webauthn.sample.app.config.AppConfig;
 import net.sharplab.springframework.security.webauthn.sample.app.config.WebSecurityConfig;
 import net.sharplab.springframework.security.webauthn.sample.domain.config.DomainConfig;
@@ -53,10 +52,25 @@ public class EqualPropertiesValidatorTest {
     }
 
     @EqualProperties(property = "rawPassword", comparingProperty = "rawPasswordRetyped")
-    @Data
     class TestForm{
         private String rawPassword;
         private String rawPasswordRetyped;
+
+        public String getRawPassword() {
+            return rawPassword;
+        }
+
+        public void setRawPassword(String rawPassword) {
+            this.rawPassword = rawPassword;
+        }
+
+        public String getRawPasswordRetyped() {
+            return rawPasswordRetyped;
+        }
+
+        public void setRawPasswordRetyped(String rawPasswordRetyped) {
+            this.rawPasswordRetyped = rawPasswordRetyped;
+        }
     }
 
 }

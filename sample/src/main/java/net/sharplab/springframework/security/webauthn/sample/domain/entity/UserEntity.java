@@ -1,7 +1,5 @@
 package net.sharplab.springframework.security.webauthn.sample.domain.entity;
 
-import lombok.Data;
-
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.List;
@@ -9,7 +7,6 @@ import java.util.List;
 /**
  * ユーザーモデル
  */
-@Data
 @Entity
 @Table(name = "m_user")
 public class UserEntity implements Serializable {
@@ -50,6 +47,94 @@ public class UserEntity implements Serializable {
 
     @Column(name = "pwauth_allowed")
     private boolean passwordAuthenticationAllowed;
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public byte[] getUserHandle() {
+        return userHandle;
+    }
+
+    public void setUserHandle(byte[] userHandle) {
+        this.userHandle = userHandle;
+    }
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+
+    public String getEmailAddress() {
+        return emailAddress;
+    }
+
+    public void setEmailAddress(String emailAddress) {
+        this.emailAddress = emailAddress;
+    }
+
+    public List<GroupEntity> getGroups() {
+        return groups;
+    }
+
+    public void setGroups(List<GroupEntity> groups) {
+        this.groups = groups;
+    }
+
+    public List<AuthorityEntity> getAuthorities() {
+        return authorities;
+    }
+
+    public void setAuthorities(List<AuthorityEntity> authorities) {
+        this.authorities = authorities;
+    }
+
+    public List<AuthenticatorEntity> getAuthenticators() {
+        return authenticators;
+    }
+
+    public void setAuthenticators(List<AuthenticatorEntity> authenticators) {
+        this.authenticators = authenticators;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public boolean isLocked() {
+        return locked;
+    }
+
+    public void setLocked(boolean locked) {
+        this.locked = locked;
+    }
+
+    public boolean isPasswordAuthenticationAllowed() {
+        return passwordAuthenticationAllowed;
+    }
+
+    public void setPasswordAuthenticationAllowed(boolean passwordAuthenticationAllowed) {
+        this.passwordAuthenticationAllowed = passwordAuthenticationAllowed;
+    }
 
     /**
      * アカウントの文字列表現。E-Mailアドレス

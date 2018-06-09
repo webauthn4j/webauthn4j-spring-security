@@ -1,6 +1,5 @@
 package net.sharplab.springframework.security.webauthn.sample.domain.vo;
 
-import lombok.Data;
 import net.sharplab.springframework.security.webauthn.sample.infrastructure.util.jpa.converter.CredentialPublicKeyVOConverter;
 
 import javax.persistence.Column;
@@ -11,7 +10,6 @@ import java.io.Serializable;
 /**
  * AttestedCredentialDataVO
  */
-@Data
 @Embeddable
 public class AttestedCredentialDataVO implements Serializable {
 
@@ -25,4 +23,27 @@ public class AttestedCredentialDataVO implements Serializable {
     @Convert(converter = CredentialPublicKeyVOConverter.class)
     private CredentialPublicKeyVO credentialPublicKey;
 
+    public byte[] getAaGuid() {
+        return aaGuid;
+    }
+
+    public void setAaGuid(byte[] aaGuid) {
+        this.aaGuid = aaGuid;
+    }
+
+    public byte[] getCredentialId() {
+        return credentialId;
+    }
+
+    public void setCredentialId(byte[] credentialId) {
+        this.credentialId = credentialId;
+    }
+
+    public CredentialPublicKeyVO getCredentialPublicKey() {
+        return credentialPublicKey;
+    }
+
+    public void setCredentialPublicKey(CredentialPublicKeyVO credentialPublicKey) {
+        this.credentialPublicKey = credentialPublicKey;
+    }
 }

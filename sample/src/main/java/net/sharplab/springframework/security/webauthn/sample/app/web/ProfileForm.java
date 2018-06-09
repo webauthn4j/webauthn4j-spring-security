@@ -16,15 +16,12 @@
 
 package net.sharplab.springframework.security.webauthn.sample.app.web;
 
-import lombok.Data;
-
 import javax.validation.Valid;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import java.util.List;
 
-@Data
 public class ProfileForm {
 
     /**
@@ -69,4 +66,60 @@ public class ProfileForm {
      * <code>true</code> if password authentication is allowed
      */
     private boolean passwordAuthenticationAllowed;
+
+    public String getUserHandle() {
+        return userHandle;
+    }
+
+    public void setUserHandle(String userHandle) {
+        this.userHandle = userHandle;
+    }
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+
+    public String getEmailAddress() {
+        return emailAddress;
+    }
+
+    public void setEmailAddress(String emailAddress) {
+        this.emailAddress = emailAddress;
+    }
+
+    public List<AuthenticatorUpdateForm> getAuthenticators() {
+        return authenticators;
+    }
+
+    public void setAuthenticators(List<AuthenticatorUpdateForm> authenticators) {
+        this.authenticators = authenticators;
+    }
+
+    public List<AuthenticatorCreateForm> getNewAuthenticators() {
+        return newAuthenticators;
+    }
+
+    public void setNewAuthenticators(List<AuthenticatorCreateForm> newAuthenticators) {
+        this.newAuthenticators = newAuthenticators;
+    }
+
+    public boolean isPasswordAuthenticationAllowed() {
+        return passwordAuthenticationAllowed;
+    }
+
+    public void setPasswordAuthenticationAllowed(boolean passwordAuthenticationAllowed) {
+        this.passwordAuthenticationAllowed = passwordAuthenticationAllowed;
+    }
 }

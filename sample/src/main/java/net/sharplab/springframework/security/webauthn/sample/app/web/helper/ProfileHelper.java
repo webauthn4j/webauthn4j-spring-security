@@ -70,9 +70,9 @@ public class ProfileHelper {
         destination.setEmailAddress(source.getEmailAddress());
 
         List<AuthenticatorCreateForm> authenticatorCreateForms = source.getNewAuthenticators().stream()
-                .filter(authenticatorCreateForm -> !authenticatorCreateForm.isDelete()).collect(Collectors.toList());
+                .filter(authenticatorCreateForm -> !authenticatorCreateForm.getDelete()).collect(Collectors.toList());
         List<AuthenticatorUpdateForm> authenticatorUpdateForms = source.getAuthenticators().stream()
-                .filter(authenticatorCreateForm -> !authenticatorCreateForm.isDelete()).collect(Collectors.toList());
+                .filter(authenticatorCreateForm -> !authenticatorCreateForm.getDelete()).collect(Collectors.toList());
         List<Authenticator> originalAuthenticators = destination.getAuthenticators();
         List<Authenticator> authenticators = new ArrayList<>();
 
