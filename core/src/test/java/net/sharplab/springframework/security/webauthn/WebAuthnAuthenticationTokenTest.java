@@ -16,7 +16,7 @@
 
 package net.sharplab.springframework.security.webauthn;
 
-import com.webauthn4j.WebAuthnAuthenticationContext;
+import net.sharplab.springframework.security.webauthn.request.WebAuthnAuthenticationRequest;
 import org.junit.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -41,7 +41,7 @@ public class WebAuthnAuthenticationTokenTest {
      */
     @Test
     public void test_methods() {
-        WebAuthnAuthenticationContext credential = mock(WebAuthnAuthenticationContext.class);
+        WebAuthnAuthenticationRequest credential = mock(WebAuthnAuthenticationRequest.class);
         WebAuthnAuthenticationToken webAuthnAuthenticationToken = new WebAuthnAuthenticationToken("username", credential, null);
 
         assertThat(webAuthnAuthenticationToken.getPrincipal()).isEqualTo("username");

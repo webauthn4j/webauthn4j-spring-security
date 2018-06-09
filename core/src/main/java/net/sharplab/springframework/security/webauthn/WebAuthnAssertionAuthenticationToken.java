@@ -16,7 +16,7 @@
 
 package net.sharplab.springframework.security.webauthn;
 
-import com.webauthn4j.WebAuthnAuthenticationContext;
+import net.sharplab.springframework.security.webauthn.request.WebAuthnAuthenticationRequest;
 import org.springframework.security.authentication.AbstractAuthenticationToken;
 
 /**
@@ -27,7 +27,7 @@ public class WebAuthnAssertionAuthenticationToken extends AbstractAuthentication
     // ~ Instance fields
     // ================================================================================================
 
-    private WebAuthnAuthenticationContext credentials;
+    private WebAuthnAuthenticationRequest credentials;
 
 
     /**
@@ -37,7 +37,7 @@ public class WebAuthnAssertionAuthenticationToken extends AbstractAuthentication
      *
      * @param credentials credential
      */
-    public WebAuthnAssertionAuthenticationToken(WebAuthnAuthenticationContext credentials) {
+    public WebAuthnAssertionAuthenticationToken(WebAuthnAuthenticationRequest credentials) {
         super(null);
         this.credentials = credentials;
         setAuthenticated(false);
@@ -57,7 +57,7 @@ public class WebAuthnAssertionAuthenticationToken extends AbstractAuthentication
      * @return the stored WebAuthn authentication context
      */
     @Override
-    public WebAuthnAuthenticationContext getCredentials() {
+    public WebAuthnAuthenticationRequest getCredentials() {
         return credentials;
     }
 

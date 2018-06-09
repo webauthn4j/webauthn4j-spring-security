@@ -16,7 +16,7 @@
 
 package net.sharplab.springframework.security.webauthn;
 
-import com.webauthn4j.WebAuthnAuthenticationContext;
+import net.sharplab.springframework.security.webauthn.request.WebAuthnAuthenticationRequest;
 import org.springframework.security.authentication.AbstractAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
 
@@ -30,9 +30,9 @@ import java.util.Collection;
 public class WebAuthnAuthenticationToken extends AbstractAuthenticationToken {
 
     private Serializable principal;
-    private WebAuthnAuthenticationContext credentials;
+    private WebAuthnAuthenticationRequest credentials;
 
-    public WebAuthnAuthenticationToken(Serializable principal, WebAuthnAuthenticationContext credentials, Collection<? extends GrantedAuthority> authorities) {
+    public WebAuthnAuthenticationToken(Serializable principal, WebAuthnAuthenticationRequest credentials, Collection<? extends GrantedAuthority> authorities) {
         super(authorities);
         this.principal = principal;
         this.credentials = credentials;
@@ -45,7 +45,7 @@ public class WebAuthnAuthenticationToken extends AbstractAuthenticationToken {
     }
 
     @Override
-    public WebAuthnAuthenticationContext getCredentials() {
+    public WebAuthnAuthenticationRequest getCredentials() {
         return credentials;
     }
 

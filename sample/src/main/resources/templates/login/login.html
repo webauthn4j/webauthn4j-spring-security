@@ -48,6 +48,11 @@
                     <button type="submit" id="webauthn-login" class="btn btn-primary btn-block btn-flat" value="webAuthnLogin" th:text="#{v.login.passwordLessLogin}">Password-less Login</button>
                 </div>
             </div>
+            <input name="credentialId" type="hidden" />
+            <input name="collectedClientData" type="hidden" />
+            <input name="authenticatorData" type="hidden" />
+            <input name="signature" type="hidden" />
+            <input name="clientExtensionsJSON" type="hidden" />
         </form>
 
         <!--

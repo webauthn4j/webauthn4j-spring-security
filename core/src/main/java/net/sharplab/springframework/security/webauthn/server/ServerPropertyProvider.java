@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package net.sharplab.springframework.security.webauthn.context.provider;
+package net.sharplab.springframework.security.webauthn.server;
 
 
 import com.webauthn4j.server.ServerProperty;

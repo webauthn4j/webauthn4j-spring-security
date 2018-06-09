@@ -47,7 +47,9 @@ public class AuthenticatorHelper {
                         request,
                         response,
                         authenticator.getClientData().getClientDataBase64(),
-                        authenticator.getAttestationObject().getAttestationObjectBase64());
+                        authenticator.getAttestationObject().getAttestationObjectBase64(),
+                        authenticator.getClientExtensionsJSON()
+                );
                 return true;
             } catch (BadChallengeException e) {
                 model.addAttribute(ResultMessages.error().add(MessageCodes.Error.User.BAD_CHALLENGE));

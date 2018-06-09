@@ -16,8 +16,9 @@
 
 package net.sharplab.springframework.security.webauthn;
 
-import com.webauthn4j.WebAuthnAuthenticationContext;
-import net.sharplab.springframework.security.webauthn.context.provider.WebAuthnAuthenticationContextProvider;
+import com.webauthn4j.server.ServerProperty;
+import net.sharplab.springframework.security.webauthn.request.WebAuthnAuthenticationRequest;
+import net.sharplab.springframework.security.webauthn.server.ServerPropertyProvider;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AbstractAuthenticationToken;
 import org.springframework.security.authentication.AuthenticationServiceException;
@@ -25,15 +26,14 @@ import org.springframework.security.authentication.FirstOfMultiFactorAuthenticat
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.util.Assert;
+import org.springframework.util.Base64Utils;
 import org.springframework.util.StringUtils;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.List;
-import java.util.Objects;
 
 
 /**
@@ -47,6 +47,7 @@ public class WebAuthnProcessingFilter extends UsernamePasswordAuthenticationFilt
     public static final String SPRING_SECURITY_FORM_CLIENTDATA_KEY = "collectedClientData";
     public static final String SPRING_SECURITY_FORM_AUTHENTICATOR_DATA_KEY = "authenticatorData";
     public static final String SPRING_SECURITY_FORM_SIGNATURE_KEY = "signature";
+    public static final String SPRING_SECURITY_FORM_CLIENT_EXTENSIONS_JSON_PARAMETER = "clientExtensionsJSON";
 
     //~ Instance fields
     // ================================================================================================
@@ -56,9 +57,11 @@ public class WebAuthnProcessingFilter extends UsernamePasswordAuthenticationFilt
     private String clientDataParameter = SPRING_SECURITY_FORM_CLIENTDATA_KEY;
     private String authenticatorDataParameter = SPRING_SECURITY_FORM_AUTHENTICATOR_DATA_KEY;
     private String signatureParameter = SPRING_SECURITY_FORM_SIGNATURE_KEY;
+    private String clientExtensionsJSONParameter = SPRING_SECURITY_FORM_CLIENT_EXTENSIONS_JSON_PARAMETER;
 
 
-    private WebAuthnAuthenticationContextProvider webAuthnAuthenticationContextProvider;
+    private ServerPropertyProvider serverPropertyProvider;
+
 
     private boolean postOnly = true;
 
@@ -86,15 +89,28 @@ public class WebAuthnProcessingFilter extends UsernamePasswordAuthenticationFilt
         String clientData = obtainClientData(request);
         String authenticatorData = obtainAuthenticatorData(request);
         String signature = obtainSignatureData(request);
+        String clientExtensionsJSON = obtainClientExtensionsJSON(request);
 
         AbstractAuthenticationToken authRequest;
         if (StringUtils.isEmpty(credentialId)) {
             authRequest = new FirstOfMultiFactorAuthenticationToken(username, password, authorities);
         } else {
-            WebAuthnAuthenticationContext webAuthnAuthenticationContext =
-                    getWebAuthnAuthenticationContextProvider().provide(request, response, credentialId, clientData, authenticatorData, signature);
+            byte[] rawId = Base64Utils.decodeFromUrlSafeString(credentialId);
+            byte[] rawClientData = Base64Utils.decodeFromUrlSafeString(clientData);
+            byte[] rawAuthenticatorData = Base64Utils.decodeFromUrlSafeString(authenticatorData);
+            byte[] signatureBytes = Base64Utils.decodeFromUrlSafeString(signature);
 
-            authRequest = new WebAuthnAssertionAuthenticationToken(webAuthnAuthenticationContext);
+            ServerProperty serverProperty = serverPropertyProvider.provide(request, response);
+
+            WebAuthnAuthenticationRequest webAuthnAuthenticationRequest = new WebAuthnAuthenticationRequest(
+                    rawId,
+                    rawClientData,
+                    rawAuthenticatorData,
+                    signatureBytes,
+                    clientExtensionsJSON,
+                    serverProperty
+            );
+            authRequest = new WebAuthnAssertionAuthenticationToken(webAuthnAuthenticationRequest);
         }
 
         // Allow subclasses to set the "details" property
@@ -117,6 +133,10 @@ public class WebAuthnProcessingFilter extends UsernamePasswordAuthenticationFilt
 
     private String obtainSignatureData(HttpServletRequest request) {
         return request.getParameter(signatureParameter);
+    }
+
+    private String obtainClientExtensionsJSON(HttpServletRequest request) {
+        return request.getParameter(clientExtensionsJSONParameter);
     }
 
     private void setDetails(HttpServletRequest request,
@@ -172,12 +192,11 @@ public class WebAuthnProcessingFilter extends UsernamePasswordAuthenticationFilt
         this.signatureParameter = signatureParameter;
     }
 
-    protected WebAuthnAuthenticationContextProvider getWebAuthnAuthenticationContextProvider() {
-        return webAuthnAuthenticationContextProvider;
+    public ServerPropertyProvider getServerPropertyProvider() {
+        return serverPropertyProvider;
     }
 
-    public void setWebAuthnAuthenticationContextProvider(WebAuthnAuthenticationContextProvider webAuthnAuthenticationContextProvider) {
-        this.webAuthnAuthenticationContextProvider = webAuthnAuthenticationContextProvider;
+    public void setServerPropertyProvider(ServerPropertyProvider serverPropertyProvider) {
+        this.serverPropertyProvider = serverPropertyProvider;
     }
-
 }

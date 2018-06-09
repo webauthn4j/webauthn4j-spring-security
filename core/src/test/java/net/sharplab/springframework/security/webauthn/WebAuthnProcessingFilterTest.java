@@ -16,8 +16,9 @@
 
 package net.sharplab.springframework.security.webauthn;
 
-import com.webauthn4j.WebAuthnAuthenticationContext;
-import net.sharplab.springframework.security.webauthn.context.provider.WebAuthnAuthenticationContextProvider;
+import com.webauthn4j.server.ServerProperty;
+import net.sharplab.springframework.security.webauthn.request.WebAuthnAuthenticationRequest;
+import net.sharplab.springframework.security.webauthn.server.ServerPropertyProvider;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -43,7 +44,7 @@ public class WebAuthnProcessingFilterTest {
     @Rule
     public MockitoRule mockito = MockitoJUnit.rule();
 
-    private WebAuthnAuthenticationContextProvider webAuthnAuthenticationContextProvider;
+    private ServerPropertyProvider serverPropertyProvider;
     private AuthenticationManager authenticationManager;
     private MockHttpServletRequest mockHttpServletRequest;
     private MockHttpServletResponse mockHttpServletResponse;
@@ -55,13 +56,13 @@ public class WebAuthnProcessingFilterTest {
 
     @Before
     public void setup() {
-        webAuthnAuthenticationContextProvider = mock(WebAuthnAuthenticationContextProvider.class);
+        serverPropertyProvider = mock(ServerPropertyProvider.class);
         authenticationManager = mock(AuthenticationManager.class);
         mockHttpServletRequest = new MockHttpServletRequest();
         mockHttpServletResponse = new MockHttpServletResponse();
 
         target.setAuthenticationManager(authenticationManager);
-        target.setWebAuthnAuthenticationContextProvider(webAuthnAuthenticationContextProvider);
+        target.setServerPropertyProvider(serverPropertyProvider);
     }
 
     @Test
@@ -98,16 +99,16 @@ public class WebAuthnProcessingFilterTest {
         mockHttpServletRequest.setParameter("signature", signature);
 
         when(authenticationManager.authenticate(captor.capture())).thenReturn(null);
-        when(webAuthnAuthenticationContextProvider.provide(any(), any(), anyString(), anyString(), anyString(), anyString())).thenReturn(mock(WebAuthnAuthenticationContext.class));
+        when(serverPropertyProvider.provide(any(), any())).thenReturn(mock(ServerProperty.class));
 
         //When
         target.attemptAuthentication(mockHttpServletRequest, mockHttpServletResponse);
 
         //Then
         WebAuthnAssertionAuthenticationToken authenticationToken = (WebAuthnAssertionAuthenticationToken) captor.getValue();
-        verify(webAuthnAuthenticationContextProvider).provide(mockHttpServletRequest, mockHttpServletResponse, credentialId, clientData, authenticatorData, signature);
+        verify(serverPropertyProvider).provide(mockHttpServletRequest, mockHttpServletResponse);
         assertThat(authenticationToken.getPrincipal()).isNull();
-        assertThat(authenticationToken.getCredentials()).isInstanceOf(WebAuthnAuthenticationContext.class);
+        assertThat(authenticationToken.getCredentials()).isInstanceOf(WebAuthnAuthenticationRequest.class);
 
     }
 
@@ -129,16 +130,16 @@ public class WebAuthnProcessingFilterTest {
         mockHttpServletRequest.setParameter("signature", signature);
 
         when(authenticationManager.authenticate(captor.capture())).thenReturn(null);
-        when(webAuthnAuthenticationContextProvider.provide(any(), any(), anyString(), anyString(), anyString(), anyString())).thenReturn(mock(WebAuthnAuthenticationContext.class));
+        when(serverPropertyProvider.provide(any(), any())).thenReturn(mock(ServerProperty.class));
 
         //When
         target.attemptAuthentication(mockHttpServletRequest, mockHttpServletResponse);
 
         //Then
         WebAuthnAssertionAuthenticationToken authenticationToken = (WebAuthnAssertionAuthenticationToken) captor.getValue();
-        verify(webAuthnAuthenticationContextProvider).provide(mockHttpServletRequest, mockHttpServletResponse, credentialId, clientData, authenticatorData, signature);
+        verify(serverPropertyProvider).provide(mockHttpServletRequest, mockHttpServletResponse);
         assertThat(authenticationToken.getPrincipal()).isNull();
-        assertThat(authenticationToken.getCredentials()).isInstanceOf(WebAuthnAuthenticationContext.class);
+        assertThat(authenticationToken.getCredentials()).isInstanceOf(WebAuthnAuthenticationRequest.class);
 
     }
 
@@ -175,7 +176,7 @@ public class WebAuthnProcessingFilterTest {
         mockHttpServletRequest.setParameter(signatureParameter, signature);
 
         when(authenticationManager.authenticate(captor.capture())).thenReturn(null);
-        when(webAuthnAuthenticationContextProvider.provide(any(), any(), anyString(), anyString(), anyString(), anyString())).thenReturn(mock(WebAuthnAuthenticationContext.class));
+        when(serverPropertyProvider.provide(any(), any())).thenReturn(mock(ServerProperty.class));
 
         //When
         target.attemptAuthentication(mockHttpServletRequest, mockHttpServletResponse);
@@ -190,9 +191,9 @@ public class WebAuthnProcessingFilterTest {
 
 
         WebAuthnAssertionAuthenticationToken authenticationToken = (WebAuthnAssertionAuthenticationToken) captor.getValue();
-        verify(webAuthnAuthenticationContextProvider).provide(mockHttpServletRequest, mockHttpServletResponse, credentialId, clientData, authenticatorData, signature);
+        verify(serverPropertyProvider).provide(mockHttpServletRequest, mockHttpServletResponse);
         assertThat(authenticationToken.getPrincipal()).isNull();
-        assertThat(authenticationToken.getCredentials()).isInstanceOf(WebAuthnAuthenticationContext.class);
+        assertThat(authenticationToken.getCredentials()).isInstanceOf(WebAuthnAuthenticationRequest.class);
 
     }
 

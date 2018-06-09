@@ -16,11 +16,11 @@
 
 package net.sharplab.springframework.security.webauthn;
 
-import com.webauthn4j.WebAuthnAuthenticationContext;
 import com.webauthn4j.authenticator.Authenticator;
 import com.webauthn4j.authenticator.AuthenticatorImpl;
 import net.sharplab.springframework.security.webauthn.authenticator.WebAuthnAuthenticatorService;
 import net.sharplab.springframework.security.webauthn.exception.CredentialIdNotFoundException;
+import net.sharplab.springframework.security.webauthn.request.WebAuthnAuthenticationRequest;
 import net.sharplab.springframework.security.webauthn.userdetails.WebAuthnUserDetailsImpl;
 import org.junit.Ignore;
 import org.junit.Rule;
@@ -86,7 +86,7 @@ public class WebAuthnAuthenticationProviderTest {
                 .thenReturn(authenticator);
 
         //When
-        WebAuthnAuthenticationContext credential = mock(WebAuthnAuthenticationContext.class);
+        WebAuthnAuthenticationRequest credential = mock(WebAuthnAuthenticationRequest.class);
         Authentication token = new WebAuthnAssertionAuthenticationToken(credential);
         Authentication authenticatedToken = webAuthnAuthenticationProvider.authenticate(token);
 

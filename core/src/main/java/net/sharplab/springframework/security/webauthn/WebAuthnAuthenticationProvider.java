@@ -21,6 +21,7 @@ import com.webauthn4j.authenticator.Authenticator;
 import com.webauthn4j.validator.WebAuthnAuthenticationContextValidator;
 import net.sharplab.springframework.security.webauthn.authenticator.WebAuthnAuthenticatorService;
 import net.sharplab.springframework.security.webauthn.exception.*;
+import net.sharplab.springframework.security.webauthn.request.WebAuthnAuthenticationRequest;
 import net.sharplab.springframework.security.webauthn.userdetails.WebAuthnUserDetails;
 import net.sharplab.springframework.security.webauthn.userdetails.WebAuthnUserDetailsService;
 import org.apache.commons.logging.Log;
@@ -36,6 +37,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsChecker;
 
 import java.io.Serializable;
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -56,6 +58,8 @@ public class WebAuthnAuthenticationProvider implements AuthenticationProvider {
     private UserDetailsChecker preAuthenticationChecks = new DefaultPreAuthenticationChecks();
     private UserDetailsChecker postAuthenticationChecks = new DefaultPostAuthenticationChecks();
     private GrantedAuthoritiesMapper authoritiesMapper = new NullAuthoritiesMapper();
+
+    private List<String> expectedAuthenticationExtensionIds;
 
     public WebAuthnAuthenticationProvider(
             WebAuthnUserDetailsService webAuthnUserDetailsService,
@@ -104,7 +108,7 @@ public class WebAuthnAuthenticationProvider implements AuthenticationProvider {
         return WebAuthnAssertionAuthenticationToken.class.isAssignableFrom(authentication);
     }
 
-    void doAuthenticate(WebAuthnAssertionAuthenticationToken authenticationToken, Authenticator authenticator, WebAuthnUserDetails user){
+    void doAuthenticate(WebAuthnAssertionAuthenticationToken authenticationToken, Authenticator authenticator, WebAuthnUserDetails user) {
         if (authenticationToken.getCredentials() == null) {
             logger.debug("Authentication failed: no credentials provided");
 
@@ -118,55 +122,55 @@ public class WebAuthnAuthenticationProvider implements AuthenticationProvider {
         boolean isUserVerified = Objects.equals(currentAuthentication.getName(), user.getUsername());
         boolean userVerificationRequired = !isUserVerified; // If user is not verified, user verification is required.
 
-        WebAuthnAuthenticationContext credentials = authenticationToken.getCredentials(); //TODO: introduce new type for credential
+        WebAuthnAuthenticationRequest credentials = authenticationToken.getCredentials();
         WebAuthnAuthenticationContext authenticationContext = new WebAuthnAuthenticationContext(
                 credentials.getCredentialId(),
-                credentials.getCollectedClientData(),
+                credentials.getClientDataJSON(),
                 credentials.getAuthenticatorData(),
                 credentials.getSignature(),
-                credentials.getClientExtensionOutputs(),
+                credentials.getClientExtensionsJSON(),
                 credentials.getServerProperty(),
                 userVerificationRequired,
-                credentials.getExpectedExtensions()
+                expectedAuthenticationExtensionIds
         );
 
-        try{
+        try {
             authenticationContextValidator.validate(authenticationContext, authenticator);
-        }
-        catch (com.webauthn4j.validator.exception.MaliciousDataException e){
+        } catch (com.webauthn4j.validator.exception.MaliciousDataException e) {
             throw new MaliciousDataException("Bad client data type", e);
-        }
-        catch (com.webauthn4j.validator.exception.BadChallengeException e){
+        } catch (com.webauthn4j.validator.exception.BadChallengeException e) {
             throw new BadChallengeException("Bad challenge", e);
-        }
-        catch (com.webauthn4j.validator.exception.BadOriginException e){
+        } catch (com.webauthn4j.validator.exception.BadOriginException e) {
             throw new BadOriginException("Bad origin", e);
-        }
-        catch (com.webauthn4j.validator.exception.BadRpIdException e){
+        } catch (com.webauthn4j.validator.exception.BadRpIdException e) {
             throw new BadRpIdException("Bad rpId", e);
-        }
-        catch (com.webauthn4j.validator.exception.UserNotVerifiedException e){
+        } catch (com.webauthn4j.validator.exception.UserNotVerifiedException e) {
             throw new UserNotVerifiedException("User not verified", e);
-        }
-        catch (com.webauthn4j.validator.exception.UserNotPresentException e){
+        } catch (com.webauthn4j.validator.exception.UserNotPresentException e) {
             throw new UserNotPresentException("User not verified", e);
-        }
-        catch (com.webauthn4j.validator.exception.BadSignatureException e){
+        } catch (com.webauthn4j.validator.exception.BadSignatureException e) {
             throw new BadSignatureException("Bad signature", e);
-        }
-        catch (com.webauthn4j.validator.exception.MaliciousCounterValueException e){
+        } catch (com.webauthn4j.validator.exception.MaliciousCounterValueException e) {
             throw new MaliciousCounterValueException("Malicious counter value is detected. Cloned authenticators exist in parallel.", e);
         }
 
 
     }
 
+    public boolean isForcePrincipalAsString() {
+        return forcePrincipalAsString;
+    }
+
     public void setForcePrincipalAsString(boolean forcePrincipalAsString) {
         this.forcePrincipalAsString = forcePrincipalAsString;
     }
 
-    public boolean isForcePrincipalAsString() {
-        return forcePrincipalAsString;
+    public List<String> getExpectedAuthenticationExtensionIds() {
+        return expectedAuthenticationExtensionIds;
+    }
+
+    public void setExpectedAuthenticationExtensionIds(List<String> expectedAuthenticationExtensionIds) {
+        this.expectedAuthenticationExtensionIds = expectedAuthenticationExtensionIds;
     }
 
     /**
@@ -185,13 +189,12 @@ public class WebAuthnAuthenticationProvider implements AuthenticationProvider {
         this.hideCredentialIdNotFoundExceptions = hideCredentialIdNotFoundExceptions;
     }
 
-    public void setAuthenticatorService(WebAuthnAuthenticatorService authenticatorService) {
-        this.authenticatorService = authenticatorService;
-    }
-
-
     protected WebAuthnAuthenticatorService getAuthenticatorService() {
         return authenticatorService;
+    }
+
+    public void setAuthenticatorService(WebAuthnAuthenticatorService authenticatorService) {
+        this.authenticatorService = authenticatorService;
     }
 
     Authenticator retrieveWebAuthnAuthenticator(byte[] credentialId, WebAuthnAssertionAuthenticationToken authenticationToken) {

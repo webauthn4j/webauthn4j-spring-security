@@ -57,7 +57,7 @@ UserCreateViewModel.prototype.addCredential = function (){
         $("#gesture-request-modal").modal('hide');
         console.log(credential);
         _this.saveCredentialId(credential.rawId);
-        _this.addCredentialForm(userHandle, credential.response.clientDataJSON, credential.response.attestationObject);
+        _this.addCredentialForm(userHandle, credential.response.clientDataJSON, credential.response.attestationObject, credential.getClientExtensionResults());
     }).catch(function(error){
         $("#gesture-request-modal").modal('hide');
         return Promise.reject(error);
@@ -69,7 +69,7 @@ UserCreateViewModel.prototype.saveCredentialId = function (credentialId) {
     localStorage.setItem('net.sharplab.springframework.security.webauthn.credentialId', encodedId);
 };
 
-UserCreateViewModel.prototype.addCredentialForm = function (userHandle, clientData, attestationObject) {
+UserCreateViewModel.prototype.addCredentialForm = function (userHandle, clientData, attestationObject, clientExtensions) {
     let _this = this;
 
     $('<tr />', { class: "authenticator-item" })
@@ -77,6 +77,7 @@ UserCreateViewModel.prototype.addCredentialForm = function (userHandle, clientDa
             .append($('<input />', { type: "text", name: "newAuthenticators["+ _this._authenticatorListIndex +"].name", value: "", class: "form-control input", placeholder: "Authenticator Name"}))
             .append($('<input />', { type: "hidden", name: "newAuthenticators["+ _this._authenticatorListIndex +"].clientData", value: base64url.encode(clientData)}))
             .append($('<input />', { type: "hidden", name: "newAuthenticators["+ _this._authenticatorListIndex +"].attestationObject", value: base64url.encode(attestationObject)}))
+            .append($('<input />', { type: "hidden", name: "newAuthenticators["+ _this._authenticatorListIndex +"].clientExtensionsJSON", value: JSON.stringify(clientExtensions)}))
             .append($('<input />', { type: "hidden", name: "newAuthenticators["+ _this._authenticatorListIndex +"].delete", value: false, class: "delete"}))
         )
         .append($('<td />')

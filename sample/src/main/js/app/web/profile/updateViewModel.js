@@ -57,7 +57,7 @@ ProfileUpdateViewModel.prototype.addCredential = function (){
         $("#gesture-request-modal").modal('hide');
         console.log(credential);
         _this.saveCredentialId(credential.rawId);
-        _this.addCredentialForm(credential.response.clientDataJSON, credential.response.attestationObject);
+        _this.addCredentialForm(credential.response.clientDataJSON, credential.response.attestationObject, credential.getClientExtensionResults());
     }).catch(function(error){
         $("#gesture-request-modal").modal('hide');
         console.error(error);
@@ -69,7 +69,7 @@ ProfileUpdateViewModel.prototype.saveCredentialId = function (credentialId) {
     localStorage.setItem('net.sharplab.springframework.security.webauthn.credentialId', encodedId);
 };
 
-ProfileUpdateViewModel.prototype.addCredentialForm = function (clientData, attestationObject) {
+ProfileUpdateViewModel.prototype.addCredentialForm = function (clientData, attestationObject, clientExtensions) {
     let _this = this;
 
     $('<tr />', { class: "authenticator-item" })
@@ -77,6 +77,7 @@ ProfileUpdateViewModel.prototype.addCredentialForm = function (clientData, attes
             .append($('<input />', { type: "text", name: "newAuthenticators["+ _this._authenticatorListIndex +"].name", value: "", class: "form-control input", placeholder: "Authenticator Name"}))
             .append($('<input />', { type: "hidden", name: "newAuthenticators["+ _this._authenticatorListIndex +"].clientData", value: base64url.encode(clientData)}))
             .append($('<input />', { type: "hidden", name: "newAuthenticators["+ _this._authenticatorListIndex +"].attestationObject", value: base64url.encode(attestationObject)}))
+            .append($('<input />', { type: "hidden", name: "newAuthenticators["+ _this._authenticatorListIndex +"].clientExtensionsJSON", value: JSON.stringify(clientExtensions)}))
             .append($('<input />', { type: "hidden", name: "newAuthenticators["+ _this._authenticatorListIndex +"].delete", value: false, class: "delete"}))
         )
         .append($('<td />')

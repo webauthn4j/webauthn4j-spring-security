@@ -24,6 +24,9 @@ public class AuthenticatorCreateForm {
     @Valid
     private AttestationObjectForm attestationObject;
 
+    @NotNull
+    private String clientExtensionsJSON;
+
     private boolean delete;
 
 }

@@ -7,13 +7,11 @@ import net.sharplab.springframework.security.webauthn.WebAuthnRegistrationReques
 import net.sharplab.springframework.security.webauthn.authenticator.WebAuthnAuthenticatorService;
 import net.sharplab.springframework.security.webauthn.challenge.ChallengeRepository;
 import net.sharplab.springframework.security.webauthn.challenge.HttpSessionChallengeRepository;
-import net.sharplab.springframework.security.webauthn.context.provider.ServerPropertyProvider;
-import net.sharplab.springframework.security.webauthn.context.provider.ServerPropertyProviderImpl;
-import net.sharplab.springframework.security.webauthn.context.provider.WebAuthnAuthenticationContextProvider;
-import net.sharplab.springframework.security.webauthn.context.provider.WebAuthnAuthenticationContextProviderImpl;
 import net.sharplab.springframework.security.webauthn.metadata.MetadataProvider;
 import net.sharplab.springframework.security.webauthn.metadata.MetadataProviderImpl;
 import net.sharplab.springframework.security.webauthn.sample.domain.component.AuthenticatorManager;
+import net.sharplab.springframework.security.webauthn.server.ServerPropertyProvider;
+import net.sharplab.springframework.security.webauthn.server.ServerPropertyProviderImpl;
 import net.sharplab.springframework.security.webauthn.userdetails.WebAuthnUserDetailsService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -36,11 +34,6 @@ import java.util.LinkedHashMap;
 
 @Configuration
 public class WebSecurityBeanConfig {
-
-    @Bean
-    public WebAuthnAuthenticationContextProvider webAuthnAuthenticationContextProvider(ServerPropertyProvider serverPropertyProvider) {
-        return new WebAuthnAuthenticationContextProviderImpl(serverPropertyProvider);
-    }
 
     @Bean
     public WebAuthnAuthenticationContextValidator webAuthnAuthenticationContextValidator() {

@@ -89,11 +89,12 @@ LoginViewModel.prototype.loginWithPublicKeyCredential = function (credential) {
     let clientData = credential.response.clientDataJSON;
     let authenticatorData = credential.response.authenticatorData;
     let signature = credential.response.signature;
+    let clientExtensions = credential.getClientExtensionResults();
 
-    _this.loginByFormSubmission(null, null, credentialId, clientData, authenticatorData, signature);
+    _this.loginByFormSubmission(null, null, credentialId, clientData, authenticatorData, signature, clientExtensions);
 };
 
-LoginViewModel.prototype.loginByFormSubmission = function (username, password, credentialId, clientData, authenticatorData, signature) {
+LoginViewModel.prototype.loginByFormSubmission = function (username, password, credentialId, clientData, authenticatorData, signature, clientExtensions) {
     let loginForm = $("#login-form");
     loginForm.find("input[name='username']").val(username);
     loginForm.find("input[name='rawPassword']").val(password);
@@ -101,6 +102,7 @@ LoginViewModel.prototype.loginByFormSubmission = function (username, password, c
     loginForm.find("input[name='collectedClientData']").val(base64url.encode(clientData));
     loginForm.find("input[name='authenticatorData']").val(base64url.encode(authenticatorData));
     loginForm.find("input[name='signature']").val(base64url.encode(signature));
+    loginForm.find("input[name='clientExtensionsJSON']").val(JSON.stringify(clientExtensions));
     loginForm.submit();
 };
 
