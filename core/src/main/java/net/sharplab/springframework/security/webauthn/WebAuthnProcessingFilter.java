@@ -192,6 +192,14 @@ public class WebAuthnProcessingFilter extends UsernamePasswordAuthenticationFilt
         this.signatureParameter = signatureParameter;
     }
 
+    public String getClientExtensionsJSONParameter() {
+        return clientExtensionsJSONParameter;
+    }
+
+    public void setClientExtensionsJSONParameter(String clientExtensionsJSONParameter) {
+        this.clientExtensionsJSONParameter = clientExtensionsJSONParameter;
+    }
+
     public ServerPropertyProvider getServerPropertyProvider() {
         return serverPropertyProvider;
     }
