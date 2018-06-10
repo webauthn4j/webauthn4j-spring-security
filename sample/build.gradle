@@ -33,6 +33,7 @@ dependencies {
     //Others
     compile("org.slf4j:jcl-over-slf4j")
     compile('ch.qos.logback:logback-classic')
+    compile('javax.xml.bind:jaxb-api')
     compile("org.modelmapper:modelmapper:${modelMapperVersion}")
     compile('org.flywaydb:flyway-core')
     runtime('com.h2database:h2')
