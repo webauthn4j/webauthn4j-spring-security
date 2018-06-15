@@ -18,6 +18,8 @@ package net.sharplab.springframework.security.webauthn.metadata;
 
 public class Metadata {
 
+    //~ Instance fields
+    // ================================================================================================
     private String credentialId;
 
     public String getCredentialId() {

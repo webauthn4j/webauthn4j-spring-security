@@ -29,8 +29,9 @@ import java.util.List;
 
 public class MetadataProviderImpl implements MetadataProvider {
 
+    //~ Instance fields
+    // ================================================================================================
     private WebAuthnUserDetailsService userDetailsService;
-
     private ObjectMapper objectMapper = new ObjectMapper();
 
     public MetadataProviderImpl(WebAuthnUserDetailsService userDetailsService) {

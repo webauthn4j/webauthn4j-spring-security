@@ -29,6 +29,8 @@ import javax.servlet.http.HttpServletResponse;
  */
 public class ServerPropertyProviderImpl implements ServerPropertyProvider {
 
+    //~ Instance fields
+    // ================================================================================================
     private String rpId = null;
     private ChallengeRepository challengeRepository;
 

@@ -29,6 +29,8 @@ import java.util.Collection;
  */
 public class WebAuthnAuthenticationToken extends AbstractAuthenticationToken {
 
+    //~ Instance fields
+    // ================================================================================================
     private Serializable principal;
     private WebAuthnAuthenticationRequest credentials;
 

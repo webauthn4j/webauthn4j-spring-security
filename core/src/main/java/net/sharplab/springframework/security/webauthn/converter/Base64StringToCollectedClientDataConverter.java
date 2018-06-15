@@ -25,6 +25,8 @@ import org.springframework.core.convert.converter.Converter;
  */
 public class Base64StringToCollectedClientDataConverter implements Converter<String, CollectedClientData> {
 
+    //~ Instance fields
+    // ================================================================================================
     private CollectedClientDataConverter converter = new CollectedClientDataConverter();
 
 

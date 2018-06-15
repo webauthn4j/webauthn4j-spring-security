@@ -12,6 +12,8 @@ import java.util.List;
 
 public class WebAuthnRegistrationRequestValidator {
 
+    //~ Instance fields
+    // ================================================================================================
     private WebAuthnRegistrationContextValidator registrationContextValidator;
     private ServerPropertyProvider serverPropertyProvider;
 

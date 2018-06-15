@@ -26,7 +26,6 @@ public class WebAuthnAssertionAuthenticationToken extends AbstractAuthentication
 
     // ~ Instance fields
     // ================================================================================================
-
     private WebAuthnAuthenticationRequest credentials;
 
 

@@ -64,6 +64,8 @@ import static net.sharplab.springframework.security.webauthn.WebAuthnProcessingF
 public final class WebAuthnLoginConfigurer<H extends HttpSecurityBuilder<H>> extends
         AbstractAuthenticationFilterConfigurer<H, WebAuthnLoginConfigurer<H>, WebAuthnProcessingFilter> {
 
+    //~ Instance fields
+    // ================================================================================================
     private MFATokenEvaluator mfaTokenEvaluator;
     private MetadataProvider metadataProvider;
 

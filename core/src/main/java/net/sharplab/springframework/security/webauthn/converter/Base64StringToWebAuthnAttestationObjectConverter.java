@@ -25,6 +25,8 @@ import org.springframework.core.convert.converter.Converter;
  */
 public class Base64StringToWebAuthnAttestationObjectConverter implements Converter<String, AttestationObject> {
 
+    //~ Instance fields
+    // ================================================================================================
     private AttestationObjectConverter converter = new AttestationObjectConverter();
 
     @Override

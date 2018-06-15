@@ -32,6 +32,8 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 public class WebAuthnFirstOfMultiFactorDelegatingAuthenticationConfigurer<B extends ProviderManagerBuilder<B>, C extends WebAuthnFirstOfMultiFactorDelegatingAuthenticationConfigurer<B, C, U>, U extends UserDetailsService>
         extends SecurityConfigurerAdapter<AuthenticationManager, B> {
 
+    //~ Instance fields
+    // ================================================================================================
     private AbstractUserDetailsAuthenticationProvider authenticationProvider;
 
     public WebAuthnFirstOfMultiFactorDelegatingAuthenticationConfigurer(AbstractUserDetailsAuthenticationProvider authenticationProvider) {

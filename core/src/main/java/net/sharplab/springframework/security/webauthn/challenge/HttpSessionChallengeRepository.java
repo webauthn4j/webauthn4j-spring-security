@@ -35,6 +35,8 @@ public class HttpSessionChallengeRepository implements ChallengeRepository {
     private static final String DEFAULT_CHALLENGE_ATTR_NAME = HttpSessionChallengeRepository.class
             .getName().concat(".CHALLENGE");
 
+    //~ Instance fields
+    // ================================================================================================
     private String sessionAttributeName = DEFAULT_CHALLENGE_ATTR_NAME;
 
     @Override

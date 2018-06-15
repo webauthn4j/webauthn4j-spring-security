@@ -27,8 +27,8 @@ import java.util.Objects;
  */
 public class WebAuthnAuthenticationRequest {
 
-    //~ Instance fields ================================================================================================
-
+    //~ Instance fields
+    // ================================================================================================
     // user inputs
     private final byte[] credentialId;
     private final byte[] clientDataJSON;
