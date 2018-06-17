@@ -22,6 +22,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
 public interface WebAuthnUserDetailsService extends UserDetailsService {
 
+    @SuppressWarnings("squid:RedundantThrowsDeclarationCheck")
     WebAuthnUserDetails loadUserByUsername(String username) throws UsernameNotFoundException;
 
     WebAuthnUserDetails loadUserByAuthenticator(Authenticator authnAuthenticator);

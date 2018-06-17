@@ -47,7 +47,7 @@ public class WebAuthnFirstOfMultiFactorDelegatingAuthenticationProvider implemen
     }
 
     @Override
-    public Authentication authenticate(Authentication authentication) throws AuthenticationException {
+    public Authentication authenticate(Authentication authentication) {
         if (!supports(authentication.getClass())) {
             throw new IllegalArgumentException("Only FirstOfMultiFactorAuthenticationToken is supported, " + authentication.getClass() + " was attempted");
         }

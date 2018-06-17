@@ -43,12 +43,12 @@ public class ServerPropertyProviderImpl implements ServerPropertyProvider {
         Origin origin = obtainOrigin(request);
         Challenge savedChallenge = obtainSavedChallenge(request);
 
-        String rpId = origin.getHost();
+        String applyingRpId = origin.getHost();
         if (this.rpId != null) {
-            rpId = this.rpId;
+            applyingRpId = this.rpId;
         }
 
-        return new ServerProperty(origin, rpId, savedChallenge, null); // tokenBinding is not supported by Servlet API as of 4.0
+        return new ServerProperty(origin, applyingRpId, savedChallenge, null); // tokenBinding is not supported by Servlet API as of 4.0
     }
 
     public String getRpId() {
