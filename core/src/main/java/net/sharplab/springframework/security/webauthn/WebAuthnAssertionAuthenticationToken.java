@@ -67,7 +67,7 @@ public class WebAuthnAssertionAuthenticationToken extends AbstractAuthentication
      * @throws IllegalArgumentException if isAuthenticated is true
      */
     @Override
-    public void setAuthenticated(boolean isAuthenticated) throws IllegalArgumentException {
+    public void setAuthenticated(boolean isAuthenticated) {
         if (isAuthenticated) {
             throw new IllegalArgumentException(
                     "Cannot set this authenticator to trusted");

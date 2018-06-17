@@ -55,6 +55,11 @@ import static net.sharplab.springframework.security.webauthn.WebAuthnProcessingF
  *
  * <h2>Shared Objects Used</h2>
  * <p>
+ * The following shared objects are populated:
+ *
+ * <ul>
+ * <li>{@link MFATokenEvaluator}</li>
+ * </ul>
  * The following shared objects are used:
  *
  * <ul>
@@ -107,10 +112,10 @@ public final class WebAuthnLoginConfigurer<H extends HttpSecurityBuilder<H>> ext
             metadataEndpointFilter.setTrustResolver(trustResolver);
         }
 
-        MFATokenEvaluator mfaTokenEvaluator = http
+        MFATokenEvaluator sharedMFATokenEvaluator = http
                 .getSharedObject(MFATokenEvaluator.class);
-        if (mfaTokenEvaluator != null) {
-            metadataEndpointFilter.setMFATokenEvaluator(mfaTokenEvaluator);
+        if (sharedMFATokenEvaluator != null) {
+            metadataEndpointFilter.setMFATokenEvaluator(sharedMFATokenEvaluator);
         }
 
         http.addFilterAfter(metadataEndpointFilter, SessionManagementFilter.class);
@@ -143,8 +148,8 @@ public final class WebAuthnLoginConfigurer<H extends HttpSecurityBuilder<H>> ext
     }
 
     /**
-     * The HTTP parameter to look for the password when performing authentication. Default
-     * is "password".
+     * The HTTP parameter to look for the credentialId when performing authentication. Default
+     * is "credentialId".
      *
      * @param credentialIdParameter the HTTP parameter to look for the credentialId when
      *                              performing authentication
@@ -156,8 +161,8 @@ public final class WebAuthnLoginConfigurer<H extends HttpSecurityBuilder<H>> ext
     }
 
     /**
-     * The HTTP parameter to look for the password when performing authentication. Default
-     * is "password".
+     * The HTTP parameter to look for the clientData when performing authentication. Default
+     * is "clientData".
      *
      * @param clientDataParameter the HTTP parameter to look for the clientData when
      *                            performing authentication
@@ -169,8 +174,8 @@ public final class WebAuthnLoginConfigurer<H extends HttpSecurityBuilder<H>> ext
     }
 
     /**
-     * The HTTP parameter to look for the password when performing authentication. Default
-     * is "password".
+     * The HTTP parameter to look for the authenticatorData when performing authentication. Default
+     * is "authenticatorData".
      *
      * @param authenticatorDataParameter the HTTP parameter to look for the authenticatorData when
      *                                   performing authentication
@@ -182,8 +187,8 @@ public final class WebAuthnLoginConfigurer<H extends HttpSecurityBuilder<H>> ext
     }
 
     /**
-     * The HTTP parameter to look for the password when performing authentication. Default
-     * is "password".
+     * The HTTP parameter to look for the signature when performing authentication. Default
+     * is "signature".
      *
      * @param signatureParameter the HTTP parameter to look for the signature when
      *                           performing authentication
@@ -191,6 +196,19 @@ public final class WebAuthnLoginConfigurer<H extends HttpSecurityBuilder<H>> ext
      */
     public WebAuthnLoginConfigurer<H> signatureParameter(String signatureParameter) {
         this.getAuthenticationFilter().setSignatureParameter(signatureParameter);
+        return this;
+    }
+
+    /**
+     * The HTTP parameter to look for the clientExtensionsJSON when performing authentication. Default
+     * is "clientExtensionsJSON".
+     *
+     * @param clientExtensionsJSONParameter the HTTP parameter to look for the clientExtensionsJSON when
+     *                           performing authentication
+     * @return the {@link WebAuthnLoginConfigurer} for additional customization
+     */
+    public WebAuthnLoginConfigurer<H> clientExtensionsJSONParameter(String clientExtensionsJSONParameter) {
+        this.getAuthenticationFilter().setClientExtensionsJSONParameter(clientExtensionsJSONParameter);
         return this;
     }
 

@@ -38,7 +38,7 @@ public class MetadataProviderImpl implements MetadataProvider {
         this.userDetailsService = userDetailsService;
     }
 
-    public String getMetadataAsString(String username) throws MetadataException {
+    public String getMetadataAsString(String username) {
         try {
             Collection<? extends Authenticator> authenticators = userDetailsService.loadUserByUsername(username).getAuthenticators();
             List<Metadata> metadataList = new ArrayList<>();

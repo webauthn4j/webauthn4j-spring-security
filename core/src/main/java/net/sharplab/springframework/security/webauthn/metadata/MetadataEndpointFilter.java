@@ -43,6 +43,8 @@ public class MetadataEndpointFilter extends GenericFilterBean {
      */
     public static final String FILTER_URL = "/webauthn/metadata";
 
+    //~ Instance fields
+    // ================================================================================================
     /**
      * Url this filter should get activated on.
      */

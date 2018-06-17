@@ -18,6 +18,7 @@ package net.sharplab.springframework.security.webauthn.request;
 
 import com.webauthn4j.server.ServerProperty;
 
+import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Objects;
 
@@ -25,7 +26,7 @@ import java.util.Objects;
 /**
  * WebAuthnAuthenticationRequest
  */
-public class WebAuthnAuthenticationRequest {
+public class WebAuthnAuthenticationRequest implements Serializable {
 
     //~ Instance fields
     // ================================================================================================

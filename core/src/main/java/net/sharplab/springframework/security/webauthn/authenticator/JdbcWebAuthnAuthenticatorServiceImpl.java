@@ -37,6 +37,7 @@ public class JdbcWebAuthnAuthenticatorServiceImpl implements WebAuthnAuthenticat
      */
     @Override
     public Authenticator loadWebAuthnAuthenticatorByCredentialId(byte[] credentialId) {
+        // TODO
         return null;
     }
 }

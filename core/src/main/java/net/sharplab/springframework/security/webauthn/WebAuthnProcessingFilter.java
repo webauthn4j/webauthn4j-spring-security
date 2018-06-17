@@ -19,6 +19,7 @@ package net.sharplab.springframework.security.webauthn;
 import com.webauthn4j.server.ServerProperty;
 import net.sharplab.springframework.security.webauthn.request.WebAuthnAuthenticationRequest;
 import net.sharplab.springframework.security.webauthn.server.ServerPropertyProvider;
+import net.sharplab.springframework.security.webauthn.server.ServerPropertyProviderImpl;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AbstractAuthenticationToken;
 import org.springframework.security.authentication.AuthenticationServiceException;
@@ -44,7 +45,7 @@ public class WebAuthnProcessingFilter extends UsernamePasswordAuthenticationFilt
     // ~ Static fields/initializers
     // =====================================================================================
     public static final String SPRING_SECURITY_FORM_CREDENTIAL_ID_KEY = "credentialId";
-    public static final String SPRING_SECURITY_FORM_CLIENTDATA_KEY = "collectedClientData";
+    public static final String SPRING_SECURITY_FORM_CLIENTDATA_KEY = "clientData";
     public static final String SPRING_SECURITY_FORM_AUTHENTICATOR_DATA_KEY = "authenticatorData";
     public static final String SPRING_SECURITY_FORM_SIGNATURE_KEY = "signature";
     public static final String SPRING_SECURITY_FORM_CLIENT_EXTENSIONS_JSON_PARAMETER = "clientExtensionsJSON";
@@ -60,7 +61,7 @@ public class WebAuthnProcessingFilter extends UsernamePasswordAuthenticationFilt
     private String clientExtensionsJSONParameter = SPRING_SECURITY_FORM_CLIENT_EXTENSIONS_JSON_PARAMETER;
 
 
-    private ServerPropertyProvider serverPropertyProvider;
+    private ServerPropertyProvider serverPropertyProvider; //TODO: init
 
 
     private boolean postOnly = true;
