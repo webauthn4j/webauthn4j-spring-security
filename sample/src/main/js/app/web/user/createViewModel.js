@@ -56,17 +56,15 @@ UserCreateViewModel.prototype.addCredential = function (){
     navigator.credentials.create(credentialCreationOptions).then(function(credential){
         $("#gesture-request-modal").modal('hide');
         console.log(credential);
-        _this.saveCredentialId(credential.rawId);
-        _this.addCredentialForm(userHandle, credential.response.clientDataJSON, credential.response.attestationObject, credential.getClientExtensionResults());
+        let clientData = credential.response.clientDataJSON;
+        let attestationObject = credential.response.attestationObject;
+        // let clientExtensions = credential.getClientExtensionResults(); //Edge preview throws exception as of build 180603-1447
+        let clientExtensions = {};
+        _this.addCredentialForm(userHandle, clientData, attestationObject, clientExtensions);
     }).catch(function(error){
         $("#gesture-request-modal").modal('hide');
         return Promise.reject(error);
     });
-};
-
-UserCreateViewModel.prototype.saveCredentialId = function (credentialId) {
-    let encodedId = base64url.encode(credentialId);
-    localStorage.setItem('net.sharplab.springframework.security.webauthn.credentialId', encodedId);
 };
 
 UserCreateViewModel.prototype.addCredentialForm = function (userHandle, clientData, attestationObject, clientExtensions) {
