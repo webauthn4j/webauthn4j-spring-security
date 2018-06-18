@@ -94,7 +94,8 @@ public class WebAuthnProcessingFilter extends UsernamePasswordAuthenticationFilt
         AbstractAuthenticationToken authRequest;
         if (StringUtils.isEmpty(credentialId)) {
             authRequest = new FirstOfMultiFactorAuthenticationToken(username, password, authorities);
-        } else {
+        }
+        else {
             byte[] rawId = Base64Utils.decodeFromUrlSafeString(credentialId);
             byte[] rawClientData = Base64Utils.decodeFromUrlSafeString(clientData);
             byte[] rawAuthenticatorData = Base64Utils.decodeFromUrlSafeString(authenticatorData);
