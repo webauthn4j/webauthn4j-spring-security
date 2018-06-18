@@ -1,16 +1,16 @@
-package net.sharplab.springframework.security.webauthn.sample.util.modelmapper.converter;
+package net.sharplab.springframework.security.webauthn.sample.util.modelmapper;
 
 import com.webauthn4j.attestation.authenticator.AttestedCredentialData;
-import com.webauthn4j.attestation.authenticator.CredentialPublicKey;
-import com.webauthn4j.attestation.authenticator.ECCredentialPublicKey;
 import net.sharplab.springframework.security.webauthn.sample.domain.config.ModelMapperConfig;
 import net.sharplab.springframework.security.webauthn.sample.domain.vo.AttestedCredentialDataVO;
+import net.sharplab.springframework.security.webauthn.sample.domain.vo.CredentialPublicKeyVO;
+import net.sharplab.springframework.security.webauthn.sample.domain.vo.ECCredentialPublicKeyVO;
 import org.junit.Test;
 import org.modelmapper.ModelMapper;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class AttestedCredentialDataToAttestedCredentialDataVOConverterTest {
+public class AttestedCredentialDataVOToAttestedCredentialDataConverterTest {
 
     @Test
     public void test(){
@@ -19,10 +19,13 @@ public class AttestedCredentialDataToAttestedCredentialDataVOConverterTest {
         //Given
         byte[] aaGuid = new byte[16];
         byte[] credentialId = new byte[32];
-        CredentialPublicKey credentialPublicKey = new ECCredentialPublicKey();
-        AttestedCredentialData source = new AttestedCredentialData(aaGuid, credentialId, credentialPublicKey);
+        CredentialPublicKeyVO credentialPublicKey = new ECCredentialPublicKeyVO();
+        AttestedCredentialDataVO source = new AttestedCredentialDataVO();
+        source.setAaGuid(aaGuid);
+        source.setCredentialId(credentialId);
+        source.setCredentialPublicKey(credentialPublicKey);
 
-        AttestedCredentialDataVO destination = new AttestedCredentialDataVO();
+        AttestedCredentialData destination = new AttestedCredentialData(null, null, null);
 
 
         //When
