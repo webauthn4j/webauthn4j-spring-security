@@ -1,5 +1,7 @@
 package net.sharplab.springframework.security.webauthn.sample.domain.vo;
 
+import com.webauthn4j.attestation.statement.COSEAlgorithmIdentifier;
+
 import java.util.List;
 
 /**
@@ -9,16 +11,16 @@ public class PackedAttestationStatementVO implements AttestationStatementVO {
 
     private static final String FORMAT = "packed";
 
-    private String alg;
+    private COSEAlgorithmIdentifier alg;
     private byte[] sig;
     private List<byte[]> x5c;
     private byte[] ecdaaKeyId;
 
-    public String getAlg() {
+    public COSEAlgorithmIdentifier getAlg() {
         return alg;
     }
 
-    public void setAlg(String alg) {
+    public void setAlg(COSEAlgorithmIdentifier alg) {
         this.alg = alg;
     }
 

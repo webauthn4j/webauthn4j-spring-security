@@ -1,5 +1,6 @@
 package net.sharplab.springframework.security.webauthn.sample.infrastructure.util.jpa.converter;
 
+import com.webauthn4j.attestation.statement.COSEAlgorithmIdentifier;
 import net.sharplab.springframework.security.webauthn.sample.domain.vo.AttestationStatementVO;
 import net.sharplab.springframework.security.webauthn.sample.domain.vo.FIDOU2FAttestationStatementVO;
 import net.sharplab.springframework.security.webauthn.sample.domain.vo.PackedAttestationStatementVO;
@@ -29,8 +30,8 @@ public class AttestationStatementVOConverterTest {
     @Test
     public void testPackedAttestationStatementVO(){
         PackedAttestationStatementVO original= new PackedAttestationStatementVO();
-        //original.setAlg(); //TODO
-        //original.setEcdaaKeyId(); //TODO
+        original.setAlg(COSEAlgorithmIdentifier.ES256);
+        original.setEcdaaKeyId(new byte[]{0x01, 0x23});
         original.setSig(new byte[]{0b00, 0b01});
         original.setX5c(Arrays.asList(new byte[]{0b10, 0b11}));
         String serialized = target.convertToDatabaseColumn(original);
