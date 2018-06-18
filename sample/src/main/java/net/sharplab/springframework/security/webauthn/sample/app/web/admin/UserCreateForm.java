@@ -37,11 +37,9 @@ public class UserCreateForm {
     @Valid
     private List<AuthenticatorCreateForm> newAuthenticators;
 
-    @NotNull
-    private Boolean passwordAuthenticationAllowed;
+    private boolean passwordAuthenticationAllowed;
 
-    @NotNull
-    private Boolean locked;
+    private boolean locked;
 
     public String getUserHandle() {
         return userHandle;
@@ -99,19 +97,19 @@ public class UserCreateForm {
         this.newAuthenticators = newAuthenticators;
     }
 
-    public Boolean getPasswordAuthenticationAllowed() {
+    public boolean isPasswordAuthenticationAllowed() {
         return passwordAuthenticationAllowed;
     }
 
-    public void setPasswordAuthenticationAllowed(Boolean passwordAuthenticationAllowed) {
+    public void setPasswordAuthenticationAllowed(boolean passwordAuthenticationAllowed) {
         this.passwordAuthenticationAllowed = passwordAuthenticationAllowed;
     }
 
-    public Boolean getLocked() {
+    public boolean isLocked() {
         return locked;
     }
 
-    public void setLocked(Boolean locked) {
+    public void setLocked(boolean locked) {
         this.locked = locked;
     }
 }
