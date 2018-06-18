@@ -23,6 +23,7 @@
 
         <div class="message-panel" th:replace="template/template :: message-panel"></div>
         <form th:object="${userCreateForm}" th:action="@{'/signup'}" id="signup-form" method="post">
+            <input type="hidden" id="locked" name="locked" th:value="false" />
             <input type="hidden" id="userHandle" name="userHandle" th:value="*{userHandle}" />
             <div class="form-group has-feedback">
                 <input class="form-control input" placeholder="First Name" th:placeholder="#{v.users.firstName}" id="firstName" name="firstName" th:value="*{firstName}" />
