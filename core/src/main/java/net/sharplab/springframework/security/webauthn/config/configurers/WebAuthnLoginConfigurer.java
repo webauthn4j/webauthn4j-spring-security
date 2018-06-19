@@ -23,6 +23,7 @@ import net.sharplab.springframework.security.webauthn.metadata.MetadataProvider;
 import net.sharplab.springframework.security.webauthn.server.ServerPropertyProvider;
 import org.springframework.security.authentication.AuthenticationTrustResolver;
 import org.springframework.security.authentication.MFATokenEvaluator;
+import org.springframework.security.authentication.MFATokenEvaluatorImpl;
 import org.springframework.security.config.annotation.web.HttpSecurityBuilder;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.annotation.web.configurers.AbstractAuthenticationFilterConfigurer;
@@ -47,19 +48,18 @@ import static net.sharplab.springframework.security.webauthn.WebAuthnProcessingF
  * <ul>
  * <li>{@link WebAuthnProcessingFilter}</li>
  * <li>{@link WebAuthnFirstOfMultiFactorDelegatingAuthenticationProvider}</li>
+ * <li>{@link MetadataEndpointFilter}</li>
  * </ul>
  *
  * <h2>Shared Objects Created</h2>
  * <p>
- * No shared objects are populated
- *
- * <h2>Shared Objects Used</h2>
- * <p>
- * The following shared objects are populated:
- *
+ * The following shared objects are populated
  * <ul>
  * <li>{@link MFATokenEvaluator}</li>
  * </ul>
+ *
+ * <h2>Shared Objects Used</h2>
+ * <p>
  * The following shared objects are used:
  *
  * <ul>
@@ -83,6 +83,7 @@ public final class WebAuthnLoginConfigurer<H extends HttpSecurityBuilder<H>> ext
         clientDataParameter(SPRING_SECURITY_FORM_CLIENTDATA_KEY);
         authenticatorDataParameter(SPRING_SECURITY_FORM_AUTHENTICATOR_DATA_KEY);
         signatureParameter(SPRING_SECURITY_FORM_SIGNATURE_KEY);
+        clientExtensionsJSONParameter(SPRING_SECURITY_FORM_CLIENT_EXTENSIONS_JSON_PARAMETER);
     }
 
     public static WebAuthnLoginConfigurer webAuthnLogin() {
@@ -96,6 +97,9 @@ public final class WebAuthnLoginConfigurer<H extends HttpSecurityBuilder<H>> ext
     public void init(H http) throws Exception {
         super.init(http);
 
+        if(mfaTokenEvaluator == null){
+            mfaTokenEvaluator = new MFATokenEvaluatorImpl();
+        }
         http.setSharedObject(MFATokenEvaluator.class, mfaTokenEvaluator);
     }
 
@@ -114,9 +118,7 @@ public final class WebAuthnLoginConfigurer<H extends HttpSecurityBuilder<H>> ext
 
         MFATokenEvaluator sharedMFATokenEvaluator = http
                 .getSharedObject(MFATokenEvaluator.class);
-        if (sharedMFATokenEvaluator != null) {
-            metadataEndpointFilter.setMFATokenEvaluator(sharedMFATokenEvaluator);
-        }
+        metadataEndpointFilter.setMFATokenEvaluator(sharedMFATokenEvaluator);
 
         http.addFilterAfter(metadataEndpointFilter, SessionManagementFilter.class);
     }
@@ -204,7 +206,7 @@ public final class WebAuthnLoginConfigurer<H extends HttpSecurityBuilder<H>> ext
      * is "clientExtensionsJSON".
      *
      * @param clientExtensionsJSONParameter the HTTP parameter to look for the clientExtensionsJSON when
-     *                           performing authentication
+     *                                      performing authentication
      * @return the {@link WebAuthnLoginConfigurer} for additional customization
      */
     public WebAuthnLoginConfigurer<H> clientExtensionsJSONParameter(String clientExtensionsJSONParameter) {

@@ -49,16 +49,20 @@ public class MetadataEndpointFilter extends GenericFilterBean {
      * Url this filter should get activated on.
      */
     protected String filterProcessesUrl = FILTER_URL;
-
     protected MessageSourceAccessor messages = SpringSecurityMessageSource.getAccessor();
+
     private MetadataProvider metadataProvider;
-    private AuthenticationTrustResolver trustResolver = new AuthenticationTrustResolverImpl();
-    private MFATokenEvaluator mfaTokenEvaluator = new MFATokenEvaluatorImpl();
-    private ObjectMapper objectMapper = new ObjectMapper();
+    private AuthenticationTrustResolver trustResolver;
+    private MFATokenEvaluator mfaTokenEvaluator;
+    private ObjectMapper objectMapper;
 
     public MetadataEndpointFilter(MetadataProvider metadataProvider) {
         this.metadataProvider = metadataProvider;
+        trustResolver = new AuthenticationTrustResolverImpl();
+        mfaTokenEvaluator = new MFATokenEvaluatorImpl();
+        objectMapper = new ObjectMapper();
     }
+
 
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {

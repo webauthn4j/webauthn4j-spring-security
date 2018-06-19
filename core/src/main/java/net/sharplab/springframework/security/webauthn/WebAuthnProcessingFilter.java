@@ -17,8 +17,10 @@
 package net.sharplab.springframework.security.webauthn;
 
 import com.webauthn4j.server.ServerProperty;
+import net.sharplab.springframework.security.webauthn.challenge.HttpSessionChallengeRepository;
 import net.sharplab.springframework.security.webauthn.request.WebAuthnAuthenticationRequest;
 import net.sharplab.springframework.security.webauthn.server.ServerPropertyProvider;
+import net.sharplab.springframework.security.webauthn.server.ServerPropertyProviderImpl;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AbstractAuthenticationToken;
 import org.springframework.security.authentication.AuthenticationServiceException;
@@ -59,20 +61,30 @@ public class WebAuthnProcessingFilter extends UsernamePasswordAuthenticationFilt
     private String signatureParameter = SPRING_SECURITY_FORM_SIGNATURE_KEY;
     private String clientExtensionsJSONParameter = SPRING_SECURITY_FORM_CLIENT_EXTENSIONS_JSON_PARAMETER;
 
-
-    private ServerPropertyProvider serverPropertyProvider; //TODO: init
+    private ServerPropertyProvider serverPropertyProvider;
 
 
     private boolean postOnly = true;
 
+    /**
+     * Default constructor
+     */
     public WebAuthnProcessingFilter() {
-        this(AuthorityUtils.createAuthorityList("ROLE_ANONYMOUS"));
+        this(AuthorityUtils.createAuthorityList("ROLE_ANONYMOUS"), new ServerPropertyProviderImpl(new HttpSessionChallengeRepository()));
     }
 
-    public WebAuthnProcessingFilter(List<GrantedAuthority> authorities) {
+    /**
+     * Constructor
+     *
+     * @param authorities            authorities for FirstOfMultiFactorAuthenticationToken
+     * @param serverPropertyProvider provider for ServerProperty
+     */
+    public WebAuthnProcessingFilter(List<GrantedAuthority> authorities, ServerPropertyProvider serverPropertyProvider) {
         super();
-        Assert.notNull(authorities, "Anonymous authorities must be set");
+        Assert.notNull(authorities, "authorities must be set");
+        Assert.notNull(serverPropertyProvider, "serverPropertyProvider must be set");
         this.authorities = authorities;
+        this.serverPropertyProvider = serverPropertyProvider;
     }
 
     @Override
@@ -117,31 +129,6 @@ public class WebAuthnProcessingFilter extends UsernamePasswordAuthenticationFilt
         setDetails(request, authRequest);
 
         return this.getAuthenticationManager().authenticate(authRequest);
-    }
-
-    private String obtainClientData(HttpServletRequest request) {
-        return request.getParameter(clientDataParameter);
-    }
-
-    private String obtainCredentialId(HttpServletRequest request) {
-        return request.getParameter(credentialIdParameter);
-    }
-
-    private String obtainAuthenticatorData(HttpServletRequest request) {
-        return request.getParameter(authenticatorDataParameter);
-    }
-
-    private String obtainSignatureData(HttpServletRequest request) {
-        return request.getParameter(signatureParameter);
-    }
-
-    private String obtainClientExtensionsJSON(HttpServletRequest request) {
-        return request.getParameter(clientExtensionsJSONParameter);
-    }
-
-    private void setDetails(HttpServletRequest request,
-                            AbstractAuthenticationToken authRequest) {
-        authRequest.setDetails(authenticationDetailsSource.buildDetails(request));
     }
 
     /**
@@ -206,5 +193,31 @@ public class WebAuthnProcessingFilter extends UsernamePasswordAuthenticationFilt
 
     public void setServerPropertyProvider(ServerPropertyProvider serverPropertyProvider) {
         this.serverPropertyProvider = serverPropertyProvider;
+    }
+
+
+    private String obtainClientData(HttpServletRequest request) {
+        return request.getParameter(clientDataParameter);
+    }
+
+    private String obtainCredentialId(HttpServletRequest request) {
+        return request.getParameter(credentialIdParameter);
+    }
+
+    private String obtainAuthenticatorData(HttpServletRequest request) {
+        return request.getParameter(authenticatorDataParameter);
+    }
+
+    private String obtainSignatureData(HttpServletRequest request) {
+        return request.getParameter(signatureParameter);
+    }
+
+    private String obtainClientExtensionsJSON(HttpServletRequest request) {
+        return request.getParameter(clientExtensionsJSONParameter);
+    }
+
+    private void setDetails(HttpServletRequest request,
+                            AbstractAuthenticationToken authRequest) {
+        authRequest.setDetails(authenticationDetailsSource.buildDetails(request));
     }
 }
