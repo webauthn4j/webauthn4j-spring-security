@@ -50,6 +50,11 @@ public class ProfileForm {
     private String emailAddress;
 
     /**
+     * require residentKey
+     */
+    private boolean requireResidentKey;
+
+    /**
      * authenticators
      */
     @Valid
@@ -97,6 +102,14 @@ public class ProfileForm {
 
     public void setEmailAddress(String emailAddress) {
         this.emailAddress = emailAddress;
+    }
+
+    public boolean isRequireResidentKey() {
+        return requireResidentKey;
+    }
+
+    public void setRequireResidentKey(boolean requireResidentKey) {
+        this.requireResidentKey = requireResidentKey;
     }
 
     public List<AuthenticatorUpdateForm> getAuthenticators() {

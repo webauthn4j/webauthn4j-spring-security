@@ -34,6 +34,8 @@ public class UserCreateForm {
     @NotEmpty
     private String rawPasswordRetyped;
 
+    private boolean requireResidentKey;
+
     @Valid
     private List<AuthenticatorCreateForm> newAuthenticators;
 
@@ -87,6 +89,14 @@ public class UserCreateForm {
 
     public void setRawPasswordRetyped(String rawPasswordRetyped) {
         this.rawPasswordRetyped = rawPasswordRetyped;
+    }
+
+    public boolean isRequireResidentKey() {
+        return requireResidentKey;
+    }
+
+    public void setRequireResidentKey(boolean requireResidentKey) {
+        this.requireResidentKey = requireResidentKey;
     }
 
     public List<AuthenticatorCreateForm> getNewAuthenticators() {

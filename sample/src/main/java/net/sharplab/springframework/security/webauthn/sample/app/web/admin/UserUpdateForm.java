@@ -26,6 +26,8 @@ public class UserUpdateForm {
     @Email
     private String emailAddress;
 
+    private boolean requireResidentKey;
+
     @Valid
     private List<AuthenticatorUpdateForm> authenticators;
 
@@ -66,6 +68,14 @@ public class UserUpdateForm {
 
     public void setEmailAddress(String emailAddress) {
         this.emailAddress = emailAddress;
+    }
+
+    public boolean isRequireResidentKey() {
+        return requireResidentKey;
+    }
+
+    public void setRequireResidentKey(boolean requireResidentKey) {
+        this.requireResidentKey = requireResidentKey;
     }
 
     public List<AuthenticatorUpdateForm> getAuthenticators() {

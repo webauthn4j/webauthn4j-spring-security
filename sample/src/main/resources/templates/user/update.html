@@ -82,6 +82,12 @@
                                                 </div>
                                             </div>
                                             <div class="box-body no-padding">
+                                                <div class="checkbox">
+                                                    <label for="requireResidentKey" class="control-label">
+                                                        <input type="checkbox" id="requireResidentKey" name="requireResidentKey" th:checked="*{requireResidentKey}" />
+                                                        <span th:text="#{v.users.requireResidentKey}">Enable password-less authentication</span>
+                                                    </label>
+                                                </div>
                                                 <table class="table table-hover">
                                                     <thead>
                                                     <tr>

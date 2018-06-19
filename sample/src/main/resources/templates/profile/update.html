@@ -82,6 +82,12 @@
                                                 </div>
                                             </div>
                                             <div class="box-body no-padding">
+                                                <div class="checkbox">
+                                                    <label for="requireResidentKey" class="control-label">
+                                                        <input type="checkbox" id="requireResidentKey" name="requireResidentKey" th:checked="*{requireResidentKey}" />
+                                                        <span th:text="#{v.users.requireResidentKey}">Enable password-less authentication</span>
+                                                    </label>
+                                                </div>
                                                 <table class="table table-hover">
                                                     <thead>
                                                     <tr>
@@ -125,13 +131,13 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="form-group">
-                            <label for="passwordAuthenticationAllowed" class="col-sm-2 control-label" th:text="#{v.users.passwordAuthenticationAllowed}">Allow password authentication</label>
-                            <div class="input-group col-sm-9">
+                        <div class="checkbox">
+                            <label for="passwordAuthenticationAllowed" class="control-label">
                                 <input type="checkbox" id="passwordAuthenticationAllowed" name="passwordAuthenticationAllowed" th:checked="*{passwordAuthenticationAllowed}" />
-                                <div class="has-error" th:if="${#fields.hasErrors('passwordAuthenticationAllowed')}">
-                                    <span class="help-block" th:errors="*{passwordAuthenticationAllowed}" >Validation error message</span>
-                                </div>
+                                <span th:text="#{v.users.passwordAuthenticationAllowed}">Allow password authentication</span>
+                            </label>
+                            <div class="has-error" th:if="${#fields.hasErrors('passwordAuthenticationAllowed')}">
+                                <span class="help-block" th:errors="*{passwordAuthenticationAllowed}" >Validation error message</span>
                             </div>
                         </div>
                         <div class="form-group">
