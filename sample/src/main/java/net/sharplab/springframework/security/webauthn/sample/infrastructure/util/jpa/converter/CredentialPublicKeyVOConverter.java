@@ -2,6 +2,7 @@ package net.sharplab.springframework.security.webauthn.sample.infrastructure.uti
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.webauthn4j.converter.jackson.ObjectMapperUtil;
 import net.sharplab.springframework.security.webauthn.sample.domain.vo.AbstractCredentialPublicKeyVO;
 
 import javax.persistence.AttributeConverter;
@@ -12,7 +13,7 @@ import java.io.UncheckedIOException;
 @Converter
 public class CredentialPublicKeyVOConverter implements AttributeConverter<AbstractCredentialPublicKeyVO, String> {
 
-    private ObjectMapper objectMapper = new ObjectMapper();
+    private ObjectMapper objectMapper = ObjectMapperUtil.createWebAuthnClassesAwareJSONMapper();
 
     @Override
     public String convertToDatabaseColumn(AbstractCredentialPublicKeyVO attribute) {
