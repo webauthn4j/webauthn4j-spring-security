@@ -1,6 +1,6 @@
 package net.sharplab.springframework.security.webauthn.sample.domain.vo;
 
-import java.util.List;
+import com.webauthn4j.attestation.statement.AttestationCertificatePath;
 
 /**
  * FIDOU2FAttestationStatementVO
@@ -9,14 +9,14 @@ public class FIDOU2FAttestationStatementVO implements AttestationStatementVO {
 
     private static final String FORMAT = "fido-u2f";
 
-    private List<byte[]> x5c;
+    private AttestationCertificatePath x5c;
     private byte[] sig;
 
-    public List<byte[]> getX5c() {
+    public AttestationCertificatePath getX5c() {
         return x5c;
     }
 
-    public void setX5c(List<byte[]> x5c) {
+    public void setX5c(AttestationCertificatePath x5c) {
         this.x5c = x5c;
     }
 

@@ -37,6 +37,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsChecker;
 
 import java.io.Serializable;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
@@ -59,7 +60,7 @@ public class WebAuthnAuthenticationProvider implements AuthenticationProvider {
     private UserDetailsChecker postAuthenticationChecks = new DefaultPostAuthenticationChecks();
     private GrantedAuthoritiesMapper authoritiesMapper = new NullAuthoritiesMapper();
 
-    private List<String> expectedAuthenticationExtensionIds;
+    private List<String> expectedAuthenticationExtensionIds = Collections.emptyList();
 
     public WebAuthnAuthenticationProvider(
             WebAuthnUserDetailsService webAuthnUserDetailsService,

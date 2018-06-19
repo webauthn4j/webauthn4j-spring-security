@@ -91,8 +91,8 @@ public class UserHelper {
             authenticators.add(authenticatorHelper.mapForUpdate(authenticatorCreateForm, null));
         }
         destination.setAuthenticators(authenticators);
-        destination.setLocked(source.getLocked());
-        destination.setPasswordAuthenticationAllowed(source.getPasswordAuthenticationAllowed());
+        destination.setLocked(source.isLocked());
+        destination.setPasswordAuthenticationAllowed(source.isPasswordAuthenticationAllowed());
 
         return destination;
 
@@ -135,8 +135,8 @@ public class UserHelper {
             authenticators.add(authenticatorHelper.mapForUpdate(authenticatorCreateForm, null));
         }
         destination.setAuthenticators(authenticators);
-        destination.setLocked(source.getLocked());
-        destination.setPasswordAuthenticationAllowed(source.getPasswordAuthenticationAllowed());
+        destination.setLocked(source.isLocked());
+        destination.setPasswordAuthenticationAllowed(source.isPasswordAuthenticationAllowed());
 
         return destination;
     }
