@@ -45,6 +45,7 @@ LoginViewModel.prototype.tryLoginWithPublicKeyCredential = function (){
         })
         .catch(function (error) { // fall back to login form
             $("#gesture-request-modal").modal('hide');
+            console.error(error);
         });
 };
 
@@ -89,7 +90,8 @@ LoginViewModel.prototype.loginWithPublicKeyCredential = function (credential) {
     let clientData = credential.response.clientDataJSON;
     let authenticatorData = credential.response.authenticatorData;
     let signature = credential.response.signature;
-    let clientExtensions = credential.getClientExtensionResults();
+    // let clientExtensions = credential.getClientExtensionResults(); //Edge preview throws exception as of build 180603-1447
+    let clientExtensions = {};
 
     _this.loginByFormSubmission(null, null, credentialId, clientData, authenticatorData, signature, clientExtensions);
 };
