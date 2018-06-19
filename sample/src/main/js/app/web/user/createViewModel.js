@@ -40,6 +40,10 @@ UserCreateViewModel.prototype.addCredential = function (){
             {
                 alg: -7,
                 type: "public-key",
+            },
+            {
+                alg: -257, //Windows Hello
+                type: "public-key",
             }
         ],
         //timeout
