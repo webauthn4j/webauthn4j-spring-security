@@ -13,12 +13,12 @@ import java.io.UncheckedIOException;
 @Converter
 public class CredentialPublicKeyVOConverter implements AttributeConverter<AbstractCredentialPublicKeyVO, String> {
 
-    private ObjectMapper objectMapper = ObjectMapperUtil.createWebAuthnClassesAwareJSONMapper();
+    private ObjectMapper jsonMapper = ObjectMapperUtil.createWebAuthnClassesAwareJSONMapper();
 
     @Override
     public String convertToDatabaseColumn(AbstractCredentialPublicKeyVO attribute) {
         try {
-            return objectMapper.writeValueAsString(attribute);
+            return jsonMapper.writeValueAsString(attribute);
         } catch (JsonProcessingException e) {
             throw new IllegalArgumentException(e);
         }
@@ -27,7 +27,7 @@ public class CredentialPublicKeyVOConverter implements AttributeConverter<Abstra
     @Override
     public AbstractCredentialPublicKeyVO convertToEntityAttribute(String dbData) {
         try {
-            return objectMapper.readValue(dbData, AbstractCredentialPublicKeyVO.class);
+            return jsonMapper.readValue(dbData, AbstractCredentialPublicKeyVO.class);
         } catch (IOException e) {
             throw new UncheckedIOException(e);
         }
