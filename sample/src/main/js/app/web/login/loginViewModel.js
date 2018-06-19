@@ -64,7 +64,7 @@ LoginViewModel.prototype.getPublicKeyCredential = function (){
         challenge: challenge,
         //timeout: null,
         //rpId: null,
-        allowCredentials: {},
+        //allowCredentials: null,
         userVerification: "required",
         extensions: {}
     };

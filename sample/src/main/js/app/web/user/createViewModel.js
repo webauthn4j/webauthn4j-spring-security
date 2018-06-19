@@ -44,7 +44,10 @@ UserCreateViewModel.prototype.addCredential = function (){
         ],
         //timeout
         //excludeCredentials = []
-        //authenticatorSelection
+        //TODO: provide UI for requireResidentKey option
+        //authenticatorSelection: {
+        //    requireResidentKey: true
+        //},
         attestation: "none",
         //extensions
     };
