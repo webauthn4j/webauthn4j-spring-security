@@ -20,3 +20,7 @@ spring:
 
   flyway:
     locations: classpath:db/migration/{vendor}
+server:
+  servlet:
+    session:
+      tracking-modes: cookie
