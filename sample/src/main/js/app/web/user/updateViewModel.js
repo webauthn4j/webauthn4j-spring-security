@@ -39,7 +39,11 @@ UserUpdateViewModel.prototype.addCredential = function (){
         pubKeyCredParams: [
             {
                 alg: -7,
-                type: "public-key",
+                type: "public-key"
+            },
+            {
+                alg: -257, //Windows Hello
+                type: "public-key"
             }
         ],
         //timeout
@@ -53,6 +57,7 @@ UserUpdateViewModel.prototype.addCredential = function (){
     let credentialCreationOptions = {
         publicKey: makePublicKeyCredentialOptions
     };
+
     $("#gesture-request-modal").modal('show');
     navigator.credentials.create(credentialCreationOptions).then(function(credential){
         $("#gesture-request-modal").modal('hide');
@@ -62,7 +67,6 @@ UserUpdateViewModel.prototype.addCredential = function (){
         // let clientExtensions = credential.getClientExtensionResults(); //Edge preview throws exception as of build 180603-1447
         let clientExtensions = {};
         _this.addCredentialForm(userHandle, clientData, attestationObject, clientExtensions);
-        _this.addCredentialForm(credential.response.clientDataJSON, credential.response.attestationObject, credential.getClientExtensionResults());
     }).catch(function(error){
         $("#gesture-request-modal").modal('hide');
         console.error(error);

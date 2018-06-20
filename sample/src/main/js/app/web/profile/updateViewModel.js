@@ -39,12 +39,18 @@ ProfileUpdateViewModel.prototype.addCredential = function (){
         pubKeyCredParams: [
             {
                 alg: -7,
-                type: "public-key",
+                type: "public-key"
+            },
+            {
+                alg: -257, //Windows Hello
+                type: "public-key"
             }
         ],
         //timeout
         //excludeCredentials = []
-        //authenticatorSelection
+        authenticatorSelection: {
+            requireResidentKey: $('#requireResidentKey').prop("checked")
+        },
         attestation: "none",
         //extensions
     };
@@ -56,17 +62,15 @@ ProfileUpdateViewModel.prototype.addCredential = function (){
     navigator.credentials.create(credentialCreationOptions).then(function(credential){
         $("#gesture-request-modal").modal('hide');
         console.log(credential);
-        _this.saveCredentialId(credential.rawId);
-        _this.addCredentialForm(credential.response.clientDataJSON, credential.response.attestationObject, credential.getClientExtensionResults());
+        let clientData = credential.response.clientDataJSON;
+        let attestationObject = credential.response.attestationObject;
+        // let clientExtensions = credential.getClientExtensionResults(); //Edge preview throws exception as of build 180603-1447
+        let clientExtensions = {};
+        _this.addCredentialForm(userHandle, clientData, attestationObject, clientExtensions);
     }).catch(function(error){
         $("#gesture-request-modal").modal('hide');
         console.error(error);
     });
-};
-
-ProfileUpdateViewModel.prototype.saveCredentialId = function (credentialId) {
-    let encodedId = base64url.encode(credentialId);
-    localStorage.setItem('net.sharplab.springframework.security.webauthn.credentialId', encodedId);
 };
 
 ProfileUpdateViewModel.prototype.addCredentialForm = function (clientData, attestationObject, clientExtensions) {
@@ -96,7 +100,9 @@ ProfileUpdateViewModel.prototype.setupEventListeners = function () {
     $('#add-credential-button').on('click', function(e){
         _this.addCredential();
     });
-    $('#authenticator-list .remove-button').on('click', function(){ $(this).closest('tr.authenticator-item').fadeOut().find('input.delete').val('true');});
+    $('#authenticator-list .remove-button').on('click', function(){
+        $(this).closest('tr.authenticator-item').fadeOut().find('input.delete').val('true');
+    });
 };
 
 module.exports = new ProfileUpdateViewModel();

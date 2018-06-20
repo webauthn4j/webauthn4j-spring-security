@@ -119,8 +119,8 @@
                                                             <td>
                                                                 <input type="text" th:name="|newAuthenticators[${stat.index}].name|" th:value="${newAuthenticator.name}" value="Office Laptop"
                                                                        class="form-control input" placeholder="Authenticator Name" />
-                                                                <input type="hidden" th:name="|newAuthenticators[${stat.index}].clientData|" th:value="${newAuthenticator.clientData.clientDataBase64}" />
-                                                                <input type="hidden" th:name="|newAuthenticators[${stat.index}].attestationObject|" th:value="${newAuthenticator.attestationObject.attestationObjectBase64}" />
+                                                                <input type="hidden" th:name="|newAuthenticators[${stat.index}].clientData|" th:value="${newAuthenticator.clientData.clientData}" />
+                                                                <input type="hidden" th:name="|newAuthenticators[${stat.index}].attestationObject|" th:value="${newAuthenticator.attestationObject.attestationObject}" />
                                                                 <input type="hidden" th:name="|newAuthenticators[${stat.index}].delete|" class="delete" value="false" />
                                                             </td>
 
