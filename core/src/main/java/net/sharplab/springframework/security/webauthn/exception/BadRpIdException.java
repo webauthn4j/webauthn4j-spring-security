@@ -22,11 +22,11 @@ import org.springframework.security.core.AuthenticationException;
  * Thrown if bad rpId is specified
  */
 public class BadRpIdException extends AuthenticationException {
-    public BadRpIdException(String msg, Throwable cause) {
-        super(msg, cause);
+    public BadRpIdException(String message, Throwable cause) {
+        super(message, cause);
     }
 
-    public BadRpIdException(String msg) {
-        super(msg);
+    public BadRpIdException(String message) {
+        super(message);
     }
 }

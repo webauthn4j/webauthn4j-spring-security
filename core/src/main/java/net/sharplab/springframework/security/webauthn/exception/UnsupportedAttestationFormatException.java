@@ -23,11 +23,11 @@ import org.springframework.security.core.AuthenticationException;
  * Thrown if unsupported attestation format is specified
  */
 public class UnsupportedAttestationFormatException extends AuthenticationException {
-    public UnsupportedAttestationFormatException(String msg, Throwable cause) {
-        super(msg, cause);
+    public UnsupportedAttestationFormatException(String message, Throwable cause) {
+        super(message, cause);
     }
 
-    public UnsupportedAttestationFormatException(String msg) {
-        super(msg);
+    public UnsupportedAttestationFormatException(String message) {
+        super(message);
     }
 }

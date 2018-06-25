@@ -22,11 +22,11 @@ import org.springframework.security.core.AuthenticationException;
  * Thrown if self attestation is specified while prohibited
  */
 public class SelfAttestationProhibitedException extends AuthenticationException {
-    public SelfAttestationProhibitedException(String msg, Throwable cause) {
-        super(msg, cause);
+    public SelfAttestationProhibitedException(String message, Throwable cause) {
+        super(message, cause);
     }
 
-    public SelfAttestationProhibitedException(String msg) {
-        super(msg);
+    public SelfAttestationProhibitedException(String message) {
+        super(message);
     }
 }

@@ -22,11 +22,11 @@ import org.springframework.security.core.AuthenticationException;
  * Thrown if an authentication request is rejected because credentialId is not found.
  */
 public class CredentialIdNotFoundException extends AuthenticationException {
-    public CredentialIdNotFoundException(String msg) {
-        super(msg);
+    public CredentialIdNotFoundException(String message) {
+        super(message);
     }
 
-    public CredentialIdNotFoundException(String msg, Throwable cause) {
-        super(msg, cause);
+    public CredentialIdNotFoundException(String message, Throwable cause) {
+        super(message, cause);
     }
 }

@@ -23,11 +23,11 @@ import org.springframework.security.core.AuthenticationException;
  * Thrown if the challenge doesn't exist in the session
  */
 public class MissingChallengeException extends AuthenticationException {
-    public MissingChallengeException(String msg, Throwable cause) {
-        super(msg, cause);
+    public MissingChallengeException(String message, Throwable cause) {
+        super(message, cause);
     }
 
-    public MissingChallengeException(String msg) {
-        super(msg);
+    public MissingChallengeException(String message) {
+        super(message);
     }
 }

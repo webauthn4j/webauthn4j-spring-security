@@ -23,11 +23,11 @@ import org.springframework.security.core.AuthenticationException;
  * Thrown if bad signature is specified
  */
 public class BadSignatureException extends AuthenticationException {
-    public BadSignatureException(String msg, Throwable cause) {
-        super(msg, cause);
+    public BadSignatureException(String message, Throwable cause) {
+        super(message, cause);
     }
 
-    public BadSignatureException(String msg) {
-        super(msg);
+    public BadSignatureException(String message) {
+        super(message);
     }
 }
