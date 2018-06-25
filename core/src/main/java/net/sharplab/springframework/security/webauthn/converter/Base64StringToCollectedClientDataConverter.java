@@ -21,7 +21,7 @@ import com.webauthn4j.converter.CollectedClientDataConverter;
 import org.springframework.core.convert.converter.Converter;
 
 /**
- * Converter which converts from Base64{@link String} to {@link CollectedClientData}
+ * Spring converter which converts from Base64{@link String} to {@link CollectedClientData}
  */
 public class Base64StringToCollectedClientDataConverter implements Converter<String, CollectedClientData> {
 

@@ -21,7 +21,7 @@ import com.webauthn4j.converter.AttestationObjectConverter;
 import org.springframework.core.convert.converter.Converter;
 
 /**
- * Converter which converts from Base64{@link String} to {@link AttestationObject}
+ * Spring converter which converts from Base64{@link String} to {@link AttestationObject}
  */
 public class Base64StringToWebAuthnAttestationObjectConverter implements Converter<String, AttestationObject> {
 
