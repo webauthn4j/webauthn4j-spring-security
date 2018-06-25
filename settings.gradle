@@ -1,6 +1,7 @@
 include "core"
 include "thymeleaf"
 include "sample"
+include "test"
 
 rootProject.name = 'spring-security-webauthn'
 

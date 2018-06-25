@@ -1,0 +1,23 @@
+group 'net.sharplab.springframework.security.extensions'
+version "${springSecurityWebAuthnVersion}"
+
+description = "Spring Security WebAuthn test library"
+
+dependencies {
+    compile project(':spring-security-webauthn-core')
+    compile('junit:junit')
+    compile('org.springframework.boot:spring-boot-starter-test')
+    compile('org.springframework.security:spring-security-test')
+
+    //Test
+    testCompile('org.mockito:mockito-core')
+    testCompile('org.assertj:assertj-core')
+
+}
+
+dependencyManagement {
+    imports {
+        mavenBom "org.springframework.boot:spring-boot-dependencies:${springBootVersion}"
+        mavenBom "org.springframework.security:spring-security-bom:${springSecurityVersion}"
+    }
+}
