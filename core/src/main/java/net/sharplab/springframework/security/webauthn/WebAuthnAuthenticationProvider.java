@@ -161,6 +161,10 @@ public class WebAuthnAuthenticationProvider implements AuthenticationProvider {
             throw new MissingChallengeException("Missing challenge error", e);
         } catch (com.webauthn4j.validator.exception.SelfAttestationProhibitedException e) {
             throw new SelfAttestationProhibitedException("Self attestation is specified while prohibited", e);
+        } catch (com.webauthn4j.validator.exception.TokenBindingException e) {
+            throw new TokenBindingException("Token binding error", e);
+        } catch (com.webauthn4j.validator.exception.UnexpectedExtensionException e) {
+            throw new UnexpectedExtensionException("Unexpected extension is contained", e);
         } catch (com.webauthn4j.validator.exception.UnsupportedAttestationFormatException e) {
             throw new UnsupportedAttestationFormatException("Unsupported attestation format error", e);
         } catch (com.webauthn4j.validator.exception.UserNotPresentException e) {
