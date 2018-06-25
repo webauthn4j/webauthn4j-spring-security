@@ -16,10 +16,12 @@
 
 package net.sharplab.springframework.security.webauthn.exception;
 
+import org.springframework.security.core.AuthenticationException;
+
 /**
- * Created by ynojima on 2017/08/27.
+ * Thrown if self attestation is specified while prohibited
  */
-public class SelfAttestationProhibitedException extends WebAuthnRegistrationException {
+public class SelfAttestationProhibitedException extends AuthenticationException {
     public SelfAttestationProhibitedException(String msg, Throwable cause) {
         super(msg, cause);
     }

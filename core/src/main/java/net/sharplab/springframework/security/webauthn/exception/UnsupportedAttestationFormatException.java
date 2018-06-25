@@ -20,14 +20,14 @@ package net.sharplab.springframework.security.webauthn.exception;
 import org.springframework.security.core.AuthenticationException;
 
 /**
- * UnsupportedAttestationFormatException
+ * Thrown if unsupported attestation format is specified
  */
-public class UnsupportedArgumentException extends AuthenticationException {
-    public UnsupportedArgumentException(String msg, Throwable cause) {
+public class UnsupportedAttestationFormatException extends AuthenticationException {
+    public UnsupportedAttestationFormatException(String msg, Throwable cause) {
         super(msg, cause);
     }
 
-    public UnsupportedArgumentException(String msg) {
+    public UnsupportedAttestationFormatException(String msg) {
         super(msg);
     }
 }

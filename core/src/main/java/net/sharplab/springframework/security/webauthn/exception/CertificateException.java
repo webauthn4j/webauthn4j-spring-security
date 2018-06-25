@@ -19,7 +19,7 @@ package net.sharplab.springframework.security.webauthn.exception;
 import org.springframework.security.core.AuthenticationException;
 
 /**
- * Created by ynojima on 2017/08/29.
+ * Thrown if certificate problems happen
  */
 public class CertificateException extends AuthenticationException {
     public CertificateException(String message, Throwable cause) {

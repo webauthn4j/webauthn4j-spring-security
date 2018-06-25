@@ -19,7 +19,7 @@ package net.sharplab.springframework.security.webauthn.exception;
 import org.springframework.security.core.AuthenticationException;
 
 /**
- * BadChallengeException
+ * Thrown if bad challenge is detected
  */
 public class BadChallengeException extends AuthenticationException {
 

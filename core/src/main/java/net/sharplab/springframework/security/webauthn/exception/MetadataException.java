@@ -16,6 +16,9 @@
 
 package net.sharplab.springframework.security.webauthn.exception;
 
+/**
+ * Thrown if an error happen while processing metadata
+ */
 public class MetadataException extends RuntimeException {
     public MetadataException(String message, Throwable cause) {
         super(message, cause);

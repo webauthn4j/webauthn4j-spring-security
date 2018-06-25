@@ -137,24 +137,39 @@ public class WebAuthnAuthenticationProvider implements AuthenticationProvider {
 
         try {
             authenticationContextValidator.validate(authenticationContext, authenticator);
-        } catch (com.webauthn4j.validator.exception.MaliciousDataException e) {
-            throw new MaliciousDataException("Bad client data type", e);
+        } catch (com.webauthn4j.validator.exception.BadAlgorithmException e) {
+            throw new BadAlgorithmException("Bad algorithm", e);
+        } catch (com.webauthn4j.validator.exception.BadAttestationStatementException e) {
+            throw new MaliciousDataException("Bad attestation statement", e);
         } catch (com.webauthn4j.validator.exception.BadChallengeException e) {
             throw new BadChallengeException("Bad challenge", e);
         } catch (com.webauthn4j.validator.exception.BadOriginException e) {
             throw new BadOriginException("Bad origin", e);
         } catch (com.webauthn4j.validator.exception.BadRpIdException e) {
             throw new BadRpIdException("Bad rpId", e);
-        } catch (com.webauthn4j.validator.exception.UserNotVerifiedException e) {
-            throw new UserNotVerifiedException("User not verified", e);
-        } catch (com.webauthn4j.validator.exception.UserNotPresentException e) {
-            throw new UserNotPresentException("User not verified", e);
         } catch (com.webauthn4j.validator.exception.BadSignatureException e) {
             throw new BadSignatureException("Bad signature", e);
+        } catch (com.webauthn4j.validator.exception.CertificateException e) {
+            throw new CertificateException("Certificate error", e);
+        } catch (com.webauthn4j.validator.exception.ConstraintViolationException e) {
+            throw new ConstraintViolationException("Constraint violation error", e);
         } catch (com.webauthn4j.validator.exception.MaliciousCounterValueException e) {
             throw new MaliciousCounterValueException("Malicious counter value is detected. Cloned authenticators exist in parallel.", e);
+        } catch (com.webauthn4j.validator.exception.MaliciousDataException e) {
+            throw new MaliciousDataException("Bad client data type", e);
+        } catch (com.webauthn4j.validator.exception.MissingChallengeException e) {
+            throw new MissingChallengeException("Missing challenge error", e);
+        } catch (com.webauthn4j.validator.exception.SelfAttestationProhibitedException e) {
+            throw new SelfAttestationProhibitedException("Self attestation is specified while prohibited", e);
+        } catch (com.webauthn4j.validator.exception.UnsupportedAttestationFormatException e) {
+            throw new UnsupportedAttestationFormatException("Unsupported attestation format error", e);
+        } catch (com.webauthn4j.validator.exception.UserNotPresentException e) {
+            throw new UserNotPresentException("User not verified", e);
+        } catch (com.webauthn4j.validator.exception.UserNotVerifiedException e) {
+            throw new UserNotVerifiedException("User not verified", e);
+        } catch (com.webauthn4j.validator.exception.ValidationException e){
+            throw new AuthenticationServiceException("WebAuthn validation error", e);
         }
-
 
     }
 

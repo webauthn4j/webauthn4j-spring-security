@@ -19,7 +19,7 @@ package net.sharplab.springframework.security.webauthn.exception;
 import org.springframework.security.core.AuthenticationException;
 
 /**
- * BadRpIdException
+ * Thrown if bad rpId is specified
  */
 public class BadRpIdException extends AuthenticationException {
     public BadRpIdException(String msg, Throwable cause) {
