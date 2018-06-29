@@ -23,7 +23,7 @@ import org.springframework.core.convert.converter.Converter;
 /**
  * Spring converter which converts from Base64{@link String} to {@link AttestationObject}
  */
-public class Base64StringToWebAuthnAttestationObjectConverter implements Converter<String, AttestationObject> {
+public class Base64StringToAttestationObjectConverter implements Converter<String, AttestationObject> {
 
     //~ Instance fields
     // ================================================================================================

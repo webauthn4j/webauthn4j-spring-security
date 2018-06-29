@@ -41,7 +41,7 @@ dependencies {
     compile("org.lazyluke:log4jdbc-remix:${log4jdbcVersion}")
 
     //Test
-    testCompile("com.webauthn4j:webauthn4j-core:${webauthn4jVersion}")
+    testCompile("com.webauthn4j:webauthn4j-test:${webauthn4jVersion}")
     testCompile('org.springframework.boot:spring-boot-starter-test')
     testCompile('org.springframework.security:spring-security-test')
     testCompile('junit:junit')
