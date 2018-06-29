@@ -40,7 +40,6 @@ AuthenticatorLoginViewModel.prototype.tryLoginWithPublicKeyCredential = function
             }
         })
         .catch(function (error) { // fall back to login form
-            $("#gesture-request-modal").modal('hide');
             console.error(error);
         });
 };
@@ -51,8 +50,6 @@ AuthenticatorLoginViewModel.prototype.getPublicKeyCredential = function (){
     if(typeof navigator.credentials === "undefined"){
         return Promise.reject("Credential Management API is not supported.");
     }
-
-    $("#gesture-request-modal").modal('show');
 
     let challenge = this.loadChallenge();
     return this.loadCredentialIds().then(function(credentialIds){

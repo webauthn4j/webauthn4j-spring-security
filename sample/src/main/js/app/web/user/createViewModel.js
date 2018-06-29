@@ -58,9 +58,7 @@ UserCreateViewModel.prototype.addCredential = function (){
         publicKey: makePublicKeyCredentialOptions
     };
 
-    $("#gesture-request-modal").modal('show');
     navigator.credentials.create(credentialCreationOptions).then(function(credential){
-        $("#gesture-request-modal").modal('hide');
         console.log(credential);
         let clientData = credential.response.clientDataJSON;
         let attestationObject = credential.response.attestationObject;
@@ -68,7 +66,6 @@ UserCreateViewModel.prototype.addCredential = function (){
         let clientExtensions = {};
         _this.addCredentialForm(userHandle, clientData, attestationObject, clientExtensions);
     }).catch(function(error){
-        $("#gesture-request-modal").modal('hide');
         return Promise.reject(error);
     });
 };
