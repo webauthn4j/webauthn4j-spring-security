@@ -46,7 +46,7 @@ public class WebSecurityBeanConfig {
     }
 
     @Bean
-    public ServerPropertyProvider relyingPartyProvider(ChallengeRepository challengeRepository) {
+    public ServerPropertyProvider serverPropertyProvider(ChallengeRepository challengeRepository) {
         return new ServerPropertyProviderImpl(challengeRepository);
     }
 
@@ -58,11 +58,6 @@ public class WebSecurityBeanConfig {
     @Bean
     public WebAuthnRegistrationContextValidator webAuthnRegistrationContextValidator() {
         return WebAuthnRegistrationContextValidator.createNullAttestationStatementValidator();
-    }
-
-    @Bean
-    public ConditionProvider metadataProvider(WebAuthnUserDetailsService userDetailsService) {
-        return new ConditionProviderImpl(userDetailsService);
     }
 
     @Bean

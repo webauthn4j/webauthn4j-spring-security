@@ -22,8 +22,11 @@ import net.sharplab.springframework.security.webauthn.challenge.ChallengeReposit
 import net.sharplab.springframework.security.webauthn.challenge.HttpSessionChallengeRepository;
 import net.sharplab.springframework.security.webauthn.parameter.ConditionEndpointFilter;
 import net.sharplab.springframework.security.webauthn.parameter.ConditionProvider;
+import net.sharplab.springframework.security.webauthn.parameter.ConditionProviderImpl;
 import net.sharplab.springframework.security.webauthn.server.ServerPropertyProvider;
 import net.sharplab.springframework.security.webauthn.server.ServerPropertyProviderImpl;
+import net.sharplab.springframework.security.webauthn.userdetails.WebAuthnUserDetailsService;
+import org.springframework.context.ApplicationContext;
 import org.springframework.security.authentication.AuthenticationTrustResolver;
 import org.springframework.security.authentication.MFATokenEvaluator;
 import org.springframework.security.authentication.MFATokenEvaluatorImpl;
@@ -57,9 +60,8 @@ import static net.sharplab.springframework.security.webauthn.WebAuthnProcessingF
  * <p>
  * The following shared objects are populated
  * <ul>
- * <li>{@link WebAuthnFirstOfMultiFactorDelegatingAuthenticationProvider}</li>
- * <li>{@link MFATokenEvaluator}</li>
  * <li>{@link ChallengeRepository}</li>
+ * <li>{@link ConditionProvider}</li>
  * <li>{@link ServerPropertyProvider}</li>
  * </ul>
  *
@@ -70,8 +72,6 @@ import static net.sharplab.springframework.security.webauthn.WebAuthnProcessingF
  * <ul>
  * <li>{@link org.springframework.security.authentication.AuthenticationManager}</li>
  * <li>{@link MFATokenEvaluator}</li>
- * <li>{@link ChallengeRepository}</li>
- * <li>{@link ServerPropertyProvider}</li>
  * </ul>
  */
 public final class WebAuthnLoginConfigurer<H extends HttpSecurityBuilder<H>> extends
@@ -79,10 +79,9 @@ public final class WebAuthnLoginConfigurer<H extends HttpSecurityBuilder<H>> ext
 
     //~ Instance fields
     // ================================================================================================
-    private MFATokenEvaluator mfaTokenEvaluator;
     private ChallengeRepository challengeRepository;
-    private ServerPropertyProvider serverPropertyProvider;
     private ConditionProvider conditionProvider;
+    private ServerPropertyProvider serverPropertyProvider;
 
     public WebAuthnLoginConfigurer() {
         super(new WebAuthnProcessingFilter(), null);
@@ -107,18 +106,33 @@ public final class WebAuthnLoginConfigurer<H extends HttpSecurityBuilder<H>> ext
     public void init(H http) throws Exception {
         super.init(http);
 
-        if(mfaTokenEvaluator == null){
-            mfaTokenEvaluator = new MFATokenEvaluatorImpl();
-        }
-        http.setSharedObject(MFATokenEvaluator.class, mfaTokenEvaluator);
+        ApplicationContext applicationContext = http.getSharedObject(ApplicationContext.class);
 
         if(challengeRepository == null){
-            challengeRepository = new HttpSessionChallengeRepository();
+            String[] beanNames = applicationContext.getBeanNamesForType(ChallengeRepository.class);
+            if(beanNames.length == 0){
+                challengeRepository = new HttpSessionChallengeRepository();
+            }
+            else {
+                challengeRepository = applicationContext.getBean(ChallengeRepository.class);
+            }
         }
         http.setSharedObject(ChallengeRepository.class, challengeRepository);
 
+        if(conditionProvider == null){
+            WebAuthnUserDetailsService userDetailsService = applicationContext.getBean(WebAuthnUserDetailsService.class);
+            conditionProvider = new ConditionProviderImpl(userDetailsService);
+        }
+        http.setSharedObject(ConditionProvider.class, conditionProvider);
+
         if(serverPropertyProvider == null){
-            serverPropertyProvider = new ServerPropertyProviderImpl(challengeRepository);
+            String[] beanNames = applicationContext.getBeanNamesForType(ServerPropertyProvider.class);
+            if(beanNames.length == 0){
+                serverPropertyProvider = new ServerPropertyProviderImpl(challengeRepository);
+            }
+            else {
+                serverPropertyProvider = applicationContext.getBean(ServerPropertyProvider.class);
+            }
         }
         http.setSharedObject(ServerPropertyProvider.class, serverPropertyProvider);
     }
@@ -132,18 +146,21 @@ public final class WebAuthnLoginConfigurer<H extends HttpSecurityBuilder<H>> ext
 
         this.getAuthenticationFilter().setServerPropertyProvider(serverPropertyProvider);
 
+        configureConditionEndpointFilter(http);
+    }
+
+    private void configureConditionEndpointFilter(H http) {
         ConditionEndpointFilter conditionEndpointFilter = new ConditionEndpointFilter(conditionProvider, serverPropertyProvider);
 
+        MFATokenEvaluator mfaTokenEvaluator = http.getSharedObject(MFATokenEvaluator.class);
+        if(mfaTokenEvaluator != null){
+            conditionEndpointFilter.setMFATokenEvaluator(mfaTokenEvaluator);
+        }
 
-        AuthenticationTrustResolver trustResolver = http
-                .getSharedObject(AuthenticationTrustResolver.class);
+        AuthenticationTrustResolver trustResolver = http.getSharedObject(AuthenticationTrustResolver.class);
         if (trustResolver != null) {
             conditionEndpointFilter.setTrustResolver(trustResolver);
         }
-
-        MFATokenEvaluator sharedMFATokenEvaluator = http
-                .getSharedObject(MFATokenEvaluator.class);
-        conditionEndpointFilter.setMFATokenEvaluator(sharedMFATokenEvaluator);
 
         http.addFilterAfter(conditionEndpointFilter, SessionManagementFilter.class);
     }
@@ -240,17 +257,6 @@ public final class WebAuthnLoginConfigurer<H extends HttpSecurityBuilder<H>> ext
     }
 
     /**
-     * Forward Authentication Failure Handler
-     *
-     * @param forwardUrl the target URL in case of failure
-     * @return he {@link WebAuthnLoginConfigurer} for additional customization
-     */
-    public WebAuthnLoginConfigurer<H> failureForwardUrl(String forwardUrl) {
-        failureHandler(new ForwardAuthenticationFailureHandler(forwardUrl));
-        return this;
-    }
-
-    /**
      * Forward Authentication Success Handler
      *
      * @param forwardUrl the target URL in case of success
@@ -261,18 +267,14 @@ public final class WebAuthnLoginConfigurer<H extends HttpSecurityBuilder<H>> ext
         return this;
     }
 
-    public WebAuthnLoginConfigurer<H> serverPropertyProvider(ServerPropertyProvider serverPropertyProvider) {
-        this.serverPropertyProvider = serverPropertyProvider;
-        return this;
-    }
-
-    public WebAuthnLoginConfigurer<H> mfaTokenEvaluator(MFATokenEvaluator mfaTokenEvaluator) {
-        this.mfaTokenEvaluator = mfaTokenEvaluator;
-        return this;
-    }
-
-    public WebAuthnLoginConfigurer<H> conditionProvider(ConditionProvider conditionProvider) {
-        this.conditionProvider = conditionProvider;
+    /**
+     * Forward Authentication Failure Handler
+     *
+     * @param forwardUrl the target URL in case of failure
+     * @return he {@link WebAuthnLoginConfigurer} for additional customization
+     */
+    public WebAuthnLoginConfigurer<H> failureForwardUrl(String forwardUrl) {
+        failureHandler(new ForwardAuthenticationFailureHandler(forwardUrl));
         return this;
     }
 
@@ -295,5 +297,22 @@ public final class WebAuthnLoginConfigurer<H extends HttpSecurityBuilder<H>> ext
     protected RequestMatcher createLoginProcessingUrlMatcher(String loginProcessingUrl) {
         return new AntPathRequestMatcher(loginProcessingUrl, "POST");
     }
+
+    public WebAuthnLoginConfigurer<H> challengeRepository(ChallengeRepository challengeRepository) {
+        this.challengeRepository = challengeRepository;
+        return this;
+    }
+
+    public WebAuthnLoginConfigurer<H> conditionProvider(ConditionProvider conditionProvider) {
+        this.conditionProvider = conditionProvider;
+        return this;
+    }
+
+    public WebAuthnLoginConfigurer<H> serverPropertyProvider(ServerPropertyProvider serverPropertyProvider) {
+        this.serverPropertyProvider = serverPropertyProvider;
+        return this;
+    }
+
+
 
 }

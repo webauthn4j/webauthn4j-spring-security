@@ -2,8 +2,6 @@ package net.sharplab.springframework.security.webauthn.sample.app.config;
 
 import net.sharplab.springframework.security.webauthn.WebAuthnAuthenticationProvider;
 import net.sharplab.springframework.security.webauthn.config.configurers.WebAuthnFirstOfMultiFactorDelegatingAuthenticationConfigurer;
-import net.sharplab.springframework.security.webauthn.parameter.ConditionProvider;
-import net.sharplab.springframework.security.webauthn.server.ServerPropertyProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Configuration;
@@ -45,17 +43,10 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     private AccessDeniedHandler accessDeniedHandler;
 
     @Autowired
-    private ServerPropertyProvider serverPropertyProvider;
-
-    @Autowired
     private DaoAuthenticationProvider daoAuthenticationProvider;
 
     @Autowired
     private HttpSessionSecurityContextRepository httpSessionSecurityContextRepository;
-
-    @Autowired
-    private ConditionProvider conditionProvider;
-
 
     @Override
     public void configure(AuthenticationManagerBuilder builder) throws Exception {
@@ -99,9 +90,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         http.apply(webAuthnLogin())
                 .loginPage("/login")
                 .usernameParameter("username")
-                .passwordParameter("rawPassword")
-                .serverPropertyProvider(serverPropertyProvider)
-                .conditionProvider(conditionProvider);
+                .passwordParameter("rawPassword");
 
         http.exceptionHandling();
 
