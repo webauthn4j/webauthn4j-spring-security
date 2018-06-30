@@ -77,7 +77,7 @@ public class WebAuthnProcessingFilter extends UsernamePasswordAuthenticationFilt
      * Constructor
      *
      * @param authorities            authorities for FirstOfMultiFactorAuthenticationToken
-     * @param serverPropertyProvider provider for ServerProperty
+     * @param serverPropertyProvider provide for ServerProperty
      */
     public WebAuthnProcessingFilter(List<GrantedAuthority> authorities, ServerPropertyProvider serverPropertyProvider) {
         super();

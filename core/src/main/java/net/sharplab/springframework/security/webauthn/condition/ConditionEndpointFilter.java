@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package net.sharplab.springframework.security.webauthn.parameter;
+package net.sharplab.springframework.security.webauthn.condition;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.webauthn4j.server.ServerProperty;
@@ -111,23 +111,23 @@ public class ConditionEndpointFilter extends GenericFilterBean {
         }
         String username = authentication.getName();
         ServerProperty serverProperty = serverPropertyProvider.provide(request);
-        return conditionProvider.getCondition(username, serverProperty);
+        return conditionProvider.provide(username, serverProperty);
     }
 
-    private void writeResponse(HttpServletResponse response, Condition condition) throws IOException {
+    void writeResponse(HttpServletResponse response, Condition condition) throws IOException {
         String responseText = objectMapper.writeValueAsString(condition);
         response.setContentType("application/json");
         response.getWriter().print(responseText);
     }
 
-    private void writeErrorResponse(HttpServletResponse response, RuntimeException e) throws IOException {
+    void writeErrorResponse(HttpServletResponse response, RuntimeException e) throws IOException {
         Error error;
         int statusCode;
         if (e instanceof InsufficientAuthenticationException) {
-            error = new Error(Error.Type.NotAuthenticated, "Anonymous access is prohibited");
+            error = new Error(Error.Type.NOT_AUTHENTICATED, "Anonymous access is prohibited");
             statusCode = HttpServletResponse.SC_FORBIDDEN;
         } else {
-            error = new Error(Error.Type.ServerError, "The server encountered an internal error");
+            error = new Error(Error.Type.SERVER_ERROR, "The server encountered an internal error");
             statusCode = HttpServletResponse.SC_INTERNAL_SERVER_ERROR;
         }
         String errorResponseText = objectMapper.writeValueAsString(error);

@@ -14,16 +14,13 @@
  * limitations under the License.
  */
 
-package net.sharplab.springframework.security.webauthn.parameter;
+package net.sharplab.springframework.security.webauthn.condition;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.webauthn4j.authenticator.Authenticator;
 import com.webauthn4j.server.ServerProperty;
 import com.webauthn4j.util.Base64UrlUtil;
-import net.sharplab.springframework.security.webauthn.exception.MetadataException;
 import net.sharplab.springframework.security.webauthn.userdetails.WebAuthnUserDetailsService;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -38,18 +35,16 @@ public class ConditionProviderImpl implements ConditionProvider {
         this.userDetailsService = userDetailsService;
     }
 
-    public Condition getCondition(String username, ServerProperty serverProperty) {
+    public Condition provide(String username, ServerProperty serverProperty) {
         Collection<? extends Authenticator> authenticators = userDetailsService.loadUserByUsername(username).getAuthenticators();
-        Condition condition = new Condition();
         List<Condition.Credential> credentials = new ArrayList<>();
         for (Authenticator authenticator : authenticators){
             byte[] credentialId = authenticator.getAttestedCredentialData().getCredentialId();
             credentials.add(new Condition.Credential(Base64UrlUtil.encodeToString(credentialId)));
         }
-        condition.setRpId(serverProperty.getRpId());
-        condition.setChallenge(Base64UrlUtil.encodeToString(serverProperty.getChallenge().getValue()));
-        condition.setCredentials(credentials);
-        return condition;
+        String rpId = serverProperty.getRpId();
+        String challenge = Base64UrlUtil.encodeToString(serverProperty.getChallenge().getValue());
+        return new Condition(rpId, challenge, credentials);
     }
 
 }

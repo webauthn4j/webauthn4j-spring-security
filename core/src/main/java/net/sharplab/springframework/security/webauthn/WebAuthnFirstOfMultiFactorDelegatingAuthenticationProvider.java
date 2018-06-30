@@ -41,7 +41,7 @@ public class WebAuthnFirstOfMultiFactorDelegatingAuthenticationProvider implemen
 
 
     public WebAuthnFirstOfMultiFactorDelegatingAuthenticationProvider(AbstractUserDetailsAuthenticationProvider authenticationProvider) {
-        Assert.notNull(authenticationProvider, "Authentication provider must be set");
+        Assert.notNull(authenticationProvider, "Authentication provide must be set");
         this.authenticationProvider = authenticationProvider;
     }
 

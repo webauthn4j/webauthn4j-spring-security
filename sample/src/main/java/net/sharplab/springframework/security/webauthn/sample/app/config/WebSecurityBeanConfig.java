@@ -7,8 +7,6 @@ import net.sharplab.springframework.security.webauthn.WebAuthnRegistrationReques
 import net.sharplab.springframework.security.webauthn.authenticator.WebAuthnAuthenticatorService;
 import net.sharplab.springframework.security.webauthn.challenge.ChallengeRepository;
 import net.sharplab.springframework.security.webauthn.challenge.HttpSessionChallengeRepository;
-import net.sharplab.springframework.security.webauthn.parameter.ConditionProvider;
-import net.sharplab.springframework.security.webauthn.parameter.ConditionProviderImpl;
 import net.sharplab.springframework.security.webauthn.sample.domain.component.AuthenticatorManager;
 import net.sharplab.springframework.security.webauthn.server.ServerPropertyProvider;
 import net.sharplab.springframework.security.webauthn.server.ServerPropertyProviderImpl;

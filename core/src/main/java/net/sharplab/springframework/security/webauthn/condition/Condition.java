@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package net.sharplab.springframework.security.webauthn.parameter;
+package net.sharplab.springframework.security.webauthn.condition;
 
 import java.util.List;
 
@@ -26,28 +26,22 @@ public class Condition {
     private String challenge;
     private List<Credential> credentials;
 
-    public String getRpId() {
-        return rpId;
+    public Condition(String rpId, String challenge, List<Credential> credentials) {
+        this.rpId = rpId;
+        this.challenge = challenge;
+        this.credentials = credentials;
     }
 
-    public void setRpId(String rpId) {
-        this.rpId = rpId;
+    public String getRpId() {
+        return rpId;
     }
 
     public String getChallenge() {
         return challenge;
     }
 
-    public void setChallenge(String challenge) {
-        this.challenge = challenge;
-    }
-
     public List<Credential> getCredentials() {
         return credentials;
-    }
-
-    public void setCredentials(List<Credential> credentials) {
-        this.credentials = credentials;
     }
 
     public static class Credential {
@@ -62,8 +56,5 @@ public class Condition {
             return id;
         }
 
-        public void setId(String id) {
-            this.id = id;
-        }
     }
 }

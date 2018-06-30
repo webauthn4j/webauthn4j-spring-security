@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 
-package net.sharplab.springframework.security.webauthn.parameter;
+package net.sharplab.springframework.security.webauthn.condition;
 
 import com.webauthn4j.server.ServerProperty;
 
 public interface ConditionProvider {
 
-    Condition getCondition(String username, ServerProperty serverProperty);
+    Condition provide(String username, ServerProperty serverProperty);
 }

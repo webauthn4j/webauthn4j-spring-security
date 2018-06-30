@@ -1,4 +1,4 @@
-package net.sharplab.springframework.security.webauthn.parameter;
+package net.sharplab.springframework.security.webauthn.condition;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
@@ -22,8 +22,8 @@ public class Error {
 
     public enum Type {
 
-        NotAuthenticated("not_authenticated"),
-        ServerError("server_error");
+        NOT_AUTHENTICATED("not_authenticated"),
+        SERVER_ERROR("server_error");
 
         @JsonValue
         private String value;
@@ -36,9 +36,9 @@ public class Error {
         public static Type create(String value){
             switch (value){
                 case "not_authenticated":
-                    return NotAuthenticated;
+                    return NOT_AUTHENTICATED;
                 case "server_error":
-                    return ServerError;
+                    return SERVER_ERROR;
                 default:
                     throw new IllegalArgumentException();
             }

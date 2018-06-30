@@ -12,7 +12,7 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * Fixture provider
+ * Fixture provide
  */
 public class FixtureProvider {
 
