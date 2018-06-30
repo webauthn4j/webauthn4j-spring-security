@@ -22,7 +22,6 @@ import com.webauthn4j.server.ServerProperty;
 import net.sharplab.springframework.security.webauthn.challenge.ChallengeRepository;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 /**
  * {@inheritDoc}

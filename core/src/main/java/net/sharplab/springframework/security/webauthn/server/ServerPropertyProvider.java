@@ -20,7 +20,6 @@ package net.sharplab.springframework.security.webauthn.server;
 import com.webauthn4j.server.ServerProperty;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 /**
  * Provides {@link ServerProperty} instance
