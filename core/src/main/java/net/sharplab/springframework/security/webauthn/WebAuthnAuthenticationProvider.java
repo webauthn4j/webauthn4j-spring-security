@@ -135,44 +135,11 @@ public class WebAuthnAuthenticationProvider implements AuthenticationProvider {
                 expectedAuthenticationExtensionIds
         );
 
-        try {
+        try{
             authenticationContextValidator.validate(authenticationContext, authenticator);
-        } catch (com.webauthn4j.validator.exception.BadAlgorithmException e) {
-            throw new BadAlgorithmException("Bad algorithm", e);
-        } catch (com.webauthn4j.validator.exception.BadAttestationStatementException e) {
-            throw new MaliciousDataException("Bad attestation statement", e);
-        } catch (com.webauthn4j.validator.exception.BadChallengeException e) {
-            throw new BadChallengeException("Bad challenge", e);
-        } catch (com.webauthn4j.validator.exception.BadOriginException e) {
-            throw new BadOriginException("Bad origin", e);
-        } catch (com.webauthn4j.validator.exception.BadRpIdException e) {
-            throw new BadRpIdException("Bad rpId", e);
-        } catch (com.webauthn4j.validator.exception.BadSignatureException e) {
-            throw new BadSignatureException("Bad signature", e);
-        } catch (com.webauthn4j.validator.exception.CertificateException e) {
-            throw new CertificateException("Certificate error", e);
-        } catch (com.webauthn4j.validator.exception.ConstraintViolationException e) {
-            throw new ConstraintViolationException("Constraint violation error", e);
-        } catch (com.webauthn4j.validator.exception.MaliciousCounterValueException e) {
-            throw new MaliciousCounterValueException("Malicious counter value is detected. Cloned authenticators exist in parallel.", e);
-        } catch (com.webauthn4j.validator.exception.MaliciousDataException e) {
-            throw new MaliciousDataException("Bad client data type", e);
-        } catch (com.webauthn4j.validator.exception.MissingChallengeException e) {
-            throw new MissingChallengeException("Missing challenge error", e);
-        } catch (com.webauthn4j.validator.exception.SelfAttestationProhibitedException e) {
-            throw new SelfAttestationProhibitedException("Self attestation is specified while prohibited", e);
-        } catch (com.webauthn4j.validator.exception.TokenBindingException e) {
-            throw new TokenBindingException("Token binding error", e);
-        } catch (com.webauthn4j.validator.exception.UnexpectedExtensionException e) {
-            throw new UnexpectedExtensionException("Unexpected extension is contained", e);
-        } catch (com.webauthn4j.validator.exception.UnsupportedAttestationFormatException e) {
-            throw new UnsupportedAttestationFormatException("Unsupported attestation format error", e);
-        } catch (com.webauthn4j.validator.exception.UserNotPresentException e) {
-            throw new UserNotPresentException("User not verified", e);
-        } catch (com.webauthn4j.validator.exception.UserNotVerifiedException e) {
-            throw new UserNotVerifiedException("User not verified", e);
-        } catch (com.webauthn4j.validator.exception.ValidationException e){
-            throw new AuthenticationServiceException("WebAuthn validation error", e);
+        }
+        catch (RuntimeException e){
+            throw wrapWithAuthenticationException(e);
         }
 
     }
@@ -282,5 +249,46 @@ public class WebAuthnAuthenticationProvider implements AuthenticationProvider {
                         "User credentials have expired"));
             }
         }
+    }
+
+    private RuntimeException wrapWithAuthenticationException(RuntimeException e){
+        if(e instanceof com.webauthn4j.validator.exception.BadAlgorithmException){
+            return new BadAlgorithmException("Bad algorithm", e);
+        } else if(e instanceof com.webauthn4j.validator.exception.BadAttestationStatementException) {
+            return new MaliciousDataException("Bad attestation statement", e);
+        } else if(e instanceof com.webauthn4j.validator.exception.BadChallengeException) {
+            return new BadChallengeException("Bad challenge", e);
+        } else if(e instanceof com.webauthn4j.validator.exception.BadOriginException) {
+            return new BadOriginException("Bad origin", e);
+        } else if(e instanceof com.webauthn4j.validator.exception.BadRpIdException) {
+            return new BadRpIdException("Bad rpId", e);
+        } else if(e instanceof com.webauthn4j.validator.exception.BadSignatureException) {
+            return new BadSignatureException("Bad signature", e);
+        } else if(e instanceof com.webauthn4j.validator.exception.CertificateException) {
+            return new CertificateException("Certificate error", e);
+        } else if(e instanceof com.webauthn4j.validator.exception.ConstraintViolationException) {
+            return new ConstraintViolationException("Constraint violation error", e);
+        } else if(e instanceof com.webauthn4j.validator.exception.MaliciousCounterValueException) {
+            return new MaliciousCounterValueException("Malicious counter value is detected. Cloned authenticators exist in parallel.", e);
+        } else if(e instanceof com.webauthn4j.validator.exception.MaliciousDataException) {
+            return new MaliciousDataException("Bad client data type", e);
+        } else if(e instanceof com.webauthn4j.validator.exception.MissingChallengeException) {
+            return new MissingChallengeException("Missing challenge error", e);
+        } else if(e instanceof com.webauthn4j.validator.exception.SelfAttestationProhibitedException) {
+            return new SelfAttestationProhibitedException("Self attestation is specified while prohibited", e);
+        } else if(e instanceof com.webauthn4j.validator.exception.TokenBindingException) {
+            return new TokenBindingException("Token binding error", e);
+        } else if(e instanceof com.webauthn4j.validator.exception.UnexpectedExtensionException) {
+            return new UnexpectedExtensionException("Unexpected extension is contained", e);
+        } else if(e instanceof com.webauthn4j.validator.exception.UnsupportedAttestationFormatException) {
+            return new UnsupportedAttestationFormatException("Unsupported attestation format error", e);
+        } else if(e instanceof com.webauthn4j.validator.exception.UserNotPresentException) {
+            return new UserNotPresentException("User not verified", e);
+        } else if(e instanceof com.webauthn4j.validator.exception.UserNotVerifiedException) {
+            return new UserNotVerifiedException("User not verified", e);
+        } else if(e instanceof com.webauthn4j.validator.exception.ValidationException){
+            return new AuthenticationServiceException("WebAuthn validation error", e);
+        }
+        return e;
     }
 }
