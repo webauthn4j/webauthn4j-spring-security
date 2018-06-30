@@ -12,6 +12,14 @@ public class Error {
         this.message = message;
     }
 
+    public Type getType() {
+        return type;
+    }
+
+    public String getMessage() {
+        return message;
+    }
+
     public enum Type {
 
         NotAuthenticated("not_authenticated"),
