@@ -14,10 +14,11 @@
  * limitations under the License.
  */
 
-package net.sharplab.springframework.security.webauthn.metadata;
+package net.sharplab.springframework.security.webauthn.parameter;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.webauthn4j.authenticator.Authenticator;
+import com.webauthn4j.server.ServerProperty;
 import com.webauthn4j.util.Base64UrlUtil;
 import net.sharplab.springframework.security.webauthn.exception.MetadataException;
 import net.sharplab.springframework.security.webauthn.userdetails.WebAuthnUserDetailsService;
@@ -27,31 +28,28 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-public class MetadataProviderImpl implements MetadataProvider {
+public class ConditionProviderImpl implements ConditionProvider {
 
     //~ Instance fields
     // ================================================================================================
     private WebAuthnUserDetailsService userDetailsService;
-    private ObjectMapper objectMapper = new ObjectMapper();
 
-    public MetadataProviderImpl(WebAuthnUserDetailsService userDetailsService) {
+    public ConditionProviderImpl(WebAuthnUserDetailsService userDetailsService) {
         this.userDetailsService = userDetailsService;
     }
 
-    public String getMetadataAsString(String username) {
-        try {
-            Collection<? extends Authenticator> authenticators = userDetailsService.loadUserByUsername(username).getAuthenticators();
-            List<Metadata> metadataList = new ArrayList<>();
-            for (Authenticator authenticator : authenticators) {
-                String credentialIdStr = Base64UrlUtil.encodeToString(authenticator.getAttestedCredentialData().getCredentialId());
-                Metadata metadata = new Metadata();
-                metadata.setCredentialId(credentialIdStr);
-                metadataList.add(metadata);
-            }
-            return objectMapper.writeValueAsString(metadataList);
-        } catch (IOException | RuntimeException e) {
-            throw new MetadataException(e);
+    public Condition getCondition(String username, ServerProperty serverProperty) {
+        Collection<? extends Authenticator> authenticators = userDetailsService.loadUserByUsername(username).getAuthenticators();
+        Condition condition = new Condition();
+        List<Condition.Credential> credentials = new ArrayList<>();
+        for (Authenticator authenticator : authenticators){
+            byte[] credentialId = authenticator.getAttestedCredentialData().getCredentialId();
+            credentials.add(new Condition.Credential(Base64UrlUtil.encodeToString(credentialId)));
         }
+        condition.setRpId(serverProperty.getRpId());
+        condition.setChallenge(Base64UrlUtil.encodeToString(serverProperty.getChallenge().getValue()));
+        condition.setCredentials(credentials);
+        return condition;
     }
 
 }

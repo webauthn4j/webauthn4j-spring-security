@@ -2,7 +2,7 @@ package net.sharplab.springframework.security.webauthn.exception;
 
 import org.junit.Test;
 
-public class MetadataExceptionTest {
+public class ConditionExceptionTest {
     private RuntimeException cause = new RuntimeException();
 
     @Test

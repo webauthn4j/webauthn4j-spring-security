@@ -2,7 +2,7 @@ package net.sharplab.springframework.security.webauthn.sample.app.config;
 
 import net.sharplab.springframework.security.webauthn.WebAuthnAuthenticationProvider;
 import net.sharplab.springframework.security.webauthn.config.configurers.WebAuthnFirstOfMultiFactorDelegatingAuthenticationConfigurer;
-import net.sharplab.springframework.security.webauthn.metadata.MetadataProvider;
+import net.sharplab.springframework.security.webauthn.parameter.ConditionProvider;
 import net.sharplab.springframework.security.webauthn.server.ServerPropertyProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
@@ -54,7 +54,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     private HttpSessionSecurityContextRepository httpSessionSecurityContextRepository;
 
     @Autowired
-    private MetadataProvider metadataProvider;
+    private ConditionProvider conditionProvider;
 
 
     @Override
@@ -101,7 +101,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .usernameParameter("username")
                 .passwordParameter("rawPassword")
                 .serverPropertyProvider(serverPropertyProvider)
-                .metadataProvider(metadataProvider);
+                .conditionProvider(conditionProvider);
 
         http.exceptionHandling();
 

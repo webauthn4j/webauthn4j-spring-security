@@ -14,19 +14,11 @@
  * limitations under the License.
  */
 
-package net.sharplab.springframework.security.webauthn.metadata;
+package net.sharplab.springframework.security.webauthn.parameter;
 
-public class Metadata {
+import com.webauthn4j.server.ServerProperty;
 
-    //~ Instance fields
-    // ================================================================================================
-    private String credentialId;
+public interface ConditionProvider {
 
-    public String getCredentialId() {
-        return credentialId;
-    }
-
-    public void setCredentialId(String credentialId) {
-        this.credentialId = credentialId;
-    }
+    Condition getCondition(String username, ServerProperty serverProperty);
 }

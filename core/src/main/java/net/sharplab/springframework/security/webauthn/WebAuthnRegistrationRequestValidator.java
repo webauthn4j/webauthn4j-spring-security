@@ -30,18 +30,18 @@ public class WebAuthnRegistrationRequestValidator {
                          String attestationObjectBase64,
                          String clientExtensionsJSON
     ) {
-        WebAuthnRegistrationContext registrationContext = getRegistrationContext(request, response, clientDataBase64, attestationObjectBase64, clientExtensionsJSON);
+        WebAuthnRegistrationContext registrationContext = createRegistrationContext(request, clientDataBase64, attestationObjectBase64, clientExtensionsJSON);
         registrationContextValidator.validate(registrationContext);
     }
 
-    WebAuthnRegistrationContext getRegistrationContext(HttpServletRequest request, HttpServletResponse response,
-                                                       String clientDataBase64,
-                                                       String attestationObjectBase64,
-                                                       String clientExtensionsJSON) {
+    WebAuthnRegistrationContext createRegistrationContext(HttpServletRequest request,
+                                                          String clientDataBase64,
+                                                          String attestationObjectBase64,
+                                                          String clientExtensionsJSON) {
 
         byte[] clientDataBytes = Base64UrlUtil.decode(clientDataBase64);
         byte[] attestationObjectBytes = Base64UrlUtil.decode(attestationObjectBase64);
-        ServerProperty serverProperty = serverPropertyProvider.provide(request, response);
+        ServerProperty serverProperty = serverPropertyProvider.provide(request);
 
         return new WebAuthnRegistrationContext(
                 clientDataBytes,

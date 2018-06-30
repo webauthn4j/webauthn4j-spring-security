@@ -115,7 +115,7 @@ AuthenticatorLoginViewModel.prototype.loginByFormSubmission = function (username
 
 
 AuthenticatorLoginViewModel.prototype.loadCredentialIds = function () {
-    return fetch("/webauthn/metadata",  //TODO
+    return fetch("/webauthn/condition",  //TODO
     {
         credentials: 'include'
     })

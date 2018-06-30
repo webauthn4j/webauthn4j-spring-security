@@ -113,7 +113,7 @@ public class WebAuthnProcessingFilter extends UsernamePasswordAuthenticationFilt
             byte[] rawAuthenticatorData = Base64Utils.decodeFromUrlSafeString(authenticatorData);
             byte[] signatureBytes = Base64Utils.decodeFromUrlSafeString(signature);
 
-            ServerProperty serverProperty = serverPropertyProvider.provide(request, response);
+            ServerProperty serverProperty = serverPropertyProvider.provide(request);
 
             WebAuthnAuthenticationRequest webAuthnAuthenticationRequest = new WebAuthnAuthenticationRequest(
                     rawId,

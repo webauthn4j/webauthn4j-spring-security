@@ -27,7 +27,7 @@ import javax.servlet.http.HttpServletResponse;
  */
 public interface ServerPropertyProvider {
 
-    ServerProperty provide(HttpServletRequest request, HttpServletResponse response);
+    ServerProperty provide(HttpServletRequest request);
 
     String getRpId();
 

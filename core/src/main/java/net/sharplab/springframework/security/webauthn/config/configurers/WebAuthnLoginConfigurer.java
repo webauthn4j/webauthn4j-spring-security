@@ -18,9 +18,12 @@ package net.sharplab.springframework.security.webauthn.config.configurers;
 
 import net.sharplab.springframework.security.webauthn.WebAuthnFirstOfMultiFactorDelegatingAuthenticationProvider;
 import net.sharplab.springframework.security.webauthn.WebAuthnProcessingFilter;
-import net.sharplab.springframework.security.webauthn.metadata.MetadataEndpointFilter;
-import net.sharplab.springframework.security.webauthn.metadata.MetadataProvider;
+import net.sharplab.springframework.security.webauthn.challenge.ChallengeRepository;
+import net.sharplab.springframework.security.webauthn.challenge.HttpSessionChallengeRepository;
+import net.sharplab.springframework.security.webauthn.parameter.ConditionEndpointFilter;
+import net.sharplab.springframework.security.webauthn.parameter.ConditionProvider;
 import net.sharplab.springframework.security.webauthn.server.ServerPropertyProvider;
+import net.sharplab.springframework.security.webauthn.server.ServerPropertyProviderImpl;
 import org.springframework.security.authentication.AuthenticationTrustResolver;
 import org.springframework.security.authentication.MFATokenEvaluator;
 import org.springframework.security.authentication.MFATokenEvaluatorImpl;
@@ -47,15 +50,17 @@ import static net.sharplab.springframework.security.webauthn.WebAuthnProcessingF
  *
  * <ul>
  * <li>{@link WebAuthnProcessingFilter}</li>
- * <li>{@link WebAuthnFirstOfMultiFactorDelegatingAuthenticationProvider}</li>
- * <li>{@link MetadataEndpointFilter}</li>
+ * <li>{@link ConditionEndpointFilter}</li>
  * </ul>
  *
  * <h2>Shared Objects Created</h2>
  * <p>
  * The following shared objects are populated
  * <ul>
+ * <li>{@link WebAuthnFirstOfMultiFactorDelegatingAuthenticationProvider}</li>
  * <li>{@link MFATokenEvaluator}</li>
+ * <li>{@link ChallengeRepository}</li>
+ * <li>{@link ServerPropertyProvider}</li>
  * </ul>
  *
  * <h2>Shared Objects Used</h2>
@@ -64,6 +69,9 @@ import static net.sharplab.springframework.security.webauthn.WebAuthnProcessingF
  *
  * <ul>
  * <li>{@link org.springframework.security.authentication.AuthenticationManager}</li>
+ * <li>{@link MFATokenEvaluator}</li>
+ * <li>{@link ChallengeRepository}</li>
+ * <li>{@link ServerPropertyProvider}</li>
  * </ul>
  */
 public final class WebAuthnLoginConfigurer<H extends HttpSecurityBuilder<H>> extends
@@ -72,7 +80,9 @@ public final class WebAuthnLoginConfigurer<H extends HttpSecurityBuilder<H>> ext
     //~ Instance fields
     // ================================================================================================
     private MFATokenEvaluator mfaTokenEvaluator;
-    private MetadataProvider metadataProvider;
+    private ChallengeRepository challengeRepository;
+    private ServerPropertyProvider serverPropertyProvider;
+    private ConditionProvider conditionProvider;
 
     public WebAuthnLoginConfigurer() {
         super(new WebAuthnProcessingFilter(), null);
@@ -101,6 +111,16 @@ public final class WebAuthnLoginConfigurer<H extends HttpSecurityBuilder<H>> ext
             mfaTokenEvaluator = new MFATokenEvaluatorImpl();
         }
         http.setSharedObject(MFATokenEvaluator.class, mfaTokenEvaluator);
+
+        if(challengeRepository == null){
+            challengeRepository = new HttpSessionChallengeRepository();
+        }
+        http.setSharedObject(ChallengeRepository.class, challengeRepository);
+
+        if(serverPropertyProvider == null){
+            serverPropertyProvider = new ServerPropertyProviderImpl(challengeRepository);
+        }
+        http.setSharedObject(ServerPropertyProvider.class, serverPropertyProvider);
     }
 
     /**
@@ -109,18 +129,23 @@ public final class WebAuthnLoginConfigurer<H extends HttpSecurityBuilder<H>> ext
     @Override
     public void configure(H http) throws Exception {
         super.configure(http);
-        MetadataEndpointFilter metadataEndpointFilter = new MetadataEndpointFilter(metadataProvider);
+
+        this.getAuthenticationFilter().setServerPropertyProvider(serverPropertyProvider);
+
+        ConditionEndpointFilter conditionEndpointFilter = new ConditionEndpointFilter(conditionProvider, serverPropertyProvider);
+
+
         AuthenticationTrustResolver trustResolver = http
                 .getSharedObject(AuthenticationTrustResolver.class);
         if (trustResolver != null) {
-            metadataEndpointFilter.setTrustResolver(trustResolver);
+            conditionEndpointFilter.setTrustResolver(trustResolver);
         }
 
         MFATokenEvaluator sharedMFATokenEvaluator = http
                 .getSharedObject(MFATokenEvaluator.class);
-        metadataEndpointFilter.setMFATokenEvaluator(sharedMFATokenEvaluator);
+        conditionEndpointFilter.setMFATokenEvaluator(sharedMFATokenEvaluator);
 
-        http.addFilterAfter(metadataEndpointFilter, SessionManagementFilter.class);
+        http.addFilterAfter(conditionEndpointFilter, SessionManagementFilter.class);
     }
 
     /**
@@ -237,7 +262,7 @@ public final class WebAuthnLoginConfigurer<H extends HttpSecurityBuilder<H>> ext
     }
 
     public WebAuthnLoginConfigurer<H> serverPropertyProvider(ServerPropertyProvider serverPropertyProvider) {
-        this.getAuthenticationFilter().setServerPropertyProvider(serverPropertyProvider);
+        this.serverPropertyProvider = serverPropertyProvider;
         return this;
     }
 
@@ -246,8 +271,8 @@ public final class WebAuthnLoginConfigurer<H extends HttpSecurityBuilder<H>> ext
         return this;
     }
 
-    public WebAuthnLoginConfigurer<H> metadataProvider(MetadataProvider metadataProvider) {
-        this.metadataProvider = metadataProvider;
+    public WebAuthnLoginConfigurer<H> conditionProvider(ConditionProvider conditionProvider) {
+        this.conditionProvider = conditionProvider;
         return this;
     }
 

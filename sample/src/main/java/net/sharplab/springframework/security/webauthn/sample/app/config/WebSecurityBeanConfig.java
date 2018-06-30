@@ -7,8 +7,8 @@ import net.sharplab.springframework.security.webauthn.WebAuthnRegistrationReques
 import net.sharplab.springframework.security.webauthn.authenticator.WebAuthnAuthenticatorService;
 import net.sharplab.springframework.security.webauthn.challenge.ChallengeRepository;
 import net.sharplab.springframework.security.webauthn.challenge.HttpSessionChallengeRepository;
-import net.sharplab.springframework.security.webauthn.metadata.MetadataProvider;
-import net.sharplab.springframework.security.webauthn.metadata.MetadataProviderImpl;
+import net.sharplab.springframework.security.webauthn.parameter.ConditionProvider;
+import net.sharplab.springframework.security.webauthn.parameter.ConditionProviderImpl;
 import net.sharplab.springframework.security.webauthn.sample.domain.component.AuthenticatorManager;
 import net.sharplab.springframework.security.webauthn.server.ServerPropertyProvider;
 import net.sharplab.springframework.security.webauthn.server.ServerPropertyProviderImpl;
@@ -61,8 +61,8 @@ public class WebSecurityBeanConfig {
     }
 
     @Bean
-    public MetadataProvider metadataProvider(WebAuthnUserDetailsService userDetailsService) {
-        return new MetadataProviderImpl(userDetailsService);
+    public ConditionProvider metadataProvider(WebAuthnUserDetailsService userDetailsService) {
+        return new ConditionProviderImpl(userDetailsService);
     }
 
     @Bean

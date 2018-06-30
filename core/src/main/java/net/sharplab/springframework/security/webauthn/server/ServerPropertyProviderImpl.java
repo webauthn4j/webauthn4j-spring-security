@@ -38,7 +38,7 @@ public class ServerPropertyProviderImpl implements ServerPropertyProvider {
         this.challengeRepository = challengeRepository;
     }
 
-    public ServerProperty provide(HttpServletRequest request, HttpServletResponse response) {
+    public ServerProperty provide(HttpServletRequest request) {
 
         Origin origin = obtainOrigin(request);
         Challenge savedChallenge = obtainSavedChallenge(request);
