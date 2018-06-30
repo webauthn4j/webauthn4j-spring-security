@@ -53,21 +53,6 @@ public class WebAuthnAuthenticationRequest implements Serializable {
         this.serverProperty = serverProperty;
     }
 
-    public WebAuthnAuthenticationRequest(byte[] credentialId,
-                                         byte[] clientDataJSON,
-                                         byte[] authenticatorData,
-                                         byte[] signature,
-                                         ServerProperty serverProperty) {
-        this(
-                credentialId,
-                clientDataJSON,
-                authenticatorData,
-                signature,
-                null,
-                serverProperty
-        );
-    }
-
     public byte[] getCredentialId() {
         return credentialId;
     }

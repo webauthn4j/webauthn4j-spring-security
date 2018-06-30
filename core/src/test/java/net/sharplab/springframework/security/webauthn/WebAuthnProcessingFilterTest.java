@@ -17,6 +17,7 @@
 package net.sharplab.springframework.security.webauthn;
 
 import com.webauthn4j.server.ServerProperty;
+import com.webauthn4j.util.Base64UrlUtil;
 import net.sharplab.springframework.security.webauthn.request.WebAuthnAuthenticationRequest;
 import net.sharplab.springframework.security.webauthn.server.ServerPropertyProvider;
 import org.junit.Before;
@@ -88,6 +89,9 @@ public class WebAuthnProcessingFilterTest {
         String clientData = "eyJjaGFsbGVuZ2UiOiJGT3JHWklmSFJfeURaSklydTVPdXBBIiwiaGFzaEFsZyI6IlMyNTYiLCJvcmlnaW4iOiJsb2NhbGhvc3QifQ";
         String authenticatorData = "SZYN5YgOjGh0NBcPZHZgW4_krrmihjLHmVzzuoMdl2MBAAABaQ";
         String signature = "MEUCIGBYMUVg2KkMG7V7UEsGxUeKVaO8x587JyVoZkk6FmsgAiEA5XRKxlYe2Vpwn-JYEJhcEVJ3-0nYFG-JfheOk4rA3dc";
+        String clientExtensionsJSON = "";
+
+        ServerProperty serverProperty = mock(ServerProperty.class);
 
 
         //Given
@@ -97,9 +101,10 @@ public class WebAuthnProcessingFilterTest {
         mockHttpServletRequest.setParameter("clientData", clientData);
         mockHttpServletRequest.setParameter("authenticatorData", authenticatorData);
         mockHttpServletRequest.setParameter("signature", signature);
+        mockHttpServletRequest.setParameter("clientExtensionsJSON", clientExtensionsJSON);
 
         when(authenticationManager.authenticate(captor.capture())).thenReturn(null);
-        when(serverPropertyProvider.provide(any(), any())).thenReturn(mock(ServerProperty.class));
+        when(serverPropertyProvider.provide(any(), any())).thenReturn(serverProperty);
 
         //When
         target.attemptAuthentication(mockHttpServletRequest, mockHttpServletResponse);
@@ -109,6 +114,12 @@ public class WebAuthnProcessingFilterTest {
         verify(serverPropertyProvider).provide(mockHttpServletRequest, mockHttpServletResponse);
         assertThat(authenticationToken.getPrincipal()).isNull();
         assertThat(authenticationToken.getCredentials()).isInstanceOf(WebAuthnAuthenticationRequest.class);
+        assertThat(authenticationToken.getCredentials().getCredentialId()).isEqualTo(Base64UrlUtil.decode(credentialId));
+        assertThat(authenticationToken.getCredentials().getClientDataJSON()).isEqualTo(Base64UrlUtil.decode(clientData));
+        assertThat(authenticationToken.getCredentials().getAuthenticatorData()).isEqualTo(Base64UrlUtil.decode(authenticatorData));
+        assertThat(authenticationToken.getCredentials().getSignature()).isEqualTo(Base64UrlUtil.decode(signature));
+        assertThat(authenticationToken.getCredentials().getClientExtensionsJSON()).isEqualTo(clientExtensionsJSON);
+        assertThat(authenticationToken.getCredentials().getServerProperty()).isEqualTo(serverProperty);
 
     }
 
@@ -119,6 +130,9 @@ public class WebAuthnProcessingFilterTest {
         String clientData = "eyJjaGFsbGVuZ2UiOiJGT3JHWklmSFJfeURaSklydTVPdXBBIiwiaGFzaEFsZyI6IlMyNTYiLCJvcmlnaW4iOiJsb2NhbGhvc3QifQ";
         String authenticatorData = "SZYN5YgOjGh0NBcPZHZgW4_krrmihjLHmVzzuoMdl2MBAAABaQ";
         String signature = "MEUCIGBYMUVg2KkMG7V7UEsGxUeKVaO8x587JyVoZkk6FmsgAiEA5XRKxlYe2Vpwn-JYEJhcEVJ3-0nYFG-JfheOk4rA3dc";
+        String clientExtensionsJSON = "";
+
+        ServerProperty serverProperty = mock(ServerProperty.class);
 
         //Given
         target.setPostOnly(false);
@@ -128,9 +142,10 @@ public class WebAuthnProcessingFilterTest {
         mockHttpServletRequest.setParameter("clientData", clientData);
         mockHttpServletRequest.setParameter("authenticatorData", authenticatorData);
         mockHttpServletRequest.setParameter("signature", signature);
+        mockHttpServletRequest.setParameter("clientExtensionsJSON", clientExtensionsJSON);
 
         when(authenticationManager.authenticate(captor.capture())).thenReturn(null);
-        when(serverPropertyProvider.provide(any(), any())).thenReturn(mock(ServerProperty.class));
+        when(serverPropertyProvider.provide(any(), any())).thenReturn(serverProperty);
 
         //When
         target.attemptAuthentication(mockHttpServletRequest, mockHttpServletResponse);
@@ -140,6 +155,12 @@ public class WebAuthnProcessingFilterTest {
         verify(serverPropertyProvider).provide(mockHttpServletRequest, mockHttpServletResponse);
         assertThat(authenticationToken.getPrincipal()).isNull();
         assertThat(authenticationToken.getCredentials()).isInstanceOf(WebAuthnAuthenticationRequest.class);
+        assertThat(authenticationToken.getCredentials().getCredentialId()).isEqualTo(Base64UrlUtil.decode(credentialId));
+        assertThat(authenticationToken.getCredentials().getClientDataJSON()).isEqualTo(Base64UrlUtil.decode(clientData));
+        assertThat(authenticationToken.getCredentials().getAuthenticatorData()).isEqualTo(Base64UrlUtil.decode(authenticatorData));
+        assertThat(authenticationToken.getCredentials().getSignature()).isEqualTo(Base64UrlUtil.decode(signature));
+        assertThat(authenticationToken.getCredentials().getClientExtensionsJSON()).isEqualTo(clientExtensionsJSON);
+        assertThat(authenticationToken.getCredentials().getServerProperty()).isEqualTo(serverProperty);
 
     }
 
@@ -153,12 +174,15 @@ public class WebAuthnProcessingFilterTest {
         String clientDataParameter = "param_clientData";
         String authenticatorDataParameter = "param_authenticatorData";
         String signatureParameter = "param_signature";
+        String clientExtensionsJSONParameter = "param_clientExtensionsJSON";
 
         String credentialId = "AAhdofeLeQWG6Y6gwwytZKNCDFB1WaIgqDsOwVYR5UavKQhAti4ic9_Dz-_CQEPpN0To6hiDRSCvmFHXaG6HK5yvvhm4DJRVJXzSvZiq5NefbXSYIr2uUaKbsoBe1lulhNdL9dRt6Dkkp38uq02YIR5CDaoxD-HQgMsS667aWlhHVKE884Sq0d1VVgGTDb1ds-Py_H7CDqk9SDErb8-XtQ9L";
         String clientData = "eyJjaGFsbGVuZ2UiOiJGT3JHWklmSFJfeURaSklydTVPdXBBIiwiaGFzaEFsZyI6IlMyNTYiLCJvcmlnaW4iOiJsb2NhbGhvc3QifQ";
         String authenticatorData = "SZYN5YgOjGh0NBcPZHZgW4_krrmihjLHmVzzuoMdl2MBAAABaQ";
         String signature = "MEUCIGBYMUVg2KkMG7V7UEsGxUeKVaO8x587JyVoZkk6FmsgAiEA5XRKxlYe2Vpwn-JYEJhcEVJ3-0nYFG-JfheOk4rA3dc";
+        String clientExtensionsJSON = "";
 
+        ServerProperty serverProperty = mock(ServerProperty.class);
 
         //Given
         target.setUsernameParameter(usernameParameter);
@@ -167,6 +191,7 @@ public class WebAuthnProcessingFilterTest {
         target.setClientDataParameter(clientDataParameter);
         target.setAuthenticatorDataParameter(authenticatorDataParameter);
         target.setSignatureParameter(signatureParameter);
+        target.setClientExtensionsJSONParameter(clientExtensionsJSONParameter);
 
         mockHttpServletRequest.setMethod("POST");
         mockHttpServletRequest.setServerName("example.com");
@@ -174,9 +199,10 @@ public class WebAuthnProcessingFilterTest {
         mockHttpServletRequest.setParameter(clientDataParameter, clientData);
         mockHttpServletRequest.setParameter(authenticatorDataParameter, authenticatorData);
         mockHttpServletRequest.setParameter(signatureParameter, signature);
+        mockHttpServletRequest.setParameter(clientExtensionsJSONParameter, clientExtensionsJSON);
 
         when(authenticationManager.authenticate(captor.capture())).thenReturn(null);
-        when(serverPropertyProvider.provide(any(), any())).thenReturn(mock(ServerProperty.class));
+        when(serverPropertyProvider.provide(any(), any())).thenReturn(serverProperty);
 
         //When
         target.attemptAuthentication(mockHttpServletRequest, mockHttpServletResponse);
@@ -188,12 +214,21 @@ public class WebAuthnProcessingFilterTest {
         assertThat(target.getClientDataParameter()).isEqualTo(clientDataParameter);
         assertThat(target.getAuthenticatorDataParameter()).isEqualTo(authenticatorDataParameter);
         assertThat(target.getSignatureParameter()).isEqualTo(signatureParameter);
+        assertThat(target.getClientExtensionsJSONParameter()).isEqualTo(clientExtensionsJSONParameter);
+        assertThat(target.getServerPropertyProvider()).isEqualTo(serverPropertyProvider);
 
 
         WebAuthnAssertionAuthenticationToken authenticationToken = (WebAuthnAssertionAuthenticationToken) captor.getValue();
         verify(serverPropertyProvider).provide(mockHttpServletRequest, mockHttpServletResponse);
         assertThat(authenticationToken.getPrincipal()).isNull();
         assertThat(authenticationToken.getCredentials()).isInstanceOf(WebAuthnAuthenticationRequest.class);
+        assertThat(authenticationToken.getCredentials().getCredentialId()).isEqualTo(Base64UrlUtil.decode(credentialId));
+        assertThat(authenticationToken.getCredentials().getClientDataJSON()).isEqualTo(Base64UrlUtil.decode(clientData));
+        assertThat(authenticationToken.getCredentials().getAuthenticatorData()).isEqualTo(Base64UrlUtil.decode(authenticatorData));
+        assertThat(authenticationToken.getCredentials().getSignature()).isEqualTo(Base64UrlUtil.decode(signature));
+        assertThat(authenticationToken.getCredentials().getClientExtensionsJSON()).isEqualTo(clientExtensionsJSON);
+        assertThat(authenticationToken.getCredentials().getServerProperty()).isEqualTo(serverProperty);
+
 
     }
 
