@@ -20,6 +20,7 @@ dependencies {
     //Test
     testCompile("com.webauthn4j:webauthn4j-test:${webauthn4jVersion}")
     testCompile('org.projectlombok:lombok')
+    testCompile("org.springframework:spring-webmvc")
     testCompile('org.springframework.boot:spring-boot-starter-test')
     testCompile('org.springframework.security:spring-security-test')
     testCompile('junit:junit')
