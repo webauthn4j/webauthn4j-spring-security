@@ -22,7 +22,6 @@ import org.springframework.security.web.csrf.HttpSessionCsrfTokenRepository;
 import org.springframework.util.Assert;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 /**
@@ -45,7 +44,7 @@ public class HttpSessionChallengeRepository implements ChallengeRepository {
     }
 
     @Override
-    public void saveChallenge(Challenge challenge, HttpServletRequest request, HttpServletResponse response) {
+    public void saveChallenge(Challenge challenge, HttpServletRequest request) {
         if (challenge == null) {
             HttpSession session = request.getSession(false);
             if (session != null) {

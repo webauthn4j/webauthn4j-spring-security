@@ -122,14 +122,18 @@ public class ConditionEndpointFilter extends GenericFilterBean {
 
     private void writeErrorResponse(HttpServletResponse response, RuntimeException e) throws IOException {
         Error error;
+        int statusCode;
         if (e instanceof InsufficientAuthenticationException) {
             error = new Error(Error.Type.NotAuthenticated, "Anonymous access is prohibited");
+            statusCode = HttpServletResponse.SC_FORBIDDEN;
         } else {
             error = new Error(Error.Type.ServerError, "The server encountered an internal error");
+            statusCode = HttpServletResponse.SC_INTERNAL_SERVER_ERROR;
         }
         String errorResponseText = objectMapper.writeValueAsString(error);
         response.setContentType("application/json");
         response.getWriter().print(errorResponseText);
+        response.setStatus(statusCode);
     }
 
 }

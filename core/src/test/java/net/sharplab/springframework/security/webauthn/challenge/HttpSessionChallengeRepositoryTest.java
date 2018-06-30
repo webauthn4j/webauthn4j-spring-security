@@ -19,7 +19,6 @@ package net.sharplab.springframework.security.webauthn.challenge;
 import com.webauthn4j.client.challenge.Challenge;
 import org.junit.Test;
 import org.springframework.mock.web.MockHttpServletRequest;
-import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.mock.web.MockHttpSession;
 
 import javax.servlet.http.HttpSession;
@@ -43,12 +42,11 @@ public class HttpSessionChallengeRepositoryTest {
     @Test
     public void saveChallenge_test() {
         MockHttpServletRequest request = new MockHttpServletRequest();
-        MockHttpServletResponse response = new MockHttpServletResponse();
         String attrName = ".test-challenge";
 
         target.setSessionAttributeName(attrName);
         Challenge challenge = target.generateChallenge();
-        target.saveChallenge(challenge, request, response);
+        target.saveChallenge(challenge, request);
 
         HttpSession session = request.getSession();
         assertThat((Challenge) session.getAttribute(attrName)).isEqualTo(challenge);
@@ -59,15 +57,13 @@ public class HttpSessionChallengeRepositoryTest {
         MockHttpSession session = new MockHttpSession();
         MockHttpServletRequest prevRequest = new MockHttpServletRequest();
         prevRequest.setSession(session);
-        MockHttpServletResponse prevResponse = new MockHttpServletResponse();
 
         MockHttpServletRequest request = new MockHttpServletRequest();
-        MockHttpServletResponse response = new MockHttpServletResponse();
         request.setSession(session);
 
         Challenge challenge = target.generateChallenge();
-        target.saveChallenge(challenge, prevRequest, prevResponse);
-        target.saveChallenge(null, request, response);
+        target.saveChallenge(challenge, prevRequest);
+        target.saveChallenge(null, request);
         Challenge loadedChallenge = target.loadChallenge(request);
 
         assertThat(loadedChallenge).isNull();
@@ -76,10 +72,8 @@ public class HttpSessionChallengeRepositoryTest {
     @Test
     public void saveChallenge_test_without_prev_request() {
         MockHttpServletRequest request = new MockHttpServletRequest();
-        MockHttpServletResponse response = new MockHttpServletResponse();
 
-        Challenge challenge = target.generateChallenge();
-        target.saveChallenge(null, request, response);
+        target.saveChallenge(null, request);
         Challenge loadedChallenge = target.loadChallenge(request);
 
         assertThat(loadedChallenge).isNull();
@@ -91,7 +85,6 @@ public class HttpSessionChallengeRepositoryTest {
         MockHttpSession session = new MockHttpSession();
         MockHttpServletRequest prevRequest = new MockHttpServletRequest();
         prevRequest.setSession(session);
-        MockHttpServletResponse prevResponse = new MockHttpServletResponse();
 
         MockHttpServletRequest request = new MockHttpServletRequest();
         request.setSession(session);
@@ -99,7 +92,7 @@ public class HttpSessionChallengeRepositoryTest {
 
         target.setSessionAttributeName(attrName);
         Challenge challenge = target.generateChallenge();
-        target.saveChallenge(challenge, prevRequest, prevResponse);
+        target.saveChallenge(challenge, prevRequest);
         Challenge loadedChallenge = target.loadChallenge(request);
 
         assertThat(loadedChallenge).isEqualTo(challenge);

@@ -65,6 +65,11 @@ public class ServerPropertyProviderImpl implements ServerPropertyProvider {
     }
 
     private Challenge obtainSavedChallenge(HttpServletRequest request) {
-        return challengeRepository.loadChallenge(request);
+        Challenge challenge = challengeRepository.loadChallenge(request);
+        if (challenge == null) {
+            challenge = challengeRepository.generateChallenge();
+            challengeRepository.saveChallenge(challenge, request);
+        }
+        return challenge;
     }
 }

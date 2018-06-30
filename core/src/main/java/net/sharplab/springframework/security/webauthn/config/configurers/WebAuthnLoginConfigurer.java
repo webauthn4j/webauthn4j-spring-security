@@ -125,13 +125,9 @@ public final class WebAuthnLoginConfigurer<H extends HttpSecurityBuilder<H>> ext
         http.setSharedObject(ConditionProvider.class, conditionProvider);
 
         if(serverPropertyProvider == null){
-            String[] beanNames = applicationContext.getBeanNamesForType(ServerPropertyProvider.class);
-            if(beanNames.length == 0){
-                serverPropertyProvider = new ServerPropertyProviderImpl(challengeRepository);
-            }
-            else {
-                serverPropertyProvider = applicationContext.getBean(ServerPropertyProvider.class);
-            }
+            // Since ServerPropertyProvider requires initialization,
+            // it is not instantiated manually, but retrieved from applicationContext.
+            serverPropertyProvider = applicationContext.getBean(ServerPropertyProvider.class);
         }
         http.setSharedObject(ServerPropertyProvider.class, serverPropertyProvider);
     }

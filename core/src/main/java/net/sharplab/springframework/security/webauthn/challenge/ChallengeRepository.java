@@ -27,9 +27,7 @@ import javax.servlet.http.HttpSession;
  * associated to the {@link HttpServletRequest}. For example, it may be stored in
  * {@link HttpSession}.
  *
- * @author Rob Winch
  * @see HttpSessionChallengeRepository
- * @since 3.2
  */
 public interface ChallengeRepository {
 
@@ -47,10 +45,8 @@ public interface ChallengeRepository {
      *
      * @param challenge the {@link Challenge} to save or null to delete
      * @param request   the {@link HttpServletRequest} to use
-     * @param response  the {@link HttpServletResponse} to use
      */
-    void saveChallenge(Challenge challenge, HttpServletRequest request,
-                       HttpServletResponse response);
+    void saveChallenge(Challenge challenge, HttpServletRequest request);
 
     /**
      * Loads the expected {@link Challenge} from the {@link HttpServletRequest}
