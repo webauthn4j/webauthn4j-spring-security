@@ -16,7 +16,6 @@
 
 package net.sharplab.springframework.security.webauthn.config.configurers;
 
-import net.sharplab.springframework.security.webauthn.WebAuthnFirstOfMultiFactorDelegatingAuthenticationProvider;
 import net.sharplab.springframework.security.webauthn.WebAuthnProcessingFilter;
 import net.sharplab.springframework.security.webauthn.challenge.ChallengeRepository;
 import net.sharplab.springframework.security.webauthn.challenge.HttpSessionChallengeRepository;
@@ -29,7 +28,6 @@ import net.sharplab.springframework.security.webauthn.userdetails.WebAuthnUserDe
 import org.springframework.context.ApplicationContext;
 import org.springframework.security.authentication.AuthenticationTrustResolver;
 import org.springframework.security.authentication.MFATokenEvaluator;
-import org.springframework.security.authentication.MFATokenEvaluatorImpl;
 import org.springframework.security.config.annotation.web.HttpSecurityBuilder;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.annotation.web.configurers.AbstractAuthenticationFilterConfigurer;
@@ -39,6 +37,7 @@ import org.springframework.security.web.authentication.ForwardAuthenticationSucc
 import org.springframework.security.web.session.SessionManagementFilter;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.security.web.util.matcher.RequestMatcher;
+import org.springframework.util.Assert;
 
 import static net.sharplab.springframework.security.webauthn.WebAuthnProcessingFilter.*;
 
@@ -299,16 +298,19 @@ public final class WebAuthnLoginConfigurer<H extends HttpSecurityBuilder<H>> ext
     }
 
     public WebAuthnLoginConfigurer<H> challengeRepository(ChallengeRepository challengeRepository) {
+        Assert.notNull(challengeRepository, "challengeRepository cannot be null");
         this.challengeRepository = challengeRepository;
         return this;
     }
 
     public WebAuthnLoginConfigurer<H> conditionProvider(ConditionProvider conditionProvider) {
+        Assert.notNull(conditionProvider, "conditionProvider cannot be null");
         this.conditionProvider = conditionProvider;
         return this;
     }
 
     public WebAuthnLoginConfigurer<H> serverPropertyProvider(ServerPropertyProvider serverPropertyProvider) {
+        Assert.notNull(serverPropertyProvider, "serverPropertyProvider cannot be null");
         this.serverPropertyProvider = serverPropertyProvider;
         return this;
     }
