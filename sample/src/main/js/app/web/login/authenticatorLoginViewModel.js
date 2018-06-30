@@ -120,8 +120,8 @@ AuthenticatorLoginViewModel.prototype.loadCredentialIds = function () {
         credentials: 'include'
     })
     .then(response => {
-        return response.json().then(function(json){
-            return json.map(metadata => base64url.toBuffer(metadata["credentialId"]));
+        return response.json().then(function(res){
+            return res["credentials"].map(entry => base64url.toBuffer(entry["id"]));
         });
     });
 };
