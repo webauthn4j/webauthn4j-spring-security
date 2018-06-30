@@ -2,7 +2,7 @@ package net.sharplab.springframework.security.webauthn.condition;
 
 import org.junit.Test;
 import org.springframework.mock.web.MockHttpServletResponse;
-import org.springframework.security.authentication.InsufficientAuthenticationException;
+import org.springframework.security.authentication.*;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -10,6 +10,17 @@ import java.io.IOException;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class ConditionEndpointFilterTest {
+
+    @Test
+    public void getter_setter_test(){
+        ConditionEndpointFilter conditionEndpointFilter = new ConditionEndpointFilter(null, null);
+        MFATokenEvaluator mfaTokenEvaluator = new MFATokenEvaluatorImpl();
+        AuthenticationTrustResolver trustResolver = new AuthenticationTrustResolverImpl();
+        conditionEndpointFilter.setMFATokenEvaluator(mfaTokenEvaluator);
+        conditionEndpointFilter.setTrustResolver(trustResolver);
+        assertThat(conditionEndpointFilter.getMfaTokenEvaluator()).isEqualTo(mfaTokenEvaluator);
+        assertThat(conditionEndpointFilter.getTrustResolver()).isEqualTo(trustResolver);
+    }
 
     @Test
     public void writeErrorResponse_with_RuntimeException_test() throws IOException {

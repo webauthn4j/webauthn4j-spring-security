@@ -84,8 +84,16 @@ public class ConditionEndpointFilter extends GenericFilterBean {
 
     }
 
+    public AuthenticationTrustResolver getTrustResolver() {
+        return trustResolver;
+    }
+
     public void setTrustResolver(AuthenticationTrustResolver trustResolver) {
         this.trustResolver = trustResolver;
+    }
+
+    public MFATokenEvaluator getMfaTokenEvaluator() {
+        return mfaTokenEvaluator;
     }
 
     public void setMFATokenEvaluator(MFATokenEvaluator mfaTokenEvaluator) {
