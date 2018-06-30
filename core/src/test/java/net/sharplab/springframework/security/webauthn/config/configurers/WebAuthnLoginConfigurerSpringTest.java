@@ -35,7 +35,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @RunWith(SpringRunner.class)
-public class WebAuthnLoginConfigurerTest {
+public class WebAuthnLoginConfigurerSpringTest {
 
     @Autowired
     Filter springSecurityFilterChain;
