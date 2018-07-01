@@ -79,7 +79,16 @@ public class WebAuthnAuthenticationProvider implements AuthenticationProvider {
 
         WebAuthnAssertionAuthenticationToken authenticationToken = (WebAuthnAssertionAuthenticationToken) authentication;
 
-        byte[] credentialId = authenticationToken.getCredentials().getCredentialId();
+        WebAuthnAuthenticationRequest credentials = authenticationToken.getCredentials();
+        if (credentials == null) {
+            logger.debug("Authentication failed: no credentials provided");
+
+            throw new BadCredentialsException(messages.getMessage(
+                    "WebAuthnAuthenticationContextValidator.badCredentials",
+                    "Bad credentials"));
+        }
+
+        byte[] credentialId = credentials.getCredentialId();
 
         // Using credential’s id attribute, look up the corresponding credential public key.
         Authenticator authenticator = retrieveWebAuthnAuthenticator(credentialId, authenticationToken);
@@ -110,14 +119,6 @@ public class WebAuthnAuthenticationProvider implements AuthenticationProvider {
     }
 
     void doAuthenticate(WebAuthnAssertionAuthenticationToken authenticationToken, Authenticator authenticator, WebAuthnUserDetails user) {
-        if (authenticationToken.getCredentials() == null) {
-            logger.debug("Authentication failed: no credentials provided");
-
-            throw new BadCredentialsException(messages.getMessage(
-                    "WebAuthnAuthenticationContextValidator.badCredentials",
-                    "Bad credentials"));
-        }
-
 
         Authentication currentAuthentication = SecurityContextHolder.getContext().getAuthentication();
         boolean isUserVerified = currentAuthentication != null && Objects.equals(currentAuthentication.getName(), user.getUsername());
@@ -179,12 +180,42 @@ public class WebAuthnAuthenticationProvider implements AuthenticationProvider {
         return hideCredentialIdNotFoundExceptions;
     }
 
+    protected WebAuthnUserDetailsService getUserDetailsService() {
+        return userDetailsService;
+    }
+
+    public void setUserDetailsService(WebAuthnUserDetailsService userDetailsService) {
+        this.userDetailsService = userDetailsService;
+    }
+
     protected WebAuthnAuthenticatorService getAuthenticatorService() {
         return authenticatorService;
     }
 
     public void setAuthenticatorService(WebAuthnAuthenticatorService authenticatorService) {
         this.authenticatorService = authenticatorService;
+    }
+
+    protected UserDetailsChecker getPreAuthenticationChecks() {
+        return preAuthenticationChecks;
+    }
+
+    /**
+     * Sets the policy will be used to verify the status of the loaded
+     * <tt>UserDetails</tt> <em>before</em> validation of the credentials takes place.
+     *
+     * @param preAuthenticationChecks strategy to be invoked prior to authentication.
+     */
+    public void setPreAuthenticationChecks(UserDetailsChecker preAuthenticationChecks) {
+        this.preAuthenticationChecks = preAuthenticationChecks;
+    }
+
+    protected UserDetailsChecker getPostAuthenticationChecks() {
+        return postAuthenticationChecks;
+    }
+
+    public void setPostAuthenticationChecks(UserDetailsChecker postAuthenticationChecks) {
+        this.postAuthenticationChecks = postAuthenticationChecks;
     }
 
     Authenticator retrieveWebAuthnAuthenticator(byte[] credentialId, WebAuthnAssertionAuthenticationToken authenticationToken) {

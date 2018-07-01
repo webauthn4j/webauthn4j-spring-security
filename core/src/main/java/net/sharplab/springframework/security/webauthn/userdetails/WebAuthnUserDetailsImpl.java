@@ -36,13 +36,21 @@ public class WebAuthnUserDetailsImpl extends User implements WebAuthnUserDetails
 
     public WebAuthnUserDetailsImpl(String username, String password, List<Authenticator> authenticators,
                                    Collection<? extends GrantedAuthority> authorities) {
-        super(username, password, authorities);
-        this.authenticators = authenticators;
+        this(username, password, authenticators, false, authorities);
     }
 
-    public WebAuthnUserDetailsImpl(String username, String password, List<Authenticator> authenticators,
-                                   Collection<? extends GrantedAuthority> authorities, boolean passwordAuthenticationAllowed) {
-        this(username, password, authenticators, authorities);
+    public WebAuthnUserDetailsImpl(String username, String password, List<Authenticator> authenticators, boolean passwordAuthenticationAllowed,
+                                   Collection<? extends GrantedAuthority> authorities) {
+        this(username, password, authenticators, passwordAuthenticationAllowed,
+                true, true, true, true,
+                authorities);
+    }
+
+    public WebAuthnUserDetailsImpl(String username, String password, List<Authenticator> authenticators, boolean passwordAuthenticationAllowed,
+                                   boolean enabled, boolean accountNonExpired, boolean credentialsNonExpired, boolean accountNonLocked,
+                                   Collection<? extends GrantedAuthority> authorities) {
+        super(username, password, enabled, accountNonExpired, credentialsNonExpired, accountNonLocked, authorities);
+        this.authenticators = authenticators;
         this.passwordAuthenticationAllowed = passwordAuthenticationAllowed;
     }
 
