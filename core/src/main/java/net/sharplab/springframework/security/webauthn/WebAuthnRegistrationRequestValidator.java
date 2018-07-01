@@ -7,7 +7,6 @@ import com.webauthn4j.validator.WebAuthnRegistrationContextValidator;
 import net.sharplab.springframework.security.webauthn.server.ServerPropertyProvider;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
 public class WebAuthnRegistrationRequestValidator {
@@ -25,7 +24,7 @@ public class WebAuthnRegistrationRequestValidator {
         this.serverPropertyProvider = serverPropertyProvider;
     }
 
-    public void validate(HttpServletRequest request, HttpServletResponse response,
+    public void validate(HttpServletRequest request,
                          String clientDataBase64,
                          String attestationObjectBase64,
                          String clientExtensionsJSON

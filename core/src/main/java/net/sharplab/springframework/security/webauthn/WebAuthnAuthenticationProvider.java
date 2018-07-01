@@ -91,7 +91,7 @@ public class WebAuthnAuthenticationProvider implements AuthenticationProvider {
         byte[] credentialId = credentials.getCredentialId();
 
         // Using credential’s id attribute, look up the corresponding credential public key.
-        Authenticator authenticator = retrieveWebAuthnAuthenticator(credentialId, authenticationToken);
+        Authenticator authenticator = retrieveWebAuthnAuthenticator(credentialId);
         WebAuthnUserDetails user = userDetailsService.loadUserByAuthenticator(authenticator);
 
         preAuthenticationChecks.check(user);
@@ -218,7 +218,7 @@ public class WebAuthnAuthenticationProvider implements AuthenticationProvider {
         this.postAuthenticationChecks = postAuthenticationChecks;
     }
 
-    Authenticator retrieveWebAuthnAuthenticator(byte[] credentialId, WebAuthnAssertionAuthenticationToken authenticationToken) {
+    Authenticator retrieveWebAuthnAuthenticator(byte[] credentialId) {
         Authenticator loadedAuthenticator;
 
         try {

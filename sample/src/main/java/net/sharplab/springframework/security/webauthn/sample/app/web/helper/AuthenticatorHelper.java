@@ -45,7 +45,6 @@ public class AuthenticatorHelper {
             try {
                 registrationRequestValidator.validate(
                         request,
-                        response,
                         authenticator.getClientData().getClientDataBase64(),
                         authenticator.getAttestationObject().getAttestationObjectBase64(),
                         authenticator.getClientExtensionsJSON()

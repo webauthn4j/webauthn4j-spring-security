@@ -68,7 +68,7 @@ public class WebAuthnRegistrationRequestValidatorTest {
         String attestationObjectBase64 = "attestationObjectBase64";
         String clientExtensionsJSON = null;
 
-        target.validate(mockHttpServletRequest, null, clientDataBase64, attestationObjectBase64, clientExtensionsJSON);
+        target.validate(mockHttpServletRequest, clientDataBase64, attestationObjectBase64, clientExtensionsJSON);
 
         ArgumentCaptor<WebAuthnRegistrationContext> argumentCaptor = ArgumentCaptor.forClass(WebAuthnRegistrationContext.class);
         verify(registrationContextValidator).validate(argumentCaptor.capture());

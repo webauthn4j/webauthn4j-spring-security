@@ -89,7 +89,7 @@ public class RegistrationValidationTest {
         String attestationObjectBase64 = Base64UrlUtil.encodeToString(registrationRequest.getAttestationObject());
         String clientExtensionsJSON = null;
 
-        target.validate(mockHttpServletRequest, null, clientDataBase64, attestationObjectBase64, clientExtensionsJSON);
+        target.validate(mockHttpServletRequest, clientDataBase64, attestationObjectBase64, clientExtensionsJSON);
     }
 
 }

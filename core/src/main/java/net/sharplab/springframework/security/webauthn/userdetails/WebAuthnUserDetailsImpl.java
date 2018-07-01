@@ -46,6 +46,7 @@ public class WebAuthnUserDetailsImpl extends User implements WebAuthnUserDetails
                 authorities);
     }
 
+    @SuppressWarnings("squid:S00107")
     public WebAuthnUserDetailsImpl(String username, String password, List<Authenticator> authenticators, boolean passwordAuthenticationAllowed,
                                    boolean enabled, boolean accountNonExpired, boolean credentialsNonExpired, boolean accountNonLocked,
                                    Collection<? extends GrantedAuthority> authorities) {
