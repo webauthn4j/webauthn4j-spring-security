@@ -16,39 +16,86 @@
 
 package net.sharplab.springframework.security.webauthn;
 
+import com.webauthn4j.WebAuthnRegistrationContext;
+import com.webauthn4j.client.Origin;
+import com.webauthn4j.client.challenge.Challenge;
+import com.webauthn4j.client.challenge.DefaultChallenge;
+import com.webauthn4j.server.ServerProperty;
+import com.webauthn4j.util.Base64UrlUtil;
 import com.webauthn4j.validator.WebAuthnRegistrationContextValidator;
-import net.sharplab.springframework.security.webauthn.challenge.HttpSessionChallengeRepository;
-import net.sharplab.springframework.security.webauthn.server.ServerPropertyProviderImpl;
-import org.junit.Ignore;
+import net.sharplab.springframework.security.webauthn.server.ServerPropertyProvider;
+import org.junit.Rule;
 import org.junit.Test;
+import org.mockito.ArgumentCaptor;
+import org.mockito.Mock;
+import org.mockito.junit.MockitoJUnit;
+import org.mockito.junit.MockitoRule;
 import org.springframework.mock.web.MockHttpServletRequest;
 
 import java.util.Collections;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.*;
 
 /**
  * Test for WebAuthnRegistrationContextValidator
  */
 public class WebAuthnRegistrationRequestValidatorTest {
 
-    private WebAuthnRegistrationRequestValidator target;
+    @Rule
+    public MockitoRule mockito = MockitoJUnit.rule();
+
+    @Mock
+    WebAuthnRegistrationContextValidator registrationContextValidator;
+
+    @Mock
+    ServerPropertyProvider serverPropertyProvider;
+
 
     @Test
-    @Ignore
-    public void test() {
-        target = new WebAuthnRegistrationRequestValidator(
-                new WebAuthnRegistrationContextValidator(Collections.emptyList(), null, null, null),
-                new ServerPropertyProviderImpl(new HttpSessionChallengeRepository())
+    public void validate_test() {
+        WebAuthnRegistrationRequestValidator target = new WebAuthnRegistrationRequestValidator(
+                registrationContextValidator, serverPropertyProvider
         );
+        target.setUserVerificationRequired(true);
 
-        String clientDataBase64 = "eyJjaGFsbGVuZ2UiOiJGRkc1UVdrRFNJUzZvRVY1SFc0Vlp3IiwiaGFzaEFsZyI6IlNIQS0yNTYiLCJvcmlnaW4iOiJodHRwOi8vbG9jYWxob3N0OjgwODAifQ";
-        String authenticatorDataBase64 = "o2hhdXRoRGF0YVjaSZYN5YgOjGh0NBcPZHZgW4_krrmihjLHmVzzuoMdl2NBAAAAAAAAAAAAAAAAAAAAAAAAAAAAUPkhL7CLReeOjs15K_lZ-dzAl9qiMLFVDiPhCy47YK_CATKTTfSYeJkcPxlk1VVuk7tFqXWom7EIvN9JEq1efGIt2KXm4mtYuHJNpWP6wUlNo2NhbGdlRVMyNTZheFgga1LrLL5aWxB9DSl3MaBK1swOMYFFyT_VKKxjAee7T5JheVgggnPC8LwHjrU7xRjo8apkgI88lJOL6TLMJuvWkkQbWQhjZm10aGZpZG8tdTJmZ2F0dFN0bXSiY3g1Y4FZAVAwggFMMIHzoAMCAQICCswWCqfhOU9rd1AwCgYIKoZIzj0EAwIwFzEVMBMGA1UEAxMMRlQgRklETyAwMTAwMB4XDTE2MDQxNTE0NTAzMloXDTI2MDQxNTE0NTAzMlowJzElMCMGA1UEAxMcRlQgRklETyBVMkYgMTE2MTYxNzMwMzA1MDIxMDBZMBMGByqGSM49AgEGCCqGSM49AwEHA0IABMbW1eH0fIaLhQlqmw_cXDw0TBGvlYRh9XnE68_ZdTiOmcnXtIRvJlMKfutffwSm3fYE-voho6ZqaoB1C-wOk2CjFzAVMBMGCysGAQQBguUcAgEBBAQDAgQwMAoGCCqGSM49BAMCA0gAMEUCIQDfA-8s6-OltTdUKwoGNa1vkzNxf8jans039fTeTLIWhQIgDGgk-KcoZTGg1H9uHHe5ke1BCnAta5oE0P3LY6aF_jtjc2lnWEcwRQIhAMhC6-Zl4aBd9qUxN-YL4iuk5fJiJT0u5O-ryg6ZRqgcAiAt9emh9-KE98O_4D5HgNUfTwMmyYPSkSCcSpuiBNU0jw";
-        String clientExtensionsJSON = "";
+        ServerProperty serverProperty = mock(ServerProperty.class);
+        when(serverPropertyProvider.provide(any())).thenReturn(serverProperty);
 
         MockHttpServletRequest mockHttpServletRequest = new MockHttpServletRequest();
-        mockHttpServletRequest.setScheme("http");
-        mockHttpServletRequest.setServerName("localhost");
-        mockHttpServletRequest.setServerPort(8080);
-        target.validate(mockHttpServletRequest, null, clientDataBase64, authenticatorDataBase64, clientExtensionsJSON);
+        mockHttpServletRequest.setScheme("https");
+        mockHttpServletRequest.setServerName("example.com");
+        mockHttpServletRequest.setServerPort(443);
+        String clientDataBase64 = "clientDataBase64";
+        String attestationObjectBase64 = "attestationObjectBase64";
+        String clientExtensionsJSON = null;
+
+        target.validate(mockHttpServletRequest, null, clientDataBase64, attestationObjectBase64, clientExtensionsJSON);
+
+        ArgumentCaptor<WebAuthnRegistrationContext> argumentCaptor = ArgumentCaptor.forClass(WebAuthnRegistrationContext.class);
+        verify(registrationContextValidator).validate(argumentCaptor.capture());
+        WebAuthnRegistrationContext registrationContext = argumentCaptor.getValue();
+
+        assertThat(registrationContext.getClientDataJSON()).isEqualTo(Base64UrlUtil.decode(clientDataBase64));
+        assertThat(registrationContext.getAttestationObject()).isEqualTo(Base64UrlUtil.decode(attestationObjectBase64));
+        assertThat(registrationContext.getClientExtensionsJSON()).isEqualTo(clientExtensionsJSON);
+        assertThat(registrationContext.getServerProperty()).isEqualTo(serverProperty);
+        assertThat(registrationContext.isUserVerificationRequired()).isEqualTo(target.isUserVerificationRequired());
+        assertThat(registrationContext.getExpectedExtensionIds()).isEqualTo(target.getExpectedRegistrationExtensionIds());
+    }
+
+    @Test
+    public void getter_setter_test(){
+        WebAuthnRegistrationRequestValidator target = new WebAuthnRegistrationRequestValidator(
+                registrationContextValidator, serverPropertyProvider
+        );
+
+        target.setUserVerificationRequired(true);
+        assertThat(target.isUserVerificationRequired()).isTrue();
+        target.setExpectedRegistrationExtensionIds(Collections.singletonList("appId"));
+        assertThat(target.getExpectedRegistrationExtensionIds()).containsExactly("appId");
+
     }
 
 }
