@@ -70,7 +70,6 @@ public class AuthenticatorHelper {
             AttestationObject attestationObject = source.getAttestationObject().getAttestationObject();
             AuthenticatorData authnAuthenticatorData = attestationObject.getAuthenticatorData();
 
-            destination.setRpIdHash(authnAuthenticatorData.getRpIdHash());
             destination.setCounter(authnAuthenticatorData.getSignCount());
             destination.setAttestedCredentialData(authnAuthenticatorData.getAttestedCredentialData());
             destination.setAttestationStatement(attestationObject.getAttestationStatement());

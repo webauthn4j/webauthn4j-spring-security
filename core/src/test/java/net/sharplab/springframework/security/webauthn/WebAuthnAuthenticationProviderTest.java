@@ -21,6 +21,7 @@ import com.webauthn4j.authenticator.Authenticator;
 import com.webauthn4j.authenticator.AuthenticatorImpl;
 import com.webauthn4j.validator.WebAuthnAuthenticationContextValidator;
 import com.webauthn4j.validator.exception.ValidationException;
+import net.sharplab.springframework.security.webauthn.authenticator.WebAuthnAuthenticator;
 import net.sharplab.springframework.security.webauthn.authenticator.WebAuthnAuthenticatorService;
 import net.sharplab.springframework.security.webauthn.exception.*;
 import net.sharplab.springframework.security.webauthn.request.WebAuthnAuthenticationRequest;
@@ -90,7 +91,7 @@ public class WebAuthnAuthenticationProviderTest {
         //Given
         byte[] credentialId = new byte[32];
         GrantedAuthority grantedAuthority = new SimpleGrantedAuthority("ROLE_ADMIN");
-        Authenticator authenticator = new AuthenticatorImpl(null, null, 0);
+        WebAuthnAuthenticator authenticator = new WebAuthnAuthenticator();
         WebAuthnUserDetailsImpl user = new WebAuthnUserDetailsImpl(
                 "dummy",
                 "dummy",
@@ -126,7 +127,7 @@ public class WebAuthnAuthenticationProviderTest {
         //Given
         byte[] credentialId = new byte[32];
         GrantedAuthority grantedAuthority = new SimpleGrantedAuthority("ROLE_ADMIN");
-        Authenticator authenticator = new AuthenticatorImpl(null, null, 0);
+        WebAuthnAuthenticator authenticator = new WebAuthnAuthenticator();
         WebAuthnUserDetailsImpl user = new WebAuthnUserDetailsImpl(
                 "dummy",
                 "dummy",
@@ -157,7 +158,7 @@ public class WebAuthnAuthenticationProviderTest {
         //Given
         byte[] credentialId = new byte[32];
         GrantedAuthority grantedAuthority = new SimpleGrantedAuthority("ROLE_ADMIN");
-        Authenticator authenticator = new AuthenticatorImpl(null, null, 0);
+        WebAuthnAuthenticator authenticator = new WebAuthnAuthenticator();
         WebAuthnUserDetailsImpl user = new WebAuthnUserDetailsImpl(
                 "dummy",
                 "dummy",
@@ -182,7 +183,7 @@ public class WebAuthnAuthenticationProviderTest {
     @Test
     public void retrieveWebAuthnAuthenticator_test() {
         byte[] credentialId = new byte[0];
-        Authenticator expectedAuthenticator = mock(Authenticator.class);
+        WebAuthnAuthenticator expectedAuthenticator = new WebAuthnAuthenticator();
 
         //Given
         when(authenticatorService.loadWebAuthnAuthenticatorByCredentialId(credentialId)).thenReturn(expectedAuthenticator);

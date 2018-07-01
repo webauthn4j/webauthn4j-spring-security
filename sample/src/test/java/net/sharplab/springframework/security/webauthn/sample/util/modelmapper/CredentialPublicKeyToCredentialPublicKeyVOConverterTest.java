@@ -5,7 +5,7 @@ import com.webauthn4j.attestation.authenticator.ECCredentialPublicKey;
 import com.webauthn4j.attestation.statement.COSEAlgorithmIdentifier;
 import com.webauthn4j.attestation.statement.COSEKeyType;
 import net.sharplab.springframework.security.webauthn.sample.domain.config.ModelMapperConfig;
-import net.sharplab.springframework.security.webauthn.sample.domain.vo.ECCredentialPublicKeyVO;
+import net.sharplab.springframework.security.webauthn.sample.domain.vo.EC2CredentialPublicKeyVO;
 import org.junit.Test;
 import org.modelmapper.ModelMapper;
 
@@ -31,7 +31,7 @@ public class CredentialPublicKeyToCredentialPublicKeyVOConverterTest {
                 new byte[]{0x00, 0x01},
                 new byte[]{0x02, 0x03}
         );
-        ECCredentialPublicKeyVO destination = new ECCredentialPublicKeyVO();
+        EC2CredentialPublicKeyVO destination = new EC2CredentialPublicKeyVO();
 
         //When
         modelMapper.map(source, destination);

@@ -13,24 +13,17 @@ import java.util.Objects;
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME)
 @JsonSubTypes({
         @JsonSubTypes.Type(name = "RSACredentialPublicKey", value = RSCredentialPublicKeyVO.class),
-        @JsonSubTypes.Type(name = "ECCredentialPublicKey", value = ECCredentialPublicKeyVO.class)
+        @JsonSubTypes.Type(name = "EC2CredentialPublicKey", value = EC2CredentialPublicKeyVO.class)
 })
 public abstract class AbstractCredentialPublicKeyVO implements CredentialPublicKeyVO, Serializable {
 
-    private COSEKeyType keyType;
     private byte[] keyId;
     private int[] keyOpts;
     private byte[] baseIV;
 
     private COSEAlgorithmIdentifier algorithm;
 
-    public COSEKeyType getKeyType() {
-        return keyType;
-    }
-
-    public void setKeyType(COSEKeyType keyType) {
-        this.keyType = keyType;
-    }
+    public abstract COSEKeyType getKeyType();
 
     public byte[] getKeyId() {
         return keyId;
@@ -69,8 +62,7 @@ public abstract class AbstractCredentialPublicKeyVO implements CredentialPublicK
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         AbstractCredentialPublicKeyVO that = (AbstractCredentialPublicKeyVO) o;
-        return keyType == that.keyType &&
-                Arrays.equals(keyId, that.keyId) &&
+        return Arrays.equals(keyId, that.keyId) &&
                 Arrays.equals(keyOpts, that.keyOpts) &&
                 Arrays.equals(baseIV, that.baseIV) &&
                 algorithm == that.algorithm;
@@ -79,7 +71,7 @@ public abstract class AbstractCredentialPublicKeyVO implements CredentialPublicK
     @Override
     public int hashCode() {
 
-        int result = Objects.hash(keyType, algorithm);
+        int result = Objects.hash(algorithm);
         result = 31 * result + Arrays.hashCode(keyId);
         result = 31 * result + Arrays.hashCode(keyOpts);
         result = 31 * result + Arrays.hashCode(baseIV);

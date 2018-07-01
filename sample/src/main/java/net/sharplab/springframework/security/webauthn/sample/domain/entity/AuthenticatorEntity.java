@@ -23,9 +23,6 @@ public class AuthenticatorEntity implements Serializable {
     @ManyToOne
     private UserEntity user;
 
-    @Column(columnDefinition = "blob")
-    private byte[] rpIdHash;
-
     private long counter;
 
     @Embedded
@@ -63,14 +60,6 @@ public class AuthenticatorEntity implements Serializable {
 
     public void setUser(UserEntity user) {
         this.user = user;
-    }
-
-    public byte[] getRpIdHash() {
-        return rpIdHash;
-    }
-
-    public void setRpIdHash(byte[] rpIdHash) {
-        this.rpIdHash = rpIdHash;
     }
 
     public long getCounter() {

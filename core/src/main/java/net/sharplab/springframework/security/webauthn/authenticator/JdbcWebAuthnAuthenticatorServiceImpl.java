@@ -16,14 +16,53 @@
 
 package net.sharplab.springframework.security.webauthn.authenticator;
 
+import com.webauthn4j.attestation.authenticator.AttestedCredentialData;
+import com.webauthn4j.attestation.authenticator.CredentialPublicKey;
+import com.webauthn4j.attestation.statement.AttestationStatement;
 import com.webauthn4j.authenticator.Authenticator;
+import com.webauthn4j.converter.jackson.ObjectMapperUtil;
+import com.webauthn4j.util.Base64UrlUtil;
 import net.sharplab.springframework.security.webauthn.exception.CredentialIdNotFoundException;
+import org.springframework.context.MessageSource;
+import org.springframework.context.MessageSourceAware;
+import org.springframework.context.support.MessageSourceAccessor;
+import org.springframework.jdbc.core.support.JdbcDaoSupport;
+import org.springframework.security.core.SpringSecurityMessageSource;
+import org.springframework.util.Assert;
+
+import java.util.List;
 
 /**
  * A {@link WebAuthnAuthenticatorService} implementation that retrieves the user details
  * from a database using JDBC queries.
  */
-public class JdbcWebAuthnAuthenticatorServiceImpl implements WebAuthnAuthenticatorService {
+public class JdbcWebAuthnAuthenticatorServiceImpl extends JdbcDaoSupport
+        implements WebAuthnAuthenticatorService, MessageSourceAware {
+
+    // ~ Static fields/initializers
+    // =====================================================================================
+
+    public static final String DEF_AUTHENTICATORS_BY_CREDENTIAL_ID_QUERY =
+            "select name, counter, aa_guid, credential_id, credential_public_key, attestation_statement " +
+            "from authenticators " + "where credential_id = ?";
+
+    // ~ Instance fields
+    // ================================================================================================
+
+    protected MessageSourceAccessor messages = SpringSecurityMessageSource.getAccessor();
+
+    private String authenticatorsByCredentialIdQuery;
+
+
+    // ~ Constructors
+    // ===================================================================================================
+
+    public JdbcWebAuthnAuthenticatorServiceImpl() {
+        this.authenticatorsByCredentialIdQuery = DEF_AUTHENTICATORS_BY_CREDENTIAL_ID_QUERY;
+    }
+
+    // ~ Methods
+    // ========================================================================================================
 
     /**
      * Locates the authenticator based on the credentialId.
@@ -33,8 +72,49 @@ public class JdbcWebAuthnAuthenticatorServiceImpl implements WebAuthnAuthenticat
      * @throws CredentialIdNotFoundException if the authenticator could not be found
      */
     @Override
-    public Authenticator loadWebAuthnAuthenticatorByCredentialId(byte[] credentialId) {
-        // TODO
-        return null;
+    public WebAuthnAuthenticator loadWebAuthnAuthenticatorByCredentialId(byte[] credentialId) {
+        List<WebAuthnAuthenticator> authenticators = loadWebAuthnAuthenticatorsByCredentialId(credentialId);
+
+        if (authenticators.isEmpty()) {
+            String credentialIdStr = Base64UrlUtil.encodeToString(credentialId);
+            this.logger.debug("Query returned no results for authenticator '" + credentialIdStr + "'");
+
+            throw new CredentialIdNotFoundException(
+                    this.messages.getMessage("JdbcDaoImpl.notFound",
+                            new Object[]{credentialIdStr}, "credentialId {0} not found"));
+        }
+
+        return authenticators.get(0);
+    }
+
+    List<WebAuthnAuthenticator> loadWebAuthnAuthenticatorsByCredentialId(byte[] credentialId) {
+        return getJdbcTemplate().query(this.authenticatorsByCredentialIdQuery,
+                new byte[][] { credentialId }, (rs, rowNum) -> {
+                    String name = rs.getString(1);
+                    int counter = rs.getInt(2);
+                    byte[] aaGuid = rs.getBytes(3);
+                    String credentialPublicKey = rs.getString(5);
+                    String attestationStatement = rs.getString(6);
+                    AttestedCredentialData attestedCredentialData = new AttestedCredentialData(aaGuid, credentialId, ObjectMapperUtil.readJSONValue(credentialPublicKey, CredentialPublicKey.class));
+                    WebAuthnAuthenticator webAuthnAuthenticator = new WebAuthnAuthenticator();
+                    webAuthnAuthenticator.setName(name);
+                    webAuthnAuthenticator.setCounter(counter);
+                    webAuthnAuthenticator.setAttestedCredentialData(attestedCredentialData);
+                    webAuthnAuthenticator.setAttestationStatement(ObjectMapperUtil.readJSONValue(attestationStatement, AttestationStatement.class));
+                    return webAuthnAuthenticator;
+                });
+    }
+
+    /**
+     * @return the messages
+     */
+    protected MessageSourceAccessor getMessages() {
+        return this.messages;
+    }
+
+    @Override
+    public void setMessageSource(MessageSource messageSource) {
+        Assert.notNull(messageSource, "messageSource cannot be null");
+        this.messages = new MessageSourceAccessor(messageSource);
     }
 }

@@ -3,7 +3,7 @@ package net.sharplab.springframework.security.webauthn.sample.infrastructure.uti
 import com.webauthn4j.attestation.authenticator.Curve;
 import com.webauthn4j.attestation.statement.COSEAlgorithmIdentifier;
 import net.sharplab.springframework.security.webauthn.sample.domain.vo.AbstractCredentialPublicKeyVO;
-import net.sharplab.springframework.security.webauthn.sample.domain.vo.ECCredentialPublicKeyVO;
+import net.sharplab.springframework.security.webauthn.sample.domain.vo.EC2CredentialPublicKeyVO;
 import net.sharplab.springframework.security.webauthn.sample.domain.vo.RSCredentialPublicKeyVO;
 import org.junit.Test;
 
@@ -15,7 +15,7 @@ public class CredentialPublicKeyVOConverterTest {
 
     @Test
     public void testECCredentialPublicKeyVO(){
-        ECCredentialPublicKeyVO original= new ECCredentialPublicKeyVO();
+        EC2CredentialPublicKeyVO original= new EC2CredentialPublicKeyVO();
         original.setCurve(Curve.SECP256R1);
         original.setAlgorithm(COSEAlgorithmIdentifier.ES256);
         original.setX(new byte[]{0b00, 0b01});

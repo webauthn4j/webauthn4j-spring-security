@@ -30,7 +30,6 @@ CREATE TABLE m_authenticator(
   id                     INTEGER       NOT NULL AUTO_INCREMENT,
   name                   VARCHAR(32)   NOT NULL,
   user_id                INTEGER       NOT NULL  REFERENCES m_user(id),
-  rp_id_hash             BLOB           NOT NULL,
   counter                BIGINT         NOT NULL,
   aa_guid                BLOB           NOT NULL,
   credential_id          BLOB           NOT NULL,

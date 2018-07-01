@@ -16,7 +16,6 @@
 
 package net.sharplab.springframework.security.webauthn.authenticator;
 
-import com.webauthn4j.authenticator.Authenticator;
 import net.sharplab.springframework.security.webauthn.exception.CredentialIdNotFoundException;
 import org.springframework.security.core.userdetails.UserDetailsService;
 
@@ -32,6 +31,6 @@ public interface WebAuthnAuthenticatorService {
      * @return a fully populated authenticator record (never <code>null</code>)
      * @throws CredentialIdNotFoundException if the authenticator could not be found
      */
-    Authenticator loadWebAuthnAuthenticatorByCredentialId(byte[] credentialId);
+    WebAuthnAuthenticator loadWebAuthnAuthenticatorByCredentialId(byte[] credentialId);
 
 }

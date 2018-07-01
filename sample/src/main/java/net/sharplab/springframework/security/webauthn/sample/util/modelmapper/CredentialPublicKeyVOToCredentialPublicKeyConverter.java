@@ -4,7 +4,7 @@ import com.webauthn4j.attestation.authenticator.CredentialPublicKey;
 import com.webauthn4j.attestation.authenticator.ECCredentialPublicKey;
 import com.webauthn4j.attestation.authenticator.RSACredentialPublicKey;
 import net.sharplab.springframework.security.webauthn.sample.domain.vo.CredentialPublicKeyVO;
-import net.sharplab.springframework.security.webauthn.sample.domain.vo.ECCredentialPublicKeyVO;
+import net.sharplab.springframework.security.webauthn.sample.domain.vo.EC2CredentialPublicKeyVO;
 import net.sharplab.springframework.security.webauthn.sample.domain.vo.RSCredentialPublicKeyVO;
 import org.modelmapper.Converter;
 import org.modelmapper.spi.MappingContext;
@@ -26,11 +26,11 @@ public class CredentialPublicKeyVOToCredentialPublicKeyConverter implements Conv
                 destination = new RSACredentialPublicKey();
             }
             context.getMappingEngine().map(context.create((RSCredentialPublicKeyVO) source, (RSACredentialPublicKey)destination));
-        } else if (source.getClass() == ECCredentialPublicKeyVO.class) {
+        } else if (source.getClass() == EC2CredentialPublicKeyVO.class) {
             if (destination == null) {
                 destination = new ECCredentialPublicKey();
             }
-            context.getMappingEngine().map(context.create((ECCredentialPublicKeyVO) source, (ECCredentialPublicKey)destination));
+            context.getMappingEngine().map(context.create((EC2CredentialPublicKeyVO) source, (ECCredentialPublicKey)destination));
         } else {
             throw new IllegalArgumentException();
         }

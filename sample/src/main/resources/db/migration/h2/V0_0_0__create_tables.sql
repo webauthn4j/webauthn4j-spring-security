@@ -27,7 +27,6 @@ CREATE TABLE m_authenticator(
   id                SERIAL         NOT NULL,
   name              VARCHAR(32)    NOT NULL,
   user_id           INTEGER        NOT NULL  REFERENCES m_user(id),
-  rp_id_hash bytea NOT NULL,
   counter           BIGINT         NOT NULL,
   aa_guid  bytea  NOT NULL,
   credential_id bytea NOT NULL,

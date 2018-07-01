@@ -10,6 +10,7 @@ dependencies {
     compile('org.springframework.security:spring-security-core:5.1.0.BUILD-SNAPSHOT')
     compile('org.springframework.security:spring-security-web:5.1.0.BUILD-SNAPSHOT')
 
+    compile("org.springframework:spring-jdbc")
     compile("org.springframework:spring-web")
     compile("org.springframework.security:spring-security-core")
     compile("org.springframework.security:spring-security-config")
@@ -23,6 +24,7 @@ dependencies {
     testCompile("org.springframework:spring-webmvc")
     testCompile('org.springframework.boot:spring-boot-starter-test')
     testCompile('org.springframework.security:spring-security-test')
+    testCompile('com.h2database:h2')
     testCompile('junit:junit')
     testCompile('org.mockito:mockito-core')
     testCompile('org.assertj:assertj-core')

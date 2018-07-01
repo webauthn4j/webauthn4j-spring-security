@@ -1,11 +1,18 @@
 package net.sharplab.springframework.security.webauthn.sample.domain.vo;
 
+import com.webauthn4j.attestation.statement.COSEKeyType;
+
 import java.util.Arrays;
 
 public class RSCredentialPublicKeyVO extends AbstractCredentialPublicKeyVO {
 
     private byte[] n;
     private byte[] e;
+
+    @Override
+    public COSEKeyType getKeyType() {
+        return COSEKeyType.RSA;
+    }
 
     public byte[] getN() {
         return n;

@@ -1,16 +1,21 @@
 package net.sharplab.springframework.security.webauthn.sample.domain.vo;
 
 import com.webauthn4j.attestation.authenticator.Curve;
+import com.webauthn4j.attestation.statement.COSEKeyType;
 
 import java.util.Arrays;
 import java.util.Objects;
 
-public class ECCredentialPublicKeyVO extends AbstractCredentialPublicKeyVO {
+public class EC2CredentialPublicKeyVO extends AbstractCredentialPublicKeyVO {
 
     private Curve curve;
     private byte[] x;
     private byte[] y;
-    private byte[] d;
+
+    @Override
+    public COSEKeyType getKeyType() {
+        return COSEKeyType.EC2;
+    }
 
     public Curve getCurve() {
         return curve;
@@ -36,24 +41,15 @@ public class ECCredentialPublicKeyVO extends AbstractCredentialPublicKeyVO {
         this.y = y;
     }
 
-    public byte[] getD() {
-        return d;
-    }
-
-    public void setD(byte[] d) {
-        this.d = d;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         if (!super.equals(o)) return false;
-        ECCredentialPublicKeyVO that = (ECCredentialPublicKeyVO) o;
+        EC2CredentialPublicKeyVO that = (EC2CredentialPublicKeyVO) o;
         return curve == that.curve &&
                 Arrays.equals(x, that.x) &&
-                Arrays.equals(y, that.y) &&
-                Arrays.equals(d, that.d);
+                Arrays.equals(y, that.y);
     }
 
     @Override
@@ -62,7 +58,6 @@ public class ECCredentialPublicKeyVO extends AbstractCredentialPublicKeyVO {
         int result = Objects.hash(super.hashCode(), curve);
         result = 31 * result + Arrays.hashCode(x);
         result = 31 * result + Arrays.hashCode(y);
-        result = 31 * result + Arrays.hashCode(d);
         return result;
     }
 }
