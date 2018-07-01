@@ -1,6 +1,9 @@
 # Spring Security WebAuthn
 
 [![Build Status](https://travis-ci.org/ynojima/spring-security-webauthn.svg?branch=master)](https://travis-ci.org/ynojima/spring-security-webauthn)
+[![Coverage](https://sonarcloud.io/api/project_badges/measure?project=spring-security-webauthn&metric=coverage)](https://sonarcloud.io/dashboard?id=spring-security-webauthn)
+[![license](https://img.shields.io/github/license/ynojima/spring-security-webauthn.svg)](https://github.com/ynojima/spring-security-webauthn/blob/master/LICENSE.txt)
+
 
 Spring Security WebAuthn provides Web Authentication specification support for your Spring application.
 Users can login with WebAuthn compliant authenticator.
