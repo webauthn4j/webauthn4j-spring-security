@@ -63,10 +63,10 @@ public class WebAuthnAuthenticationProvider implements AuthenticationProvider {
     private List<String> expectedAuthenticationExtensionIds = Collections.emptyList();
 
     public WebAuthnAuthenticationProvider(
-            WebAuthnUserDetailsService webAuthnUserDetailsService,
+            WebAuthnUserDetailsService userDetailsService,
             WebAuthnAuthenticatorService authenticatorService,
             WebAuthnAuthenticationContextValidator authenticationContextValidator) {
-        this.userDetailsService = webAuthnUserDetailsService;
+        this.userDetailsService = userDetailsService;
         this.authenticatorService = authenticatorService;
         this.authenticationContextValidator = authenticationContextValidator;
     }
@@ -175,6 +175,10 @@ public class WebAuthnAuthenticationProvider implements AuthenticationProvider {
         this.hideCredentialIdNotFoundExceptions = hideCredentialIdNotFoundExceptions;
     }
 
+    public boolean isHideCredentialIdNotFoundExceptions() {
+        return hideCredentialIdNotFoundExceptions;
+    }
+
     protected WebAuthnAuthenticatorService getAuthenticatorService() {
         return authenticatorService;
     }
@@ -208,11 +212,12 @@ public class WebAuthnAuthenticationProvider implements AuthenticationProvider {
 
     }
 
-    private RuntimeException wrapWithAuthenticationException(RuntimeException e) {
+    @SuppressWarnings("squid:S3776")
+    RuntimeException wrapWithAuthenticationException(RuntimeException e) {
         if (e instanceof com.webauthn4j.validator.exception.BadAlgorithmException) {
             return new BadAlgorithmException("Bad algorithm", e);
         } else if (e instanceof com.webauthn4j.validator.exception.BadAttestationStatementException) {
-            return new MaliciousDataException("Bad attestation statement", e);
+            return new BadAttestationStatementException("Bad attestation statement", e);
         } else if (e instanceof com.webauthn4j.validator.exception.BadChallengeException) {
             return new BadChallengeException("Bad challenge", e);
         } else if (e instanceof com.webauthn4j.validator.exception.BadOriginException) {
