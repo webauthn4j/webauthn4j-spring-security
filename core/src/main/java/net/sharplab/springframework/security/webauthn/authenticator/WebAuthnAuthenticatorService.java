@@ -26,14 +26,11 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 public interface WebAuthnAuthenticatorService {
 
     /**
-     * Locates the user based on the username. In the actual implementation, the search may possibly be case
-     * insensitive, or case insensitive depending on how the implementation instance is configured. In this case, the
-     * <code>UserDetails</code> object that comes back may have a username that is of a different case than what was
-     * actually requested..
+     * Locates the authenticator based on the credentialId.
      *
-     * @param credentialId the credentialId identifying the user whose data is required.
-     * @return a fully populated user record (never <code>null</code>)
-     * @throws CredentialIdNotFoundException if the user could not be found or the user has no GrantedAuthority
+     * @param credentialId the credentialId identifying the authenticator whose data is required.
+     * @return a fully populated authenticator record (never <code>null</code>)
+     * @throws CredentialIdNotFoundException if the authenticator could not be found
      */
     Authenticator loadWebAuthnAuthenticatorByCredentialId(byte[] credentialId);
 
