@@ -46,11 +46,11 @@ public class Condition {
 
     public static class Credential {
 
-        public Credential(String id){
+        private String id;
+
+        public Credential(String id) {
             this.id = id;
         }
-
-        private String id;
 
         public String getId() {
             return id;

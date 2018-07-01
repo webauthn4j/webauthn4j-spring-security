@@ -17,9 +17,6 @@
 package net.sharplab.springframework.security.webauthn;
 
 import com.webauthn4j.WebAuthnRegistrationContext;
-import com.webauthn4j.client.Origin;
-import com.webauthn4j.client.challenge.Challenge;
-import com.webauthn4j.client.challenge.DefaultChallenge;
 import com.webauthn4j.server.ServerProperty;
 import com.webauthn4j.util.Base64UrlUtil;
 import com.webauthn4j.validator.WebAuthnRegistrationContextValidator;
@@ -86,7 +83,7 @@ public class WebAuthnRegistrationRequestValidatorTest {
     }
 
     @Test
-    public void getter_setter_test(){
+    public void getter_setter_test() {
         WebAuthnRegistrationRequestValidator target = new WebAuthnRegistrationRequestValidator(
                 registrationContextValidator, serverPropertyProvider
         );

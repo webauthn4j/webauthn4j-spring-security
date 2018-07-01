@@ -20,7 +20,7 @@ import static org.mockito.Mockito.*;
 public class ConditionProviderImplTest {
 
     @Test
-    public void provide_test(){
+    public void provide_test() {
         String challenge = Base64UrlUtil.encodeToString(TestUtil.createChallenge().getValue());
         byte[] credentialId = new byte[]{0x01, 0x23, 0x45};
         WebAuthnUserDetailsService userDetailsService = mock(WebAuthnUserDetailsService.class);

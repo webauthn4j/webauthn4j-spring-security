@@ -106,24 +106,23 @@ public final class WebAuthnLoginConfigurer<H extends HttpSecurityBuilder<H>> ext
 
         ApplicationContext applicationContext = http.getSharedObject(ApplicationContext.class);
 
-        if(challengeRepository == null){
+        if (challengeRepository == null) {
             String[] beanNames = applicationContext.getBeanNamesForType(ChallengeRepository.class);
-            if(beanNames.length == 0){
+            if (beanNames.length == 0) {
                 challengeRepository = new HttpSessionChallengeRepository();
-            }
-            else {
+            } else {
                 challengeRepository = applicationContext.getBean(ChallengeRepository.class);
             }
         }
         http.setSharedObject(ChallengeRepository.class, challengeRepository);
 
-        if(conditionProvider == null){
+        if (conditionProvider == null) {
             WebAuthnUserDetailsService userDetailsService = applicationContext.getBean(WebAuthnUserDetailsService.class);
             conditionProvider = new ConditionProviderImpl(userDetailsService);
         }
         http.setSharedObject(ConditionProvider.class, conditionProvider);
 
-        if(serverPropertyProvider == null){
+        if (serverPropertyProvider == null) {
             // Since ServerPropertyProvider requires initialization,
             // it is not instantiated manually, but retrieved from applicationContext.
             serverPropertyProvider = applicationContext.getBean(ServerPropertyProvider.class);
@@ -147,7 +146,7 @@ public final class WebAuthnLoginConfigurer<H extends HttpSecurityBuilder<H>> ext
         ConditionEndpointFilter conditionEndpointFilter = new ConditionEndpointFilter(conditionProvider, serverPropertyProvider);
 
         MFATokenEvaluator mfaTokenEvaluator = http.getSharedObject(MFATokenEvaluator.class);
-        if(mfaTokenEvaluator != null){
+        if (mfaTokenEvaluator != null) {
             conditionEndpointFilter.setMFATokenEvaluator(mfaTokenEvaluator);
         }
 
@@ -309,7 +308,6 @@ public final class WebAuthnLoginConfigurer<H extends HttpSecurityBuilder<H>> ext
         this.serverPropertyProvider = serverPropertyProvider;
         return this;
     }
-
 
 
 }

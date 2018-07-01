@@ -12,7 +12,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class ConditionEndpointFilterTest {
 
     @Test
-    public void getter_setter_test(){
+    public void getter_setter_test() {
         ConditionEndpointFilter conditionEndpointFilter = new ConditionEndpointFilter(null, null);
         MFATokenEvaluator mfaTokenEvaluator = new MFATokenEvaluatorImpl();
         AuthenticationTrustResolver trustResolver = new AuthenticationTrustResolverImpl();

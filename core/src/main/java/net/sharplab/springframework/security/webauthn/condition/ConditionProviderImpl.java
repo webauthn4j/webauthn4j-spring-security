@@ -38,7 +38,7 @@ public class ConditionProviderImpl implements ConditionProvider {
     public Condition provide(String username, ServerProperty serverProperty) {
         Collection<? extends Authenticator> authenticators = userDetailsService.loadUserByUsername(username).getAuthenticators();
         List<Condition.Credential> credentials = new ArrayList<>();
-        for (Authenticator authenticator : authenticators){
+        for (Authenticator authenticator : authenticators) {
             byte[] credentialId = authenticator.getAttestedCredentialData().getCredentialId();
             credentials.add(new Condition.Credential(Base64UrlUtil.encodeToString(credentialId)));
         }

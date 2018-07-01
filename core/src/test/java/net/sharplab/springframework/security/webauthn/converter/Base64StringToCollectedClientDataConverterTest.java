@@ -11,7 +11,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class Base64StringToCollectedClientDataConverterTest {
 
     @Test
-    public void convert_test(){
+    public void convert_test() {
         CollectedClientData expected = TestUtil.createClientData(ClientDataType.GET);
         String source = new CollectedClientDataConverter().convertToBase64UrlString(expected);
 

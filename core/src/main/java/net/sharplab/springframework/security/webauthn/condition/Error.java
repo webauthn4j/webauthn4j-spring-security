@@ -28,13 +28,13 @@ public class Error {
         @JsonValue
         private String value;
 
-        Type(String value){
+        Type(String value) {
             this.value = value;
         }
 
         @JsonCreator
-        public static Type create(String value){
-            switch (value){
+        public static Type create(String value) {
+            switch (value) {
                 case "not_authenticated":
                     return NOT_AUTHENTICATED;
                 case "server_error":

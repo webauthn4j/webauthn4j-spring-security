@@ -19,7 +19,7 @@ public class FIDOU2FAuthenticatorTest {
 
     @Ignore
     @Test
-    public void test(){
+    public void test() {
         Challenge challenge = new DefaultChallenge();
 
         // create

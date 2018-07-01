@@ -47,7 +47,7 @@ public class WebAuthnLoginConfigurerSpringTest {
     private WebAuthnUserDetailsService userDetailsService;
 
     @Before
-    public void setup(){
+    public void setup() {
         WebAuthnUserDetails mockUserDetails = mock(WebAuthnUserDetails.class);
         when(mockUserDetails.getAuthenticators()).thenReturn(Collections.emptyList());
         when(userDetailsService.loadUserByUsername(any())).thenReturn(mockUserDetails);
@@ -106,15 +106,15 @@ public class WebAuthnLoginConfigurerSpringTest {
     }
 
     @EnableWebSecurity
-    static class Config extends WebSecurityConfigurerAdapter{
+    static class Config extends WebSecurityConfigurerAdapter {
 
         @Bean
-        public ChallengeRepository challengeRepository(){
+        public ChallengeRepository challengeRepository() {
             return new HttpSessionChallengeRepository();
         }
 
         @Bean
-        public ServerPropertyProvider serverPropertyProvider(ChallengeRepository challengeRepository){
+        public ServerPropertyProvider serverPropertyProvider(ChallengeRepository challengeRepository) {
             ServerPropertyProvider serverPropertyProvider = new ServerPropertyProviderImpl(challengeRepository);
             serverPropertyProvider.setRpId("example.com");
             return serverPropertyProvider;

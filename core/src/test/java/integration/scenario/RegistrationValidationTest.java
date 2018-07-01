@@ -41,10 +41,9 @@ import static org.mockito.Mockito.when;
  */
 public class RegistrationValidationTest {
 
-    private Origin origin = new Origin("http://localhost");
     String rpId = "example.com";
     Challenge challenge = new DefaultChallenge();
-
+    private Origin origin = new Origin("http://localhost");
     private WebAuthnModelAuthenticatorAdaptor webAuthnModelAuthenticatorAdaptor = new WebAuthnModelAuthenticatorAdaptor();
     private ClientPlatform clientPlatform = new ClientPlatform(origin, webAuthnModelAuthenticatorAdaptor);
     private ServerPropertyProvider serverPropertyProvider = mock(ServerPropertyProvider.class);

@@ -74,11 +74,10 @@ public class ConditionEndpointFilter extends GenericFilterBean {
             return;
         }
 
-        try{
+        try {
             Condition condition = createCondition(fi.getRequest());
             writeResponse(fi.getResponse(), condition);
-        }
-        catch (RuntimeException e){
+        } catch (RuntimeException e) {
             writeErrorResponse(fi.getResponse(), e);
         }
 
@@ -110,7 +109,7 @@ public class ConditionEndpointFilter extends GenericFilterBean {
         return (request.getRequestURI().contains(filterProcessesUrl));
     }
 
-    private Condition createCondition(HttpServletRequest request){
+    private Condition createCondition(HttpServletRequest request) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (trustResolver.isAnonymous(authentication) && !mfaTokenEvaluator.isFirstOfMultiFactorAuthentication(authentication)) {
             throw new InsufficientAuthenticationException(messages.getMessage(

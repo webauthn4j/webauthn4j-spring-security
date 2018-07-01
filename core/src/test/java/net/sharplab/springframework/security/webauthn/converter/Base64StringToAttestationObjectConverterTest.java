@@ -10,7 +10,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class Base64StringToAttestationObjectConverterTest {
 
     @Test
-    public void convert_test(){
+    public void convert_test() {
         AttestationObject expected = TestUtil.createAttestationObjectWithFIDOU2FAttestationStatement();
         String source = new AttestationObjectConverter().convertToString(expected);
         Base64StringToAttestationObjectConverter converter = new Base64StringToAttestationObjectConverter();

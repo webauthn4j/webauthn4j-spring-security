@@ -14,7 +14,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class WebAuthnAuthenticationRequestTest {
 
     @Test
-    public void equals_hashCode_test(){
+    public void equals_hashCode_test() {
         Challenge challenge = new DefaultChallenge();
         byte[] clientDataJSON = TestUtil.createClientDataJSON(ClientDataType.GET);
         byte[] authenticatorData = new AuthenticatorDataConverter().convert(TestUtil.createAuthenticatorData());
