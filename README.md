@@ -26,6 +26,10 @@ self-contained bootstrap mechanism for the build.
 - Spring Framework 5.0 or later
 - Spring Security 5.0 (Customized build)
 
+To support multi factor authentication flow, spring-security-webauthn requires modification to spring-security.
+The modification will be sent to spring-security project as a pull-request by the spring-security-webauthn becomes stable, 
+but for now, not available with normal spring-security.
+
 ### Checkout sources
 
 ```
