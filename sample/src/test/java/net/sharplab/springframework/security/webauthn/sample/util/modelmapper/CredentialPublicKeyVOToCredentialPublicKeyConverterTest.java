@@ -22,7 +22,6 @@ public class CredentialPublicKeyVOToCredentialPublicKeyConverterTest {
 
         //Given
         EC2CredentialPublicKeyVO source = new EC2CredentialPublicKeyVO();
-        source.setKeyType(COSEKeyType.EC2);
         source.setAlgorithm(COSEAlgorithmIdentifier.ES256);
         source.setCurve(Curve.SECP256R1);
         source.setX(new byte[]{0x00, 0x01});
