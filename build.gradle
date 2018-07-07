@@ -27,10 +27,11 @@ subprojects{
     sourceCompatibility = 1.8
 
     repositories {
-        mavenCentral()
+        //mavenCentral()
         flatDir {
             dirs "../libs"
         }
+        maven { url "https://oss.jfrog.org/artifactory/libs-snapshot" }
     }
 
     javadoc {

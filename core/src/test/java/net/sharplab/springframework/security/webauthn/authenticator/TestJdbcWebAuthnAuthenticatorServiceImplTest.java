@@ -1,11 +1,10 @@
 package net.sharplab.springframework.security.webauthn.authenticator;
 
 import com.webauthn4j.attestation.authenticator.Curve;
-import com.webauthn4j.attestation.authenticator.ECCredentialPublicKey;
+import com.webauthn4j.attestation.authenticator.EC2CredentialPublicKey;
 import com.webauthn4j.attestation.statement.COSEAlgorithmIdentifier;
 import com.webauthn4j.attestation.statement.COSEKeyType;
 import com.webauthn4j.attestation.statement.NoneAttestationStatement;
-import com.webauthn4j.authenticator.Authenticator;
 import com.webauthn4j.util.Base64UrlUtil;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -37,9 +36,9 @@ public class TestJdbcWebAuthnAuthenticatorServiceImplTest {
         assertThat(authenticator.getAttestationStatement().getFormat()).isEqualTo(NoneAttestationStatement.FORMAT);
         assertThat(authenticator.getAttestedCredentialData().getAaGuid()).isEmpty();
         assertThat(authenticator.getAttestedCredentialData().getCredentialId()).isEqualTo(credentialId);
-        assertThat(authenticator.getAttestedCredentialData().getCredentialPublicKey()).isInstanceOf(ECCredentialPublicKey.class);
+        assertThat(authenticator.getAttestedCredentialData().getCredentialPublicKey()).isInstanceOf(EC2CredentialPublicKey.class);
 
-        ECCredentialPublicKey publicKey = (ECCredentialPublicKey) authenticator.getAttestedCredentialData().getCredentialPublicKey();
+        EC2CredentialPublicKey publicKey = (EC2CredentialPublicKey) authenticator.getAttestedCredentialData().getCredentialPublicKey();
         assertThat(publicKey.getKeyType()).isEqualTo(COSEKeyType.EC2);
         assertThat(publicKey.getCurve()).isEqualTo(Curve.SECP256R1);
         assertThat(publicKey.getAlgorithm()).isEqualTo(COSEAlgorithmIdentifier.ES256);

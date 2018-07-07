@@ -1,7 +1,7 @@
 package net.sharplab.springframework.security.webauthn.sample.util.modelmapper;
 
 import com.webauthn4j.attestation.authenticator.Curve;
-import com.webauthn4j.attestation.authenticator.ECCredentialPublicKey;
+import com.webauthn4j.attestation.authenticator.EC2CredentialPublicKey;
 import com.webauthn4j.attestation.statement.COSEAlgorithmIdentifier;
 import com.webauthn4j.attestation.statement.COSEKeyType;
 import net.sharplab.springframework.security.webauthn.sample.domain.config.ModelMapperConfig;
@@ -26,7 +26,7 @@ public class CredentialPublicKeyVOToCredentialPublicKeyConverterTest {
         source.setCurve(Curve.SECP256R1);
         source.setX(new byte[]{0x00, 0x01});
         source.setY(new byte[]{0x02, 0x03});
-        ECCredentialPublicKey destination = new ECCredentialPublicKey();
+        EC2CredentialPublicKey destination = new EC2CredentialPublicKey();
 
         //When
         modelMapper.map(source, destination);

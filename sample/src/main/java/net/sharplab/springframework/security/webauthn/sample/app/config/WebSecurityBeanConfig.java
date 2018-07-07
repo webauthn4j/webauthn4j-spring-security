@@ -55,7 +55,7 @@ public class WebSecurityBeanConfig {
 
     @Bean
     public WebAuthnRegistrationContextValidator webAuthnRegistrationContextValidator() {
-        return WebAuthnRegistrationContextValidator.createNullAttestationStatementValidator();
+        return WebAuthnRegistrationContextValidator.createNonStrictRegistrationContextValidator();
     }
 
     @Bean

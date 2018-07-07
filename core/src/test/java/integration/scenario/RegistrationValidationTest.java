@@ -48,7 +48,7 @@ public class RegistrationValidationTest {
     private ClientPlatform clientPlatform = new ClientPlatform(origin, webAuthnModelAuthenticatorAdaptor);
     private ServerPropertyProvider serverPropertyProvider = mock(ServerPropertyProvider.class);
     private WebAuthnRegistrationRequestValidator target = new WebAuthnRegistrationRequestValidator(
-            WebAuthnRegistrationContextValidator.createNullAttestationStatementValidator(), serverPropertyProvider
+            WebAuthnRegistrationContextValidator.createNonStrictRegistrationContextValidator(), serverPropertyProvider
     );
 
     @Test
