@@ -1,0 +1,93 @@
+package net.sharplab.springframework.security.webauthn.anchor;
+
+import com.webauthn4j.anchor.KeyStoreException;
+import com.webauthn4j.anchor.TrustAnchorProviderBase;
+import com.webauthn4j.util.CertificateUtil;
+import org.springframework.core.io.Resource;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.security.KeyStore;
+import java.security.NoSuchAlgorithmException;
+import java.security.cert.CertificateException;
+import java.security.cert.TrustAnchor;
+import java.security.cert.X509Certificate;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
+public class KeyStoreResourceTrustAnchorProvider extends TrustAnchorProviderBase {
+
+    //~ Instance fields ================================================================================================
+
+    private Resource keyStore;
+    private String password;
+
+    /**
+     * retrieve {@link TrustAnchor} {@link Set} backed by Java KeyStore resource.
+     *
+     * @return {@link TrustAnchor} {@link Set}
+     */
+    @Override
+    protected Set<TrustAnchor> loadTrustAnchors() {
+        Resource keystore = getKeyStore();
+        try (InputStream inputStream = keystore.getInputStream()) {
+            KeyStore keyStoreObject = loadKeyStoreFromStream(inputStream, getPassword());
+            List<String> aliases = Collections.list(keyStoreObject.aliases());
+            Set<TrustAnchor> trustAnchors = new HashSet<>();
+            for (String alias : aliases) {
+                X509Certificate certificate = (X509Certificate) keyStoreObject.getCertificate(alias);
+                trustAnchors.add(new TrustAnchor(certificate, null));
+            }
+            return trustAnchors;
+        } catch (java.security.KeyStoreException | IOException | NoSuchAlgorithmException | CertificateException e) {
+            throw new KeyStoreException("Failed to load TrustAnchor from keystore", e);
+        }
+    }
+
+    /**
+     * Provides keyStore resource
+     *
+     * @return keyStore resource
+     */
+    public Resource getKeyStore() {
+        return keyStore;
+    }
+
+    /**
+     * Sets keyStore resource
+     *
+     * @param keyStore keyStore resource
+     */
+    public void setKeyStore(Resource keyStore) {
+        this.keyStore = keyStore;
+    }
+
+    /**
+     * Provides keyStore file password
+     *
+     * @return keyStore file password
+     */
+    public String getPassword() {
+        return password;
+    }
+
+    /**
+     * Sets keyStore file password
+     *
+     * @param password keyStore file password
+     */
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    private KeyStore loadKeyStoreFromStream(InputStream inputStream, String password)
+            throws CertificateException, NoSuchAlgorithmException, IOException {
+        KeyStore keyStoreObject = CertificateUtil.createKeyStore();
+        keyStoreObject.load(inputStream, password.toCharArray());
+        return keyStoreObject;
+    }
+
+
+}
