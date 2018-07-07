@@ -22,14 +22,11 @@ import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.config.annotation.SecurityBuilder;
 import org.springframework.security.config.annotation.SecurityConfigurerAdapter;
 import org.springframework.security.config.annotation.authentication.ProviderManagerBuilder;
-import org.springframework.security.core.userdetails.UserDetailsService;
 
 /**
  * @param <B> the type of the {@link SecurityBuilder}
- * @param <C> the type of {@link WebAuthnMultiFactorAuthenticationConfigurer} this is
- * @param <U> The type of {@link UserDetailsService} that is being used
  */
-public class WebAuthnMultiFactorAuthenticationConfigurer<B extends ProviderManagerBuilder<B>, C extends WebAuthnMultiFactorAuthenticationConfigurer<B, C, U>, U extends UserDetailsService>
+public class WebAuthnMultiFactorAuthenticationConfigurer<B extends ProviderManagerBuilder<B>>
         extends SecurityConfigurerAdapter<AuthenticationManager, B> {
 
     //~ Instance fields
@@ -46,8 +43,8 @@ public class WebAuthnMultiFactorAuthenticationConfigurer<B extends ProviderManag
 
     @Override
     public void configure(B builder) {
-        WebAuthnMultiFactorAuthenticationProvider delegatingAuthenticationProvider = new WebAuthnMultiFactorAuthenticationProvider(authenticationProvider);
-        delegatingAuthenticationProvider = postProcess(delegatingAuthenticationProvider);
-        builder.authenticationProvider(delegatingAuthenticationProvider);
+        WebAuthnMultiFactorAuthenticationProvider webAuthnMultiFactorAuthenticationProvider = new WebAuthnMultiFactorAuthenticationProvider(authenticationProvider);
+        webAuthnMultiFactorAuthenticationProvider = postProcess(webAuthnMultiFactorAuthenticationProvider);
+        builder.authenticationProvider(webAuthnMultiFactorAuthenticationProvider);
     }
 }

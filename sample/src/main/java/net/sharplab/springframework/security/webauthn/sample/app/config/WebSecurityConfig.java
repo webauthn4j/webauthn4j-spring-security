@@ -1,7 +1,10 @@
 package net.sharplab.springframework.security.webauthn.sample.app.config;
 
 import net.sharplab.springframework.security.webauthn.WebAuthnAuthenticationProvider;
+import net.sharplab.springframework.security.webauthn.authenticator.WebAuthnAuthenticatorService;
+import net.sharplab.springframework.security.webauthn.config.configurers.WebAuthnAuthenticationConfigurer;
 import net.sharplab.springframework.security.webauthn.config.configurers.WebAuthnMultiFactorAuthenticationConfigurer;
+import net.sharplab.springframework.security.webauthn.userdetails.WebAuthnUserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Configuration;
@@ -33,9 +36,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     private static final String ADMIN_ROLE = "ADMIN";
 
     @Autowired
-    private ApplicationContext applicationContext;
-
-    @Autowired
     private InvalidSessionStrategy invalidSessionStrategy;
 
     @Autowired
@@ -46,12 +46,18 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     private DaoAuthenticationProvider daoAuthenticationProvider;
 
     @Autowired
+    private WebAuthnUserDetailsService userDetailsService;
+
+    @Autowired
+    private WebAuthnAuthenticatorService authenticatorService;
+
+    @Autowired
     private HttpSessionSecurityContextRepository httpSessionSecurityContextRepository;
 
     @Override
     public void configure(AuthenticationManagerBuilder builder) throws Exception {
+        builder.apply(new WebAuthnAuthenticationConfigurer<>(userDetailsService, authenticatorService));
         builder.apply(new WebAuthnMultiFactorAuthenticationConfigurer<>(daoAuthenticationProvider));
-        builder.authenticationProvider(applicationContext.getBean(WebAuthnAuthenticationProvider.class));
     }
 
     @Override

@@ -1,16 +1,11 @@
 package net.sharplab.springframework.security.webauthn.sample.app.config;
 
-import com.webauthn4j.validator.WebAuthnAuthenticationContextValidator;
 import com.webauthn4j.validator.WebAuthnRegistrationContextValidator;
-import net.sharplab.springframework.security.webauthn.WebAuthnAuthenticationProvider;
 import net.sharplab.springframework.security.webauthn.WebAuthnRegistrationRequestValidator;
-import net.sharplab.springframework.security.webauthn.authenticator.WebAuthnAuthenticatorService;
 import net.sharplab.springframework.security.webauthn.challenge.ChallengeRepository;
 import net.sharplab.springframework.security.webauthn.challenge.HttpSessionChallengeRepository;
-import net.sharplab.springframework.security.webauthn.sample.domain.component.AuthenticatorManager;
 import net.sharplab.springframework.security.webauthn.server.ServerPropertyProvider;
 import net.sharplab.springframework.security.webauthn.server.ServerPropertyProviderImpl;
-import net.sharplab.springframework.security.webauthn.userdetails.WebAuthnUserDetailsService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.access.AccessDeniedException;
@@ -32,11 +27,6 @@ import java.util.LinkedHashMap;
 
 @Configuration
 public class WebSecurityBeanConfig {
-
-    @Bean
-    public WebAuthnAuthenticationContextValidator webAuthnAuthenticationContextValidator() {
-        return new WebAuthnAuthenticationContextValidator();
-    }
 
     @Bean
     public WebAuthnRegistrationRequestValidator webAuthnRegistrationRequestValidator(WebAuthnRegistrationContextValidator registrationContextValidator, ServerPropertyProvider serverPropertyProvider) {
@@ -69,20 +59,6 @@ public class WebSecurityBeanConfig {
         daoAuthenticationProvider.setPasswordEncoder(passwordEncoder);
         daoAuthenticationProvider.setUserDetailsService(userDetailsService);
         return daoAuthenticationProvider;
-    }
-
-
-    @Bean
-    public WebAuthnAuthenticationProvider webAuthnAuthenticationProvider(
-            AuthenticatorManager authenticatorManager,
-            WebAuthnUserDetailsService webAuthnUserDetailsService,
-            WebAuthnAuthenticatorService webAuthnAuthenticatorService,
-            WebAuthnAuthenticationContextValidator authenticationContextValidator) {
-
-        WebAuthnAuthenticationProvider webAuthnAuthenticationProvider =
-                new WebAuthnAuthenticationProvider(webAuthnUserDetailsService, webAuthnAuthenticatorService, authenticationContextValidator);
-        webAuthnAuthenticationProvider.setAuthenticatorService(authenticatorManager);
-        return webAuthnAuthenticationProvider;
     }
 
     @Bean
