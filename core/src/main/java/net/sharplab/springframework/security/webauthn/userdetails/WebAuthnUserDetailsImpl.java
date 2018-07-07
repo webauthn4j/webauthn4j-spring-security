@@ -31,7 +31,7 @@ public class WebAuthnUserDetailsImpl extends User implements WebAuthnUserDetails
 
     // ~ Instance fields
     // ================================================================================================
-    private boolean passwordAuthenticationAllowed = false;
+    private boolean singleFactorAuthenticationAllowed = false;
     private List<Authenticator> authenticators;
 
     public WebAuthnUserDetailsImpl(String username, String password, List<Authenticator> authenticators,
@@ -39,20 +39,20 @@ public class WebAuthnUserDetailsImpl extends User implements WebAuthnUserDetails
         this(username, password, authenticators, false, authorities);
     }
 
-    public WebAuthnUserDetailsImpl(String username, String password, List<Authenticator> authenticators, boolean passwordAuthenticationAllowed,
+    public WebAuthnUserDetailsImpl(String username, String password, List<Authenticator> authenticators, boolean singleFactorAuthenticationAllowed,
                                    Collection<? extends GrantedAuthority> authorities) {
-        this(username, password, authenticators, passwordAuthenticationAllowed,
+        this(username, password, authenticators, singleFactorAuthenticationAllowed,
                 true, true, true, true,
                 authorities);
     }
 
     @SuppressWarnings("squid:S00107")
-    public WebAuthnUserDetailsImpl(String username, String password, List<Authenticator> authenticators, boolean passwordAuthenticationAllowed,
+    public WebAuthnUserDetailsImpl(String username, String password, List<Authenticator> authenticators, boolean singleFactorAuthenticationAllowed,
                                    boolean enabled, boolean accountNonExpired, boolean credentialsNonExpired, boolean accountNonLocked,
                                    Collection<? extends GrantedAuthority> authorities) {
         super(username, password, enabled, accountNonExpired, credentialsNonExpired, accountNonLocked, authorities);
         this.authenticators = authenticators;
-        this.passwordAuthenticationAllowed = passwordAuthenticationAllowed;
+        this.singleFactorAuthenticationAllowed = singleFactorAuthenticationAllowed;
     }
 
     @Override
@@ -61,13 +61,13 @@ public class WebAuthnUserDetailsImpl extends User implements WebAuthnUserDetails
     }
 
     @Override
-    public boolean isPasswordAuthenticationAllowed() {
-        return passwordAuthenticationAllowed;
+    public boolean isSingleFactorAuthenticationAllowed() {
+        return singleFactorAuthenticationAllowed;
     }
 
     @Override
-    public void setPasswordAuthenticationAllowed(boolean passwordAuthenticationAllowed) {
-        this.passwordAuthenticationAllowed = passwordAuthenticationAllowed;
+    public void setSingleFactorAuthenticationAllowed(boolean singleFactorAuthenticationAllowed) {
+        this.singleFactorAuthenticationAllowed = singleFactorAuthenticationAllowed;
     }
 
 

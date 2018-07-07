@@ -43,7 +43,7 @@ public class UserEntityToUserConverter implements Converter<UserEntity, User> {
             destination.setAuthenticators(context.getMappingEngine().map(context.create(source.getAuthenticators(), AuthenticatorList)));
         }
 
-        destination.setPasswordAuthenticationAllowed(source.isPasswordAuthenticationAllowed());
+        destination.setSingleFactorAuthenticationAllowed(source.isPasswordAuthenticationAllowed());
         destination.setLocked(source.isLocked());
 
         return destination;

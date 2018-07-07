@@ -24,7 +24,7 @@ public class UserUpdateFormValidator  implements Validator {
             authenticatorCount += form.getAuthenticators().stream().filter(item -> !item.getDelete()).count();
         }
 
-        if(!form.isPasswordAuthenticationAllowed() && authenticatorCount == 0){
+        if(!form.isSingleFactorAuthenticationAllowed() && authenticatorCount == 0){
             errors.rejectValue("newAuthenticators",
                     "e.UserUpdateFormValidator.noAuthenticator",
                     "To disable password authentication, at least one authenticator must be registered.");

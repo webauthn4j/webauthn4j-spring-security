@@ -20,14 +20,14 @@ import net.sharplab.springframework.security.webauthn.userdetails.WebAuthnUserDe
 import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.MultiFactorAuthenticationToken;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.authentication.dao.AbstractUserDetailsAuthenticationProvider;
 import org.springframework.security.core.Authentication;
 import org.springframework.util.Assert;
 
+import java.util.Collections;
+
 /**
- * An {@link AuthenticationProvider} implementation for the first factor of multi factor authentication.
- * Authentication itself is delegated to {@link AbstractUserDetailsAuthenticationProvider}.
+ * An {@link AuthenticationProvider} implementation for the first factor(step) of multi factor authentication.
+ * Authentication itself is delegated to another {@link AuthenticationProvider}.
  */
 public class WebAuthnMultiFactorAuthenticationProvider implements AuthenticationProvider {
 
@@ -35,47 +35,68 @@ public class WebAuthnMultiFactorAuthenticationProvider implements Authentication
     // ~ Instance fields
     // ================================================================================================
     protected MessageSourceAccessor messages = SpringSecurityWebAuthnMessageSource.getAccessor();
-    private AbstractUserDetailsAuthenticationProvider authenticationProvider;
-    private boolean passwordAuthenticationAllowed = true;
+    /**
+     * {@link AuthenticationProvider} to be delegated
+     */
+    private AuthenticationProvider authenticationProvider;
+    private boolean singleFactorAuthenticationAllowed = true;
 
 
-    public WebAuthnMultiFactorAuthenticationProvider(AbstractUserDetailsAuthenticationProvider authenticationProvider) {
+    /**
+     * Constructor
+     * @param authenticationProvider {@link AuthenticationProvider} to be delegated
+     */
+    public WebAuthnMultiFactorAuthenticationProvider(AuthenticationProvider authenticationProvider) {
         Assert.notNull(authenticationProvider, "Authentication provide must be set");
         this.authenticationProvider = authenticationProvider;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Authentication authenticate(Authentication authentication) {
         if (!supports(authentication.getClass())) {
-            throw new IllegalArgumentException("Only MultiFactorAuthenticationToken is supported, " + authentication.getClass() + " was attempted");
+            throw new IllegalArgumentException("Not supported AuthenticationToken " + authentication.getClass() + " was attempted");
         }
 
-        MultiFactorAuthenticationToken firstOfMultiFactorAuthenticationToken = (MultiFactorAuthenticationToken) authentication;
-        UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken =
-                new UsernamePasswordAuthenticationToken(firstOfMultiFactorAuthenticationToken.getPrincipal(), firstOfMultiFactorAuthenticationToken.getCredentials());
+        Authentication result = authenticationProvider.authenticate(authentication);
 
-        Authentication result = authenticationProvider.authenticate(usernamePasswordAuthenticationToken);
-
-        if (passwordAuthenticationAllowed && result.isAuthenticated() && result.getPrincipal() instanceof WebAuthnUserDetails) {
+        if (singleFactorAuthenticationAllowed && result.isAuthenticated() && result.getPrincipal() instanceof WebAuthnUserDetails) {
             WebAuthnUserDetails userDetails = (WebAuthnUserDetails) result.getPrincipal();
-            if (userDetails.isPasswordAuthenticationAllowed()) {
+            if (userDetails.isSingleFactorAuthenticationAllowed()) {
                 return result;
             }
         }
 
-        return new MultiFactorAuthenticationToken(result.getPrincipal(), result.getCredentials(), authentication.getAuthorities());
+        return new MultiFactorAuthenticationToken(
+                result.getPrincipal(),
+                result.getCredentials(),
+                Collections.emptyList() // result.getAuthorities() is not used as not to inherit authorities from result
+        );
     }
 
-    public boolean isPasswordAuthenticationAllowed() {
-        return passwordAuthenticationAllowed;
+    /**
+     * Check if single factor authentication is allowed
+     * @return true if single factor authentication is allowed
+     */
+    public boolean isSingleFactorAuthenticationAllowed() {
+        return singleFactorAuthenticationAllowed;
     }
 
-    public void setPasswordAuthenticationAllowed(boolean passwordAuthenticationAllowed) {
-        this.passwordAuthenticationAllowed = passwordAuthenticationAllowed;
+    /**
+     * Set single factor authentication is allowed
+     * @param singleFactorAuthenticationAllowed true if single factor authentication is allowed
+     */
+    public void setSingleFactorAuthenticationAllowed(boolean singleFactorAuthenticationAllowed) {
+        this.singleFactorAuthenticationAllowed = singleFactorAuthenticationAllowed;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public boolean supports(Class<?> authentication) {
-        return MultiFactorAuthenticationToken.class.isAssignableFrom(authentication);
+        return authenticationProvider.supports(authentication);
     }
 }

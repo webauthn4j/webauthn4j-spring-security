@@ -6,7 +6,6 @@ import net.sharplab.springframework.security.webauthn.sample.app.web.Authenticat
 import javax.validation.Valid;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
 import java.util.List;
 
 /**
@@ -34,7 +33,7 @@ public class UserUpdateForm {
     @Valid
     private List<AuthenticatorCreateForm> newAuthenticators;
 
-    private boolean passwordAuthenticationAllowed;
+    private boolean singleFactorAuthenticationAllowed;
 
     private boolean locked;
 
@@ -94,12 +93,12 @@ public class UserUpdateForm {
         this.newAuthenticators = newAuthenticators;
     }
 
-    public boolean isPasswordAuthenticationAllowed() {
-        return passwordAuthenticationAllowed;
+    public boolean isSingleFactorAuthenticationAllowed() {
+        return singleFactorAuthenticationAllowed;
     }
 
-    public void setPasswordAuthenticationAllowed(boolean passwordAuthenticationAllowed) {
-        this.passwordAuthenticationAllowed = passwordAuthenticationAllowed;
+    public void setSingleFactorAuthenticationAllowed(boolean singleFactorAuthenticationAllowed) {
+        this.singleFactorAuthenticationAllowed = singleFactorAuthenticationAllowed;
     }
 
     public boolean isLocked() {

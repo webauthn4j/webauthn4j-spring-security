@@ -25,7 +25,7 @@ public class User implements WebAuthnUserDetails {
 
     private boolean locked;
 
-    private boolean passwordAuthenticationAllowed = false;
+    private boolean singleFactorAuthenticationAllowed = false;
 
     public User() {
         //NOP
@@ -35,7 +35,7 @@ public class User implements WebAuthnUserDetails {
         this.id = id;
     }
 
-    public User(Integer id, byte[] userHandle, String firstName, String lastName, String emailAddress, List<Authority> authorities, List<Group> groups, List<Authenticator> authenticators, boolean locked, boolean passwordAuthenticationAllowed) {
+    public User(Integer id, byte[] userHandle, String firstName, String lastName, String emailAddress, List<Authority> authorities, List<Group> groups, List<Authenticator> authenticators, boolean locked, boolean singleFactorAuthenticationAllowed) {
         this.id = id;
         this.userHandle = userHandle;
         this.firstName = firstName;
@@ -45,7 +45,7 @@ public class User implements WebAuthnUserDetails {
         this.groups = groups;
         this.authenticators = authenticators;
         this.locked = locked;
-        this.passwordAuthenticationAllowed = passwordAuthenticationAllowed;
+        this.singleFactorAuthenticationAllowed = singleFactorAuthenticationAllowed;
     }
 
     /**
@@ -74,13 +74,13 @@ public class User implements WebAuthnUserDetails {
     }
 
     @Override
-    public boolean isPasswordAuthenticationAllowed() {
-        return this.passwordAuthenticationAllowed;
+    public boolean isSingleFactorAuthenticationAllowed() {
+        return this.singleFactorAuthenticationAllowed;
     }
 
     @Override
-    public void setPasswordAuthenticationAllowed(boolean passwordAuthenticationAllowed) {
-        this.passwordAuthenticationAllowed = passwordAuthenticationAllowed;
+    public void setSingleFactorAuthenticationAllowed(boolean singleFactorAuthenticationAllowed) {
+        this.singleFactorAuthenticationAllowed = singleFactorAuthenticationAllowed;
     }
 
     /**

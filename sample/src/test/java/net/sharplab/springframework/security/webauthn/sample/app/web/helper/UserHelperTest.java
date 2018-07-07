@@ -38,7 +38,7 @@ public class UserHelperTest {
         original.setRawPassword("rawPassword");
         original.setRawPasswordRetyped("rawPasswordRetyped");
         original.setLocked(true);
-        original.setPasswordAuthenticationAllowed(true);
+        original.setSingleFactorAuthenticationAllowed(true);
 
         //When
         User result = userHelper.mapForCreate(original);
@@ -50,7 +50,7 @@ public class UserHelperTest {
         assertThat(result.getEmailAddress()).isEqualTo("john.doe@example.com");
         assertThat(passwordEncoder.matches("rawPassword", result.getPassword())).isTrue();
         assertThat(result.isLocked()).isTrue();
-        assertThat(result.isPasswordAuthenticationAllowed()).isTrue();
+        assertThat(result.isSingleFactorAuthenticationAllowed()).isTrue();
     }
 
     @Test
@@ -63,7 +63,7 @@ public class UserHelperTest {
         original.setEmailAddress("john.doe@example.com");
         original.setPassword("$2a$10$P2/aZvvln5dWs9T96ycx0eNFS1EwdiElzRjMObg8j0rTDISHMEdoq");
         original.setLocked(true);
-        original.setPasswordAuthenticationAllowed(true);
+        original.setSingleFactorAuthenticationAllowed(true);
 
         UserUpdateForm result = new UserUpdateForm();
 
@@ -75,7 +75,7 @@ public class UserHelperTest {
         assertThat(result.getLastName()).isEqualTo("Doe");
         assertThat(result.getEmailAddress()).isEqualTo("john.doe@example.com");
         assertThat(result.isLocked()).isTrue();
-        assertThat(result.isPasswordAuthenticationAllowed()).isTrue();
+        assertThat(result.isSingleFactorAuthenticationAllowed()).isTrue();
     }
 
     @Test
@@ -87,7 +87,7 @@ public class UserHelperTest {
         original.setEmailAddress("john.doe@example.com");
         original.setPassword("$2a$10$P2/aZvvln5dWs9T96ycx0eNFS1EwdiElzRjMObg8j0rTDISHMEdoq");
         original.setLocked(true);
-        original.setPasswordAuthenticationAllowed(true);
+        original.setSingleFactorAuthenticationAllowed(true);
 
         UserPasswordForm result = new UserPasswordForm();
 

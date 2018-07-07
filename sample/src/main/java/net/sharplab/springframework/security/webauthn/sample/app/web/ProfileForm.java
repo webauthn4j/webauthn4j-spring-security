@@ -70,7 +70,7 @@ public class ProfileForm {
     /**
      * <code>true</code> if password authentication is allowed
      */
-    private boolean passwordAuthenticationAllowed;
+    private boolean singleFactorAuthenticationAllowed;
 
     public String getUserHandle() {
         return userHandle;
@@ -128,11 +128,11 @@ public class ProfileForm {
         this.newAuthenticators = newAuthenticators;
     }
 
-    public boolean isPasswordAuthenticationAllowed() {
-        return passwordAuthenticationAllowed;
+    public boolean isSingleFactorAuthenticationAllowed() {
+        return singleFactorAuthenticationAllowed;
     }
 
-    public void setPasswordAuthenticationAllowed(boolean passwordAuthenticationAllowed) {
-        this.passwordAuthenticationAllowed = passwordAuthenticationAllowed;
+    public void setSingleFactorAuthenticationAllowed(boolean singleFactorAuthenticationAllowed) {
+        this.singleFactorAuthenticationAllowed = singleFactorAuthenticationAllowed;
     }
 }

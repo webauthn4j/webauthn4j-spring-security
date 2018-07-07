@@ -44,7 +44,7 @@ public class ProfileHelper {
                     authenticatorHelper.mapForUpdate(authenticator, null)).collect(Collectors.toList());
             destination.setAuthenticators(authenticatorUpdateForms);
         }
-        destination.setPasswordAuthenticationAllowed(source.isPasswordAuthenticationAllowed());
+        destination.setSingleFactorAuthenticationAllowed(source.isSingleFactorAuthenticationAllowed());
         return destination;
 
     }
@@ -89,7 +89,7 @@ public class ProfileHelper {
             authenticators.add(authenticatorHelper.mapForUpdate(authenticatorCreateForm, null));
         }
         destination.setAuthenticators(authenticators);
-        destination.setPasswordAuthenticationAllowed(source.isPasswordAuthenticationAllowed());
+        destination.setSingleFactorAuthenticationAllowed(source.isSingleFactorAuthenticationAllowed());
 
         return destination;
 

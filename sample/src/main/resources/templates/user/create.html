@@ -147,11 +147,11 @@
                             </div>
                         </div>
                         <div class="form-group">
-                            <label for="passwordAuthenticationAllowed" class="col-sm-2 control-label" th:text="#{v.users.passwordAuthenticationAllowed}">Allow password authentication</label>
+                            <label for="singleFactorAuthenticationAllowed" class="col-sm-2 control-label" th:text="#{v.users.singleFactorAuthenticationAllowed}">Allow password authentication</label>
                             <div class="input-group col-sm-9">
-                                <input type="checkbox" id="passwordAuthenticationAllowed" name="passwordAuthenticationAllowed" th:checked="*{passwordAuthenticationAllowed}" />
-                                <div class="has-error" th:if="${#fields.hasErrors('passwordAuthenticationAllowed')}">
-                                    <span class="help-block" th:errors="*{passwordAuthenticationAllowed}" >Validation error message</span>
+                                <input type="checkbox" id="singleFactorAuthenticationAllowed" name="singleFactorAuthenticationAllowed" th:checked="*{singleFactorAuthenticationAllowed}" />
+                                <div class="has-error" th:if="${#fields.hasErrors('singleFactorAuthenticationAllowed')}">
+                                    <span class="help-block" th:errors="*{singleFactorAuthenticationAllowed}" >Validation error message</span>
                                 </div>
                             </div>
                         </div>

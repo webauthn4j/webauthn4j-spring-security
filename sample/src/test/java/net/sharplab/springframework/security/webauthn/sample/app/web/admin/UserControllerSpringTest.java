@@ -96,7 +96,7 @@ public class UserControllerSpringTest {
                 .param("rawPassword", "password")
                 .param("rawPasswordRetyped", "password")
                 .param("locked", "on")
-                .param("passwordAuthenticationAllowed", "on")
+                .param("singleFactorAuthenticationAllowed", "on")
         )
         //Then
                 .andExpect(status().is3xxRedirection())
@@ -142,7 +142,7 @@ public class UserControllerSpringTest {
                 .param("rawPassword", "password")
                 .param("rawPasswordRetyped", "password")
                 .param("locked", "on")
-                .param("passwordAuthenticationAllowed", "on")
+                .param("singleFactorAuthenticationAllowed", "on")
         )
         //Then
                 .andExpect(status().isOk())
@@ -160,14 +160,14 @@ public class UserControllerSpringTest {
         retrievedUser.setLastName("Doe");
         retrievedUser.setEmailAddress("john.doe@example.com");
         retrievedUser.setLocked(true);
-        retrievedUser.setPasswordAuthenticationAllowed(true);
+        retrievedUser.setSingleFactorAuthenticationAllowed(true);
 
         UserUpdateForm userUpdateForm = new UserUpdateForm();
         userUpdateForm.setFirstName("John");
         userUpdateForm.setLastName("Doe");
         userUpdateForm.setEmailAddress("john.doe@example.com");
         userUpdateForm.setLocked(true);
-        userUpdateForm.setPasswordAuthenticationAllowed(true);
+        userUpdateForm.setSingleFactorAuthenticationAllowed(true);
 
         //Given
         when(userService.findOne(userId)).thenReturn(retrievedUser);
@@ -190,7 +190,7 @@ public class UserControllerSpringTest {
         retrievedUser.setLastName("Doe");
         retrievedUser.setEmailAddress("john.doe@example.com");
         retrievedUser.setLocked(true);
-        retrievedUser.setPasswordAuthenticationAllowed(true);
+        retrievedUser.setSingleFactorAuthenticationAllowed(true);
 
         //Given
         when(userService.findOne(userId)).thenThrow(new WebAuthnSampleEntityNotFoundException(ResultMessages.error().add(MessageCodes.Error.User.USER_NOT_FOUND)));
@@ -228,7 +228,7 @@ public class UserControllerSpringTest {
                         .param("lastName", "new last name")
                         .param("emailAddress", "new.email.address@example.com")
                         .param("locked", "on")
-                        .param("passwordAuthenticationAllowed", "on")
+                        .param("singleFactorAuthenticationAllowed", "on")
                 )
                 //Then
                 .andExpect(status().is3xxRedirection())
@@ -242,7 +242,7 @@ public class UserControllerSpringTest {
         assertThat(captor.getValue().getEmailAddress()).isEqualTo("new.email.address@example.com");
         assertThat(captor.getValue().getPassword()).isEqualTo(exsistingUser.getPassword());
         assertThat(captor.getValue().isLocked()).isTrue();
-        assertThat(captor.getValue().isPasswordAuthenticationAllowed()).isTrue();
+        assertThat(captor.getValue().isSingleFactorAuthenticationAllowed()).isTrue();
     }
 
     @Test
@@ -289,7 +289,7 @@ public class UserControllerSpringTest {
                         .param("lastName", "new last name")
                         .param("emailAddress", "new.email.address@example.com")
                         .param("locked", "on")
-                        .param("passwordAuthenticationAllowed", "on")
+                        .param("singleFactorAuthenticationAllowed", "on")
                 )
         //Then
         .andExpect(status().isOk())
@@ -297,7 +297,7 @@ public class UserControllerSpringTest {
         .andExpect(model().attribute("userUpdateForm", hasProperty("lastName", is("new last name"))))
         .andExpect(model().attribute("userUpdateForm", hasProperty("emailAddress", is("new.email.address@example.com"))))
         .andExpect(model().attribute("userUpdateForm", hasProperty("locked", is(true))))
-        .andExpect(model().attribute("userUpdateForm", hasProperty("passwordAuthenticationAllowed", is(true))));
+        .andExpect(model().attribute("userUpdateForm", hasProperty("singleFactorAuthenticationAllowed", is(true))));
     }
 
     @Test

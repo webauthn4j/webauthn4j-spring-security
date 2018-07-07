@@ -55,7 +55,7 @@ public class UserHelper {
             destination.setAuthenticators(authenticatorUpdateForms);
         }
         destination.setLocked(source.isLocked());
-        destination.setPasswordAuthenticationAllowed(source.isPasswordAuthenticationAllowed());
+        destination.setSingleFactorAuthenticationAllowed(source.isSingleFactorAuthenticationAllowed());
         return destination;
     }
 
@@ -92,7 +92,7 @@ public class UserHelper {
         }
         destination.setAuthenticators(authenticators);
         destination.setLocked(source.isLocked());
-        destination.setPasswordAuthenticationAllowed(source.isPasswordAuthenticationAllowed());
+        destination.setSingleFactorAuthenticationAllowed(source.isSingleFactorAuthenticationAllowed());
 
         return destination;
 
@@ -136,7 +136,7 @@ public class UserHelper {
         }
         destination.setAuthenticators(authenticators);
         destination.setLocked(source.isLocked());
-        destination.setPasswordAuthenticationAllowed(source.isPasswordAuthenticationAllowed());
+        destination.setSingleFactorAuthenticationAllowed(source.isSingleFactorAuthenticationAllowed());
 
         return destination;
     }

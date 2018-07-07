@@ -76,7 +76,7 @@ public class WebAuthnProcessingFilterTest {
         when(authenticationManager.authenticate(captor.capture())).thenReturn(null);
         target.attemptAuthentication(mockHttpServletRequest, mockHttpServletResponse);
 
-        MultiFactorAuthenticationToken authenticationToken = (MultiFactorAuthenticationToken) captor.getValue();
+        Authentication authenticationToken = captor.getValue();
         assertThat(authenticationToken.getPrincipal()).isEqualTo("username");
         assertThat(authenticationToken.getCredentials()).isEqualTo("password");
 

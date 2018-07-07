@@ -24,7 +24,7 @@ public class ProfileFormValidator implements Validator {
             authenticatorCount += form.getAuthenticators().stream().filter(item -> !item.getDelete()).count();
         }
 
-        if(!form.isPasswordAuthenticationAllowed() && authenticatorCount == 0){
+        if(!form.isSingleFactorAuthenticationAllowed() && authenticatorCount == 0){
             errors.rejectValue("newAuthenticators",
                     "e.ProfileFormValidator.noAuthenticator",
                     "To disable password authentication, at least one authenticator must be registered.");

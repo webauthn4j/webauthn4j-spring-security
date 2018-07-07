@@ -25,6 +25,7 @@ import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AbstractAuthenticationToken;
 import org.springframework.security.authentication.AuthenticationServiceException;
 import org.springframework.security.authentication.MultiFactorAuthenticationToken;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;
@@ -105,7 +106,7 @@ public class WebAuthnProcessingFilter extends UsernamePasswordAuthenticationFilt
 
         AbstractAuthenticationToken authRequest;
         if (StringUtils.isEmpty(credentialId)) {
-            authRequest = new MultiFactorAuthenticationToken(username, password, authorities);
+            authRequest = new UsernamePasswordAuthenticationToken(username, password, authorities);
         } else {
             byte[] rawId = Base64Utils.decodeFromUrlSafeString(credentialId);
             byte[] rawClientData = Base64Utils.decodeFromUrlSafeString(clientData);
