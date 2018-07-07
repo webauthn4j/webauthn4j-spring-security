@@ -44,10 +44,10 @@ public class WebAuthnRegistrationRequestValidatorTest {
     public MockitoRule mockito = MockitoJUnit.rule();
 
     @Mock
-    WebAuthnRegistrationContextValidator registrationContextValidator;
+    private WebAuthnRegistrationContextValidator registrationContextValidator;
 
     @Mock
-    ServerPropertyProvider serverPropertyProvider;
+    private ServerPropertyProvider serverPropertyProvider;
 
 
     @Test
