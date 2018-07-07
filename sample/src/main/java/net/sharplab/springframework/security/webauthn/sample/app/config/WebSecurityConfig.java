@@ -36,9 +36,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     private static final String ADMIN_ROLE = "ADMIN";
 
     @Autowired
-    private InvalidSessionStrategy invalidSessionStrategy;
-
-    @Autowired
     @Named("accessDeniedHandler")
     private AccessDeniedHandler accessDeniedHandler;
 
@@ -50,9 +47,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
     private WebAuthnAuthenticatorService authenticatorService;
-
-    @Autowired
-    private HttpSessionSecurityContextRepository httpSessionSecurityContextRepository;
 
     @Override
     public void configure(AuthenticationManagerBuilder builder) throws Exception {
@@ -75,6 +69,17 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
 
+        // WebAuthn Login
+        http.apply(webAuthnLogin())
+                .loginPage("/login")
+                .usernameParameter("username")
+                .passwordParameter("rawPassword");
+
+        // Logout
+        http.logout()
+                .logoutRequestMatcher(new AntPathRequestMatcher("/logout**"))
+                .logoutSuccessUrl("/login?logout=true");
+
         // Authorization
         http.authorizeRequests()
                 .mvcMatchers("/login").permitAll()
@@ -86,27 +91,11 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .mvcMatchers("/api/admin/**").hasRole(ADMIN_ROLE)
                 .anyRequest().fullyAuthenticated();
 
-        // Logout configuration
-        http.logout()
-                .logoutRequestMatcher(new AntPathRequestMatcher("/logout**"))
-                .logoutSuccessUrl("/login?logout=true");
-
-
-        // WebAuthn SecurityFilterChain
-        http.apply(webAuthnLogin())
-                .loginPage("/login")
-                .usernameParameter("username")
-                .passwordParameter("rawPassword");
-
         http.exceptionHandling();
 
         http.sessionManagement()
-                .invalidSessionStrategy(invalidSessionStrategy)
                 .invalidSessionUrl("/login?expired")
                 .sessionAuthenticationErrorUrl("/login?expired");
-
-        http.securityContext()
-                .securityContextRepository(httpSessionSecurityContextRepository);
 
         http.exceptionHandling().accessDeniedHandler(accessDeniedHandler);
 

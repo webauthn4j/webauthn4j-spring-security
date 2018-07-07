@@ -8,25 +8,10 @@ import org.terasoluna.gfw.common.exception.SystemException;
 import org.terasoluna.gfw.common.message.ResultMessages;
 
 /**
- * Controller for error handling
+ * Controller for error handling test
  */
 @Controller
-public class ErrorController {
-
-    @RequestMapping("/error/500")
-    public String show500() {
-        return "error/500";
-    }
-
-    @RequestMapping("/error/404")
-    public String show404() {
-        return "error/404";
-    }
-
-    @RequestMapping({"/error/403", "/error/accessDeniedError"})
-    public String show403() {
-        return "error/403";
-    }
+public class ExceptionTestController {
 
     /**
      * Throws business exception to simulate an unhandled business exception.

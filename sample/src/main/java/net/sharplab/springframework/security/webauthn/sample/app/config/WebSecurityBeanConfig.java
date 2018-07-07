@@ -16,12 +16,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.access.AccessDeniedHandlerImpl;
 import org.springframework.security.web.access.DelegatingAccessDeniedHandler;
-import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
 import org.springframework.security.web.csrf.InvalidCsrfTokenException;
 import org.springframework.security.web.csrf.MissingCsrfTokenException;
-import org.springframework.security.web.session.InvalidSessionAccessDeniedHandler;
-import org.springframework.security.web.session.InvalidSessionStrategy;
-import org.springframework.security.web.session.SimpleRedirectInvalidSessionStrategy;
 
 import java.util.LinkedHashMap;
 
@@ -53,27 +49,14 @@ public class WebSecurityBeanConfig {
         return new BCryptPasswordEncoder();
     }
 
+    // Not to register DaoAuthenticationProvider to ProviderManager,
+    // initialize DaoAuthenticationProvider manually instead of using DaoAuthenticationConfigurer.
     @Bean
     public DaoAuthenticationProvider daoAuthenticationProvider(PasswordEncoder passwordEncoder, UserDetailsService userDetailsService) {
         DaoAuthenticationProvider daoAuthenticationProvider = new DaoAuthenticationProvider();
         daoAuthenticationProvider.setPasswordEncoder(passwordEncoder);
         daoAuthenticationProvider.setUserDetailsService(userDetailsService);
         return daoAuthenticationProvider;
-    }
-
-    @Bean
-    public HttpSessionSecurityContextRepository httpSessionSecurityContextRepository() {
-        return new HttpSessionSecurityContextRepository();
-    }
-
-    @Bean
-    public InvalidSessionStrategy invalidSessionStrategy() {
-        return new SimpleRedirectInvalidSessionStrategy("/login?expired");
-    }
-
-    @Bean
-    public InvalidSessionAccessDeniedHandler invalidSessionAccessDeniedHandler(InvalidSessionStrategy invalidSessionStrategy) {
-        return new InvalidSessionAccessDeniedHandler(invalidSessionStrategy);
     }
 
     @Bean
