@@ -379,7 +379,6 @@ public class GroupControllerSpringTest {
      * HTTP Redirect
      * サービスが投げた業務例外の結果メッセージの設定
      */
-    @Ignore
     @Test
     public void delete_test2() throws Exception{
 

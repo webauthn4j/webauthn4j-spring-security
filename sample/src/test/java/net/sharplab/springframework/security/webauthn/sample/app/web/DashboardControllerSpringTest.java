@@ -30,7 +30,6 @@ public class DashboardControllerSpringTest {
     @Autowired
     private MockMvc mvc;
 
-    @Ignore
     @Test
     @WithAnonymousUser
     public void index_test1() throws Exception{

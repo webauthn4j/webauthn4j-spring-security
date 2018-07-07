@@ -319,7 +319,6 @@ public class UserControllerSpringTest {
                 .andExpect(flash().attribute("resultMessages", samePropertyValuesAs(ResultMessages.success().add(MessageCodes.Success.User.USER_DELETED))));
     }
 
-    @Ignore
     @Test
     public void delete_without_userId_test() throws Exception{
 

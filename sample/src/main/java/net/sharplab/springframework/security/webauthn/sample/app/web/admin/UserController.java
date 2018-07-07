@@ -109,6 +109,11 @@ public class UserController {
     @RequestMapping(value = "/{userId}", method = RequestMethod.GET)
     public String show(Model model, RedirectAttributes redirectAttributes, @PathVariable Integer userId) {
 
+        if(userId == null){
+            redirectAttributes.addFlashAttribute(ResultMessages.error().add(MessageCodes.Error.User.USER_NOT_FOUND));
+            return ViewNames.REDIRECT_ADMIN_USERS;
+        }
+
         User user;
         try {
             user = userService.findOne(userId);
@@ -125,6 +130,11 @@ public class UserController {
 
     @RequestMapping(value = "/updatePassword/{userId}", method = RequestMethod.GET)
     public String showPasswordUpdateView(Model model, RedirectAttributes redirectAttributes, @PathVariable Integer userId) {
+
+        if(userId == null){
+            redirectAttributes.addFlashAttribute(ResultMessages.error().add(MessageCodes.Error.User.USER_NOT_FOUND));
+            return ViewNames.REDIRECT_ADMIN_USERS;
+        }
 
         User user;
         try {
@@ -147,6 +157,10 @@ public class UserController {
         if (result.hasErrors()) {
             model.addAttribute(TARGET_USER_ID, userId);
             return ViewNames.VIEW_USER_UPDATE;
+        }
+        if(userId == null){
+            redirectAttributes.addFlashAttribute(ResultMessages.error().add(MessageCodes.Error.User.USER_NOT_FOUND));
+            return ViewNames.REDIRECT_ADMIN_USERS;
         }
 
         if (!authenticatorHelper.validateAuthenticators(model, request, response, userUpdateForm.getNewAuthenticators())) {
@@ -178,6 +192,10 @@ public class UserController {
             model.addAttribute(TARGET_USER_ID, userId);
             return ViewNames.VIEW_USER_PASSWORD_UPDATE;
         }
+        if(userId == null){
+            redirectAttributes.addFlashAttribute(ResultMessages.error().add(MessageCodes.Error.User.USER_NOT_FOUND));
+            return ViewNames.REDIRECT_ADMIN_USERS;
+        }
 
         User user;
         try {
@@ -198,6 +216,10 @@ public class UserController {
     @RequestMapping(value = "/delete/{userId}", method = RequestMethod.POST)
     public String delete(RedirectAttributes redirectAttributes, Model model, @PathVariable Integer userId) {
 
+        if(userId == null){
+            redirectAttributes.addFlashAttribute(ResultMessages.error().add(MessageCodes.Error.User.USER_NOT_FOUND));
+            return ViewNames.REDIRECT_ADMIN_USERS;
+        }
         try {
             userService.delete(userId);
         } catch (WebAuthnSampleBusinessException ex) {
