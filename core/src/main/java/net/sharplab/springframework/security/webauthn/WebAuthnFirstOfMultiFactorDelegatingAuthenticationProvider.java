@@ -27,7 +27,7 @@ import org.springframework.security.core.SpringSecurityMessageSource;
 import org.springframework.util.Assert;
 
 /**
- * An {@link AuthenticationProvider} implementation for the first of multi factor authentication.
+ * An {@link AuthenticationProvider} implementation for the first factor of multi factor authentication.
  * Authentication itself is delegated to {@link AbstractUserDetailsAuthenticationProvider}.
  */
 public class WebAuthnFirstOfMultiFactorDelegatingAuthenticationProvider implements AuthenticationProvider {
@@ -35,7 +35,7 @@ public class WebAuthnFirstOfMultiFactorDelegatingAuthenticationProvider implemen
 
     // ~ Instance fields
     // ================================================================================================
-    protected MessageSourceAccessor messages = SpringSecurityMessageSource.getAccessor();
+    protected MessageSourceAccessor messages = SpringSecurityWebAuthnMessageSource.getAccessor();
     private AbstractUserDetailsAuthenticationProvider authenticationProvider;
     private boolean passwordAuthenticationAllowed = true;
 

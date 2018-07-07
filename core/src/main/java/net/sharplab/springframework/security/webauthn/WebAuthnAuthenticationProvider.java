@@ -50,7 +50,7 @@ public class WebAuthnAuthenticationProvider implements AuthenticationProvider {
 
     //~ Instance fields
     // ================================================================================================
-    protected MessageSourceAccessor messages = SpringSecurityMessageSource.getAccessor();
+    protected MessageSourceAccessor messages = SpringSecurityWebAuthnMessageSource.getAccessor();
     private WebAuthnUserDetailsService userDetailsService;
     private WebAuthnAuthenticatorService authenticatorService;
     private WebAuthnAuthenticationContextValidator authenticationContextValidator;
