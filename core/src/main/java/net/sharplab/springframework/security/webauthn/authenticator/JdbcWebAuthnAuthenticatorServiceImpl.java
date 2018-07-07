@@ -19,15 +19,14 @@ package net.sharplab.springframework.security.webauthn.authenticator;
 import com.webauthn4j.attestation.authenticator.AttestedCredentialData;
 import com.webauthn4j.attestation.authenticator.CredentialPublicKey;
 import com.webauthn4j.attestation.statement.AttestationStatement;
-import com.webauthn4j.authenticator.Authenticator;
 import com.webauthn4j.converter.jackson.ObjectMapperUtil;
 import com.webauthn4j.util.Base64UrlUtil;
+import net.sharplab.springframework.security.webauthn.SpringSecurityWebAuthnMessageSource;
 import net.sharplab.springframework.security.webauthn.exception.CredentialIdNotFoundException;
 import org.springframework.context.MessageSource;
 import org.springframework.context.MessageSourceAware;
 import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.jdbc.core.support.JdbcDaoSupport;
-import org.springframework.security.core.SpringSecurityMessageSource;
 import org.springframework.util.Assert;
 
 import java.util.List;
@@ -49,7 +48,7 @@ public class JdbcWebAuthnAuthenticatorServiceImpl extends JdbcDaoSupport
     // ~ Instance fields
     // ================================================================================================
 
-    protected MessageSourceAccessor messages = SpringSecurityMessageSource.getAccessor();
+    protected MessageSourceAccessor messages = SpringSecurityWebAuthnMessageSource.getAccessor();
 
     private String authenticatorsByCredentialIdQuery;
 
@@ -80,8 +79,8 @@ public class JdbcWebAuthnAuthenticatorServiceImpl extends JdbcDaoSupport
             this.logger.debug("Query returned no results for authenticator '" + credentialIdStr + "'");
 
             throw new CredentialIdNotFoundException(
-                    this.messages.getMessage("JdbcDaoImpl.notFound",
-                            new Object[]{credentialIdStr}, "credentialId {0} not found"));
+                    this.messages.getMessage("JdbcWebAuthnAuthenticatorServiceImpl.notFound",
+                            new Object[]{credentialIdStr}, "Authenticator {0} not found"));
         }
 
         return authenticators.get(0);
