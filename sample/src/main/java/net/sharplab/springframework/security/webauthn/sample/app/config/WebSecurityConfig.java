@@ -1,7 +1,7 @@
 package net.sharplab.springframework.security.webauthn.sample.app.config;
 
 import net.sharplab.springframework.security.webauthn.WebAuthnAuthenticationProvider;
-import net.sharplab.springframework.security.webauthn.config.configurers.WebAuthnFirstOfMultiFactorDelegatingAuthenticationConfigurer;
+import net.sharplab.springframework.security.webauthn.config.configurers.WebAuthnMultiFactorAuthenticationConfigurer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Configuration;
@@ -50,7 +50,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     public void configure(AuthenticationManagerBuilder builder) throws Exception {
-        builder.apply(new WebAuthnFirstOfMultiFactorDelegatingAuthenticationConfigurer<>(daoAuthenticationProvider));
+        builder.apply(new WebAuthnMultiFactorAuthenticationConfigurer<>(daoAuthenticationProvider));
         builder.authenticationProvider(applicationContext.getBean(WebAuthnAuthenticationProvider.class));
     }
 

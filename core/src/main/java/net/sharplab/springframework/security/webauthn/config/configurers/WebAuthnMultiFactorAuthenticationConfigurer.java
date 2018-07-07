@@ -18,7 +18,7 @@ package net.sharplab.springframework.security.webauthn.config.configurers;
 
 import net.sharplab.springframework.security.webauthn.WebAuthnMultiFactorAuthenticationProvider;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.dao.AbstractUserDetailsAuthenticationProvider;
+import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.config.annotation.SecurityBuilder;
 import org.springframework.security.config.annotation.SecurityConfigurerAdapter;
 import org.springframework.security.config.annotation.authentication.ProviderManagerBuilder;
@@ -26,17 +26,17 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 
 /**
  * @param <B> the type of the {@link SecurityBuilder}
- * @param <C> the type of {@link WebAuthnFirstOfMultiFactorDelegatingAuthenticationConfigurer} this is
+ * @param <C> the type of {@link WebAuthnMultiFactorAuthenticationConfigurer} this is
  * @param <U> The type of {@link UserDetailsService} that is being used
  */
-public class WebAuthnFirstOfMultiFactorDelegatingAuthenticationConfigurer<B extends ProviderManagerBuilder<B>, C extends WebAuthnFirstOfMultiFactorDelegatingAuthenticationConfigurer<B, C, U>, U extends UserDetailsService>
+public class WebAuthnMultiFactorAuthenticationConfigurer<B extends ProviderManagerBuilder<B>, C extends WebAuthnMultiFactorAuthenticationConfigurer<B, C, U>, U extends UserDetailsService>
         extends SecurityConfigurerAdapter<AuthenticationManager, B> {
 
     //~ Instance fields
     // ================================================================================================
-    private AbstractUserDetailsAuthenticationProvider authenticationProvider;
+    private AuthenticationProvider authenticationProvider;
 
-    public WebAuthnFirstOfMultiFactorDelegatingAuthenticationConfigurer(AbstractUserDetailsAuthenticationProvider authenticationProvider) {
+    public WebAuthnMultiFactorAuthenticationConfigurer(AuthenticationProvider authenticationProvider) {
         this.authenticationProvider = authenticationProvider;
     }
 
