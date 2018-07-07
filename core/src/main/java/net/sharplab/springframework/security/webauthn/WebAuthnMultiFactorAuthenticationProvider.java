@@ -19,18 +19,17 @@ package net.sharplab.springframework.security.webauthn;
 import net.sharplab.springframework.security.webauthn.userdetails.WebAuthnUserDetails;
 import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.security.authentication.AuthenticationProvider;
-import org.springframework.security.authentication.FirstOfMultiFactorAuthenticationToken;
+import org.springframework.security.authentication.MultiFactorAuthenticationToken;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.authentication.dao.AbstractUserDetailsAuthenticationProvider;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.SpringSecurityMessageSource;
 import org.springframework.util.Assert;
 
 /**
  * An {@link AuthenticationProvider} implementation for the first factor of multi factor authentication.
  * Authentication itself is delegated to {@link AbstractUserDetailsAuthenticationProvider}.
  */
-public class WebAuthnFirstOfMultiFactorDelegatingAuthenticationProvider implements AuthenticationProvider {
+public class WebAuthnMultiFactorAuthenticationProvider implements AuthenticationProvider {
 
 
     // ~ Instance fields
@@ -40,7 +39,7 @@ public class WebAuthnFirstOfMultiFactorDelegatingAuthenticationProvider implemen
     private boolean passwordAuthenticationAllowed = true;
 
 
-    public WebAuthnFirstOfMultiFactorDelegatingAuthenticationProvider(AbstractUserDetailsAuthenticationProvider authenticationProvider) {
+    public WebAuthnMultiFactorAuthenticationProvider(AbstractUserDetailsAuthenticationProvider authenticationProvider) {
         Assert.notNull(authenticationProvider, "Authentication provide must be set");
         this.authenticationProvider = authenticationProvider;
     }
@@ -48,10 +47,10 @@ public class WebAuthnFirstOfMultiFactorDelegatingAuthenticationProvider implemen
     @Override
     public Authentication authenticate(Authentication authentication) {
         if (!supports(authentication.getClass())) {
-            throw new IllegalArgumentException("Only FirstOfMultiFactorAuthenticationToken is supported, " + authentication.getClass() + " was attempted");
+            throw new IllegalArgumentException("Only MultiFactorAuthenticationToken is supported, " + authentication.getClass() + " was attempted");
         }
 
-        FirstOfMultiFactorAuthenticationToken firstOfMultiFactorAuthenticationToken = (FirstOfMultiFactorAuthenticationToken) authentication;
+        MultiFactorAuthenticationToken firstOfMultiFactorAuthenticationToken = (MultiFactorAuthenticationToken) authentication;
         UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken =
                 new UsernamePasswordAuthenticationToken(firstOfMultiFactorAuthenticationToken.getPrincipal(), firstOfMultiFactorAuthenticationToken.getCredentials());
 
@@ -64,7 +63,7 @@ public class WebAuthnFirstOfMultiFactorDelegatingAuthenticationProvider implemen
             }
         }
 
-        return new FirstOfMultiFactorAuthenticationToken(result.getPrincipal(), result.getCredentials(), authentication.getAuthorities());
+        return new MultiFactorAuthenticationToken(result.getPrincipal(), result.getCredentials(), authentication.getAuthorities());
     }
 
     public boolean isPasswordAuthenticationAllowed() {
@@ -77,6 +76,6 @@ public class WebAuthnFirstOfMultiFactorDelegatingAuthenticationProvider implemen
 
     @Override
     public boolean supports(Class<?> authentication) {
-        return FirstOfMultiFactorAuthenticationToken.class.isAssignableFrom(authentication);
+        return MultiFactorAuthenticationToken.class.isAssignableFrom(authentication);
     }
 }

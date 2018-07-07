@@ -16,7 +16,7 @@
 
 package net.sharplab.springframework.security.webauthn.config.configurers;
 
-import net.sharplab.springframework.security.webauthn.WebAuthnFirstOfMultiFactorDelegatingAuthenticationProvider;
+import net.sharplab.springframework.security.webauthn.WebAuthnMultiFactorAuthenticationProvider;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.dao.AbstractUserDetailsAuthenticationProvider;
 import org.springframework.security.config.annotation.SecurityBuilder;
@@ -42,7 +42,7 @@ public class WebAuthnFirstOfMultiFactorDelegatingAuthenticationConfigurer<B exte
 
     @Override
     public void configure(B builder) {
-        WebAuthnFirstOfMultiFactorDelegatingAuthenticationProvider delegatingAuthenticationProvider = new WebAuthnFirstOfMultiFactorDelegatingAuthenticationProvider(authenticationProvider);
+        WebAuthnMultiFactorAuthenticationProvider delegatingAuthenticationProvider = new WebAuthnMultiFactorAuthenticationProvider(authenticationProvider);
         delegatingAuthenticationProvider = postProcess(delegatingAuthenticationProvider);
         builder.authenticationProvider(delegatingAuthenticationProvider);
     }

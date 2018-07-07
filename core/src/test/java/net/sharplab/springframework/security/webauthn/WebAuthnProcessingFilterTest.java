@@ -31,7 +31,7 @@ import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationServiceException;
-import org.springframework.security.authentication.FirstOfMultiFactorAuthenticationToken;
+import org.springframework.security.authentication.MultiFactorAuthenticationToken;
 import org.springframework.security.core.Authentication;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -76,7 +76,7 @@ public class WebAuthnProcessingFilterTest {
         when(authenticationManager.authenticate(captor.capture())).thenReturn(null);
         target.attemptAuthentication(mockHttpServletRequest, mockHttpServletResponse);
 
-        FirstOfMultiFactorAuthenticationToken authenticationToken = (FirstOfMultiFactorAuthenticationToken) captor.getValue();
+        MultiFactorAuthenticationToken authenticationToken = (MultiFactorAuthenticationToken) captor.getValue();
         assertThat(authenticationToken.getPrincipal()).isEqualTo("username");
         assertThat(authenticationToken.getCredentials()).isEqualTo("password");
 

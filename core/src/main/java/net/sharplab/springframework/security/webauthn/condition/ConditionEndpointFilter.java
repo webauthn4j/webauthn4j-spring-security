@@ -111,7 +111,7 @@ public class ConditionEndpointFilter extends GenericFilterBean {
 
     private Condition createCondition(HttpServletRequest request) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (trustResolver.isAnonymous(authentication) && !mfaTokenEvaluator.isFirstOfMultiFactorAuthentication(authentication)) {
+        if (trustResolver.isAnonymous(authentication) && !mfaTokenEvaluator.isMultiFactorAuthentication(authentication)) {
             throw new InsufficientAuthenticationException(messages.getMessage(
                     "ConditionEndpointFilter.insufficientAuthentication",
                     "Anonymous user is not allowed"));

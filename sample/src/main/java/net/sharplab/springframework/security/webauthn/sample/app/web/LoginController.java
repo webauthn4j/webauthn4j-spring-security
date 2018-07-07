@@ -1,6 +1,6 @@
 package net.sharplab.springframework.security.webauthn.sample.app.web;
 
-import org.springframework.security.authentication.FirstOfMultiFactorAuthenticationToken;
+import org.springframework.security.authentication.MultiFactorAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -24,7 +24,7 @@ public class LoginController {
     public String login() {
         Authentication authentication =
                 SecurityContextHolder.getContext().getAuthentication();
-        if (authentication instanceof FirstOfMultiFactorAuthenticationToken) {
+        if (authentication instanceof MultiFactorAuthenticationToken) {
             return ViewNames.VIEW_LOGIN_AUTHENTICATOR_LOGIN;
         } else {
             return ViewNames.VIEW_LOGIN_LOGIN;
