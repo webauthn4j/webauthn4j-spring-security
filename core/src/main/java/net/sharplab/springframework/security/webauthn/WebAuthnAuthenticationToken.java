@@ -34,6 +34,12 @@ public class WebAuthnAuthenticationToken extends AbstractAuthenticationToken {
     private Serializable principal;
     private WebAuthnAuthenticationRequest credentials;
 
+    /**
+     * Constructor
+     * @param principal principal
+     * @param credentials credentials
+     * @param authorities the collection of GrantedAuthority for the principal represented by this authentication object.
+     */
     public WebAuthnAuthenticationToken(Serializable principal, WebAuthnAuthenticationRequest credentials, Collection<? extends GrantedAuthority> authorities) {
         super(authorities);
         this.principal = principal;
@@ -41,16 +47,25 @@ public class WebAuthnAuthenticationToken extends AbstractAuthenticationToken {
         this.setAuthenticated(true);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Serializable getPrincipal() {
         return principal;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public WebAuthnAuthenticationRequest getCredentials() {
         return credentials;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -63,6 +78,9 @@ public class WebAuthnAuthenticationToken extends AbstractAuthenticationToken {
         return credentials != null ? credentials.equals(that.credentials) : that.credentials == null;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public int hashCode() {
         int result = super.hashCode();

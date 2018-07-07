@@ -9,6 +9,7 @@ import net.sharplab.springframework.security.webauthn.server.ServerPropertyProvi
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
+
 public class WebAuthnRegistrationRequestValidator {
 
     //~ Instance fields
@@ -19,17 +20,22 @@ public class WebAuthnRegistrationRequestValidator {
     private boolean userVerificationRequired;
     private List<String> expectedRegistrationExtensionIds;
 
+    /**
+     * Constructor
+     * @param registrationContextValidator validator for {@link WebAuthnRegistrationContext}
+     * @param serverPropertyProvider provider for {@link ServerProperty}
+     */
     public WebAuthnRegistrationRequestValidator(WebAuthnRegistrationContextValidator registrationContextValidator, ServerPropertyProvider serverPropertyProvider) {
         this.registrationContextValidator = registrationContextValidator;
         this.serverPropertyProvider = serverPropertyProvider;
     }
 
-    public void validate(HttpServletRequest request,
+    public void validate(HttpServletRequest httpServletRequest,
                          String clientDataBase64,
                          String attestationObjectBase64,
                          String clientExtensionsJSON
     ) {
-        WebAuthnRegistrationContext registrationContext = createRegistrationContext(request, clientDataBase64, attestationObjectBase64, clientExtensionsJSON);
+        WebAuthnRegistrationContext registrationContext = createRegistrationContext(httpServletRequest, clientDataBase64, attestationObjectBase64, clientExtensionsJSON);
         registrationContextValidator.validate(registrationContext);
     }
 
@@ -51,10 +57,18 @@ public class WebAuthnRegistrationRequestValidator {
                 expectedRegistrationExtensionIds);
     }
 
+    /**
+     * Check if user verification is required
+     * @return true if user verification is required
+     */
     public boolean isUserVerificationRequired() {
         return userVerificationRequired;
     }
 
+    /**
+     * Set whether user verification is required
+     * @param userVerificationRequired true if user verification is required
+     */
     public void setUserVerificationRequired(boolean userVerificationRequired) {
         this.userVerificationRequired = userVerificationRequired;
     }

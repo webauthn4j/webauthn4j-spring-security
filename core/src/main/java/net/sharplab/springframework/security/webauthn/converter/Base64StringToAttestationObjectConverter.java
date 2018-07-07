@@ -29,6 +29,11 @@ public class Base64StringToAttestationObjectConverter implements Converter<Strin
     // ================================================================================================
     private AttestationObjectConverter converter = new AttestationObjectConverter();
 
+    /**
+     * Convert Base64 {@link String} to {@link AttestationObject}
+     * @param source base64String
+     * @return attestationObject
+     */
     @Override
     public AttestationObject convert(String source) {
         return converter.convert(source);

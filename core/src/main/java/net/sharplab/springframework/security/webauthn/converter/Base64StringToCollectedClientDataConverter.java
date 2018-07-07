@@ -29,7 +29,11 @@ public class Base64StringToCollectedClientDataConverter implements Converter<Str
     // ================================================================================================
     private CollectedClientDataConverter converter = new CollectedClientDataConverter();
 
-
+    /**
+     * Convert Base64 {@link String} to {@link CollectedClientData}
+     * @param source base64String
+     * @return collectedClientData
+     */
     @Override
     public CollectedClientData convert(String source) {
         return converter.convert(source);

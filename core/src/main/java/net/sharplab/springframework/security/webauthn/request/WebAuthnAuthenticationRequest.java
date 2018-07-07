@@ -77,6 +77,9 @@ public class WebAuthnAuthenticationRequest implements Serializable {
         return serverProperty;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -90,6 +93,9 @@ public class WebAuthnAuthenticationRequest implements Serializable {
                 Objects.equals(serverProperty, that.serverProperty);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public int hashCode() {
 

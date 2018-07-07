@@ -36,6 +36,10 @@ public class WebAuthnMultiFactorAuthenticationConfigurer<B extends ProviderManag
     // ================================================================================================
     private AuthenticationProvider authenticationProvider;
 
+    /**
+     * Constructor
+     * @param authenticationProvider {@link AuthenticationProvider} to be delegated
+     */
     public WebAuthnMultiFactorAuthenticationConfigurer(AuthenticationProvider authenticationProvider) {
         this.authenticationProvider = authenticationProvider;
     }

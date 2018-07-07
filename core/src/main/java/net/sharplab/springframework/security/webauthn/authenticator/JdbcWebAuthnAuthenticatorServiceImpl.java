@@ -111,6 +111,9 @@ public class JdbcWebAuthnAuthenticatorServiceImpl extends JdbcDaoSupport
         return this.messages;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void setMessageSource(MessageSource messageSource) {
         Assert.notNull(messageSource, "messageSource cannot be null");

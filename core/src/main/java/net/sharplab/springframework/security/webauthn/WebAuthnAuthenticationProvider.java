@@ -70,6 +70,9 @@ public class WebAuthnAuthenticationProvider implements AuthenticationProvider {
         this.authenticationContextValidator = authenticationContextValidator;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Authentication authenticate(Authentication authentication) {
         if (!supports(authentication.getClass())) {
@@ -111,7 +114,9 @@ public class WebAuthnAuthenticationProvider implements AuthenticationProvider {
         return result;
     }
 
-
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public boolean supports(Class<?> authentication) {
         return WebAuthnAssertionAuthenticationToken.class.isAssignableFrom(authentication);

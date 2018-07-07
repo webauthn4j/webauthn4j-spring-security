@@ -33,6 +33,9 @@ public class WebAuthnAuthenticator extends AuthenticatorImpl {
         this.name = name;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -42,6 +45,9 @@ public class WebAuthnAuthenticator extends AuthenticatorImpl {
         return Objects.equals(name, that.name);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public int hashCode() {
 

@@ -18,9 +18,10 @@ package net.sharplab.springframework.security.webauthn;
 
 import net.sharplab.springframework.security.webauthn.request.WebAuthnAuthenticationRequest;
 import org.springframework.security.authentication.AbstractAuthenticationToken;
+import org.springframework.security.core.Authentication;
 
 /**
- * WebAuthnAssertionAuthenticationToken
+ * An {@link Authentication} implementation for representing WebAuthn assertion
  */
 public class WebAuthnAssertionAuthenticationToken extends AbstractAuthenticationToken {
 
@@ -76,12 +77,18 @@ public class WebAuthnAssertionAuthenticationToken extends AbstractAuthentication
         super.setAuthenticated(false);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void eraseCredentials() {
         super.eraseCredentials();
         credentials = null;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -93,6 +100,9 @@ public class WebAuthnAssertionAuthenticationToken extends AbstractAuthentication
         return credentials != null ? credentials.equals(that.credentials) : that.credentials == null;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public int hashCode() {
         int result = super.hashCode();
