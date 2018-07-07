@@ -82,8 +82,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
         // Logout configuration
         http.logout()
-                .logoutRequestMatcher(new AntPathRequestMatcher("/logout**"))       // ログアウト処理のパス
-                .logoutSuccessUrl("/login?logout=true");                                        // ログアウト完了時のパス
+                .logoutRequestMatcher(new AntPathRequestMatcher("/logout**"))
+                .logoutSuccessUrl("/login?logout=true");
 
 
         // WebAuthn SecurityFilterChain
