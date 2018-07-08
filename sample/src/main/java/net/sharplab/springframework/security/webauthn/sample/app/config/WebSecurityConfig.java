@@ -1,23 +1,20 @@
 package net.sharplab.springframework.security.webauthn.sample.app.config;
 
-import net.sharplab.springframework.security.webauthn.WebAuthnAuthenticationProvider;
 import net.sharplab.springframework.security.webauthn.authenticator.WebAuthnAuthenticatorService;
 import net.sharplab.springframework.security.webauthn.config.configurers.WebAuthnAuthenticationConfigurer;
-import net.sharplab.springframework.security.webauthn.config.configurers.WebAuthnMultiFactorAuthenticationConfigurer;
 import net.sharplab.springframework.security.webauthn.userdetails.WebAuthnUserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
+import org.springframework.security.authentication.MultiFactorAuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.authentication.configurers.mfa.MultiFactorAuthenticationProviderConfigurer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.web.access.AccessDeniedHandler;
-import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
-import org.springframework.security.web.session.InvalidSessionStrategy;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 import javax.inject.Named;
@@ -51,7 +48,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     public void configure(AuthenticationManagerBuilder builder) throws Exception {
         builder.apply(new WebAuthnAuthenticationConfigurer<>(userDetailsService, authenticatorService));
-        builder.apply(new WebAuthnMultiFactorAuthenticationConfigurer<>(daoAuthenticationProvider));
+        builder.apply(new MultiFactorAuthenticationProviderConfigurer<>(daoAuthenticationProvider));
     }
 
     @Override
