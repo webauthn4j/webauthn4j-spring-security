@@ -13,21 +13,13 @@ Initially, the specification was developed as FIDO 2.0 by the FIDO Alliance, but
 
 Spring Security WebAuthn is a Spring Security extension module to provide Web Authentication specification support for your Spring web application.
 
-==== Supported Attestation Statement Formats
-
-List of supported attestation statement formats is below:
-
-- None Attestation Statement Format
-
-Other attestation statement formats are also planed to support.
-
 === Requirements
 
 ==== Language & Framework
 
-- Java8 or later
-- Spring Framework 5.0 or later
-- Spring Security 5.0 or later
+* Java8 or later
+* Spring Framework 5.0 or later
+* Spring Security 5.0 or later
 
 ==== Environment
 
@@ -35,9 +27,9 @@ Other attestation statement formats are also planed to support.
 
 === Source code
 
-Source code for this project is hosted on https://github.com/sharplab/spring-security-webauthn[Github].
+Source code for this project is hosted on https://github.com/ynojima/spring-security-webauthn[Github].
 ----
-git clone git@github.com:sharplab/spring-security-webauthn.git
+git clone git@github.com:ynojima/spring-security-webauthn.git
 ----
 
 === License

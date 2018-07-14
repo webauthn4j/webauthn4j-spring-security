@@ -5,7 +5,8 @@
 
 ==== Maven依存関係
 
-ライブラリとその依存関係を導入するために、以下をpom.xmlファイルに追加してください。
+[line-through]#ライブラリとその依存関係を導入するために、以下をpom.xmlファイルに追加してください。#
+現在、まだカスタムビルドのSpring Securityを必要とする事情から、Maven Centralへの公開は行っていません。
 
 [source, xml]
 ----
@@ -16,32 +17,30 @@
 </dependency>
 ----
 
-==== Bean定義
-
 ==== Java Config
 
 
 === 認証デバイス登録時の検証
 
-認証デバイス登録操作のハンドリングは、基本的にはアプリケーション側の責務であり、Spring Security WebAuthnは機能を直接提供することはしません。
-但し、登録しようとしているデバイス情報が認証時に使用できるものであるか、検証する為に、WebAuthnRegistrationContextValidatorクラスを提供します。
+認証デバイス登録操作のハンドリングは、基本的にはアプリケーション側の責務ですが、登録しようとしているデバイス情報が
+認証時に使用できるものであるか検証する為に、Spring Security WebAuthnは `WebAuthnRegistrationRequestValidator` クラスを
+提供します。
 
 === 認証時の検証
 
 ==== 認証方法の選択
 
-Spring Security WebAuthnでは、認証方法としてパスワード認証、パスワードと認証デバイスの組み合わせによる認証、
-ユーザー検証をサポートした認証デバイスを単独での認証をサポートしています。
-全ての認証方法をサポートし、ユーザーへの間口を広げることも出来ますし、認証デバイスを用いた認証だけに制限することで、
+Spring Security WebAuthnでは、認証方法として「ユーザー検証機能付き認証デバイスによるパスワードレス多要素認証」、
+「パスワード＋認証デバイスによる多要素認証」、「パスワード等による単一要素認証」をサポートしています。
+パスワード認証をサポートし、ユーザーへの間口を広げることも出来ますし、パスワード認証を制限することで、
 セキュリティを高めることも出来ます。
 
-TODO:認証方法の選択設定方法
+===== パスワード認証を制限する方法
 
-各ユーザーは、システムで許されている範囲で、認証方法を更に制限することが可能です。
-例え、パスワード認証がシステム全体で許容されていたとしても、自分のアカウントのログインに関してはパスワード認証を
-許容しないように設定することが可能です。
-
-TODO:設定方法の紹介
+パスワード等による単一要素認証の許可・制限は、ユーザー単位で行うことが可能です。
+`WebAuthnUserDetails` の基底インタフェースである `MFAUserDetails` インタフェースには、
+`isSingleFactorAuthenticationAllowed` メソッドが存在し、実装クラスで `true` を返却すれば、そのユーザーは
+パスワードなどの第一認証要素だけで認証をパスすることが出来ます。
 
 === ユーザーディレクトリとの統合
 
@@ -49,13 +48,42 @@ TODO:設定方法の紹介
 
 ==== WebAuthnAuthenticatorServiceとWebAuthnAuthenticator
 
+=== MultiFactorAuthenticationProvider
+
+Spring Security WebAuthnは、多要素認証の実現に `MultiFactorAuthenticationProvider` を使用します。
+`MultiFactorAuthenticationProvider` はSpring Securityで多要素認証を実現するための `AuthenticationProvider`
+インタフェースの実装で、認証処理自体は別の `AuthenticationProvider` に委譲します。
+委譲先の `AuthenticationProvider` での認証処理が成功し、単一要素認証が許可されていない場合、
+`MultiFactorAuthenticationProvider`は委譲先の `AuthenticationProvider` の返却した `Authentication` の代わりに
+`MultiFactorAuthenticationToken` を返却します。
+
+`MultiFactorAuthenticationToken` は多要素認証における複数の認証要素の内、一部が完了し、一部が未完了であることを示す
+`Authentication` インタフェースの実装です。デフォルトでは `AnonymousAuthenticationToken` と同様に、
+認証が完了していないPrincipalとして扱われます。
+
+Spring Security WebAuthnでパスワード＋認証デバイスによる多要素認証を実現するには、パスワード認証のための
+`DaoAuthenticationProvider` を委譲先とした `MultiFactorAuthenticationProvider` を用意し、
+`MultiFactorAuthenticationProvider` のみ `AuthenticationManager` にセットする必要があります。
+
+なお、委譲先である `DaoAuthenticationProvider` は `AuthenticationManager` にセットしてはいけません。
+これは、委譲先の `DaoAuthenticationProvider` が `MultiFactorAuthenticationProvider` を経由せずに `Authentication` を
+処理してしまうと、 `MultiFactorAuthenticationToken` が返却されず、パスワードのみによる単一要素認証となってしまうためです。
+
+=== WebAuthnAuthenticationProvider
+
+`WebAuthnAuthenticationProvider` は `WebAuthnAssertionAuthenticationToken` を処理するための `AuthenticationProvider`
+インタフェースの実装です。WebAuthnのアサーションの検証には `WebAuthnAuthenticationContextValidator` を使用します。
+`WebAuthnAuthenticationContextValidator` については https://webauthn4j.github.io/webauthn4j/ja/[WebAuthn4Jのリファレンス] を参照して下さい。
+
 === 公開鍵の有効範囲（RpId）設定
 
-Web Authentication仕様では、公開鍵の取得時、その公開鍵の有効範囲を制限するためのパラメータとして、RpIdを指定します。
-RpIdには、～ドメインを指定することが出来ます。例えば、～メソッドが実際に呼び出されたページのドメインが
-"subdomain.example.com"だった場合に、RpIdを"subdomain.example.com"と指定すれば、
-その公開鍵は"subdomain.example.com"とそのサブドメインの範囲だけで利用できますが、
-RpIdを"example.com"とすることで、公開鍵が利用可能な範囲を"example.com"およびそのサブドメインに広げることが出来ます。
+Web Authentication仕様では、Credentialの作成時、即ち認証デバイスの登録時、そのCredentialの有効範囲を制限するための
+パラメータとして、RpIdを指定します。RpIdには、～ドメインを指定することが出来ます。例えば、Credentialの作成を行った
+ページのドメインが"subdomain.example.com"だった場合に、RpIdを"subdomain.example.com"と指定すれば、そのCredentialは
+"subdomain.example.com"とそのサブドメインの範囲だけで利用できますが、RpIdを"example.com"とすることで、
+公開鍵が利用可能な範囲を"example.com"およびそのサブドメインに広げることが出来ます。
+
+
 
 
 == クライアントサイドとのインタフェース仕様
@@ -80,7 +108,7 @@ Spring Security本体側のトピック？
 
 ==== ChallengeAttrProcessor
 
-Web Authentication仕様では、署名対象データにChallengeを含める必要があります。spring-security-webauthnでは、
+Web Authentication仕様では、署名対象データにChallengeを含める必要があります。spring-security-webauthn-thymeleafでは、
 Challengeをサーバーから渡すために、Challengeデータを含むMetaタグを出力するThymeleafのCustom Dialectを提供します。
 
 ==== ChallengeRepository
@@ -114,9 +142,9 @@ FIDO Metadata Serviceで公開されている証明書をトラストアンカ�
 
 
 
-===== `KeyStoreTrustAnchorService`
+===== `KeyStoreResourceTrustAnchorProvider`
 
-Java Key Storeファイルに保存した公開鍵証明書をトラストアンカーとして利用するための`WebAuthnTrustAnchorService`の
+Java Key Storeファイルに保存した公開鍵証明書をトラストアンカーとして利用するための`TrustAnchorProvider`の
 実装です。
 
 
