@@ -18,6 +18,7 @@ public class WebAuthnAuthenticationProviderConfigurer<B extends ProviderManagerB
 
     /**
      * Constructor
+     *
      * @param userDetailsService {@link WebAuthnUserDetailsService}
      */
     public WebAuthnAuthenticationProviderConfigurer(U userDetailsService) {

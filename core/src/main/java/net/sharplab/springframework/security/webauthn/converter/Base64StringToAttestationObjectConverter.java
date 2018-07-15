@@ -31,6 +31,7 @@ public class Base64StringToAttestationObjectConverter implements Converter<Strin
 
     /**
      * Convert Base64 {@link String} to {@link AttestationObject}
+     *
      * @param source base64String
      * @return attestationObject
      */

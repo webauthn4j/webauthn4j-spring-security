@@ -163,6 +163,10 @@ public class WebAuthnAuthenticationProvider implements AuthenticationProvider {
         this.expectedAuthenticationExtensionIds = expectedAuthenticationExtensionIds;
     }
 
+    public boolean isHideCredentialIdNotFoundExceptions() {
+        return hideCredentialIdNotFoundExceptions;
+    }
+
     /**
      * By default the <code>WebAuthnAuthenticationProvider</code> throws a
      * <code>BadCredentialsException</code> if a credentialId is not found or the credential is
@@ -177,10 +181,6 @@ public class WebAuthnAuthenticationProvider implements AuthenticationProvider {
      */
     public void setHideCredentialIdNotFoundExceptions(boolean hideCredentialIdNotFoundExceptions) {
         this.hideCredentialIdNotFoundExceptions = hideCredentialIdNotFoundExceptions;
-    }
-
-    public boolean isHideCredentialIdNotFoundExceptions() {
-        return hideCredentialIdNotFoundExceptions;
     }
 
     protected WebAuthnUserDetailsService getUserDetailsService() {

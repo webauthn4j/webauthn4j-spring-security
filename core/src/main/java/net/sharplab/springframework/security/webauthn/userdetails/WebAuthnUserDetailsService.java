@@ -31,7 +31,6 @@ public interface WebAuthnUserDetailsService extends UserDetailsService {
      * @param credentialId credentialId
      * @return fully populated {@link WebAuthnUserDetails} instance (never <code>null</code>),
      * which must returns the authenticator in getAuthenticators result.
-     *
      * @throws CredentialIdNotFoundException if the authenticator could not be found
      */
     WebAuthnUserDetails loadUserByCredentialId(byte[] credentialId);

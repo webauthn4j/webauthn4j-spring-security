@@ -22,8 +22,9 @@ public class WebAuthnRegistrationRequestValidator {
 
     /**
      * Constructor
+     *
      * @param registrationContextValidator validator for {@link WebAuthnRegistrationContext}
-     * @param serverPropertyProvider provider for {@link ServerProperty}
+     * @param serverPropertyProvider       provider for {@link ServerProperty}
      */
     public WebAuthnRegistrationRequestValidator(WebAuthnRegistrationContextValidator registrationContextValidator, ServerPropertyProvider serverPropertyProvider) {
         this.registrationContextValidator = registrationContextValidator;
@@ -59,6 +60,7 @@ public class WebAuthnRegistrationRequestValidator {
 
     /**
      * Check if user verification is required
+     *
      * @return true if user verification is required
      */
     public boolean isUserVerificationRequired() {
@@ -67,6 +69,7 @@ public class WebAuthnRegistrationRequestValidator {
 
     /**
      * Set whether user verification is required
+     *
      * @param userVerificationRequired true if user verification is required
      */
     public void setUserVerificationRequired(boolean userVerificationRequired) {

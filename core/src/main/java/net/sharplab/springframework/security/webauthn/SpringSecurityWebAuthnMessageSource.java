@@ -28,7 +28,7 @@ import org.springframework.context.support.ResourceBundleMessageSource;
  * class is only used when the deployment environment has not specified an alternative
  * message source.
  * </p>
- *
+ * <p>
  * This class design is based on {@link org.springframework.security.core.SpringSecurityMessageSource}
  */
 public class SpringSecurityWebAuthnMessageSource extends ResourceBundleMessageSource {

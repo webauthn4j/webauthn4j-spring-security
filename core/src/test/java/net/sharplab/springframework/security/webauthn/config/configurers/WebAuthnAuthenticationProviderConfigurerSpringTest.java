@@ -30,7 +30,7 @@ public class WebAuthnAuthenticationProviderConfigurerSpringTest {
     ProviderManager providerManager;
 
     @Test
-    public void test(){
+    public void test() {
         assertThat(providerManager.getProviders()).extracting("class").contains(WebAuthnAuthenticationProvider.class);
     }
 
@@ -73,7 +73,7 @@ public class WebAuthnAuthenticationProviderConfigurerSpringTest {
         @Override
         public void configure(AuthenticationManagerBuilder builder) throws Exception {
             builder.apply(new WebAuthnAuthenticationProviderConfigurer<>(userDetailsService))
-            .authenticationContextValidator(new WebAuthnAuthenticationContextValidator());
+                    .authenticationContextValidator(new WebAuthnAuthenticationContextValidator());
         }
 
     }

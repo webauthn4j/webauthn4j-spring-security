@@ -14,7 +14,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class WebAuthnUserDetailsImplTest {
 
     @Test
-    public void getter_setter_test(){
+    public void getter_setter_test() {
         GrantedAuthority grantedAuthority = new SimpleGrantedAuthority("ROLE_ADMIN");
         Authenticator authenticator = new AuthenticatorImpl(null, null, 0);
         WebAuthnUserDetailsImpl userDetails = new WebAuthnUserDetailsImpl(

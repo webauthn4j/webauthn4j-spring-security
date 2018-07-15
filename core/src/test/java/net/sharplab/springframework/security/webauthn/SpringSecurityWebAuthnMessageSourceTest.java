@@ -8,7 +8,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class SpringSecurityWebAuthnMessageSourceTest {
 
     @Test
-    public void getAccessor_test(){
+    public void getAccessor_test() {
         MessageSourceAccessor accessor = SpringSecurityWebAuthnMessageSource.getAccessor();
         assertThat(accessor).isNotNull();
     }

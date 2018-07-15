@@ -36,7 +36,8 @@ public class WebAuthnAuthenticationToken extends AbstractAuthenticationToken {
 
     /**
      * Constructor
-     * @param principal principal
+     *
+     * @param principal   principal
      * @param credentials credentials
      * @param authorities the collection of GrantedAuthority for the principal represented by this authentication object.
      */

@@ -9,21 +9,21 @@ import static org.mockito.Mockito.mock;
 public class WebAuthnAssertionAuthenticationTokenTest {
 
     @Test(expected = IllegalArgumentException.class)
-    public void setAuthenticated_with_true_test(){
+    public void setAuthenticated_with_true_test() {
         WebAuthnAuthenticationRequest request = mock(WebAuthnAuthenticationRequest.class);
         WebAuthnAssertionAuthenticationToken token = new WebAuthnAssertionAuthenticationToken(request);
         token.setAuthenticated(true);
     }
 
     @Test
-    public void setAuthenticated_with_false_test(){
+    public void setAuthenticated_with_false_test() {
         WebAuthnAuthenticationRequest request = mock(WebAuthnAuthenticationRequest.class);
         WebAuthnAssertionAuthenticationToken token = new WebAuthnAssertionAuthenticationToken(request);
         token.setAuthenticated(false);
     }
 
     @Test
-    public void eraseCredentials_test(){
+    public void eraseCredentials_test() {
         WebAuthnAuthenticationRequest request = mock(WebAuthnAuthenticationRequest.class);
         WebAuthnAssertionAuthenticationToken token = new WebAuthnAssertionAuthenticationToken(request);
         token.eraseCredentials();
@@ -31,7 +31,7 @@ public class WebAuthnAssertionAuthenticationTokenTest {
     }
 
     @Test
-    public void equals_hashCode_test(){
+    public void equals_hashCode_test() {
         WebAuthnAuthenticationRequest request = mock(WebAuthnAuthenticationRequest.class);
         WebAuthnAssertionAuthenticationToken tokenA = new WebAuthnAssertionAuthenticationToken(request);
         WebAuthnAssertionAuthenticationToken tokenB = new WebAuthnAssertionAuthenticationToken(request);

@@ -57,7 +57,7 @@ public class WebAuthnAuthenticationProviderTest {
             = new WebAuthnAuthenticationProvider(userDetailsService, authenticationContextValidator);
 
     @Before
-    public void setup(){
+    public void setup() {
         authenticationProvider = new WebAuthnAuthenticationProvider(userDetailsService, authenticationContextValidator);
         authenticationProvider.setExpectedAuthenticationExtensionIds(Collections.singletonList("appId"));
     }
@@ -171,7 +171,6 @@ public class WebAuthnAuthenticationProviderTest {
     }
 
 
-
     @Test
     public void retrieveWebAuthnUserDetails_test() {
         byte[] credentialId = new byte[0];
@@ -236,7 +235,7 @@ public class WebAuthnAuthenticationProviderTest {
     }
 
     @Test
-    public void wrapWithAuthenticationException_test(){
+    public void wrapWithAuthenticationException_test() {
 
         Map<RuntimeException, Class> map = new HashMap<>();
         map.put(new com.webauthn4j.validator.exception.BadAlgorithmException("dummy"), BadAlgorithmException.class);
@@ -259,13 +258,13 @@ public class WebAuthnAuthenticationProviderTest {
         map.put(new UnknownValidationException("dummy"), AuthenticationServiceException.class);
         map.put(new RuntimeException("dummy"), RuntimeException.class);
 
-        for (Map.Entry<RuntimeException, Class> entry : map.entrySet()){
+        for (Map.Entry<RuntimeException, Class> entry : map.entrySet()) {
             assertThat(authenticationProvider.wrapWithAuthenticationException(entry.getKey())).isInstanceOf(entry.getValue());
         }
     }
 
     @Test
-    public void getter_setter_test(){
+    public void getter_setter_test() {
         WebAuthnUserDetailsService userDetailsService = mock(WebAuthnUserDetailsService.class);
         UserDetailsChecker preAuthenticationChecker = mock(UserDetailsChecker.class);
         UserDetailsChecker postAuthenticationChecker = mock(UserDetailsChecker.class);
@@ -288,7 +287,7 @@ public class WebAuthnAuthenticationProviderTest {
     }
 
     @Test
-    public void userDetailsChecker_check_test(){
+    public void userDetailsChecker_check_test() {
         GrantedAuthority grantedAuthority = new SimpleGrantedAuthority("ROLE_ADMIN");
         Authenticator authenticator = new AuthenticatorImpl(null, null, 0);
         WebAuthnUserDetailsImpl userDetails = new WebAuthnUserDetailsImpl(
@@ -300,7 +299,7 @@ public class WebAuthnAuthenticationProviderTest {
     }
 
     @Test(expected = DisabledException.class)
-    public void userDetailsChecker_check_with_disabled_userDetails_test(){
+    public void userDetailsChecker_check_with_disabled_userDetails_test() {
         GrantedAuthority grantedAuthority = new SimpleGrantedAuthority("ROLE_ADMIN");
         Authenticator authenticator = new AuthenticatorImpl(null, null, 0);
         WebAuthnUserDetailsImpl userDetails = new WebAuthnUserDetailsImpl(
@@ -317,7 +316,7 @@ public class WebAuthnAuthenticationProviderTest {
     }
 
     @Test(expected = AccountExpiredException.class)
-    public void userDetailsChecker_check_with_expired_userDetails_test(){
+    public void userDetailsChecker_check_with_expired_userDetails_test() {
         GrantedAuthority grantedAuthority = new SimpleGrantedAuthority("ROLE_ADMIN");
         Authenticator authenticator = new AuthenticatorImpl(null, null, 0);
         WebAuthnUserDetailsImpl userDetails = new WebAuthnUserDetailsImpl(
@@ -334,7 +333,7 @@ public class WebAuthnAuthenticationProviderTest {
     }
 
     @Test(expected = CredentialsExpiredException.class)
-    public void userDetailsChecker_check_with_credentials_expired_userDetails_test(){
+    public void userDetailsChecker_check_with_credentials_expired_userDetails_test() {
         GrantedAuthority grantedAuthority = new SimpleGrantedAuthority("ROLE_ADMIN");
         Authenticator authenticator = new AuthenticatorImpl(null, null, 0);
         WebAuthnUserDetailsImpl userDetails = new WebAuthnUserDetailsImpl(
@@ -351,7 +350,7 @@ public class WebAuthnAuthenticationProviderTest {
     }
 
     @Test(expected = LockedException.class)
-    public void userDetailsChecker_check_with_locked_userDetails_test(){
+    public void userDetailsChecker_check_with_locked_userDetails_test() {
         GrantedAuthority grantedAuthority = new SimpleGrantedAuthority("ROLE_ADMIN");
         Authenticator authenticator = new AuthenticatorImpl(null, null, 0);
         WebAuthnUserDetailsImpl userDetails = new WebAuthnUserDetailsImpl(

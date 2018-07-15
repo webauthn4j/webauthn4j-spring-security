@@ -18,7 +18,7 @@ public class ServerPropertyProviderImplTest {
     private ServerPropertyProviderImpl target = new ServerPropertyProviderImpl(challengeRepository);
 
     @Test
-    public void provide_test(){
+    public void provide_test() {
         MockHttpServletRequest request = new MockHttpServletRequest();
         request.setScheme("https");
         request.setServerName("origin.example.com");

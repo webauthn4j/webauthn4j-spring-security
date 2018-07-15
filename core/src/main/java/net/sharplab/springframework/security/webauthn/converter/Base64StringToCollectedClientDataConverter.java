@@ -31,6 +31,7 @@ public class Base64StringToCollectedClientDataConverter implements Converter<Str
 
     /**
      * Convert Base64 {@link String} to {@link CollectedClientData}
+     *
      * @param source base64String
      * @return collectedClientData
      */
