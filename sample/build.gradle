@@ -6,7 +6,10 @@ plugins {
 }
 
 group 'net.sharplab.springframework.security.extensions'
-version "${springSecurityWebAuthnVersion}"
+
+jar {
+    version = null
+}
 
 description = "Spring Security WebAuthn sample"
 
@@ -59,6 +62,7 @@ dependencyManagement {
         mavenBom "org.springframework.security:spring-security-bom:${springSecurityVersion}"
     }
 }
+
 
 node {
     download = true
