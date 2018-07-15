@@ -10,8 +10,6 @@ public class SpringSecurityWebAuthnMessageSourceTest {
     @Test
     public void getAccessor_test(){
         MessageSourceAccessor accessor = SpringSecurityWebAuthnMessageSource.getAccessor();
-        String credentialIdStr = "dummyCredentialId";
-        String message = accessor.getMessage("JdbcWebAuthnAuthenticatorServiceImpl.notFound", new Object[]{credentialIdStr});
-        assertThat(message).isEqualTo("Authenticator dummyCredentialId not found");
+        assertThat(accessor).isNotNull();
     }
 }
