@@ -79,7 +79,7 @@ WebAuthentication仕様では、ブラウザのJavaScript APIが規定されて�
 インタフェースについては規定がありません。Spring Security WebAuthnでは、 `WebAuthnProcessingFilter` がログインURLに
 対して送信されたリクエストからリクエストパラメータとして `credentialId` 、`clientData` 、 `authenticatorData` 、
 `signature` 、`clientExtensionsJSON` を取得して認証を行います。 `credentialId` 、`clientData` 、 `authenticatorData` 、
-`signature`はバイナリデータの為、Base64URLエンコードして送信して下さい。
+`signature` はバイナリデータの為、Base64URLエンコードして送信して下さい。
 
 ===== コンディションエンドポイント仕様
 
@@ -87,10 +87,6 @@ WebAuthentication仕様では、認証に先立ってサーバーからチャレ
 また、FIDO-U2Fトークンを認証デバイスとして使用する場合は、第一認証要素によって特定されたユーザーに紐づけられた
 CredentialIdをサーバーから取得する必要があります。これらのデータを取得するためのエンドポイントとして、
 Spring Security WebAuthnではコンディションエンドポイントを用意しています。
-
-===== 認証デバイスの登録
-
-===== 認証
 
 === カスタマイズ
 
@@ -113,7 +109,7 @@ Spring Security WebAuthnは、多要素認証の実現に `MultiFactorAuthentica
 `MultiFactorAuthenticationProvider` はSpring Securityで多要素認証を実現するための `AuthenticationProvider`
 インタフェースの実装で、認証処理自体は別の `AuthenticationProvider` に委譲します。
 委譲先の `AuthenticationProvider` での認証処理が成功し、単一要素認証が許可されていない場合、
-`MultiFactorAuthenticationProvider`は委譲先の `AuthenticationProvider` の返却した `Authentication` の代わりに
+`MultiFactorAuthenticationProvider` は委譲先の `AuthenticationProvider` の返却した `Authentication` の代わりに
 `MultiFactorAuthenticationToken` を返却します。
 
 `MultiFactorAuthenticationToken` は多要素認証における複数の認証要素の内、一部が完了し、一部が未完了であることを示す
@@ -123,8 +119,7 @@ Spring Security WebAuthnは、多要素認証の実現に `MultiFactorAuthentica
 Spring Security WebAuthnでパスワード＋認証デバイスによる多要素認証を実現するには、パスワード認証のための
 `DaoAuthenticationProvider` を委譲先とした `MultiFactorAuthenticationProvider` を用意し、
 `MultiFactorAuthenticationProvider` のみ `AuthenticationManager` にセットする必要があります。
-
-なお、委譲先である `DaoAuthenticationProvider` は `AuthenticationManager` にセットしてはいけません。
+委譲先である `DaoAuthenticationProvider` は `AuthenticationManager` にセットしてはいけません。
 これは、委譲先の `DaoAuthenticationProvider` が `MultiFactorAuthenticationProvider` を経由せずに `Authentication` を
 処理してしまうと、 `MultiFactorAuthenticationToken` が返却されず、パスワードのみによる単一要素認証となってしまうためです。
 
