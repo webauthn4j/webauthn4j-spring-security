@@ -36,6 +36,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsChecker;
 
 import java.io.Serializable;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
@@ -92,9 +93,11 @@ public class WebAuthnAuthenticationProvider implements AuthenticationProvider {
 
         byte[] credentialId = credentials.getCredentialId();
 
-        // Using credential’s id attribute, look up the corresponding credential public key.
-        Authenticator authenticator = retrieveWebAuthnAuthenticator(credentialId);
-        WebAuthnUserDetails user = userDetailsService.loadUserByAuthenticator(authenticator);
+        WebAuthnUserDetails user = retrieveWebAuthnUserDetails(credentialId);
+        Authenticator authenticator = user.getAuthenticators().stream()
+                .filter(item -> Arrays.equals(item.getAttestedCredentialData().getCredentialId(), credentialId))
+                .findFirst()
+                .orElse(null);
 
         preAuthenticationChecks.check(user);
         doAuthenticate(authenticationToken, authenticator, user);
@@ -222,11 +225,10 @@ public class WebAuthnAuthenticationProvider implements AuthenticationProvider {
         this.postAuthenticationChecks = postAuthenticationChecks;
     }
 
-    Authenticator retrieveWebAuthnAuthenticator(byte[] credentialId) {
-        Authenticator loadedAuthenticator;
-
+    WebAuthnUserDetails retrieveWebAuthnUserDetails(byte[] credentialId) {
+        WebAuthnUserDetails user;
         try {
-            loadedAuthenticator = this.getAuthenticatorService().loadWebAuthnAuthenticatorByCredentialId(credentialId);
+            user = userDetailsService.loadUserByCredentialId(credentialId);
         } catch (CredentialIdNotFoundException notFound) {
             if (hideCredentialIdNotFoundExceptions) {
                 throw new BadCredentialsException(messages.getMessage(
@@ -239,12 +241,11 @@ public class WebAuthnAuthenticationProvider implements AuthenticationProvider {
             throw new InternalAuthenticationServiceException(repositoryProblem.getMessage(), repositoryProblem);
         }
 
-        if (loadedAuthenticator == null) {
+        if (user == null) {
             throw new InternalAuthenticationServiceException(
                     "UserDetailsService returned null, which is an interface contract violation");
         }
-        return loadedAuthenticator;
-
+        return user;
     }
 
     @SuppressWarnings("squid:S3776")

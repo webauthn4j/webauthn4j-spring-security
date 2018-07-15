@@ -1,6 +1,7 @@
 package net.sharplab.springframework.security.webauthn.sample.domain.component;
 
 import com.webauthn4j.authenticator.Authenticator;
+import net.sharplab.springframework.security.webauthn.exception.CredentialIdNotFoundException;
 import net.sharplab.springframework.security.webauthn.sample.domain.constant.MessageCodes;
 import net.sharplab.springframework.security.webauthn.sample.domain.entity.AuthenticatorEntity;
 import net.sharplab.springframework.security.webauthn.sample.domain.entity.UserEntity;
@@ -19,6 +20,8 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import org.terasoluna.gfw.common.message.ResultMessages;
+
+import java.nio.charset.StandardCharsets;
 
 /**
  * {@inheritDoc}
@@ -60,8 +63,11 @@ public class UserManagerImpl implements UserManager, WebAuthnUserDetailsService 
     }
 
     @Override
-    public WebAuthnUserDetails loadUserByAuthenticator(Authenticator authnAuthenticator) {
-        AuthenticatorEntity authenticatorEntity = authenticatorEntityRepository.findOneByCredentialId(authnAuthenticator.getAttestedCredentialData().getCredentialId());
+    public WebAuthnUserDetails loadUserByCredentialId(byte[] credentialId) {
+        AuthenticatorEntity authenticatorEntity = authenticatorEntityRepository.findOneByCredentialId(credentialId);
+        if (authenticatorEntity == null) {
+            throw new CredentialIdNotFoundException(String.format("User with credentialId'%s' is not found.", new String(credentialId, StandardCharsets.UTF_8)));
+        }
         return modelMapper.map(authenticatorEntity.getUser(), User.class);
     }
 
