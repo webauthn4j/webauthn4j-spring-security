@@ -25,7 +25,7 @@ import static net.sharplab.springframework.security.webauthn.config.configurers.
 import static org.assertj.core.api.Assertions.assertThat;
 
 @RunWith(SpringRunner.class)
-public class WebAuthnAuthenticationConfigurerSpringTest {
+public class WebAuthnAuthenticationProviderConfigurerSpringTest {
 
     @Autowired
     ProviderManager providerManager;
@@ -76,7 +76,7 @@ public class WebAuthnAuthenticationConfigurerSpringTest {
 
         @Override
         public void configure(AuthenticationManagerBuilder builder) throws Exception {
-            builder.apply(new WebAuthnAuthenticationConfigurer<>(userDetailsService, authenticatorService))
+            builder.apply(new WebAuthnAuthenticationProviderConfigurer<>(userDetailsService, authenticatorService))
             .authenticationContextValidator(new WebAuthnAuthenticationContextValidator());
         }
 

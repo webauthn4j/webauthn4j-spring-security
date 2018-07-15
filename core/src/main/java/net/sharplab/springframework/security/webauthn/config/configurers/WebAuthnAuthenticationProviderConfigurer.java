@@ -9,7 +9,7 @@ import org.springframework.security.config.annotation.SecurityConfigurerAdapter;
 import org.springframework.security.config.annotation.authentication.ProviderManagerBuilder;
 import org.springframework.util.Assert;
 
-public class WebAuthnAuthenticationConfigurer<B extends ProviderManagerBuilder<B>, U extends WebAuthnUserDetailsService, A extends WebAuthnAuthenticatorService>
+public class WebAuthnAuthenticationProviderConfigurer<B extends ProviderManagerBuilder<B>, U extends WebAuthnUserDetailsService, A extends WebAuthnAuthenticatorService>
         extends SecurityConfigurerAdapter<AuthenticationManager, B> {
 
     //~ Instance fields
@@ -23,7 +23,7 @@ public class WebAuthnAuthenticationConfigurer<B extends ProviderManagerBuilder<B
      * @param userDetailsService {@link WebAuthnUserDetailsService}
      * @param authenticatorService {@link WebAuthnAuthenticatorService}
      */
-    public WebAuthnAuthenticationConfigurer(U userDetailsService, A authenticatorService) {
+    public WebAuthnAuthenticationProviderConfigurer(U userDetailsService, A authenticatorService) {
         this.userDetailsService = userDetailsService;
         this.authenticatorService = authenticatorService;
     }
@@ -36,7 +36,7 @@ public class WebAuthnAuthenticationConfigurer<B extends ProviderManagerBuilder<B
         builder.authenticationProvider(authenticationProvider);
     }
 
-    public WebAuthnAuthenticationConfigurer<B, U, A> authenticationContextValidator(WebAuthnAuthenticationContextValidator authenticationContextValidator) {
+    public WebAuthnAuthenticationProviderConfigurer<B, U, A> authenticationContextValidator(WebAuthnAuthenticationContextValidator authenticationContextValidator) {
         Assert.notNull(authenticationContextValidator, "authenticationContextValidator cannot be null");
         this.authenticationContextValidator = authenticationContextValidator;
         return this;
