@@ -22,8 +22,8 @@
 ===== WebAuthnProcessingFilterの組込
 
 WebAuthnの認証要求を受け付ける `WebAuthnProcessingFilter` はJavaConfigで設定することが可能です。
-`WebSecurityConfigurerAdapter` を継承したクラスで `protected void configure(HttpSecurity http)` メソッドをオーバーライドし、
-`WebAuthnLoginConfigurer` を適用して下さい。 `WebAuthnLoginConfigurer` はインスタンスを返却する `webAuthnLogin` という
+`WebSecurityConfigurerAdapter` を継承したクラスで `configure(HttpSecurity http)` メソッドをオーバーライドし、
+`WebAuthnLoginConfigurer` を適用して下さい。 `WebAuthnLoginConfigurer` はインスタンスを返却する `webAuthnLogin()` という
 staticメソッドを持っていますので、そちらを活用すると良いでしょう。
 
 ```
@@ -131,12 +131,7 @@ Spring Security WebAuthnでパスワード＋認証デバイスによる多要�
 
 ==== ユーザーディレクトリとの統合
 
-
-==== 認証デバイス情報の永続化
-
-
-===== WebAuthnAuthenticatorService
-
+===== WebAuthnUserDetailsService
 
 
 ===== 公開鍵の有効範囲（RpId）設定
@@ -150,21 +145,23 @@ Web Authentication仕様では、Credentialの作成時、即ち認証デバイ�
 
 === 高度なトピック
 
-==== 多要素認証で第一要素認証のみ完了したユーザーの識別
+==== 多要素認証で第一要素のみ認証完了したユーザーの識別
 
+多要素認証で第一要素のみ認証完了しているかどうかで、ログインページの表示を変更したい場合、以下のように
+現在の `Authentication` インスタンスが `MultiFactorAuthenticationToken` か否かで判断することが出来ます。
 
-==== メタデータ
-
-==== チャレンジ
-
-===== ChallengeAttrProcessor
-
-Web Authentication仕様では、署名対象データにChallengeを含める必要があります。spring-security-webauthn-thymeleafでは、
-Challengeをサーバーから渡すために、Challengeデータを含むMetaタグを出力するThymeleafのCustom Dialectを提供します。
-
-===== ChallengeRepository
-
-Challengeデータの生成を管理を行うインタフェースとして、ChallengeRepositoryインタフェースが定義されています。
+```java
+@RequestMapping(value = "/login", method = RequestMethod.GET)
+public String login() {
+    Authentication authentication =
+            SecurityContextHolder.getContext().getAuthentication();
+    if (authentication instanceof MultiFactorAuthenticationToken) {
+        return ViewNames.VIEW_LOGIN_AUTHENTICATOR_LOGIN;
+    } else {
+        return ViewNames.VIEW_LOGIN_LOGIN;
+    }
+}
+```
 
 ==== 構成証明ステートメントの検証
 
@@ -176,46 +173,15 @@ Relying Partyは取得した構成証明ステートメントを検証するこ�
 低下します。認証デバイスの厳密な検証が必要なエンタープライズ用途以外、通常のB2Cサイトでは、構成証明ステートメントの
 要求を行うべきではないでしょう。
 
-WebAuthn4Jでは、`WebAuthnRegistrationContextValidator`が認証デバイスの登録要求の検証を司りますが、
+WebAuthn4Jでは、`WebAuthnRegistrationContextValidator` が認証デバイスの登録要求の検証を司りますが、
 取得した構成証明ステートメントの署名と信頼性の検証は、それぞれ`AttestationStatementValidator` と
 `CertPathTrustworthinessValidator` インタフェースの実装に委譲します。
 
 厳密な構成証明ステートメントの検証を必要としないサイト向けに、`AttestationStatementValidator` と
 `CertPathTrustworthinessValidator` を構成した`WebAuthnRegistrationContextValidator` のインスタンスは、
-`WebAuthnRegistrationContextValidator.createNonStrictRegistrationContextValidator` スタティックメソッドで作成出来ます。
+`WebAuthnRegistrationContextValidator.createNonStrictRegistrationContextValidator` ファクトリメソッドで作成出来ます。
 
-===== 構成証明ステートメントの署名の検証
-
-Spring Security WebAuthnは`AttestationStatementSignatureValidator`インタフェースの実装として、
-`FIDOU2FAttestationStatementSignatureValidator`と`WebAuthnAttestationStatementSignatureValidator`を提供します。
-spring-security-webauthnは`AttestationStatementSignatureValidator`インタフェースを実装したクラスのBeanを自動で検出し、
-署名の検証時、フォーマットと適合する`AttestationStatementSignatureValidator`を使用して検証を行います。
-
-
-===== 構成証明ステートメントの信頼性の検証
-
-信頼の検証は、構成証明ステートメントが自己署名か、ECDAAか、それ以外かによって方法が異なり、
-Spring Security WebAuthnではそれぞれの検証手段のインタフェースとして `SelfAttestationTrustworthinessValidator` 、
-`ECDAATrustworthinessValidator` 、 `CertPathTrustworthinessValidator` を用意しています。
-
-`CertPathTrustworthinessValidator` が証明書パスに基づいて構成証明ステートメントを検証する際、WebAuthn4Jは
-`TrustAnchorProvider` インタフェースの実装を用いてトラスト・アンカーを取得します。
-
-`TrustAnchorProvider`インタフェースの実装クラスは必要とする検証の内容に応じて、
-`StrictAttestationStatementTrustworthinessValidator`と`LooseAttestationStatementTrustworthinessValidator`を用意していますが、
-実際の検証は`SelfAttestationTrustworthinessValidator`インタフェース、
- `ECDAATrustworthinessValidator`インタフェース、`CertPathTrustworthinessValidator`インタフェースを実装したクラスに
-委譲しています。
-
-
-===== `FIDOMetadataServiceCertPathTrustworthinessValidator`
-
-`FIDOMetadataServiceCertPathTrustworthinessValidator`は`CertPathTrustworthinessValidator`インタフェースを実装したクラスで、
-FIDO Metadata Serviceで公開されている証明書をトラストアンカーに構成証明証明書の信頼を検証します。
-更に、FIDO Metadata Serviceから得られた各構成証明証明書のStatus Reportを元に検証を行います。
-
-
-===== `KeyStoreResourceTrustAnchorProvider`
+===== KeyStoreResourceTrustAnchorProvider
 
 Java Key Storeファイルに保存した公開鍵証明書をトラストアンカーとして利用するための`TrustAnchorProvider`の
 実装です。Springの `Resource` として読み込んだJava Key Storeファイルから `TrustAnchor` を提供します。
