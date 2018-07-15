@@ -19,6 +19,30 @@
 
 ==== Java Config
 
+===== WebAuthnProcessingFilterの組込
+
+WebAuthnの認証要求を受け付ける `WebAuthnProcessingFilter` はJavaConfigで設定することが可能です。
+`WebSecurityConfigurerAdapter` を継承したクラスで `protected void configure(HttpSecurity http)` メソッドをオーバーライドし、
+`WebAuthnLoginConfigurer` を適用して下さい。 `WebAuthnLoginConfigurer` はインスタンスを返却する `webAuthnLogin` という
+staticメソッドを持っていますので、そちらを活用すると良いでしょう。
+
+```
+
+import static net.sharplab.springframework.security.webauthn.config.configurers.WebAuthnLoginConfigurer.webAuthnLogin;
+
+public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
+    @Override
+    protected void configure(HttpSecurity http) throws Exception {
+
+        // WebAuthn Login
+        http.apply(webAuthnLogin())
+                .loginPage("/login")
+                .usernameParameter("username")
+                .passwordParameter("rawPassword");
+    }
+}
+```
+
 
 === 認証デバイス登録時の検証
 
@@ -145,7 +169,7 @@ FIDO Metadata Serviceで公開されている証明書をトラストアンカ�
 ===== `KeyStoreResourceTrustAnchorProvider`
 
 Java Key Storeファイルに保存した公開鍵証明書をトラストアンカーとして利用するための`TrustAnchorProvider`の
-実装です。
+実装です。Springの `Resource` として読み込んだJava Key Storeファイルから `TrustAnchor` を提供します。
 
 
 ==== 証言ステートメント署名の検証
