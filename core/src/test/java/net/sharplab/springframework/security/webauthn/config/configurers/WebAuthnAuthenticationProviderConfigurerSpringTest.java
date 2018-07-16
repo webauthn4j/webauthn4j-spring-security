@@ -47,7 +47,7 @@ public class WebAuthnAuthenticationProviderConfigurerSpringTest {
 
         @Bean
         public ServerPropertyProvider serverPropertyProvider(ChallengeRepository challengeRepository) {
-            ServerPropertyProvider serverPropertyProvider = new ServerPropertyProviderImpl(challengeRepository);
+            ServerPropertyProviderImpl serverPropertyProvider = new ServerPropertyProviderImpl(challengeRepository);
             serverPropertyProvider.setRpId("example.com");
             return serverPropertyProvider;
         }

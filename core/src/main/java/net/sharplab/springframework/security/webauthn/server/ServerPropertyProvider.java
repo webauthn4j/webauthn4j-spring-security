@@ -28,7 +28,4 @@ public interface ServerPropertyProvider {
 
     ServerProperty provide(HttpServletRequest request);
 
-    String getRpId();
-
-    void setRpId(String rpId);
 }
