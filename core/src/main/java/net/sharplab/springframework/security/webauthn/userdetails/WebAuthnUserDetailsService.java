@@ -33,5 +33,6 @@ public interface WebAuthnUserDetailsService extends UserDetailsService {
      * which must returns the authenticator in getAuthenticators result.
      * @throws CredentialIdNotFoundException if the authenticator could not be found
      */
-    WebAuthnUserDetails loadUserByCredentialId(byte[] credentialId);
+    @SuppressWarnings("squid:RedundantThrowsDeclarationCheck")
+    WebAuthnUserDetails loadUserByCredentialId(byte[] credentialId) throws CredentialIdNotFoundException;
 }

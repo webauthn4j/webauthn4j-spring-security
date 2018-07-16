@@ -131,16 +131,18 @@ Spring Security WebAuthnでパスワード＋認証デバイスによる多要�
 
 ==== ユーザーディレクトリとの統合
 
-===== WebAuthnUserDetailsService
+Spring Security WebAuthnは `WebAuthnUserDetailsService` インタフェースを通じてユーザーを検索します。
+`WebAuthnUserDetailsService` を実装したクラスを `WebAuthnAuthenticationProvider` および
+`MultiFactorAuthenticationProvider` の委譲先の `AuthenticationProvider` にセットして下さい。
 
 
 ===== 公開鍵の有効範囲（RpId）設定
 
 Web Authentication仕様では、Credentialの作成時、即ち認証デバイスの登録時、そのCredentialの有効範囲を制限するための
-パラメータとして、RpIdを指定します。RpIdには、～ドメインを指定することが出来ます。例えば、Credentialの作成を行った
+パラメータとして、RpIdを指定します。RpIdには、 https://html.spec.whatwg.org/multipage/origin.html#concept-origin-effective-domain[effective domain] を指定することが出来ます。例えば、Credentialの作成を行った
 ページのドメインが"subdomain.example.com"だった場合に、RpIdを"subdomain.example.com"と指定すれば、そのCredentialは
 "subdomain.example.com"とそのサブドメインの範囲だけで利用できますが、RpIdを"example.com"とすることで、
-公開鍵が利用可能な範囲を"example.com"およびそのサブドメインに広げることが出来ます。
+Credentialが利用可能な範囲を"example.com"およびそのサブドメインに広げることが出来ます。
 
 
 === 高度なトピック
@@ -174,16 +176,16 @@ Relying Partyは取得した構成証明ステートメントを検証するこ�
 要求を行うべきではないでしょう。
 
 WebAuthn4Jでは、`WebAuthnRegistrationContextValidator` が認証デバイスの登録要求の検証を司りますが、
-取得した構成証明ステートメントの署名と信頼性の検証は、それぞれ`AttestationStatementValidator` と
+取得した構成証明ステートメントの署名と信頼性の検証は、それぞれ `AttestationStatementValidator` と
 `CertPathTrustworthinessValidator` インタフェースの実装に委譲します。
 
 厳密な構成証明ステートメントの検証を必要としないサイト向けに、`AttestationStatementValidator` と
-`CertPathTrustworthinessValidator` を構成した`WebAuthnRegistrationContextValidator` のインスタンスは、
+`CertPathTrustworthinessValidator` を構成した `WebAuthnRegistrationContextValidator` のインスタンスは、
 `WebAuthnRegistrationContextValidator.createNonStrictRegistrationContextValidator` ファクトリメソッドで作成出来ます。
 
 ===== KeyStoreResourceTrustAnchorProvider
 
-Java Key Storeファイルに保存した公開鍵証明書をトラストアンカーとして利用するための`TrustAnchorProvider`の
+Java Key Storeファイルに保存した公開鍵証明書をトラストアンカーとして利用するための `TrustAnchorProvider` の
 実装です。Springの `Resource` として読み込んだJava Key Storeファイルから `TrustAnchor` を提供します。
 
 
