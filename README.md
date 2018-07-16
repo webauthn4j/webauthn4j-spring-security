@@ -48,6 +48,8 @@ git clone https://github.com/ynojima/spring-security-webauthn
 ./gradlew spring-security-webauthn-sample:bootRun
 ```
 
+![Login view](./docs/src/reference/asciidoc/en/images/login.png "Login view")
+
 ## License
 
 Spring Security WebAuthn is Open Source software released under the
