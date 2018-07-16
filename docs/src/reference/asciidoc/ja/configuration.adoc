@@ -26,7 +26,7 @@ WebAuthnの認証要求を受け付ける `WebAuthnProcessingFilter` はJavaConf
 `WebAuthnLoginConfigurer` を適用して下さい。 `WebAuthnLoginConfigurer` はインスタンスを返却する `webAuthnLogin()` という
 staticメソッドを持っていますので、そちらを活用すると良いでしょう。
 
-```
+```java
 
 import static net.sharplab.springframework.security.webauthn.config.configurers.WebAuthnLoginConfigurer.webAuthnLogin;
 
@@ -54,15 +54,20 @@ Web Authentication用の `AuthenticationProvider` である `WebAuthnAuthenticat
 委譲する場合、 `DaoAuthenticationProvider` を `AuthenticationManager` に登録する `DaoAuthenticationConfigurer` や、
 `AuthenticationManagerBuilder#userDetailsService` は使用しないで下さい。
 
-```
+```java
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     public void configure(AuthenticationManagerBuilder builder) throws Exception {
-        builder.apply(new WebAuthnAuthenticationConfigurer<>(userDetailsService, authenticatorService));
+        builder.apply(new WebAuthnAuthenticationConfigurer<>(userDetailsService));
         builder.apply(new MultiFactorAuthenticationProviderConfigurer<>(daoAuthenticationProvider));
     }
 }
 ```
+==== ユーザーディレクトリとの統合
+
+Spring Security WebAuthnは `WebAuthnUserDetailsService` インタフェースを通じてユーザーを検索します。
+`WebAuthnUserDetailsService` を実装したクラスを `WebAuthnAuthenticationProvider` および
+`MultiFactorAuthenticationProvider` の委譲先の `AuthenticationProvider` にセットして下さい。
 
 ==== 認証デバイス登録時の検証
 
@@ -128,12 +133,6 @@ Spring Security WebAuthnでパスワード＋認証デバイスによる多要�
 `WebAuthnAuthenticationProvider` は `WebAuthnAssertionAuthenticationToken` を処理するための `AuthenticationProvider`
 インタフェースの実装です。WebAuthnのアサーションの検証には `WebAuthnAuthenticationContextValidator` を使用します。
 `WebAuthnAuthenticationContextValidator` については https://webauthn4j.github.io/webauthn4j/ja/[WebAuthn4Jのリファレンス] を参照して下さい。
-
-==== ユーザーディレクトリとの統合
-
-Spring Security WebAuthnは `WebAuthnUserDetailsService` インタフェースを通じてユーザーを検索します。
-`WebAuthnUserDetailsService` を実装したクラスを `WebAuthnAuthenticationProvider` および
-`MultiFactorAuthenticationProvider` の委譲先の `AuthenticationProvider` にセットして下さい。
 
 
 === 高度なトピック
