@@ -1,0 +1,4 @@
+[spring-boot]
+== Spring Boot
+
+Spring Boot Auto-Configuration for Spring Security WebAuthn is planned to be provided in the future version.
