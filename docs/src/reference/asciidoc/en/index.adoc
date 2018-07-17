@@ -14,5 +14,6 @@
 
 include::introduction.adoc[]
 include::quick-start.adoc[]
+include::configuration.adoc[]
 include::spring-boot.adoc[]
 include::sample-app.adoc[]

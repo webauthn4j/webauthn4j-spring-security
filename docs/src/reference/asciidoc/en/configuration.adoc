@@ -1,0 +1,44 @@
+[configuration]
+== Configuration
+
+=== Integration to applications
+
+==== Maven dependency
+
+[line-through]#Please add following to pom.xml to introduce Spring Security WebAuthn and its dependencies.#
+For now, it is not published to Maven Central as it requires Spring Security custom build.
+
+[source, xml]
+----
+<dependency>
+	<groupId>net.sharplab.springframework.security.extensions</groupId>
+	<artifactId>spring-security-webauthn-core</artifactId>
+	<version>${version}</version>
+</dependency>
+----
+
+==== Java Config
+
+===== WebAuthnProcessingFilterの組込
+
+`WebAuthnProcessingFilter`, which listens WebAuthn authentication requests can be configured with JavaConfig.
+Please define a configuration class, make it inherit `WebSecurityConfigurerAdapter`, apply `WebAuthnLoginConfigurer`
+in a method overrides `configure(HttpSecurity http)`.
+`WebAuthnLoginConfigurer` has a factory method named `webAuthnLogin()`, which can be utilized.
+
+```java
+
+import static net.sharplab.springframework.security.webauthn.config.configurers.WebAuthnLoginConfigurer.webAuthnLogin;
+
+public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
+    @Override
+    protected void configure(HttpSecurity http) throws Exception {
+
+        // WebAuthn Login
+        http.apply(webAuthnLogin())
+                .loginPage("/login")
+                .usernameParameter("username")
+                .passwordParameter("rawPassword");
+    }
+}
+```
