@@ -65,3 +65,25 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     }
 }
 ```
+
+==== User directory integration
+
+Spring Security WebAuthn looks up a user through the `WebAuthnUserDetailsService` interface.
+Please set a class implementing `WebAuthnUserDetailsService` to the `WebAuthnAuthenticationProvider` and the delegated
+ `AuthenticationProvider`.
+
+==== Validation on an authenticator registration
+
+While it is basically application's responsibility to handle an authenticator registration process, Spring Security WebAuthn
+provides converters and validators to examine the credential in question.
+`Base64StringToCollectedClientDataConverter` converts Base64 string to a `CollectedClientData`.
+`Base64StringToAttestationObjectConverter` converts Base64 string to a `AttestationObject`.
+
+`WebAuthnRegistrationRequestValidator` validates an authenticator registration request.
+
+==== Client interface specification
+
+Web Authentication defines browser JavaScript APIs only. It is up to implementation the way to send corrected credential.
+Regarding Spring Security WebAuthn, `WebAuthnProcessingFilter` retrieves `credentialId`, `clientData`, `authenticatorData`,
+`signature`, `clientExtensionsJSON` for authentication, and `credentialId`, `clientData`, `authenticatorData` and
+`signature` is binary data, please send them as Base64 strings.
