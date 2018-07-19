@@ -91,7 +91,7 @@ WebAuthentication仕様では、ブラウザのJavaScript APIが規定されて�
 WebAuthentication仕様では、認証に先立ってサーバーからチャレンジを取得する必要があります。
 また、FIDO-U2Fトークンを認証デバイスとして使用する場合は、第一認証要素によって特定されたユーザーに紐づけられた
 CredentialIdをサーバーから取得する必要があります。これらのデータを取得するためのエンドポイントとして、
-Spring Security WebAuthnではコンディションエンドポイントを用意しています。
+Spring Security WebAuthnでは`ConditionEndpointFilter`を用意しています。
 
 === カスタマイズ
 

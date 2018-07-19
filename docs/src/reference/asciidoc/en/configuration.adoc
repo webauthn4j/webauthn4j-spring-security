@@ -87,3 +87,27 @@ Web Authentication defines browser JavaScript APIs only. It is up to implementat
 Regarding Spring Security WebAuthn, `WebAuthnProcessingFilter` retrieves `credentialId`, `clientData`, `authenticatorData`,
 `signature`, `clientExtensionsJSON` for authentication, and `credentialId`, `clientData`, `authenticatorData` and
 `signature` is binary data, please send them as Base64 strings.
+
+==== Condition endpoint specification
+
+Web Authentication requests to obtain a challenge from the server prior to authentication.
+When using the FIDO-U2F token as an authentication device, the CredentialIds associated with the user identified by
+the first authentication element are also need to be obtained from the server.
+To retrieve these data, Spring Security WebAuthn offers `ConditionEndpointFilter`.
+
+=== Customization
+
+==== Selecting authentication method
+
+Spring Security WebAuthn supports "Password-less multi-factor authentication with a user-verifying authenticator",
+"Multi-factor authentication with password and authenticator" and "Single-factor authentication like password".
+If you put value on adoption, you may allow password authentication in your web system, or if you give greater importance
+to security, you may restrict password authentication.
+
+
+===== How to restrict password authentication
+
+Restriction of single-factor authentication like password can be configured per user basis.
+`MFAUserDetails` interface, which is a base interface of `WebAuthnUserDetails` has `isSingleFactorAuthenticationAllowed`
+method. If an implementing class returns `true` by the method, the user can pass the authentication with only a single-factor
+like password.
