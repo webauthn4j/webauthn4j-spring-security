@@ -118,14 +118,14 @@ Spring Security WebAuthnは、多要素認証の実現に `MultiFactorAuthentica
 `MultiFactorAuthenticationToken` を返却します。
 
 `MultiFactorAuthenticationToken` は多要素認証における複数の認証要素の内、一部が完了し、一部が未完了であることを示す
-`Authentication` インタフェースの実装です。デフォルトでは `AnonymousAuthenticationToken` と同様に、
+`Authentication` インタフェースの実装です。`AnonymousAuthenticationToken` と同様に、
 認証が完了していないPrincipalとして扱われます。
 
 Spring Security WebAuthnでパスワード＋認証デバイスによる多要素認証を実現するには、パスワード認証のための
 `DaoAuthenticationProvider` を委譲先とした `MultiFactorAuthenticationProvider` を用意し、
-`MultiFactorAuthenticationProvider` のみ `AuthenticationManager` にセットする必要があります。
+`MultiFactorAuthenticationProvider` のみ `AuthenticationManager` に登録する必要があります。
 委譲先である `DaoAuthenticationProvider` は `AuthenticationManager` にセットしてはいけません。
-これは、委譲先の `DaoAuthenticationProvider` が `MultiFactorAuthenticationProvider` を経由せずに `Authentication` を
+これは、委譲先の `AuthenticationProvider` が `MultiFactorAuthenticationProvider` を経由せずに `Authentication` を
 処理してしまうと、 `MultiFactorAuthenticationToken` が返却されず、パスワードのみによる単一要素認証となってしまうためです。
 
 ===== WebAuthnAuthenticationProvider
@@ -139,8 +139,9 @@ Spring Security WebAuthnでパスワード＋認証デバイスによる多要�
 
 ==== 多要素認証で第一要素のみ認証完了したユーザーの識別
 
-多要素認証で第一要素のみ認証完了しているかどうかで、ログインページの表示を変更したい場合、以下のように
-現在の `Authentication` インスタンスが `MultiFactorAuthenticationToken` か否かで判断することが出来ます。
+多要素認証で第一要素のみ認証完了しているユーザーに対して、認証デバイスを要求する画面など、異なるログインページを
+表示したい場合、以下のように現在の `Authentication` インスタンスが `MultiFactorAuthenticationToken` か否かで
+判断することが出来ます。
 
 ```java
 @RequestMapping(value = "/login", method = RequestMethod.GET)
@@ -158,12 +159,12 @@ public String login() {
 ==== Credentialの有効範囲（RpId）設定
 
 Web Authentication仕様では、Credentialの作成時、即ち認証デバイスの登録時、そのCredentialの有効範囲を制限するための
-パラメータとして、RpIdを指定します。RpIdには、 https://html.spec.whatwg.org/multipage/origin.html#concept-origin-effective-domain[effective domain] を指定することが出来ます。例えば、Credentialの作成を行った
-ページのドメインが"subdomain.example.com"だった場合に、RpIdを"subdomain.example.com"と指定すれば、そのCredentialは
-"subdomain.example.com"とそのサブドメインの範囲だけで利用できますが、RpIdを"example.com"とすることで、
-Credentialが利用可能な範囲を"example.com"およびそのサブドメインに広げることが出来ます。
+パラメータとして、 `rpId` を指定します。 `rpId` には、 https://html.spec.whatwg.org/multipage/origin.html#concept-origin-effective-domain[effective domain] を指定することが出来ます。例えば、Credentialの作成を行った
+ページのドメインが `dev.example.com` だった場合に、RpIdを `dev.example.com` と指定すれば、そのCredentialは
+`dev.example.com` とそのサブドメインの範囲だけで利用できますが、 `rpId` を `example.com` とすることで、
+Credentialが利用可能な範囲を `example.com` およびそのサブドメインに広げることが出来ます。
 
-Spring Security WebAuthnでは、RpIdは `ServerPropertyProviderImpl` のプロパティとして設定可能です。
+Spring Security WebAuthnでは、 `rpId` は `ServerPropertyProviderImpl` のプロパティとして設定可能です。
 
 
 ==== 構成証明ステートメントの検証
@@ -184,9 +185,10 @@ WebAuthn4Jでは、`WebAuthnRegistrationContextValidator` が認証デバイス�
 `CertPathTrustworthinessValidator` を構成した `WebAuthnRegistrationContextValidator` のインスタンスは、
 `WebAuthnRegistrationContextValidator.createNonStrictRegistrationContextValidator` ファクトリメソッドで作成出来ます。
 
-==== KeyStoreResourceTrustAnchorProvider
+==== SpringのResourceを活用したTrustAnchorProvider
 
 認証デバイスを登録時に証明書パスから検証する場合、 `TrustAnchorCertPathTrustworthinessValidator` クラスは
-`TrustAnchorProvider` インタフェースの実装クラスから取得したトラストアンカーを使用します。Spring Security WebAuthnでは、
-SpringのResourceとして読み込んだJava Key Storeファイルをトラストアンカーとして読み込む `TrustAnchorProvider` として、
+`TrustAnchorProvider` インタフェースの実装クラスから取得した `TrustAnchor` を使用します。Spring Security WebAuthnでは、
+SpringのResourceとして読み込んだJava Key Storeファイルを `TrustAnchor` として使用する `TrustAnchorProvider` として、
 `KeyStoreResourceTrustAnchorProvider` クラスを提供します。
+

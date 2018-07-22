@@ -111,3 +111,85 @@ Restriction of single-factor authentication like password can be configured per 
 `MFAUserDetails` interface, which is a base interface of `WebAuthnUserDetails` has `isSingleFactorAuthenticationAllowed`
 method. If an implementing class returns `true` by the method, the user can pass the authentication with only a single-factor
 like password.
+
+===== MultiFactorAuthenticationProvider
+
+Spring Security WebAuthn utilizes `MultiFactorAuthenticationProvider` to realize multi-factor authentication.
+`MultiFactorAuthenticationProvider` is an `AuthenticationProvider` interface implementation, which delegates authentication
+decision itself to another `AuthenticationProvider`. If authentication succeeds in the delegated `AuthenticationProvider`
+and single-factor authentication is not permitted, `MultiFactorAuthenticationProvider` returns a `MultiFactorAuthenticationToken`
+instead of the `Authentication` returned from `AuthenticationProvider`.
+
+`MultiFactorAuthenticationToken` is an `Authentication` interface implementation represents partial finish of
+multi-factor authentication. It is treated as a principal that has not authenticated like `AnonymousAuthenticationToken`.
+
+To realize multi-factor authentication with password and authenticator, setup a `MultiFactorAuthenticationProvider`,
+delegate password authentication to a `DaoAuthenticationProvider`, and register the `MultiFactorAuthenticationProvider`
+to the `AuthenticationManager`. The `DaoAuthenticationProvider`, which is delegated to, must not to be registered to
+the `AuthenticationManager` to avoid it processes an `Authentication` directly, and finishes authentication without
+ second-factor verification.
+
+===== WebAuthnAuthenticationProvider
+
+`WebAuthnAuthenticationProvider` is an `AuthenticationProvider` implementation to process a
+`WebAuthnAssertionAuthenticationToken`. For WebAuthn assertion verification, `WebAuthnAuthenticationContextValidator` is
+used. See https://webauthn4j.github.io/webauthn4j/ja/[WebAuthn4J reference] for more details of
+`WebAuthnAuthenticationContextValidator`.
+
+
+=== Advanced topics
+
+==== Distinction of a user in the middle of multi-factor authentication
+
+In the case where it is needed to show a different login view like the one asks an authenticator for the user whose
+first factor is verified but second factor is not provided yet, the distinction can be made by checking the type of
+`Authentication` instance is a descendant of `MultiFactorAuthenticationToken` or not.
+
+```java
+@RequestMapping(value = "/login", method = RequestMethod.GET)
+public String login() {
+    Authentication authentication =
+            SecurityContextHolder.getContext().getAuthentication();
+    if (authentication instanceof MultiFactorAuthenticationToken) {
+        return ViewNames.VIEW_LOGIN_AUTHENTICATOR_LOGIN;
+    } else {
+        return ViewNames.VIEW_LOGIN_LOGIN;
+    }
+}
+```
+
+==== Configuring a credential scope (rpId)
+
+In Web Authentication specification, the scope of a creating credential can be configured through the parameter named
+"rpId" while creating the credential i.e. registering authenticator. "rpId" accepts
+https://html.spec.whatwg.org/multipage/origin.html#concept-origin-effective-domain[effective domain].
+For example, in the case where the domain of the site is `webauthn.example.com`, and `webauthn.example.com` is set to
+`rpId`, the credential is only available in `webauthn.example.com` and its sub-domain, but if `example.com`
+is set to `rpId`, the scope of the credential is relaxed to `example.com` and its sub-domain.
+
+Spring Security WebAuthn supports `rpId` configuration through the `rpId` property of `ServerPropertyProviderImpl`.
+
+==== Attestation statement verification
+
+Web Authentication specification allows the relying party to retrieve an attestation statement from an authenticator if
+it is requested while authenticator registration. By verifying attestation statement, the relying party can exclude
+authenticators not conforming its security requirements. It's to be noted that the attestation statement contains
+information that can be used to track user across web sites, it is discouraged to request an attestation statement
+unnecessarily. It is also to be noted that the browsers shows an additional dialog to confirm the user consent, lowers
+usability. Except for enterprise applications that require strict verification of authenticators, most sites should not
+request attestation statements.
+
+`WebAuthnRegistrationContextValidator` from WebAuthn4J validates an authenticator registration request, and it delegates
+attestation statement signature and trustworthiness validation to `AttestationStatementValidator` and
+`CertPathTrustworthinessValidator` interface implementation respectively.
+
+`WebAuthnRegistrationContextValidator.createNonStrictRegistrationContextValidator` factory method can create the
+`WebAuthnRegistrationContextValidator` instance that contains `AttestationStatementValidator` and
+`CertPathTrustworthinessValidator` configured for web sites not requiring strict attestation verification.
+
+==== TrustAnchorProvider using Spring Resource
+
+While validating an authenticator attestation certificate path on registration,
+`TrustAnchorCertPathTrustworthinessValidator` class uses `TrustAnchor` retrieved through `TrustAnchorProvider` interface
+implementation. Spring Security WebAuthn offers `KeyStoreResourceTrustAnchorProvider` class, which retrieves a
+`TrustAnchor` from a Java Key Store file loaded as Spring `Resource`.
