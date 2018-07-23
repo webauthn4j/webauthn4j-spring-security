@@ -1,7 +1,7 @@
 [configuration]
 == Configuration
 
-=== Integration to applications
+=== Applications integration
 
 ==== Maven dependency
 
