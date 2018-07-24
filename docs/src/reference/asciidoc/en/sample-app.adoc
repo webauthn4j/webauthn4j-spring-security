@@ -54,6 +54,8 @@ You will be automatically redirected to the dashboard.
 ==== Password-less multi-factor authentication with a user-verifying authenticator
 
 If you register a user-verifying authenticator like that supports FIDO-CTAP2, you can login without password.
+As of Jul. 2018, Edge bundled with Windows 10 Insider Preview is the only browser supporting user-verifying authenticators,
+this feature is only available with Edge.
 
 image::images/login-with-edge.png[login view (password-less login)]
 
