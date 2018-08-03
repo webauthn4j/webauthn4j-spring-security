@@ -26,7 +26,6 @@ bootJar {
 
 dependencies {
     implementation project(':webauthn4j-spring-security-core')
-    implementation project(':webauthn4j-spring-security-thymeleaf')
 
     // Spring Framework
     implementation('org.springframework.boot:spring-boot-starter-web')
