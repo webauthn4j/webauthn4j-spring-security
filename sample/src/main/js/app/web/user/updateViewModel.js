@@ -48,9 +48,12 @@ UserUpdateViewModel.prototype.addCredential = function (){
         ],
         //timeout
         //excludeCredentials = []
-        authenticatorSelection: {
-            requireResidentKey: $('#requireResidentKey').prop("checked")
-        },
+
+        // As of Aug. 2018, Chrome Canary Android version excludes platform authenticators
+        // if authenticatorSelection is present
+        //authenticatorSelection: {
+        //    requireResidentKey: $('#requireResidentKey').prop("checked")
+        //},
         attestation: "none",
         //extensions
     };
