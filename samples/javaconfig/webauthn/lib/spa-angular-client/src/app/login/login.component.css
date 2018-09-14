@@ -1,0 +1,17 @@
+.login-container{
+  max-width: 400px;
+  width: 100%;
+  padding: 15px;
+  margin: auto;
+}
+
+.loginForm .form-control {
+  position: relative;
+  box-sizing: border-box;
+  height: auto;
+  padding: 10px;
+  font-size: 16px;
+}
+.loginForm .form-control:focus {
+  z-index: 2;
+}

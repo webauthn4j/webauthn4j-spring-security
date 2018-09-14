@@ -1,0 +1,99 @@
+<div class="profile-container">
+  <h2 class="h4 font-weight-normal text-center">Update profile</h2>
+  <form name="profileForm" class="profileForm" #profileForm="ngForm" (submit)="update()" novalidate>
+    <div *ngFor="let alert of alerts">
+      <ngb-alert [type]="alert.type" [dismissible]="false">{{ alert.message }}</ngb-alert>
+    </div>
+
+    <div class="form-group">
+      <label for="firstname">First name</label>
+      <input type="text" id="firstname" name="firstname" [(ngModel)]="user.firstName" #firstname="ngModel"
+             class="form-control" [class.is-invalid]="firstname.invalid && firstname.touched"
+             placeholder="First name" required autofocus />
+      <div *ngIf="firstname.invalid && firstname.touched" class="invalid-feedback">
+        <div *ngIf="firstname.errors?.required">
+          First name is required.
+        </div>
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="lastname">Last name</label>
+      <input type="text" id="lastname" name="lastname" [(ngModel)]="user.lastName" #lastname="ngModel"
+             class="form-control" [class.is-invalid]="lastname.invalid && lastname.touched"
+             placeholder="Last name" required />
+      <div *ngIf="lastname.invalid && lastname.touched" class="invalid-feedback">
+        <div *ngIf="lastname.errors?.required">
+          Last name is required.
+        </div>
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="username">E-mail</label>
+      <input type="text" id="username" name="username" [(ngModel)]="user.emailAddress" #username="ngModel"
+             class="form-control" [class.is-invalid]="username.invalid && username.touched"
+             placeholder="E-mail" required email />
+      <div *ngIf="username.invalid && username.touched" class="invalid-feedback">
+        <div *ngIf="username.errors?.required">
+          E-mail is required.
+        </div>
+        <div *ngIf="username.errors?.email">
+          Not valid e-mail address.
+        </div>
+      </div>
+    </div>
+    <div class="form-group">
+      <div class="card">
+        <div class="card-header">
+          <div class="row">
+            <label class="col-8">Authenticators</label>
+            <div class="button-group col-4 text-right">
+              <div class="tooltip-wrapper">
+                <button type="button" class="btn btn-light btn-sm" (click)="addAuthenticator()" [disabled]="!isWebAuthnAvailable() || username.invalid">
+                  <i class="fas fa-plus-square"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="card-body">
+          <ul class="list-group" *ngFor="let authenticator of user.authenticators">
+            <li class="list-group-item">
+              <div class="row">
+                <div class="col-8">{{authenticator.name}}</div>
+                <div class="button-group col-4 text-right">
+                  <!--
+                  <button type="button" class="btn btn-light btn-sm" (click)="editAuthenticator(authenticator)"><i class="fas fa-edit"></i></button>
+                  -->
+                  <button type="button" class="btn btn-light btn-sm" (click)="removeAuthenticator(authenticator)"><i class="fas fa-trash-alt"></i></button>
+                </div>
+              </div>
+            </li>
+          </ul>
+          <div class="text-muted small" [class.d-none]="user.authenticators.length > 0">
+            No authenticators are registered.
+          </div>
+          <div class="text-danger small" [class.d-none]="user.authenticators.length > 0 || user.singleFactorAuthenticationAllowed">
+            At least one authenticator must be registered.
+          </div>
+        </div>
+      </div>
+      <div class="text-secondary small" [class.d-none]="isWebAuthnAvailable()">
+        Your browser does not support device login.
+      </div>
+      <div class="text-secondary small" [class.d-none]="!isWebAuthnAvailable()">
+        E-mail is required to register authenticators.
+      </div>
+    </div>
+    <div class="form-group">
+      <div class="form-check">
+        <input class="form-check-input" type="checkbox" id="singleFactorAuthenticationAllowed" name="singleFactorAuthenticationAllowed"
+               [(ngModel)]="user.singleFactorAuthenticationAllowed" #singleFactorAuthenticationAllowed="ngModel"
+               />
+        <label class="form-check-label" for="singleFactorAuthenticationAllowed">Allow password authentication</label>
+      </div>
+    </div>
+    <div class="mt-3 mb-3">
+      <button type="submit" class="btn btn-primary btn-block" [disabled]="profileForm.invalid || submitting || (user.authenticators.length == 0 && !user.singleFactorAuthenticationAllowed)">Update</button>
+    </div>
+  </form>
+</div>

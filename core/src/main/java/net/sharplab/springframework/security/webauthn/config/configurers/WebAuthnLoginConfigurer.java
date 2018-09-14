@@ -16,18 +16,18 @@
 
 package net.sharplab.springframework.security.webauthn.config.configurers;
 
+import com.webauthn4j.attestation.statement.COSEAlgorithmIdentifier;
 import net.sharplab.springframework.security.webauthn.WebAuthnProcessingFilter;
 import net.sharplab.springframework.security.webauthn.challenge.ChallengeRepository;
 import net.sharplab.springframework.security.webauthn.challenge.HttpSessionChallengeRepository;
-import net.sharplab.springframework.security.webauthn.condition.ConditionEndpointFilter;
-import net.sharplab.springframework.security.webauthn.condition.ConditionProvider;
-import net.sharplab.springframework.security.webauthn.condition.ConditionProviderImpl;
+import net.sharplab.springframework.security.webauthn.options.*;
 import net.sharplab.springframework.security.webauthn.server.ServerPropertyProvider;
 import net.sharplab.springframework.security.webauthn.userdetails.WebAuthnUserDetailsService;
 import org.springframework.context.ApplicationContext;
 import org.springframework.security.authentication.AuthenticationTrustResolver;
 import org.springframework.security.authentication.MFATokenEvaluator;
 import org.springframework.security.config.annotation.web.HttpSecurityBuilder;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.annotation.web.configurers.AbstractAuthenticationFilterConfigurer;
 import org.springframework.security.config.annotation.web.configurers.FormLoginConfigurer;
@@ -37,6 +37,9 @@ import org.springframework.security.web.session.SessionManagementFilter;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.security.web.util.matcher.RequestMatcher;
 import org.springframework.util.Assert;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static net.sharplab.springframework.security.webauthn.WebAuthnProcessingFilter.*;
 
@@ -51,7 +54,7 @@ import static net.sharplab.springframework.security.webauthn.WebAuthnProcessingF
  *
  * <ul>
  * <li>{@link WebAuthnProcessingFilter}</li>
- * <li>{@link ConditionEndpointFilter}</li>
+ * <li>{@link OptionsEndpointFilter}</li>
  * </ul>
  *
  * <h2>Shared Objects Created</h2>
@@ -59,7 +62,7 @@ import static net.sharplab.springframework.security.webauthn.WebAuthnProcessingF
  * The following shared objects are populated
  * <ul>
  * <li>{@link ChallengeRepository}</li>
- * <li>{@link ConditionProvider}</li>
+ * <li>{@link OptionsProvider}</li>
  * <li>{@link ServerPropertyProvider}</li>
  * </ul>
  *
@@ -78,23 +81,29 @@ public final class WebAuthnLoginConfigurer<H extends HttpSecurityBuilder<H>> ext
     //~ Instance fields
     // ================================================================================================
     private ChallengeRepository challengeRepository;
-    private ConditionProvider conditionProvider;
+    private OptionsProvider optionsProvider;
     private ServerPropertyProvider serverPropertyProvider;
+
+    private String rpId;
+    private String rpName;
+    private List<PublicKeyCredentialParameters> publicKeyCredParams = new ArrayList<>();
+
+    private String usernameParameter = SPRING_SECURITY_FORM_USERNAME_KEY;
+    private String passwordParameter = SPRING_SECURITY_FORM_PASSWORD_KEY;
+    private String credentialIdParameter = SPRING_SECURITY_FORM_CREDENTIAL_ID_KEY;
+    private String clientDataParameter = SPRING_SECURITY_FORM_CLIENTDATA_KEY;
+    private String authenticatorDataParameter = SPRING_SECURITY_FORM_AUTHENTICATOR_DATA_KEY;
+    private String signatureParameter = SPRING_SECURITY_FORM_SIGNATURE_KEY;
+    private String clientExtensionsJSONParameter = SPRING_SECURITY_FORM_CLIENT_EXTENSIONS_JSON_KEY;
+
+    private final WebAuthnLoginConfigurer<H>.PublicKeyCredParamsConfig publicKeyCredParamsConfigurer = new WebAuthnLoginConfigurer<H>.PublicKeyCredParamsConfig();
 
     public WebAuthnLoginConfigurer() {
         super(new WebAuthnProcessingFilter(), null);
-
-        usernameParameter(SPRING_SECURITY_FORM_USERNAME_KEY);
-        passwordParameter(SPRING_SECURITY_FORM_PASSWORD_KEY);
-        credentialIdParameter(SPRING_SECURITY_FORM_CREDENTIAL_ID_KEY);
-        clientDataParameter(SPRING_SECURITY_FORM_CLIENTDATA_KEY);
-        authenticatorDataParameter(SPRING_SECURITY_FORM_AUTHENTICATOR_DATA_KEY);
-        signatureParameter(SPRING_SECURITY_FORM_SIGNATURE_KEY);
-        clientExtensionsJSONParameter(SPRING_SECURITY_FORM_CLIENT_EXTENSIONS_JSON_PARAMETER);
     }
 
-    public static WebAuthnLoginConfigurer webAuthnLogin() {
-        return new WebAuthnLoginConfigurer();
+    public static WebAuthnLoginConfigurer<HttpSecurity> webAuthnLogin() {
+        return new WebAuthnLoginConfigurer<>();
     }
 
     /**
@@ -102,8 +111,6 @@ public final class WebAuthnLoginConfigurer<H extends HttpSecurityBuilder<H>> ext
      */
     @Override
     public void init(H http) throws Exception {
-        super.init(http);
-
         ApplicationContext applicationContext = http.getSharedObject(ApplicationContext.class);
 
         if (challengeRepository == null) {
@@ -116,11 +123,11 @@ public final class WebAuthnLoginConfigurer<H extends HttpSecurityBuilder<H>> ext
         }
         http.setSharedObject(ChallengeRepository.class, challengeRepository);
 
-        if (conditionProvider == null) {
+        if (optionsProvider == null) {
             WebAuthnUserDetailsService userDetailsService = applicationContext.getBean(WebAuthnUserDetailsService.class);
-            conditionProvider = new ConditionProviderImpl(userDetailsService);
+            optionsProvider = new OptionsProviderImpl(userDetailsService, challengeRepository);
         }
-        http.setSharedObject(ConditionProvider.class, conditionProvider);
+        http.setSharedObject(OptionsProvider.class, optionsProvider);
 
         if (serverPropertyProvider == null) {
             // Since ServerPropertyProvider requires initialization,
@@ -128,6 +135,8 @@ public final class WebAuthnLoginConfigurer<H extends HttpSecurityBuilder<H>> ext
             serverPropertyProvider = applicationContext.getBean(ServerPropertyProvider.class);
         }
         http.setSharedObject(ServerPropertyProvider.class, serverPropertyProvider);
+
+        super.init(http);
     }
 
     /**
@@ -139,23 +148,56 @@ public final class WebAuthnLoginConfigurer<H extends HttpSecurityBuilder<H>> ext
 
         this.getAuthenticationFilter().setServerPropertyProvider(serverPropertyProvider);
 
-        configureConditionEndpointFilter(http);
+        this.optionsProvider.setRpId(rpId);
+        this.optionsProvider.setRpName(rpName);
+        this.optionsProvider.setPublicKeyCredParams(this.publicKeyCredParamsConfigurer.parameters);
+
+        this.getAuthenticationFilter().setUsernameParameter(usernameParameter);
+        this.optionsProvider.setUsernameParameter(usernameParameter);
+        getAuthenticationFilter().setPasswordParameter(passwordParameter);
+        this.optionsProvider.setPasswordParameter(passwordParameter);
+        this.getAuthenticationFilter().setCredentialIdParameter(credentialIdParameter);
+        this.optionsProvider.setCredentialIdParameter(credentialIdParameter);
+        this.getAuthenticationFilter().setClientDataParameter(clientDataParameter);
+        this.optionsProvider.setClientDataParameter(clientDataParameter);
+        this.getAuthenticationFilter().setAuthenticatorDataParameter(authenticatorDataParameter);
+        this.optionsProvider.setAuthenticatorDataParameter(authenticatorDataParameter);
+        this.getAuthenticationFilter().setSignatureParameter(signatureParameter);
+        this.optionsProvider.setSignatureParameter(signatureParameter);
+        this.getAuthenticationFilter().setClientExtensionsJSONParameter(clientExtensionsJSONParameter);
+        this.optionsProvider.setClientExtensionsJSONParameter(clientExtensionsJSONParameter);
+
+        configureOptionsEndpointFilter(http);
     }
 
-    private void configureConditionEndpointFilter(H http) {
-        ConditionEndpointFilter conditionEndpointFilter = new ConditionEndpointFilter(conditionProvider, serverPropertyProvider);
+    private void configureOptionsEndpointFilter(H http) {
+        OptionsEndpointFilter optionsEndpointFilter = new OptionsEndpointFilter(optionsProvider);
 
         MFATokenEvaluator mfaTokenEvaluator = http.getSharedObject(MFATokenEvaluator.class);
         if (mfaTokenEvaluator != null) {
-            conditionEndpointFilter.setMFATokenEvaluator(mfaTokenEvaluator);
+            optionsEndpointFilter.setMFATokenEvaluator(mfaTokenEvaluator);
         }
 
         AuthenticationTrustResolver trustResolver = http.getSharedObject(AuthenticationTrustResolver.class);
         if (trustResolver != null) {
-            conditionEndpointFilter.setTrustResolver(trustResolver);
+            optionsEndpointFilter.setTrustResolver(trustResolver);
         }
 
-        http.addFilterAfter(conditionEndpointFilter, SessionManagementFilter.class);
+        http.addFilterAfter(optionsEndpointFilter, SessionManagementFilter.class);
+    }
+
+    public WebAuthnLoginConfigurer<H> rpId(String rpId) {
+        this.rpId = rpId;
+        return this;
+    }
+
+    public WebAuthnLoginConfigurer<H> rpName(String rpName) {
+        this.rpName = rpName;
+        return this;
+    }
+
+    public WebAuthnLoginConfigurer<H>.PublicKeyCredParamsConfig publicKeyCredParams() {
+        return this.publicKeyCredParamsConfigurer;
     }
 
     /**
@@ -167,7 +209,7 @@ public final class WebAuthnLoginConfigurer<H extends HttpSecurityBuilder<H>> ext
      * @return the {@link FormLoginConfigurer} for additional customization
      */
     public WebAuthnLoginConfigurer<H> usernameParameter(String usernameParameter) {
-        this.getAuthenticationFilter().setUsernameParameter(usernameParameter);
+        this.usernameParameter = usernameParameter;
         return this;
     }
 
@@ -180,7 +222,7 @@ public final class WebAuthnLoginConfigurer<H extends HttpSecurityBuilder<H>> ext
      * @return the {@link WebAuthnLoginConfigurer} for additional customization
      */
     public WebAuthnLoginConfigurer<H> passwordParameter(String passwordParameter) {
-        getAuthenticationFilter().setPasswordParameter(passwordParameter);
+        this.passwordParameter = passwordParameter;
         return this;
     }
 
@@ -193,7 +235,7 @@ public final class WebAuthnLoginConfigurer<H extends HttpSecurityBuilder<H>> ext
      * @return the {@link WebAuthnLoginConfigurer} for additional customization
      */
     public WebAuthnLoginConfigurer<H> credentialIdParameter(String credentialIdParameter) {
-        this.getAuthenticationFilter().setCredentialIdParameter(credentialIdParameter);
+        this.credentialIdParameter = credentialIdParameter;
         return this;
     }
 
@@ -206,7 +248,7 @@ public final class WebAuthnLoginConfigurer<H extends HttpSecurityBuilder<H>> ext
      * @return the {@link WebAuthnLoginConfigurer} for additional customization
      */
     public WebAuthnLoginConfigurer<H> clientDataParameter(String clientDataParameter) {
-        this.getAuthenticationFilter().setClientDataParameter(clientDataParameter);
+        this.clientDataParameter = clientDataParameter;
         return this;
     }
 
@@ -219,7 +261,7 @@ public final class WebAuthnLoginConfigurer<H extends HttpSecurityBuilder<H>> ext
      * @return the {@link WebAuthnLoginConfigurer} for additional customization
      */
     public WebAuthnLoginConfigurer<H> authenticatorDataParameter(String authenticatorDataParameter) {
-        this.getAuthenticationFilter().setAuthenticatorDataParameter(authenticatorDataParameter);
+        this.authenticatorDataParameter = authenticatorDataParameter;
         return this;
     }
 
@@ -232,7 +274,7 @@ public final class WebAuthnLoginConfigurer<H extends HttpSecurityBuilder<H>> ext
      * @return the {@link WebAuthnLoginConfigurer} for additional customization
      */
     public WebAuthnLoginConfigurer<H> signatureParameter(String signatureParameter) {
-        this.getAuthenticationFilter().setSignatureParameter(signatureParameter);
+        this.signatureParameter = signatureParameter;
         return this;
     }
 
@@ -245,7 +287,7 @@ public final class WebAuthnLoginConfigurer<H extends HttpSecurityBuilder<H>> ext
      * @return the {@link WebAuthnLoginConfigurer} for additional customization
      */
     public WebAuthnLoginConfigurer<H> clientExtensionsJSONParameter(String clientExtensionsJSONParameter) {
-        this.getAuthenticationFilter().setClientExtensionsJSONParameter(clientExtensionsJSONParameter);
+        this.clientExtensionsJSONParameter = clientExtensionsJSONParameter;
         return this;
     }
 
@@ -297,9 +339,9 @@ public final class WebAuthnLoginConfigurer<H extends HttpSecurityBuilder<H>> ext
         return this;
     }
 
-    public WebAuthnLoginConfigurer<H> conditionProvider(ConditionProvider conditionProvider) {
-        Assert.notNull(conditionProvider, "conditionProvider cannot be null");
-        this.conditionProvider = conditionProvider;
+    public WebAuthnLoginConfigurer<H> optionsProvider(OptionsProvider optionsProvider){
+        Assert.notNull(optionsProvider, "optionsProvider cannot be null");
+        this.optionsProvider = optionsProvider;
         return this;
     }
 
@@ -309,5 +351,19 @@ public final class WebAuthnLoginConfigurer<H extends HttpSecurityBuilder<H>> ext
         return this;
     }
 
+    public class PublicKeyCredParamsConfig {
+
+        private List<PublicKeyCredentialParameters> parameters = new ArrayList<>();
+
+        public PublicKeyCredParamsConfig addPublicKeyCredParams(PublicKeyCredentialType type, COSEAlgorithmIdentifier alg){
+            parameters.add(new PublicKeyCredentialParameters(type, alg));
+            return this;
+        }
+
+        public WebAuthnLoginConfigurer<H> and() {
+            return WebAuthnLoginConfigurer.this;
+        }
+
+    }
 
 }

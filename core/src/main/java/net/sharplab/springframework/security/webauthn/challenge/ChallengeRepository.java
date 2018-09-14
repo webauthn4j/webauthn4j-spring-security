@@ -55,5 +55,20 @@ public interface ChallengeRepository {
      * @return the {@link Challenge} or null if none exists
      */
     Challenge loadChallenge(HttpServletRequest request);
+
+    /**
+     * Loads or generates {@link Challenge} from the {@link HttpServletRequest}
+     * @param request the {@link HttpServletRequest} to use
+     * @return the {@link Challenge} or null if none exists
+     */
+    default Challenge loadOrGenerateChallenge(HttpServletRequest request) {
+        Challenge challenge = this.loadChallenge(request);
+        if (challenge == null) {
+            challenge = this.generateChallenge();
+            this.saveChallenge(challenge, request);
+        }
+        return challenge;
+    }
+
 }
 

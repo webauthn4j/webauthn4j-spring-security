@@ -4,6 +4,8 @@ import com.webauthn4j.validator.WebAuthnAuthenticationContextValidator;
 import net.sharplab.springframework.security.webauthn.WebAuthnAuthenticationProvider;
 import net.sharplab.springframework.security.webauthn.challenge.ChallengeRepository;
 import net.sharplab.springframework.security.webauthn.challenge.HttpSessionChallengeRepository;
+import net.sharplab.springframework.security.webauthn.options.OptionsProvider;
+import net.sharplab.springframework.security.webauthn.options.OptionsProviderImpl;
 import net.sharplab.springframework.security.webauthn.server.ServerPropertyProvider;
 import net.sharplab.springframework.security.webauthn.server.ServerPropertyProviderImpl;
 import net.sharplab.springframework.security.webauthn.userdetails.WebAuthnUserDetailsService;
@@ -46,10 +48,15 @@ public class WebAuthnAuthenticationProviderConfigurerSpringTest {
         }
 
         @Bean
-        public ServerPropertyProvider serverPropertyProvider(ChallengeRepository challengeRepository) {
-            ServerPropertyProviderImpl serverPropertyProvider = new ServerPropertyProviderImpl(challengeRepository);
-            serverPropertyProvider.setRpId("example.com");
-            return serverPropertyProvider;
+        public OptionsProvider optionsProvider(WebAuthnUserDetailsService webAuthnUserDetailsService, ChallengeRepository challengeRepository){
+            OptionsProvider optionsProvider = new OptionsProviderImpl(webAuthnUserDetailsService, challengeRepository);
+            optionsProvider.setRpId("example.com");
+            return optionsProvider;
+        }
+
+        @Bean
+        public ServerPropertyProvider serverPropertyProvider(OptionsProvider optionsProvider, ChallengeRepository challengeRepository) {
+            return new ServerPropertyProviderImpl(optionsProvider, challengeRepository);
         }
 
         @Bean

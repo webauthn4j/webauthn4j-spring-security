@@ -5,6 +5,7 @@ import com.webauthn4j.client.challenge.Challenge;
 import com.webauthn4j.client.challenge.DefaultChallenge;
 import com.webauthn4j.server.ServerProperty;
 import net.sharplab.springframework.security.webauthn.challenge.ChallengeRepository;
+import net.sharplab.springframework.security.webauthn.options.OptionsProvider;
 import org.junit.Test;
 import org.springframework.mock.web.MockHttpServletRequest;
 
@@ -15,7 +16,8 @@ import static org.mockito.Mockito.when;
 public class ServerPropertyProviderImplTest {
 
     private ChallengeRepository challengeRepository = mock(ChallengeRepository.class);
-    private ServerPropertyProviderImpl target = new ServerPropertyProviderImpl(challengeRepository);
+    private OptionsProvider optionsProvider = mock(OptionsProvider.class);
+    private ServerPropertyProviderImpl target = new ServerPropertyProviderImpl(optionsProvider, challengeRepository);
 
     @Test
     public void provide_test() {
@@ -24,12 +26,11 @@ public class ServerPropertyProviderImplTest {
         request.setServerName("origin.example.com");
         request.setServerPort(443);
         Challenge mockChallenge = new DefaultChallenge();
-        when(challengeRepository.loadChallenge(request)).thenReturn(mockChallenge);
+        when(challengeRepository.loadOrGenerateChallenge(request)).thenReturn(mockChallenge);
+        when(optionsProvider.getEffectiveRpId(request)).thenReturn("rpid.example.com");
 
-        target.setRpId("rpid.example.com");
         ServerProperty serverProperty = target.provide(request);
 
-        assertThat(target.getRpId()).isEqualTo("rpid.example.com");
         assertThat(serverProperty.getRpId()).isEqualTo("rpid.example.com");
         assertThat(serverProperty.getOrigin()).isEqualTo(new Origin("https://origin.example.com"));
         assertThat(serverProperty.getChallenge()).isEqualTo(mockChallenge);

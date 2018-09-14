@@ -1,8 +1,11 @@
 package net.sharplab.springframework.security.webauthn.config.configurers;
 
 
+import com.webauthn4j.client.challenge.DefaultChallenge;
 import net.sharplab.springframework.security.webauthn.challenge.ChallengeRepository;
 import net.sharplab.springframework.security.webauthn.challenge.HttpSessionChallengeRepository;
+import net.sharplab.springframework.security.webauthn.options.OptionsProvider;
+import net.sharplab.springframework.security.webauthn.options.OptionsProviderImpl;
 import net.sharplab.springframework.security.webauthn.server.ServerPropertyProvider;
 import net.sharplab.springframework.security.webauthn.server.ServerPropertyProviderImpl;
 import net.sharplab.springframework.security.webauthn.userdetails.WebAuthnUserDetails;
@@ -13,6 +16,7 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Bean;
+import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
@@ -67,16 +71,16 @@ public class WebAuthnLoginConfigurerSpringTest {
     }
 
     @Test
-    public void conditionEndpointPath_with_anonymous_user_test() throws Exception {
+    public void optionsEndpointPath_with_anonymous_user_test() throws Exception {
         mvc = MockMvcBuilders.standaloneSetup()
                 .addFilter(springSecurityFilterChain)
                 .build();
 
         mvc
-                .perform(get("/webauthn/condition").with(anonymous()))
+                .perform(get("/webauthn/options").with(anonymous()))
                 .andExpect(unauthenticated())
-                .andExpect(content().json("{\"type\":\"not_authenticated\",\"message\":\"Anonymous access is prohibited\"}"))
-                .andExpect(status().isForbidden());
+                .andExpect(content().json("{\"relyingParty\":{\"id\":\"localhost\",\"name\":null},\"challenge\":\"aFglXMZdQTKD4krvNzJBzA\",\"pubKeyCredParams\":[],\"credentials\":[],\"parameters\":{\"username\":\"username\",\"password\":\"password\",\"credentialId\":\"credentialId\",\"clientData\":\"clientData\",\"authenticatorData\":\"authenticatorData\",\"signature\":\"signature\",\"clientExtensionsJSON\":\"clientExtensionsJSON\"}}"))
+                .andExpect(status().isOk());
     }
 
     @Test
@@ -100,9 +104,9 @@ public class WebAuthnLoginConfigurerSpringTest {
                 .build();
 
         mvc
-                .perform(get("/webauthn/condition").with(user("john")))
+                .perform(get("/webauthn/options").with(user("john")))
                 .andExpect(authenticated())
-                .andExpect(status().is2xxSuccessful());
+                .andExpect(status().isOk());
     }
 
     @EnableWebSecurity
@@ -110,14 +114,21 @@ public class WebAuthnLoginConfigurerSpringTest {
 
         @Bean
         public ChallengeRepository challengeRepository() {
-            return new HttpSessionChallengeRepository();
+            ChallengeRepository challengeRepository = mock(ChallengeRepository.class);
+            when(challengeRepository.loadOrGenerateChallenge(any())).thenReturn(new DefaultChallenge("aFglXMZdQTKD4krvNzJBzA"));
+            return challengeRepository;
         }
 
         @Bean
-        public ServerPropertyProvider serverPropertyProvider(ChallengeRepository challengeRepository) {
-            ServerPropertyProviderImpl serverPropertyProvider = new ServerPropertyProviderImpl(challengeRepository);
-            serverPropertyProvider.setRpId("example.com");
-            return serverPropertyProvider;
+        public OptionsProvider optionsProvider(WebAuthnUserDetailsService webAuthnUserDetailsService, ChallengeRepository challengeRepository){
+            OptionsProvider optionsProvider = new OptionsProviderImpl(webAuthnUserDetailsService, challengeRepository);
+            optionsProvider.setRpId("example.com");
+            return optionsProvider;
+        }
+
+        @Bean
+        public ServerPropertyProvider serverPropertyProvider(OptionsProvider optionsProvider, ChallengeRepository challengeRepository) {
+            return new ServerPropertyProviderImpl(optionsProvider, challengeRepository);
         }
 
         @Override

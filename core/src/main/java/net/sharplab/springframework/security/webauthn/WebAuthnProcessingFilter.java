@@ -17,10 +17,9 @@
 package net.sharplab.springframework.security.webauthn;
 
 import com.webauthn4j.server.ServerProperty;
-import net.sharplab.springframework.security.webauthn.challenge.HttpSessionChallengeRepository;
+import net.sharplab.springframework.security.webauthn.options.OptionsProvider;
 import net.sharplab.springframework.security.webauthn.request.WebAuthnAuthenticationRequest;
 import net.sharplab.springframework.security.webauthn.server.ServerPropertyProvider;
-import net.sharplab.springframework.security.webauthn.server.ServerPropertyProviderImpl;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AbstractAuthenticationToken;
 import org.springframework.security.authentication.AuthenticationServiceException;
@@ -49,7 +48,7 @@ public class WebAuthnProcessingFilter extends UsernamePasswordAuthenticationFilt
     public static final String SPRING_SECURITY_FORM_CLIENTDATA_KEY = "clientData";
     public static final String SPRING_SECURITY_FORM_AUTHENTICATOR_DATA_KEY = "authenticatorData";
     public static final String SPRING_SECURITY_FORM_SIGNATURE_KEY = "signature";
-    public static final String SPRING_SECURITY_FORM_CLIENT_EXTENSIONS_JSON_PARAMETER = "clientExtensionsJSON";
+    public static final String SPRING_SECURITY_FORM_CLIENT_EXTENSIONS_JSON_KEY = "clientExtensionsJSON";
 
     //~ Instance fields
     // ================================================================================================
@@ -59,7 +58,7 @@ public class WebAuthnProcessingFilter extends UsernamePasswordAuthenticationFilt
     private String clientDataParameter = SPRING_SECURITY_FORM_CLIENTDATA_KEY;
     private String authenticatorDataParameter = SPRING_SECURITY_FORM_AUTHENTICATOR_DATA_KEY;
     private String signatureParameter = SPRING_SECURITY_FORM_SIGNATURE_KEY;
-    private String clientExtensionsJSONParameter = SPRING_SECURITY_FORM_CLIENT_EXTENSIONS_JSON_PARAMETER;
+    private String clientExtensionsJSONParameter = SPRING_SECURITY_FORM_CLIENT_EXTENSIONS_JSON_KEY;
 
     private ServerPropertyProvider serverPropertyProvider;
 
@@ -67,17 +66,18 @@ public class WebAuthnProcessingFilter extends UsernamePasswordAuthenticationFilt
     private boolean postOnly = true;
 
     /**
-     * Default constructor
+     * Constructor
      */
     public WebAuthnProcessingFilter() {
-        this(AuthorityUtils.createAuthorityList("ROLE_ANONYMOUS"), new ServerPropertyProviderImpl(new HttpSessionChallengeRepository()));
+        super();
+        this.authorities = AuthorityUtils.createAuthorityList("ROLE_ANONYMOUS");
     }
 
     /**
      * Constructor
      *
      * @param authorities            authorities for FirstOfMultiFactorAuthenticationToken
-     * @param serverPropertyProvider provide for ServerProperty
+     * @param serverPropertyProvider provider for ServerProperty
      */
     public WebAuthnProcessingFilter(List<GrantedAuthority> authorities, ServerPropertyProvider serverPropertyProvider) {
         super();

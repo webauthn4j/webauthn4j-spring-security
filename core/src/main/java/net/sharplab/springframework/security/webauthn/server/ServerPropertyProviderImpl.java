@@ -20,6 +20,9 @@ import com.webauthn4j.client.Origin;
 import com.webauthn4j.client.challenge.Challenge;
 import com.webauthn4j.server.ServerProperty;
 import net.sharplab.springframework.security.webauthn.challenge.ChallengeRepository;
+import net.sharplab.springframework.security.webauthn.options.Options;
+import net.sharplab.springframework.security.webauthn.options.OptionsProvider;
+import net.sharplab.springframework.security.webauthn.util.ServletUtil;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -30,45 +33,22 @@ public class ServerPropertyProviderImpl implements ServerPropertyProvider {
 
     //~ Instance fields
     // ================================================================================================
-    private String rpId = null;
+    private OptionsProvider optionsProvider;
     private ChallengeRepository challengeRepository;
 
-    public ServerPropertyProviderImpl(ChallengeRepository challengeRepository) {
+    public ServerPropertyProviderImpl(OptionsProvider optionsProvider, ChallengeRepository challengeRepository) {
+        this.optionsProvider = optionsProvider;
         this.challengeRepository = challengeRepository;
     }
 
     public ServerProperty provide(HttpServletRequest request) {
 
-        Origin origin = obtainOrigin(request);
-        Challenge savedChallenge = obtainSavedChallenge(request);
+        Origin origin = ServletUtil.getOrigin(request);
+        String effectiveRpId = optionsProvider.getEffectiveRpId(request);
+        Challenge challenge = challengeRepository.loadOrGenerateChallenge(request);
 
-        String applyingRpId = origin.getHost();
-        if (this.rpId != null) {
-            applyingRpId = this.rpId;
-        }
-
-        return new ServerProperty(origin, applyingRpId, savedChallenge, null); // tokenBinding is not supported by Servlet API as of 4.0
-    }
-
-    public String getRpId() {
-        return rpId;
-    }
-
-    public void setRpId(String rpId) {
-        this.rpId = rpId;
+        return new ServerProperty(origin, effectiveRpId, challenge, null); // tokenBinding is not supported by Servlet API as of 4.0
     }
 
 
-    private Origin obtainOrigin(HttpServletRequest request) {
-        return new Origin(request.getScheme(), request.getServerName(), request.getServerPort());
-    }
-
-    private Challenge obtainSavedChallenge(HttpServletRequest request) {
-        Challenge challenge = challengeRepository.loadChallenge(request);
-        if (challenge == null) {
-            challenge = challengeRepository.generateChallenge();
-            challengeRepository.saveChallenge(challenge, request);
-        }
-        return challenge;
-    }
 }

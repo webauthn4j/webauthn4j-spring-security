@@ -1,0 +1,5 @@
+<div class="login-container" [ngSwitch]="this.authStatus">
+  <app-password-login *ngSwitchCase="'Anonymous'"></app-password-login>
+  <app-authenticator-login *ngSwitchCase="'PartiallyAuthenticated'"></app-authenticator-login>
+  <app-password-login *ngSwitchCase="'Authenticated'"></app-password-login>
+</div>

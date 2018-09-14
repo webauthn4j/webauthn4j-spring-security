@@ -1,0 +1,24 @@
+<ng-container>
+  <nav class="navbar navbar-expand-md navbar-dark bg-dark mb-5" *ngIf="this.authStatus == 'Authenticated'">
+    <a class="navbar-brand" href="#">Spring Security WebAuthn Sample</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse">
+      <div ngbDropdown placement="bottom-right" class="navbar-nav ml-auto">
+        <div class="nav-link dropdown-toggle" id="nav-menu" ngbDropdownToggle>
+          <span class="navbar-toggler-icon"></span>
+        </div>
+        <div class="dropdown-menu" aria-labelledby="nav-menu" ngbDropdownMenu>
+          <a class="dropdown-item" routerLink="/profile">Profile</a>
+          <div class="dropdown-divider"></div>
+          <a class="dropdown-item" (click)="logout()">Logout</a>
+        </div>
+      </div>
+    </div>
+  </nav>
+  <div class="site-title-container">
+    <h1 class="h3 font-weight-normal text-center" id="site-title" *ngIf="this.authStatus != 'Authenticated'">Spring-Security-WebAuthn Sample</h1>
+  </div>
+</ng-container>

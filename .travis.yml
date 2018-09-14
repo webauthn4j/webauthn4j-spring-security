@@ -5,6 +5,8 @@ jdk:
   - oraclejdk8
   - oraclejdk9
 
+dist: trusty # to use chrome
+
 script:
   # the following command line builds the project, runs the tests with coverage and then execute the SonarCloud analysis
   - ./gradlew sonarqube bootJar test javadoc asciidoc -Dsonar.organization=ynojima -Dsonar.host.url=https://sonarcloud.io -Dsonar.login=$SONAR_TOKEN
@@ -21,5 +23,6 @@ deploy:
     jdk: openjdk8
 
 addons:
+  chrome: stable
   sonarcloud:
     organization: "ynojima"

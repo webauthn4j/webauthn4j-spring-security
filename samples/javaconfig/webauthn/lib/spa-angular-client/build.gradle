@@ -1,0 +1,52 @@
+plugins {
+  id "com.moowork.node" version "1.2.0"
+}
+
+group 'net.sharplab.springframework.security.extensions'
+version "${springSecurityWebAuthnVersion}"
+
+description = "Spring Security WebAuthn Sample angular client library"
+
+node {
+  download = true
+
+  // Version of node to use.
+  version = '8.12.0'
+
+  // Version of npm to use.
+  npmVersion = '6.4.1'
+}
+
+npm_run_build {
+  args = ['--production']
+  group = 'build'
+
+}
+
+npm_run_test {
+  group = 'verification'
+}
+
+npm_run_watchTest {
+  group = 'verification'
+}
+
+npm_run_e2e {
+  group = 'verification'
+}
+
+npm_run_start {
+  group = 'other'
+}
+
+// classes is a Java task
+classes.dependsOn npm_run_build
+npm_run_build.mustRunAfter processResources
+
+
+// test is a Java task
+test.dependsOn npm_run_test
+
+sonarqube {
+  skipProject = true
+}

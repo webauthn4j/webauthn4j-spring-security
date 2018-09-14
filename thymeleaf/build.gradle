@@ -3,6 +3,12 @@ version "${springSecurityWebAuthnVersion}"
 
 description = "Spring Security WebAuthn Thymeleaf Extension library"
 
+repositories {
+    flatDir {
+        dirs "../libs"
+    }
+}
+
 dependencies {
     compile project(':spring-security-webauthn-core')
 

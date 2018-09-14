@@ -1,0 +1,26 @@
+<form name="authenticatorForm" class="authenticatorForm" #authenticatorForm="ngForm" (ngSubmit)="save()" novalidate>
+  <div class="modal-header">
+    <h4 class="modal-title" id="modal-basic-title">Authenticator</h4>
+    <button type="button" class="close" aria-label="Close" (click)="activeModal.dismiss()">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <div class="form-group">
+      <label for="name">Name</label>
+      <input type="text" id="name" name="name" [(ngModel)]="authenticator.name" #name="ngModel"
+             class="form-control" [class.is-invalid]="name.invalid && name.touched"
+             placeholder="Name" required />
+      <div *ngIf="name.invalid && name.touched" class="invalid-feedback">
+        <div *ngIf="name.errors?.required">
+          Name is required.
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button type="submit" class="btn btn-primary" [disabled]="authenticatorForm.invalid || submitting">OK</button>
+    <button type="button" class="btn btn-secondary" (click)="activeModal.dismiss()">Cancel</button>
+  </div>
+</form>
+
