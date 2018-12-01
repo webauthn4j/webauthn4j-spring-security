@@ -81,7 +81,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
         // WebAuthn Login
         http.apply(webAuthnLogin())
-                .rpId("localhost")
                 .rpName("Spring Security WebAuthn Sample")
                 .loginPage("/login")
                 .publicKeyCredParams()
