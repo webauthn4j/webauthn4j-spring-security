@@ -13,6 +13,7 @@ repositories {
 }
 
 jar {
+    baseName 'spring-security-webauthn-sample-spa'
     version = null
 }
 
