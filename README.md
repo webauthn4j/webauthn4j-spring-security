@@ -47,7 +47,7 @@ git clone https://github.com/ynojima/spring-security-webauthn
 ### Execute sample application
 
 ```
-./gradlew spring-security-webauthn-sample:bootRun
+./gradlew spring-security-webauthn-samples/javaconfig/webauthn/spa:bootRun
 ```
 
 ![Login view](./docs/src/reference/asciidoc/en/images/login.png "Login view")

@@ -26,9 +26,9 @@ Spring Security WebAuthn is a Spring Security extension module to provide Web Au
 
 * SecureContext
 * Browsers
-** Google Chrome 67 or later
+** Google Chrome 70 or later
 ** Mozilla Firefox 60 or later
-** Microsoft Edge bundled with Windows 10 Insider Preview Build 17682 or later
+** Microsoft Edge bundled with Windows 10 October 2018 Update or later
 
 ===== SecureContext
 

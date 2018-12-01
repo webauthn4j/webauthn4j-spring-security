@@ -8,7 +8,7 @@ Spring Security WebAuthn contains a sample application demonstrates its major fu
 Sample application can be executed by following command.
 
 ```
-./gradlew spring-security-webauthn-sample:bootRun
+./gradlew spring-security-webauthn-samples/javaconfig/webauthn/spa:bootRun
 ```
 
 === User and authenticator registration

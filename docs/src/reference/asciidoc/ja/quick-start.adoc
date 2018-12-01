@@ -6,7 +6,7 @@ Spring Security WebAuthnは主要機能をデモするサンプルアプリケ�
 サンプルアプリケーションは以下のコマンドで実行することが出来ます。
 
 ```
-./gradlew spring-security-webauthn-sample:bootRun
+./gradlew spring-security-webauthn-samples/javaconfig/webauthn/spa:bootRun
 ```
 
 image::images/login.png[ログイン画面]

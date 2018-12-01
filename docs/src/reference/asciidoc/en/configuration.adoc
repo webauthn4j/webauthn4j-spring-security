@@ -88,12 +88,12 @@ Regarding Spring Security WebAuthn, `WebAuthnProcessingFilter` retrieves `creden
 `signature`, `clientExtensionsJSON` for authentication, and `credentialId`, `clientData`, `authenticatorData` and
 `signature` is binary data, please send them as Base64 strings.
 
-==== Condition endpoint specification
+==== Options endpoint specification
 
 Web Authentication requests to obtain a challenge from the server prior to authentication.
 When using the FIDO-U2F token as an authentication device, the CredentialIds associated with the user identified by
 the first authentication factor are also need to be obtained from the server.
-To retrieve these data, Spring Security WebAuthn offers `ConditionEndpointFilter`.
+To retrieve these data, Spring Security WebAuthn offers `OptionsEndpointFilter`.
 
 === Customization
 

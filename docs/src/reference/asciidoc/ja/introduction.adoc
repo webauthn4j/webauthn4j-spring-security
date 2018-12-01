@@ -28,9 +28,9 @@ Spring Security WebAuthnの動作環境は、以下の要件を満たす必要�
 
 * SecureContext
 * ブラウザ
-** Google Chrome 67以降
+** Google Chrome 70以降
 ** Mozilla Firefox 60以降
-** Microsoft Edge Insider Preview Build 17682以降
+** Microsoft Edge Windows 10 October 2018 Update同梱版 以降
 
 ===== SecureContext
 
