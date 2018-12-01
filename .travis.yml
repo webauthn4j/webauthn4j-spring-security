@@ -25,4 +25,4 @@ deploy:
 addons:
   chrome: stable
   sonarcloud:
-    organization: "ynojima"
+    organization: "sharplab"
