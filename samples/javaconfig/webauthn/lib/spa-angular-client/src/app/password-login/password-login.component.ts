@@ -15,8 +15,8 @@ export class PasswordLoginComponent implements OnInit {
   alerts: Alert[] = [];
 
   passwordLoginCredential: PasswordLoginCredential = {
-    username: "i.tanaka@example.com",
-    password: "password"
+    username: "",
+    password: ""
   };
 
   constructor(private authService: AuthService, private router: Router) { }
