@@ -53,8 +53,6 @@ image::images/authenticatorLogin.png[認証デバイスログイン画面]
 ==== ユーザー検証機能付き認証デバイスによるパスワードレス多要素認証
 
 ユーザー検証機能が付いている認証デバイスを登録した場合、パスワードレス認証が可能です。
-2018年7月現在、Windows 10 Insider Previewバンドル版Edgeのみがユーザー検証機能が付いている認証デバイスを
-サポートしているため、Edgeのみで利用可能です。
 
 image::images/login-with-edge.png[ログイン画面（パスワードレスログイン）]
 

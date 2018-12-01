@@ -35,7 +35,7 @@ but for now, not available with normal spring-security.
 ### Checkout sources
 
 ```
-git clone https://github.com/ynojima/spring-security-webauthn
+git clone https://github.com/sharplab/spring-security-webauthn
 ```
 
 ### Build all jars

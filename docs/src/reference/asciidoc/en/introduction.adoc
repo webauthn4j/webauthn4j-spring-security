@@ -47,10 +47,10 @@ password-less authentication.
 
 === Source code
 
-Source code for this project is hosted on https://github.com/ynojima/spring-security-webauthn[Github].
+Source code for this project is hosted on https://github.com/sharplab/spring-security-webauthn[Github].
 
 ----
-git clone https://github.com/ynojima/spring-security-webauthn
+git clone https://github.com/sharplab/spring-security-webauthn
 ----
 
 === License

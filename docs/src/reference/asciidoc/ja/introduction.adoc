@@ -40,17 +40,19 @@ Web Authentication仕様では、動作環境がSecureContextであることを�
 
 ===== ブラウザ
 
-2018年7月現在、デスクトップ版Google Chrome 67以降およびデスクトップ版Mozilla Firefox 60以降でWebAuthnは利用可能です。
+2018年12月現在、デスクトップ版Google Chrome 70以降およびデスクトップ版Mozilla Firefox 60以降でWebAuthnは利用可能です。
 但し、認証デバイスのサポートはFIDO-U2Fの認証トークンに限定されており、指紋認証などによるユーザー検証機能がついた
 認証デバイスはサポートしていないため、パスワードレス認証は利用できません。
-Microsoft Edgeでは、Insider Preview Build 17682以降でWebAuthnが利用可能です。EdgeではFIDO-U2Fの認証トークンだけでなく、
+Microsoft Edgeでは、Windows 10 October 2018 Update以降でWebAuthnが利用可能です。EdgeではFIDO-U2Fの認証トークンだけでなく、
 Windows Helloを認証デバイスとして使用できるため、パスワードレス認証をサポートしています。
+モバイルブラウザとしては、Chrome for Android 70以降でWebAuthnは利用可能です。Chrome for Androidでも、スマートフォンの
+指紋リーダーなどを認証デバイスとして使用してパスワードレス認証を行うことが出来ます。
 
 === ソースコード
 
-ソースコードは https://github.com/ynojima/spring-security-webauthn[Github] で管理されています。
+ソースコードは https://github.com/sharplab/spring-security-webauthn[Github] で管理されています。
 ----
-git clone https://github.com/ynojima/spring-security-webauthn
+git clone https://github.com/sharplab/spring-security-webauthn
 ----
 
 === ライセンス
