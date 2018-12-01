@@ -12,7 +12,8 @@ repositories {
     }
 }
 
-jar {
+bootJar {
+    baseName = "spring-security-webauthn-sample-spa"
     version = null
 }
 
