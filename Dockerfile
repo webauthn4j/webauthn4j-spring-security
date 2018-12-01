@@ -14,7 +14,6 @@ LABEL maintainer="Yoshikazu Nojima <mail@ynojima.net>"
 COPY --from=build-env /workspace/samples/javaconfig/webauthn/spa/build/libs/spring-security-webauthn-sample-spa.jar /opt/spring-security-webauthn/spring-security-webauthn-sample-spa.jar
 
 WORKDIR /opt/spring-security-webauthn
-CMD ["java", "-XX:+UnlockExperimentalVMOptions", "-XX:+UseCGroupMemoryLimitForHeap", "-jar", "/opt/spring-security-webauthn/spring-security-webauthn-sample-spa.jar"]
+CMD ["java", "-XX:+UnlockExperimentalVMOptions", "-XX:+UseCGroupMemoryLimitForHeap", "-jar", "/opt/spring-security-webauthn/spring-security-webauthn-sample-spa.jar", "--server.port=80"]
 
-EXPOSE 8080
-
+EXPOSE 80
