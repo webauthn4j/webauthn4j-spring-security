@@ -8,6 +8,7 @@ import {AuthenticatorDialogComponent} from "../authenticator-dialog/authenticato
 import {AuthenticatorRegistrationReconfirmationDialogComponent} from "../authenticator-registration-reconfirmation-dialog/authenticator-registration-reconfirmation-dialog.component";
 import {WebauthnService} from "../webauthn/webauthn.service";
 import {ProfileService} from "../profile/profile.service";
+import {v4 as uuid} from "uuid";
 
 @Component({
   selector: 'app-signup',
@@ -31,7 +32,7 @@ export class SignupComponent implements OnInit {
   alerts: Alert[] = [];
 
   user: ProfileCreateViewModel = {
-    userHandle: "",
+    userHandle: uuid(),
     firstName: "",
     lastName: "",
     emailAddress: "",

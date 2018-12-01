@@ -9,7 +9,6 @@ import {AuthenticatorRegistrationReconfirmationDialogComponent} from "../authent
 import {Alert} from "../alert/alert";
 import {ProfileService} from "./profile.service";
 import {ProfileUpdateViewModel} from "./profile-update.view-model";
-import {v4 as uuid} from "uuid";
 
 @Component({
   selector: 'app-profile',
