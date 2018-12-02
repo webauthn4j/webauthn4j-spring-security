@@ -10,6 +10,7 @@ import {ServerOptions} from "./server-options";
 import {Observable} from "rxjs/internal/Observable";
 import {OptionsResponse} from "./options-response";
 import {map} from "rxjs/operators";
+import {el} from "@angular/platform-browser/testing/src/browser_util";
 
 @Injectable({
   providedIn: 'root'
@@ -89,11 +90,22 @@ export class WebauthnService {
 
     return serverOptionsPromise.then(serverOptions => {
 
+      let allowCredentials: PublicKeyCredentialDescriptor[];
+      if(webAuthnCredentialRequestOptions.allowCredentials){
+        allowCredentials = webAuthnCredentialRequestOptions.allowCredentials;
+      }
+      else if(serverOptions.credentials != null && serverOptions.credentials.length > 0){
+        allowCredentials = serverOptions.credentials;
+      }
+      else{
+        allowCredentials = undefined; // As Chrome doesn't support empty allowCredentials as of Chrome 70, put undefined on it
+      }
+
       let publicKeyCredentialRequestOptions: PublicKeyCredentialRequestOptions = {
         challenge: webAuthnCredentialRequestOptions.challenge ? webAuthnCredentialRequestOptions.challenge : serverOptions.challenge,
         timeout: webAuthnCredentialRequestOptions.timeout,
         rpId: webAuthnCredentialRequestOptions.rpId ? webAuthnCredentialRequestOptions.rpId : serverOptions.relyingParty.id,
-        allowCredentials: webAuthnCredentialRequestOptions.allowCredentials ? webAuthnCredentialRequestOptions.allowCredentials : serverOptions.credentials,
+        allowCredentials: allowCredentials,
         userVerification: webAuthnCredentialRequestOptions.userVerification ? webAuthnCredentialRequestOptions.userVerification : "preferred",
         extensions: webAuthnCredentialRequestOptions.extensions
       };
