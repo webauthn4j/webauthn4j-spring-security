@@ -24,3 +24,4 @@ server:
   servlet:
     session:
       tracking-modes: cookie
+  use-forward-headers: true
