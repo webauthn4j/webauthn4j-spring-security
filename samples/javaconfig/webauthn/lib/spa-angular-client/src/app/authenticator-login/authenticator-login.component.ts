@@ -29,13 +29,26 @@ export class AuthenticatorLoginComponent implements OnInit, AfterContentInit {
     }).subscribe((data: string) =>{
       this.router.navigate(["profile"]);
     } , (error) =>{
+      let alert: Alert;
       switch(error.name)
       {
         case "NotAllowedError":
           console.info(error);
           return;
+        case "HttpErrorResponse":
+          alert = {
+            type: "danger",
+            message: "Authentication failed"
+          };
+          this.alerts = [alert];
+          return;
         default:
-          console.error(error);
+          alert = {
+            type: "danger",
+            message: "Authentication failed with " + error.name
+          };
+          this.alerts = [alert];
+          return;
       }
     });
   }
