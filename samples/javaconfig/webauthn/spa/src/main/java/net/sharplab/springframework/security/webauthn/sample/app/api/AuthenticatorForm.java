@@ -12,6 +12,8 @@ public class AuthenticatorForm {
 
     private AttestationObjectForm attestationObject;
 
+    private String clientExtensionJSON;
+
     public Integer getId() {
         return id;
     }
@@ -50,5 +52,13 @@ public class AuthenticatorForm {
 
     public void setAttestationObject(AttestationObjectForm attestationObject) {
         this.attestationObject = attestationObject;
+    }
+
+    public String getClientExtensionJSON() {
+        return clientExtensionJSON;
+    }
+
+    public void setClientExtensionJSON(String clientExtensionJSON) {
+        this.clientExtensionJSON = clientExtensionJSON;
     }
 }

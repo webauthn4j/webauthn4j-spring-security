@@ -107,7 +107,8 @@ export class ProfileService implements OnInit {
         name: authenticatorForm.name,
         credentialId: base64url.parse(authenticatorForm.credentialId, { loose: true }).buffer,
         clientData: base64url.parse((<RegisteringAuthenticatorForm>authenticatorForm).clientData, { loose: true }).buffer,
-        attestationObject: base64url.parse((<RegisteringAuthenticatorForm>authenticatorForm).attestationObject, { loose: true }).buffer
+        attestationObject: base64url.parse((<RegisteringAuthenticatorForm>authenticatorForm).attestationObject, { loose: true }).buffer,
+        clientExtensionsJSON: (<RegisteringAuthenticatorForm>authenticatorForm).clientExtensionsJSON
       };
       return registeringAuthenticator;
     }
@@ -130,7 +131,8 @@ export class ProfileService implements OnInit {
         name: authenticator.name,
         credentialId: base64url.stringify(new Uint8Array(authenticator.credentialId)),
         clientData: base64url.stringify(new Uint8Array((<RegisteringAuthenticatorViewModel>authenticator).clientData)),
-        attestationObject: base64url.stringify(new Uint8Array((<RegisteringAuthenticatorViewModel>authenticator).attestationObject))
+        attestationObject: base64url.stringify(new Uint8Array((<RegisteringAuthenticatorViewModel>authenticator).attestationObject)),
+        clientExtensionsJSON: (<RegisteringAuthenticatorViewModel>authenticator).clientExtensionsJSON
       };
       return registeringAuthenticatorForm;
     }

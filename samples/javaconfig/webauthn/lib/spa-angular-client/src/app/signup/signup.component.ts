@@ -52,12 +52,13 @@ export class SignupComponent implements OnInit {
       let attestationResponse: AuthenticatorAttestationResponse = publicKeyCredential.response as AuthenticatorAttestationResponse;
       let clientData = attestationResponse.clientDataJSON;
       let attestationObject = attestationResponse.attestationObject;
-      // let clientExtensions = credential.getClientExtensionResults(); //Edge preview throws exception as of build 180603-1447
+      //let clientExtensions = credential.getClientExtensionResults(); //Edge preview throws exception as of build 180603-1447
       let clientExtensions = {};
+      let clientExtensionsJSON = JSON.stringify(clientExtensions);
 
       let name = "Authenticator";
 
-      let authenticator = new RegisteringAuthenticatorViewModel(publicKeyCredential.rawId, name, clientData, attestationObject);
+      let authenticator = new RegisteringAuthenticatorViewModel(publicKeyCredential.rawId, name, clientData, attestationObject, clientExtensionsJSON);
       this.user.authenticators.push(authenticator);
 
       this.alerts = [];

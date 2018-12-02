@@ -6,7 +6,8 @@ export class RegisteringAuthenticatorViewModel implements AuthenticatorViewModel
     public credentialId: ArrayBuffer,
     public name: string,
     public clientData: ArrayBuffer,
-    public attestationObject: ArrayBuffer
+    public attestationObject: ArrayBuffer,
+    public clientExtensionsJSON: string
   ) {
   }
 }
