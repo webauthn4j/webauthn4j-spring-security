@@ -11,6 +11,8 @@ import javax.servlet.http.HttpServletRequest;
 @Component
 public class AuthenticatorFormValidator {
 
+    private static final String NOT_NULL = "not.null" ;
+
     private WebAuthnRegistrationRequestValidator webAuthnRegistrationRequestValidator;
 
     public AuthenticatorFormValidator(WebAuthnRegistrationRequestValidator webAuthnRegistrationRequestValidator) {
@@ -19,14 +21,17 @@ public class AuthenticatorFormValidator {
 
     public void validate(HttpServletRequest request, AuthenticatorForm form, Errors errors) {
         if(form.getId() == null){
+            if(form.getCredentialId() == null){
+                errors.rejectValue("credentialId", NOT_NULL);
+            }
             if(form.getAttestationObject() == null){
-                errors.rejectValue("attestationObject", "not.null");
+                errors.rejectValue("attestationObject", NOT_NULL);
             }
             if(form.getClientData() == null){
-                errors.rejectValue("clientData", "not.null");
+                errors.rejectValue("clientData", NOT_NULL);
             }
             if(form.getClientExtensionsJSON() == null){
-                errors.rejectValue("clientExtensionsJSON", "not.null");
+                errors.rejectValue("clientExtensionsJSON", NOT_NULL);
             }
             try{
                 webAuthnRegistrationRequestValidator.validate(

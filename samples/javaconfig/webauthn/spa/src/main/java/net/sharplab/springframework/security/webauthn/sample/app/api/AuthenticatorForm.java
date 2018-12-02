@@ -11,7 +11,6 @@ public class AuthenticatorForm {
      */
     private Integer id;
 
-    @NotEmpty
     private String credentialId;
 
     @NotEmpty
