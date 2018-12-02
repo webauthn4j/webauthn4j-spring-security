@@ -45,8 +45,6 @@ Web Authentication仕様では、動作環境がSecureContextであることを�
 認証デバイスはサポートしていないため、パスワードレス認証は利用できません。
 Microsoft Edgeでは、Windows 10 October 2018 Update以降でWebAuthnが利用可能です。EdgeではFIDO-U2Fの認証トークンだけでなく、
 Windows Helloを認証デバイスとして使用できるため、パスワードレス認証をサポートしています。
-モバイルブラウザとしては、Chrome for Android 70以降でWebAuthnは利用可能です。Chrome for Androidでも、スマートフォンの
-指紋リーダーなどを認証デバイスとして使用してパスワードレス認証を行うことが出来ます。
 
 === ソースコード
 
