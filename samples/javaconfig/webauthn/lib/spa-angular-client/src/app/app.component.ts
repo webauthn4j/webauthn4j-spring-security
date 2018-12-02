@@ -6,5 +6,5 @@ import { Component } from '@angular/core';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
-  title = 'sample-client';
+  title = 'Spring Security WebAuthn Sample SPA';
 }
