@@ -1,13 +1,14 @@
 package net.sharplab.springframework.security.webauthn.sample.app.api;
 
-import net.sharplab.springframework.security.webauthn.sample.app.api.validator.ProfileCreateFormValidator;
-import net.sharplab.springframework.security.webauthn.sample.app.api.validator.ProfileUpdateFormValidator;
+import net.sharplab.springframework.security.webauthn.sample.app.api.validator.spring.ProfileCreateFormValidator;
+import net.sharplab.springframework.security.webauthn.sample.app.api.validator.spring.ProfileUpdateFormValidator;
 import net.sharplab.springframework.security.webauthn.sample.app.service.ProfileAppService;
 import net.sharplab.springframework.security.webauthn.sample.app.util.AppSpecificMapper;
 import net.sharplab.springframework.security.webauthn.sample.domain.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -30,6 +31,16 @@ public class ProfileController {
     public ProfileController(ProfileAppService profileAppService, AppSpecificMapper mapper) {
         this.profileAppService = profileAppService;
         this.mapper = mapper;
+    }
+
+    @InitBinder("profileCreateForm")
+    public void initProfileCreateFormBinder(WebDataBinder binder) {
+        binder.addValidators(profileCreateFormValidator);
+    }
+
+    @InitBinder("profileUpdateForm")
+    public void initProfileUpdateFormBinder(WebDataBinder binder) {
+        binder.addValidators(profileUpdateFormValidator);
     }
 
     @GetMapping

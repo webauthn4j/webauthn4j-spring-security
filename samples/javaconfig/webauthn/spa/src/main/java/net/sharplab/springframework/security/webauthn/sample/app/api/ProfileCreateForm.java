@@ -1,6 +1,5 @@
 package net.sharplab.springframework.security.webauthn.sample.app.api;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
@@ -8,8 +7,6 @@ import javax.validation.constraints.NotNull;
 import java.util.List;
 
 public class ProfileCreateForm {
-
-    private HttpServletRequest request;
 
     @NotEmpty
     private String userHandle;
@@ -32,14 +29,6 @@ public class ProfileCreateForm {
 
     @NotNull
     private Boolean singleFactorAuthenticationAllowed;
-
-    public HttpServletRequest getRequest() {
-        return request;
-    }
-
-    public void setRequest(HttpServletRequest request) {
-        this.request = request;
-    }
 
     public String getUserHandle() {
         return userHandle;

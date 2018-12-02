@@ -1,18 +1,36 @@
 package net.sharplab.springframework.security.webauthn.sample.app.api;
 
+import net.sharplab.springframework.security.webauthn.sample.app.api.validator.AuthenticatorFormValidator;
+
+import javax.validation.constraints.NotEmpty;
+
 public class AuthenticatorForm {
 
+    /**
+     *     correlation validation is implemented in {@link AuthenticatorFormValidator}
+     */
     private Integer id;
 
+    @NotEmpty
     private String credentialId;
 
+    @NotEmpty
     private String name;
 
+    /**
+     *     correlation validation is implemented in {@link AuthenticatorFormValidator}
+     */
     private CollectedClientDataForm clientData;
 
+    /**
+     *     correlation validation is implemented in {@link AuthenticatorFormValidator}
+     */
     private AttestationObjectForm attestationObject;
 
-    private String clientExtensionJSON;
+    /**
+     *     correlation validation is implemented in {@link AuthenticatorFormValidator}
+     */
+    private String clientExtensionsJSON;
 
     public Integer getId() {
         return id;
@@ -54,11 +72,11 @@ public class AuthenticatorForm {
         this.attestationObject = attestationObject;
     }
 
-    public String getClientExtensionJSON() {
-        return clientExtensionJSON;
+    public String getClientExtensionsJSON() {
+        return clientExtensionsJSON;
     }
 
-    public void setClientExtensionJSON(String clientExtensionJSON) {
-        this.clientExtensionJSON = clientExtensionJSON;
+    public void setClientExtensionsJSON(String clientExtensionsJSON) {
+        this.clientExtensionsJSON = clientExtensionsJSON;
     }
 }

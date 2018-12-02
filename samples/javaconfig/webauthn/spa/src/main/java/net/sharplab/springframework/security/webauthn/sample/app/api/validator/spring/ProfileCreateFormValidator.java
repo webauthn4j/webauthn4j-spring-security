@@ -1,27 +1,32 @@
-package net.sharplab.springframework.security.webauthn.sample.app.api.validator;
+package net.sharplab.springframework.security.webauthn.sample.app.api.validator.spring;
 
 import com.webauthn4j.validator.exception.ValidationException;
 import net.sharplab.springframework.security.webauthn.WebAuthnRegistrationRequestValidator;
 import net.sharplab.springframework.security.webauthn.sample.app.api.AuthenticatorForm;
 import net.sharplab.springframework.security.webauthn.sample.app.api.ProfileCreateForm;
-import net.sharplab.springframework.security.webauthn.sample.app.api.ProfileUpdateForm;
+import net.sharplab.springframework.security.webauthn.sample.app.api.validator.AuthenticatorFormValidator;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 
+import javax.servlet.http.HttpServletRequest;
+
 @Component
-public class ProfileUpdateFormValidator implements Validator {
+public class ProfileCreateFormValidator implements Validator {
 
-    private WebAuthnRegistrationRequestValidator webAuthnRegistrationRequestValidator;
+    @Autowired
+    private HttpServletRequest request;
 
-    public ProfileUpdateFormValidator(WebAuthnRegistrationRequestValidator webAuthnRegistrationRequestValidator) {
-        this.webAuthnRegistrationRequestValidator = webAuthnRegistrationRequestValidator;
+    private AuthenticatorFormValidator authenticatorFormValidator;
+
+    public ProfileCreateFormValidator(AuthenticatorFormValidator authenticatorFormValidator) {
+        this.authenticatorFormValidator = authenticatorFormValidator;
     }
-
 
     @Override
     public boolean supports(Class<?> clazz) {
-        return ProfileUpdateForm.class.isAssignableFrom(clazz);
+        return ProfileCreateForm.class.isAssignableFrom(clazz);
     }
 
     @Override
@@ -32,24 +37,19 @@ public class ProfileUpdateFormValidator implements Validator {
 
             if (!form.isSingleFactorAuthenticationAllowed()) {
                 errors.rejectValue("authenticators",
-                        "e.ProfileUpdateFormValidator.noAuthenticator",
+                        "e.ProfileCreateFormValidator.noAuthenticator",
                         "To disable password authentication, at least one authenticator must be registered.");
             }
         }
         else{
             for(AuthenticatorForm authenticator : form.getAuthenticators()){
                 try{
-                    webAuthnRegistrationRequestValidator.validate(
-                            form.getRequest(),
-                            authenticator.getClientData().getClientDataBase64(),
-                            authenticator.getAttestationObject().getAttestationObjectBase64(),
-                            authenticator.getClientExtensionJSON());
+                    authenticatorFormValidator.validate(request, authenticator, errors);
                 }
                 catch (ValidationException exception){
-                    errors.rejectValue("authenticators", "e.ProfileUpdateFormValidator.invalidAuthenticator", "Authenticator is invalid.");
+                    errors.rejectValue("authenticators", "e.ProfileCreateFormValidator.invalidAuthenticator", "Authenticator is invalid.");
                 }
             }
-
         }
     }
 }
