@@ -20,6 +20,7 @@ import {PageNotFoundComponent} from "./page-not-found/page-not-found.component";
 import {HeaderComponent} from "./header/header.component";
 import {AuthGuard} from "./auth/auth.guard";
 import {AuthInterceptor} from "./auth/auth.interceptor";
+import { ResidentKeyRequirementDialogComponent } from './resident-key-requirement-dialog/resident-key-requirement-dialog.component';
 
 @NgModule({
   declarations: [
@@ -33,7 +34,8 @@ import {AuthInterceptor} from "./auth/auth.interceptor";
     AuthenticatorRegistrationReconfirmationDialogComponent,
     ProfileComponent,
     PageNotFoundComponent,
-    HeaderComponent
+    HeaderComponent,
+    ResidentKeyRequirementDialogComponent
   ],
   imports: [
     BrowserModule,
@@ -53,7 +55,8 @@ import {AuthInterceptor} from "./auth/auth.interceptor";
   bootstrap: [AppComponent],
   entryComponents: [
     AuthenticatorDialogComponent,
-    AuthenticatorRegistrationReconfirmationDialogComponent
+    AuthenticatorRegistrationReconfirmationDialogComponent,
+    ResidentKeyRequirementDialogComponent
   ]
 
 })

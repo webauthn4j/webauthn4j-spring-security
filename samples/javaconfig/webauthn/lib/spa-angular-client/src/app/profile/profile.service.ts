@@ -33,7 +33,8 @@ export class ProfileService implements OnInit {
     userHandleBase64: string,
     username: string,
     displayName: string,
-    credentialIds: ArrayBuffer[]
+    credentialIds: ArrayBuffer[],
+    requireResidentKey: boolean
   ): Promise<Credential> {
     let userHandle = base64url.parse(userHandleBase64, { loose: true });
     let excludeCredentials: PublicKeyCredentialDescriptor[] = credentialIds.map(credentialId => {
@@ -49,7 +50,7 @@ export class ProfileService implements OnInit {
       },
       excludeCredentials: excludeCredentials,
       authenticatorSelection: {
-        requireResidentKey: false
+        requireResidentKey: requireResidentKey
       }
     });
   }

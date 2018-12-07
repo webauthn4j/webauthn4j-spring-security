@@ -9,6 +9,7 @@ import {AuthenticatorRegistrationReconfirmationDialogComponent} from "../authent
 import {Alert} from "../alert/alert";
 import {ProfileService} from "./profile.service";
 import {ProfileUpdateViewModel} from "./profile-update.view-model";
+import {ResidentKeyRequirementDialogComponent} from "../resident-key-requirement-dialog/resident-key-requirement-dialog.component";
 
 @Component({
   selector: 'app-profile',
@@ -49,28 +50,30 @@ export class ProfileComponent implements OnInit {
 };
 
   addAuthenticator() {
-    let credentialIds = this.user.authenticators.map(authenticator => authenticator.credentialId);
-    this.profileService.createCredential(this.user.userHandle, this.user.emailAddress, this.user.emailAddress, credentialIds)
-      .then( credential => {
-        if(credential.type != "public-key"){
-          Promise.reject("Unexpected credential type");
-        }
-        let publicKeyCredential: PublicKeyCredential = credential as PublicKeyCredential;
-        let attestationResponse: AuthenticatorAttestationResponse = publicKeyCredential.response as AuthenticatorAttestationResponse;
-        let clientData = attestationResponse.clientDataJSON;
-        let attestationObject = attestationResponse.attestationObject;
-        // let clientExtensions = credential.getClientExtensionResults(); //Edge preview throws exception as of build 180603-1447
-        let clientExtensions = {};
-        let clientExtensionsJSON = JSON.stringify(clientExtensions);
 
-        let name = "Authenticator";
+    this.checkResidentKeyRequirement().then(residentKeyRequirement =>{
+      let credentialIds = this.user.authenticators.map(authenticator => authenticator.credentialId);
+      this.profileService.createCredential(this.user.userHandle, this.user.emailAddress, this.user.emailAddress, credentialIds, residentKeyRequirement)
+        .then( credential => {
+          if(credential.type != "public-key"){
+            Promise.reject("Unexpected credential type");
+          }
+          let publicKeyCredential: PublicKeyCredential = credential as PublicKeyCredential;
+          let attestationResponse: AuthenticatorAttestationResponse = publicKeyCredential.response as AuthenticatorAttestationResponse;
+          let clientData = attestationResponse.clientDataJSON;
+          let attestationObject = attestationResponse.attestationObject;
+          // let clientExtensions = credential.getClientExtensionResults(); //Edge preview throws exception as of build 180603-1447
+          let clientExtensions = {};
+          let clientExtensionsJSON = JSON.stringify(clientExtensions);
 
-        let authenticator = new RegisteringAuthenticatorViewModel(publicKeyCredential.rawId, name, clientData, attestationObject, clientExtensionsJSON);
-        this.user.authenticators.push(authenticator);
+          let name = "Authenticator";
 
-        this.alerts = [];
-        return Promise.resolve();
-      }).catch(exception =>{
+          let authenticator = new RegisteringAuthenticatorViewModel(publicKeyCredential.rawId, name, clientData, attestationObject, clientExtensionsJSON);
+          this.user.authenticators.push(authenticator);
+
+          this.alerts = [];
+          return Promise.resolve();
+        }).catch(exception =>{
         let message: string;
         switch(exception.name)
         {
@@ -90,6 +93,7 @@ export class ProfileComponent implements OnInit {
         };
         this.alerts = [alert];
       });
+    }, ()=>{});
   }
 
   editAuthenticator(authenticator){
@@ -142,6 +146,10 @@ export class ProfileComponent implements OnInit {
   checkUVPAA(): Promise<boolean>{
     let untypedWindow: any = window;
     return untypedWindow.PublicKeyCredential.isUserVerifyingPlatformAuthenticatorAvailable();
+  }
+
+  checkResidentKeyRequirement(): Promise<boolean>{
+    return this.modalService.open(ResidentKeyRequirementDialogComponent, { centered: true }).result;
   }
 
   reconfirmAuthenticatorRegistration(): Promise<boolean>{
