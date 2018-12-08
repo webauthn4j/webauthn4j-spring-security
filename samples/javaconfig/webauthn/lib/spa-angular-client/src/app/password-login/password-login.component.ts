@@ -57,7 +57,7 @@ export class PasswordLoginComponent implements OnInit {
   loginWithPublicKeyCredential() {
 
     // As of 2018-11-25, Firefox doesn't support password-less login, but it ignores userVerification option.
-    if(window.navigator.userAgent.indexOf("Firefox") >= 0){
+    if(this.authService.isFirefox()){
       let message = "Firefox doesn't support device login (password-less login). Firefox only supports two-step login."
         + " For two-step login, you need to press 'Login' button instead of 'Device Login' button.";
       let alert: Alert = {

@@ -10,6 +10,7 @@ import {WebauthnService} from "../webauthn/webauthn.service";
 import {ProfileService} from "../profile/profile.service";
 import {v4 as uuid} from "uuid";
 import {ResidentKeyRequirementDialogComponent} from "../resident-key-requirement-dialog/resident-key-requirement-dialog.component";
+import {AuthService} from "../auth/auth.service";
 
 @Component({
   selector: 'app-signup',
@@ -18,7 +19,11 @@ import {ResidentKeyRequirementDialogComponent} from "../resident-key-requirement
 })
 export class SignupComponent implements OnInit {
 
-  constructor(private profileService: ProfileService, private router: Router, private modalService: NgbModal) { }
+  constructor(
+    private profileService: ProfileService,
+    private authService: AuthService,
+    private router: Router,
+    private modalService: NgbModal) { }
 
   ngOnInit() {
     this.checkUVPAA().then((isUVPAA)=>{
@@ -137,6 +142,9 @@ export class SignupComponent implements OnInit {
   }
 
   checkResidentKeyRequirement(): Promise<boolean>{
+    if(this.authService.isFirefox()){
+      return Promise.resolve(false);
+    }
     return this.modalService.open(ResidentKeyRequirementDialogComponent, { centered: true }).result;
   }
 

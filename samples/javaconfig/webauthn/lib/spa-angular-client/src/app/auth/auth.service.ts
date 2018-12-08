@@ -70,5 +70,9 @@ export class AuthService {
     return this.http.get<AuthResponse>(this.authStatusUrl).pipe(map<AuthResponse, AuthenticationStatus>(response => response.status));
   }
 
+  isFirefox(): boolean {
+    return window.navigator.userAgent.indexOf("Firefox") >= 0;
+  }
+
 
 }

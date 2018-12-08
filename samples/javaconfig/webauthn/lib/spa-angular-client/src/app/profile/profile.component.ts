@@ -10,6 +10,7 @@ import {Alert} from "../alert/alert";
 import {ProfileService} from "./profile.service";
 import {ProfileUpdateViewModel} from "./profile-update.view-model";
 import {ResidentKeyRequirementDialogComponent} from "../resident-key-requirement-dialog/resident-key-requirement-dialog.component";
+import {AuthService} from "../auth/auth.service";
 
 @Component({
   selector: 'app-profile',
@@ -18,7 +19,11 @@ import {ResidentKeyRequirementDialogComponent} from "../resident-key-requirement
 })
 export class ProfileComponent implements OnInit {
 
-  constructor(private profileService: ProfileService, private router: Router, private modalService: NgbModal) { }
+  constructor(
+              private profileService: ProfileService,
+              private authService: AuthService,
+              private router: Router,
+              private modalService: NgbModal) { }
 
   ngOnInit() {
     this.profileService.load().subscribe((user)=>{
@@ -149,6 +154,9 @@ export class ProfileComponent implements OnInit {
   }
 
   checkResidentKeyRequirement(): Promise<boolean>{
+    if(this.authService.isFirefox()){
+      return Promise.resolve(false);
+    }
     return this.modalService.open(ResidentKeyRequirementDialogComponent, { centered: true }).result;
   }
 
