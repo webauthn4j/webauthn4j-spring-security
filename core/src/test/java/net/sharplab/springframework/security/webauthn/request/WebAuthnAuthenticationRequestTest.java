@@ -5,6 +5,7 @@ import com.webauthn4j.client.Origin;
 import com.webauthn4j.client.challenge.Challenge;
 import com.webauthn4j.client.challenge.DefaultChallenge;
 import com.webauthn4j.converter.AuthenticatorDataConverter;
+import com.webauthn4j.registry.Registry;
 import com.webauthn4j.server.ServerProperty;
 import com.webauthn4j.test.TestUtil;
 import org.junit.Test;
@@ -13,11 +14,13 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 public class WebAuthnAuthenticationRequestTest {
 
+    private Registry registry = new Registry();
+
     @Test
     public void equals_hashCode_test() {
         Challenge challenge = new DefaultChallenge();
         byte[] clientDataJSON = TestUtil.createClientDataJSON(ClientDataType.GET);
-        byte[] authenticatorData = new AuthenticatorDataConverter().convert(TestUtil.createAuthenticatorData());
+        byte[] authenticatorData = new AuthenticatorDataConverter(registry).convert(TestUtil.createAuthenticatorData());
         WebAuthnAuthenticationRequest requestA = new WebAuthnAuthenticationRequest(
                 new byte[]{0x01, 0x23},
                 clientDataJSON,

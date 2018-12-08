@@ -17,7 +17,7 @@
 package net.sharplab.springframework.security.webauthn.options;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.webauthn4j.converter.jackson.ObjectMapperUtil;
+import com.webauthn4j.registry.Registry;
 import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.security.authentication.*;
 import org.springframework.security.core.Authentication;
@@ -54,11 +54,11 @@ public class OptionsEndpointFilter extends GenericFilterBean {
     private MFATokenEvaluator mfaTokenEvaluator;
     private ObjectMapper objectMapper;
 
-    public OptionsEndpointFilter(OptionsProvider optionsProvider) {
+    public OptionsEndpointFilter(OptionsProvider optionsProvider, Registry registry) {
         this.optionsProvider = optionsProvider;
         trustResolver = new AuthenticationTrustResolverImpl();
         mfaTokenEvaluator = new MFATokenEvaluatorImpl();
-        objectMapper = ObjectMapperUtil.createWebAuthnClassesAwareJSONMapper();
+        objectMapper = registry.getJsonMapper();
     }
 
 

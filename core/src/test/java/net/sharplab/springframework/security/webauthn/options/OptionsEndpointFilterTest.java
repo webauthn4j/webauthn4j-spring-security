@@ -1,5 +1,6 @@
 package net.sharplab.springframework.security.webauthn.options;
 
+import com.webauthn4j.registry.Registry;
 import org.junit.Test;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.security.authentication.*;
@@ -11,9 +12,11 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 public class OptionsEndpointFilterTest {
 
+    private Registry registry = new Registry();
+
     @Test
     public void getter_setter_test() {
-        OptionsEndpointFilter optionsEndpointFilter = new OptionsEndpointFilter(null);
+        OptionsEndpointFilter optionsEndpointFilter = new OptionsEndpointFilter(null, registry);
         MFATokenEvaluator mfaTokenEvaluator = new MFATokenEvaluatorImpl();
         AuthenticationTrustResolver trustResolver = new AuthenticationTrustResolverImpl();
         optionsEndpointFilter.setMFATokenEvaluator(mfaTokenEvaluator);
@@ -24,7 +27,7 @@ public class OptionsEndpointFilterTest {
 
     @Test
     public void writeErrorResponse_with_RuntimeException_test() throws IOException {
-        OptionsEndpointFilter optionsEndpointFilter = new OptionsEndpointFilter(null);
+        OptionsEndpointFilter optionsEndpointFilter = new OptionsEndpointFilter(null, registry);
 
         MockHttpServletResponse response = new MockHttpServletResponse();
         RuntimeException exception = new RuntimeException();
@@ -37,7 +40,7 @@ public class OptionsEndpointFilterTest {
 
     @Test
     public void writeErrorResponse_with_InsufficientAuthenticationException_test() throws IOException {
-        OptionsEndpointFilter optionsEndpointFilter = new OptionsEndpointFilter(null);
+        OptionsEndpointFilter optionsEndpointFilter = new OptionsEndpointFilter(null, registry);
 
         MockHttpServletResponse response = new MockHttpServletResponse();
         InsufficientAuthenticationException exception = new InsufficientAuthenticationException("not privileged");

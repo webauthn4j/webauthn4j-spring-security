@@ -17,6 +17,7 @@
 package net.sharplab.springframework.security.webauthn.config.configurers;
 
 import com.webauthn4j.attestation.statement.COSEAlgorithmIdentifier;
+import com.webauthn4j.registry.Registry;
 import net.sharplab.springframework.security.webauthn.WebAuthnProcessingFilter;
 import net.sharplab.springframework.security.webauthn.challenge.ChallengeRepository;
 import net.sharplab.springframework.security.webauthn.challenge.HttpSessionChallengeRepository;
@@ -82,6 +83,7 @@ public final class WebAuthnLoginConfigurer<H extends HttpSecurityBuilder<H>> ext
     // ================================================================================================
     private ChallengeRepository challengeRepository;
     private OptionsProvider optionsProvider;
+    private Registry registry;
     private ServerPropertyProvider serverPropertyProvider;
 
     private String rpId;
@@ -129,6 +131,15 @@ public final class WebAuthnLoginConfigurer<H extends HttpSecurityBuilder<H>> ext
         }
         http.setSharedObject(OptionsProvider.class, optionsProvider);
 
+        if (registry == null){
+            String[] beanNames = applicationContext.getBeanNamesForType(Registry.class);
+            if (beanNames.length == 0) {
+                registry = new Registry();
+            } else {
+                registry = applicationContext.getBean(Registry.class);
+            }
+        }
+
         if (serverPropertyProvider == null) {
             // Since ServerPropertyProvider requires initialization,
             // it is not instantiated manually, but retrieved from applicationContext.
@@ -171,7 +182,7 @@ public final class WebAuthnLoginConfigurer<H extends HttpSecurityBuilder<H>> ext
     }
 
     private void configureOptionsEndpointFilter(H http) {
-        OptionsEndpointFilter optionsEndpointFilter = new OptionsEndpointFilter(optionsProvider);
+        OptionsEndpointFilter optionsEndpointFilter = new OptionsEndpointFilter(optionsProvider, registry);
 
         MFATokenEvaluator mfaTokenEvaluator = http.getSharedObject(MFATokenEvaluator.class);
         if (mfaTokenEvaluator != null) {

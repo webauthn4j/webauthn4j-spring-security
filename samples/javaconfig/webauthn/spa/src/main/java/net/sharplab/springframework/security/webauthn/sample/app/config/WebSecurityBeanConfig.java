@@ -1,5 +1,6 @@
 package net.sharplab.springframework.security.webauthn.sample.app.config;
 
+import com.webauthn4j.registry.Registry;
 import com.webauthn4j.validator.WebAuthnRegistrationContextValidator;
 import net.sharplab.springframework.security.webauthn.WebAuthnRegistrationRequestValidator;
 import net.sharplab.springframework.security.webauthn.challenge.ChallengeRepository;
@@ -85,6 +86,11 @@ public class WebSecurityBeanConfig {
         daoAuthenticationProvider.setPasswordEncoder(passwordEncoder);
         daoAuthenticationProvider.setUserDetailsService(userDetailsService);
         return daoAuthenticationProvider;
+    }
+
+    @Bean
+    public Registry registry(){
+        return new Registry();
     }
 
     @Bean
