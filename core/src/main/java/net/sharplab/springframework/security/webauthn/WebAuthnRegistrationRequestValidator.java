@@ -3,6 +3,7 @@ package net.sharplab.springframework.security.webauthn;
 import com.webauthn4j.WebAuthnRegistrationContext;
 import com.webauthn4j.server.ServerProperty;
 import com.webauthn4j.util.Base64UrlUtil;
+import com.webauthn4j.validator.WebAuthnRegistrationContextValidationResponse;
 import com.webauthn4j.validator.WebAuthnRegistrationContextValidator;
 import net.sharplab.springframework.security.webauthn.server.ServerPropertyProvider;
 
@@ -31,13 +32,17 @@ public class WebAuthnRegistrationRequestValidator {
         this.serverPropertyProvider = serverPropertyProvider;
     }
 
-    public void validate(HttpServletRequest httpServletRequest,
-                         String clientDataBase64,
-                         String attestationObjectBase64,
-                         String clientExtensionsJSON
+    public WebAuthnRegistrationRequestValidationResponse validate(HttpServletRequest httpServletRequest,
+                                                                  String clientDataBase64,
+                                                                  String attestationObjectBase64,
+                                                                  String clientExtensionsJSON
     ) {
         WebAuthnRegistrationContext registrationContext = createRegistrationContext(httpServletRequest, clientDataBase64, attestationObjectBase64, clientExtensionsJSON);
-        registrationContextValidator.validate(registrationContext);
+        WebAuthnRegistrationContextValidationResponse response = registrationContextValidator.validate(registrationContext);
+        return new WebAuthnRegistrationRequestValidationResponse(
+                response.getCollectedClientData(),
+                response.getAttestationObject(),
+                response.getClientExtensionOutputs());
     }
 
     WebAuthnRegistrationContext createRegistrationContext(HttpServletRequest request,
