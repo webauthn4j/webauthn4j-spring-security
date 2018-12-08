@@ -22,6 +22,7 @@ import com.webauthn4j.authenticator.AuthenticatorImpl;
 import com.webauthn4j.validator.WebAuthnAuthenticationContextValidator;
 import com.webauthn4j.validator.exception.ValidationException;
 import net.sharplab.springframework.security.webauthn.authenticator.WebAuthnAuthenticator;
+import net.sharplab.springframework.security.webauthn.authenticator.WebAuthnAuthenticatorService;
 import net.sharplab.springframework.security.webauthn.exception.*;
 import net.sharplab.springframework.security.webauthn.request.WebAuthnAuthenticationRequest;
 import net.sharplab.springframework.security.webauthn.userdetails.WebAuthnUserDetails;
@@ -51,14 +52,16 @@ public class WebAuthnAuthenticationProviderTest {
 
     private WebAuthnUserDetailsService userDetailsService = mock(WebAuthnUserDetailsService.class);
 
+    private WebAuthnAuthenticatorService authenticatorService = mock(WebAuthnAuthenticatorService.class);
+
     private WebAuthnAuthenticationContextValidator authenticationContextValidator = mock(WebAuthnAuthenticationContextValidator.class);
 
     private WebAuthnAuthenticationProvider authenticationProvider
-            = new WebAuthnAuthenticationProvider(userDetailsService, authenticationContextValidator);
+            = new WebAuthnAuthenticationProvider(userDetailsService, authenticatorService, authenticationContextValidator);
 
     @Before
     public void setup() {
-        authenticationProvider = new WebAuthnAuthenticationProvider(userDetailsService, authenticationContextValidator);
+        authenticationProvider = new WebAuthnAuthenticationProvider(userDetailsService, authenticatorService, authenticationContextValidator);
         authenticationProvider.setExpectedAuthenticationExtensionIds(Collections.singletonList("appId"));
     }
 

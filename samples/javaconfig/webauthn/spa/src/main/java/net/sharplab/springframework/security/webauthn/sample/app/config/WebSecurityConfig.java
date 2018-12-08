@@ -3,6 +3,7 @@ package net.sharplab.springframework.security.webauthn.sample.app.config;
 import com.webauthn4j.attestation.statement.COSEAlgorithmIdentifier;
 import com.webauthn4j.registry.Registry;
 import net.sharplab.springframework.security.webauthn.WebAuthnAuthenticationProvider;
+import net.sharplab.springframework.security.webauthn.authenticator.WebAuthnAuthenticatorService;
 import net.sharplab.springframework.security.webauthn.config.configurers.WebAuthnAuthenticationProviderConfigurer;
 import net.sharplab.springframework.security.webauthn.options.PublicKeyCredentialType;
 import net.sharplab.springframework.security.webauthn.userdetails.WebAuthnUserDetailsService;
@@ -59,12 +60,15 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     private WebAuthnUserDetailsService userDetailsService;
 
     @Autowired
+    private WebAuthnAuthenticatorService authenticatorService;
+
+    @Autowired
     private Registry registry;
 
     @Override
     public void configure(AuthenticationManagerBuilder builder) throws Exception {
-        WebAuthnAuthenticationProviderConfigurer<AuthenticationManagerBuilder, WebAuthnUserDetailsService> configurer =
-                new WebAuthnAuthenticationProviderConfigurer<>(userDetailsService);
+        WebAuthnAuthenticationProviderConfigurer<AuthenticationManagerBuilder, WebAuthnUserDetailsService, WebAuthnAuthenticatorService> configurer =
+                new WebAuthnAuthenticationProviderConfigurer<>(userDetailsService, authenticatorService);
         builder.apply(configurer.registry(registry));
         builder.apply(new MultiFactorAuthenticationProviderConfigurer<>(daoAuthenticationProvider));
     }

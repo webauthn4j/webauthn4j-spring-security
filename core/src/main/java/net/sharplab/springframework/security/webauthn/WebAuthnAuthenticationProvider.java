@@ -19,6 +19,7 @@ package net.sharplab.springframework.security.webauthn;
 import com.webauthn4j.WebAuthnAuthenticationContext;
 import com.webauthn4j.authenticator.Authenticator;
 import com.webauthn4j.validator.WebAuthnAuthenticationContextValidator;
+import net.sharplab.springframework.security.webauthn.authenticator.WebAuthnAuthenticatorService;
 import net.sharplab.springframework.security.webauthn.exception.*;
 import net.sharplab.springframework.security.webauthn.request.WebAuthnAuthenticationRequest;
 import net.sharplab.springframework.security.webauthn.userdetails.WebAuthnUserDetails;
@@ -51,6 +52,7 @@ public class WebAuthnAuthenticationProvider implements AuthenticationProvider {
     // ================================================================================================
     protected MessageSourceAccessor messages = SpringSecurityWebAuthnMessageSource.getAccessor();
     private WebAuthnUserDetailsService userDetailsService;
+    private WebAuthnAuthenticatorService authenticatorService;
     private WebAuthnAuthenticationContextValidator authenticationContextValidator;
     private boolean forcePrincipalAsString = false;
     private boolean hideCredentialIdNotFoundExceptions = true;
@@ -62,8 +64,10 @@ public class WebAuthnAuthenticationProvider implements AuthenticationProvider {
 
     public WebAuthnAuthenticationProvider(
             WebAuthnUserDetailsService userDetailsService,
+            WebAuthnAuthenticatorService authenticatorService,
             WebAuthnAuthenticationContextValidator authenticationContextValidator) {
         this.userDetailsService = userDetailsService;
+        this.authenticatorService = authenticatorService;
         this.authenticationContextValidator = authenticationContextValidator;
     }
 
@@ -98,6 +102,9 @@ public class WebAuthnAuthenticationProvider implements AuthenticationProvider {
         preAuthenticationChecks.check(user);
         doAuthenticate(authenticationToken, authenticator, user);
         postAuthenticationChecks.check(user);
+
+        //noinspection ConstantConditions
+        authenticatorService.updateCounter(credentialId, authenticator.getCounter());
 
         Serializable principalToReturn = user;
 
