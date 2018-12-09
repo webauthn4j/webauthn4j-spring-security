@@ -17,8 +17,13 @@
 package net.sharplab.springframework.security.webauthn;
 
 import com.webauthn4j.WebAuthnRegistrationContext;
+import com.webauthn4j.attestation.AttestationObject;
+import com.webauthn4j.client.CollectedClientData;
+import com.webauthn4j.extension.client.ClientExtensionOutput;
 import com.webauthn4j.server.ServerProperty;
+import com.webauthn4j.test.client.ClientExtensionInput;
 import com.webauthn4j.util.Base64UrlUtil;
+import com.webauthn4j.validator.WebAuthnRegistrationContextValidationResponse;
 import com.webauthn4j.validator.WebAuthnRegistrationContextValidator;
 import net.sharplab.springframework.security.webauthn.server.ServerPropertyProvider;
 import org.junit.Rule;
@@ -30,6 +35,8 @@ import org.mockito.junit.MockitoRule;
 import org.springframework.mock.web.MockHttpServletRequest;
 
 import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
@@ -60,13 +67,19 @@ public class WebAuthnRegistrationRequestValidatorTest {
         ServerProperty serverProperty = mock(ServerProperty.class);
         when(serverPropertyProvider.provide(any())).thenReturn(serverProperty);
 
+        CollectedClientData collectedClientData = mock(CollectedClientData.class);
+        AttestationObject attestationObject = mock(AttestationObject.class);
+        Map<String, ClientExtensionOutput> clientExtensionOutputs = new HashMap<>();
+        when(registrationContextValidator.validate(any())).thenReturn(
+                new WebAuthnRegistrationContextValidationResponse(collectedClientData, attestationObject, clientExtensionOutputs));
+
         MockHttpServletRequest mockHttpServletRequest = new MockHttpServletRequest();
         mockHttpServletRequest.setScheme("https");
         mockHttpServletRequest.setServerName("example.com");
         mockHttpServletRequest.setServerPort(443);
         String clientDataBase64 = "clientDataBase64";
         String attestationObjectBase64 = "attestationObjectBase64";
-        String clientExtensionsJSON = null;
+        String clientExtensionsJSON = "clientExtensionsJSON";
 
         target.validate(mockHttpServletRequest, clientDataBase64, attestationObjectBase64, clientExtensionsJSON);
 
