@@ -19,21 +19,16 @@ package net.sharplab.springframework.security.webauthn.options;
 import com.webauthn4j.authenticator.Authenticator;
 import com.webauthn4j.client.Origin;
 import com.webauthn4j.client.challenge.Challenge;
-import com.webauthn4j.server.ServerProperty;
 import com.webauthn4j.util.Base64UrlUtil;
 import net.sharplab.springframework.security.webauthn.challenge.ChallengeRepository;
 import net.sharplab.springframework.security.webauthn.userdetails.WebAuthnUserDetailsService;
 import net.sharplab.springframework.security.webauthn.util.ServletUtil;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
-
-import static org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter.SPRING_SECURITY_FORM_PASSWORD_KEY;
-import static org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter.SPRING_SECURITY_FORM_USERNAME_KEY;
 
 public class OptionsProviderImpl implements OptionsProvider {
 

@@ -17,7 +17,6 @@
 package net.sharplab.springframework.security.webauthn;
 
 import com.webauthn4j.server.ServerProperty;
-import net.sharplab.springframework.security.webauthn.options.OptionsProvider;
 import net.sharplab.springframework.security.webauthn.request.WebAuthnAuthenticationRequest;
 import net.sharplab.springframework.security.webauthn.server.ServerPropertyProvider;
 import org.springframework.http.HttpMethod;

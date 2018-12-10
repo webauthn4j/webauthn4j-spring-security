@@ -10,13 +10,6 @@ public class WebAuthnAuthenticator extends AuthenticatorImpl {
     private String name;
 
     /**
-     * Default constructor
-     */
-    public WebAuthnAuthenticator() {
-        //nop
-    }
-
-    /**
      * Constructor
      *
      * @param name authenticator's friendly name

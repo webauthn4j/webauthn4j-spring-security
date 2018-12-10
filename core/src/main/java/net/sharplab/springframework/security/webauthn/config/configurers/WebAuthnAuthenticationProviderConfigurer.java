@@ -32,10 +32,6 @@ public class WebAuthnAuthenticationProviderConfigurer<B extends ProviderManagerB
     }
 
     @Override
-    public void init(B builder){
-    }
-
-    @Override
     public void configure(B builder) {
         if(this.authenticationContextValidator == null){
             if(this.registry == null){

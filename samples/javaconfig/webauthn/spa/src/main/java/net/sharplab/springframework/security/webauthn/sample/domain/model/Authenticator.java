@@ -12,6 +12,7 @@ public class Authenticator extends WebAuthnAuthenticator {
     private Integer id;
 
     public Authenticator() {
+        this("Authenticator");
     }
 
     public Authenticator(String name) {
