@@ -32,6 +32,7 @@ import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationServiceException;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.authority.AuthorityUtils;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
@@ -241,6 +242,13 @@ public class WebAuthnProcessingFilterTest {
 
         //When
         target.attemptAuthentication(mockHttpServletRequest, mockHttpServletResponse);
+    }
+
+    @Test
+    public void constructor_test(){
+        ServerPropertyProvider serverPropertyProvider = mock(ServerPropertyProvider.class);
+        WebAuthnProcessingFilter webAuthnProcessingFilter = new WebAuthnProcessingFilter(AuthorityUtils.NO_AUTHORITIES, serverPropertyProvider);
+        assertThat(webAuthnProcessingFilter.getServerPropertyProvider()).isEqualTo(serverPropertyProvider);
     }
 
 

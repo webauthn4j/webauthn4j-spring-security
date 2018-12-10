@@ -10,9 +10,11 @@ import com.webauthn4j.util.Base64UrlUtil;
 import net.sharplab.springframework.security.webauthn.challenge.ChallengeRepository;
 import net.sharplab.springframework.security.webauthn.userdetails.WebAuthnUserDetails;
 import net.sharplab.springframework.security.webauthn.userdetails.WebAuthnUserDetailsService;
+import org.assertj.core.util.Lists;
 import org.junit.Test;
 import org.springframework.mock.web.MockHttpServletRequest;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -51,5 +53,37 @@ public class OptionsProviderImplTest {
 
     }
 
+    @Test
+    public void getter_setter_test(){
+        WebAuthnUserDetailsService userDetailsService = mock(WebAuthnUserDetailsService.class);
+        ChallengeRepository challengeRepository = mock(ChallengeRepository.class);
+        OptionsProviderImpl optionsProvider = new OptionsProviderImpl(userDetailsService, challengeRepository);
+
+        optionsProvider.setRpId("example.com");
+        assertThat(optionsProvider.getRpId()).isEqualTo("example.com");
+        optionsProvider.setRpName("example");
+        assertThat(optionsProvider.getRpName()).isEqualTo("example");
+        List publicKeyCredParams = Lists.emptyList();
+        optionsProvider.setPublicKeyCredParams(publicKeyCredParams);
+        assertThat(optionsProvider.getPublicKeyCredParams()).isEqualTo(publicKeyCredParams);
+        optionsProvider.setTimeout(10000);
+        assertThat(optionsProvider.getTimeout()).isEqualTo(10000);
+
+        optionsProvider.setUsernameParameter("usernameParameter");
+        assertThat(optionsProvider.getUsernameParameter()).isEqualTo("usernameParameter");
+        optionsProvider.setPasswordParameter("passwordParameter");
+        assertThat(optionsProvider.getPasswordParameter()).isEqualTo("passwordParameter");
+        optionsProvider.setCredentialIdParameter("credentialIdParameter");
+        assertThat(optionsProvider.getCredentialIdParameter()).isEqualTo("credentialIdParameter");
+        optionsProvider.setClientDataParameter("clientDataParameter");
+        assertThat(optionsProvider.getClientDataParameter()).isEqualTo("clientDataParameter");
+        optionsProvider.setAuthenticatorDataParameter("authenticatorDataParameter");
+        assertThat(optionsProvider.getAuthenticatorDataParameter()).isEqualTo("authenticatorDataParameter");
+        optionsProvider.setSignatureParameter("signatureParameter");
+        assertThat(optionsProvider.getSignatureParameter()).isEqualTo("signatureParameter");
+        optionsProvider.setClientExtensionsJSONParameter("clientExtensionsJSONParameter");
+        assertThat(optionsProvider.getClientExtensionsJSONParameter()).isEqualTo("clientExtensionsJSONParameter");
+
+    }
 
 }

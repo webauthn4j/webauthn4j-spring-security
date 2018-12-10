@@ -106,4 +106,13 @@ public class HttpSessionChallengeRepositoryTest {
 
         assertThat(loadedChallenge).isNull();
     }
+
+    @Test
+    public void loadOrGenerateChallenge_test_without_previous_request() {
+        MockHttpServletRequest request = new MockHttpServletRequest();
+
+        Challenge loadedChallenge = target.loadOrGenerateChallenge(request);
+
+        assertThat(loadedChallenge).isNotNull();
+    }
 }
