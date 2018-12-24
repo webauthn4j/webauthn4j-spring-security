@@ -1,8 +1,10 @@
 package net.sharplab.springframework.security.webauthn.anchor;
 
+import com.webauthn4j.anchor.CachingTrustAnchorProviderBase;
 import com.webauthn4j.anchor.KeyStoreException;
-import com.webauthn4j.anchor.TrustAnchorProviderBase;
+import com.webauthn4j.util.AssertUtil;
 import com.webauthn4j.util.CertificateUtil;
+import org.springframework.beans.factory.InitializingBean;
 import org.springframework.core.io.Resource;
 
 import java.io.IOException;
@@ -17,12 +19,22 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-public class KeyStoreResourceTrustAnchorProvider extends TrustAnchorProviderBase {
+public class KeyStoreResourceTrustAnchorProvider extends CachingTrustAnchorProviderBase implements InitializingBean {
 
     //~ Instance fields ================================================================================================
 
     private Resource keyStore;
     private String password;
+
+
+    @Override
+    public void afterPropertiesSet() {
+        checkConfig();
+    }
+
+    private void checkConfig(){
+        AssertUtil.notNull(keyStore, "keyStore must not be null");
+    }
 
     /**
      * retrieve {@link TrustAnchor} {@link Set} backed by Java KeyStore resource.
@@ -31,6 +43,7 @@ public class KeyStoreResourceTrustAnchorProvider extends TrustAnchorProviderBase
      */
     @Override
     protected Set<TrustAnchor> loadTrustAnchors() {
+        checkConfig();
         Resource keystore = getKeyStore();
         try (InputStream inputStream = keystore.getInputStream()) {
             KeyStore keyStoreObject = loadKeyStoreFromStream(inputStream, getPassword());
@@ -88,6 +101,5 @@ public class KeyStoreResourceTrustAnchorProvider extends TrustAnchorProviderBase
         keyStoreObject.load(inputStream, password.toCharArray());
         return keyStoreObject;
     }
-
 
 }

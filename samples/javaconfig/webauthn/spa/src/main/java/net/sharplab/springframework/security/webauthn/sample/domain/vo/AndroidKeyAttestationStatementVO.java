@@ -3,17 +3,13 @@ package net.sharplab.springframework.security.webauthn.sample.domain.vo;
 import com.webauthn4j.attestation.statement.AttestationCertificatePath;
 import com.webauthn4j.attestation.statement.COSEAlgorithmIdentifier;
 
-/**
- * PackedAttestationStatementVO
- */
-public class PackedAttestationStatementVO implements AttestationStatementVO {
+public class AndroidKeyAttestationStatementVO implements AttestationStatementVO{
 
-    public static final String FORMAT = "packed";
+    public static final String FORMAT = "android-key";
 
     private COSEAlgorithmIdentifier alg;
     private byte[] sig;
     private AttestationCertificatePath x5c;
-    private byte[] ecdaaKeyId;
 
     public COSEAlgorithmIdentifier getAlg() {
         return alg;
@@ -37,14 +33,6 @@ public class PackedAttestationStatementVO implements AttestationStatementVO {
 
     public void setX5c(AttestationCertificatePath x5c) {
         this.x5c = x5c;
-    }
-
-    public byte[] getEcdaaKeyId() {
-        return ecdaaKeyId;
-    }
-
-    public void setEcdaaKeyId(byte[] ecdaaKeyId) {
-        this.ecdaaKeyId = ecdaaKeyId;
     }
 
     @Override

@@ -11,9 +11,11 @@ import java.io.Serializable;
  */
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, property = "format")
 @JsonSubTypes({
-        @JsonSubTypes.Type(name = "fido-u2f", value = FIDOU2FAttestationStatementVO.class),
-        @JsonSubTypes.Type(name = "packed", value = PackedAttestationStatementVO.class),
-        @JsonSubTypes.Type(name = "none", value = NoneAttestationStatementVO.class)
+        @JsonSubTypes.Type(name = FIDOU2FAttestationStatementVO.FORMAT, value = FIDOU2FAttestationStatementVO.class),
+        @JsonSubTypes.Type(name = PackedAttestationStatementVO.FORMAT, value = PackedAttestationStatementVO.class),
+        @JsonSubTypes.Type(name = AndroidKeyAttestationStatementVO.FORMAT, value = AndroidKeyAttestationStatementVO.class),
+        @JsonSubTypes.Type(name = AndroidSafetyNetAttestationStatementVO.FORMAT, value = AndroidSafetyNetAttestationStatementVO.class),
+        @JsonSubTypes.Type(name = NoneAttestationStatementVO.FORMAT, value = NoneAttestationStatementVO.class)
 })
 public interface AttestationStatementVO extends Serializable {
 

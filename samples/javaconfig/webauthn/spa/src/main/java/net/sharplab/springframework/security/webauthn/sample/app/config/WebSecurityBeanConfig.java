@@ -1,18 +1,28 @@
 package net.sharplab.springframework.security.webauthn.sample.app.config;
 
+import com.webauthn4j.anchor.TrustAnchorProvider;
 import com.webauthn4j.registry.Registry;
 import com.webauthn4j.validator.WebAuthnRegistrationContextValidator;
+import com.webauthn4j.validator.attestation.androidkey.AndroidKeyAttestationStatementValidator;
+import com.webauthn4j.validator.attestation.androidsafetynet.AndroidSafetyNetAttestationStatementValidator;
+import com.webauthn4j.validator.attestation.packed.PackedAttestationStatementValidator;
+import com.webauthn4j.validator.attestation.trustworthiness.certpath.TrustAnchorCertPathTrustworthinessValidator;
+import com.webauthn4j.validator.attestation.trustworthiness.ecdaa.DefaultECDAATrustworthinessValidator;
+import com.webauthn4j.validator.attestation.trustworthiness.self.DefaultSelfAttestationTrustworthinessValidator;
+import com.webauthn4j.validator.attestation.u2f.FIDOU2FAttestationStatementValidator;
 import net.sharplab.springframework.security.webauthn.WebAuthnRegistrationRequestValidator;
+import net.sharplab.springframework.security.webauthn.anchor.CertFileResourcesTrustAnchorProvider;
 import net.sharplab.springframework.security.webauthn.challenge.ChallengeRepository;
 import net.sharplab.springframework.security.webauthn.challenge.HttpSessionChallengeRepository;
 import net.sharplab.springframework.security.webauthn.options.OptionsProvider;
 import net.sharplab.springframework.security.webauthn.options.OptionsProviderImpl;
-import net.sharplab.springframework.security.webauthn.options.Parameters;
 import net.sharplab.springframework.security.webauthn.server.ServerPropertyProvider;
 import net.sharplab.springframework.security.webauthn.server.ServerPropertyProviderImpl;
 import net.sharplab.springframework.security.webauthn.userdetails.WebAuthnUserDetailsService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.AuthenticationTrustResolver;
 import org.springframework.security.authentication.AuthenticationTrustResolverImpl;
@@ -33,7 +43,9 @@ import org.springframework.security.web.authentication.logout.LogoutSuccessHandl
 import org.springframework.security.web.csrf.InvalidCsrfTokenException;
 import org.springframework.security.web.csrf.MissingCsrfTokenException;
 
+import java.util.Arrays;
 import java.util.LinkedHashMap;
+import java.util.List;
 
 @Configuration
 public class WebSecurityBeanConfig {
@@ -69,8 +81,27 @@ public class WebSecurityBeanConfig {
     }
 
     @Bean
-    public WebAuthnRegistrationContextValidator webAuthnRegistrationContextValidator() {
-        return WebAuthnRegistrationContextValidator.createNonStrictRegistrationContextValidator();
+    public WebAuthnRegistrationContextValidator webAuthnRegistrationContextValidator(TrustAnchorProvider trustAnchorProvider) {
+        return new WebAuthnRegistrationContextValidator(
+                Arrays.asList(
+                        new PackedAttestationStatementValidator(),
+                        new FIDOU2FAttestationStatementValidator(),
+                        new AndroidKeyAttestationStatementValidator(),
+                        new AndroidSafetyNetAttestationStatementValidator()
+                ),
+                new TrustAnchorCertPathTrustworthinessValidator(trustAnchorProvider),
+                new DefaultECDAATrustworthinessValidator(),
+                new DefaultSelfAttestationTrustworthinessValidator()
+        );
+    }
+
+    @Bean
+    public TrustAnchorProvider trustAnchorProvider(){
+        List<Resource> certificates = Arrays.asList(
+                new ClassPathResource("certs/google/GSR2.crt"),
+                new ClassPathResource("certs/yubico/yubico-u2f-ca-certs.crt")
+        );
+        return new CertFileResourcesTrustAnchorProvider(certificates);
     }
 
     @Bean

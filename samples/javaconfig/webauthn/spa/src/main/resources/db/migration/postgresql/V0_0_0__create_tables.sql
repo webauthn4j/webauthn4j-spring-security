@@ -30,8 +30,8 @@ CREATE TABLE m_authenticator(
   counter           BIGINT         NOT NULL,
   aa_guid  bytea  NOT NULL,
   credential_id bytea NOT NULL,
-  credential_public_key VARCHAR(4096) NOT NULL,
-  attestation_statement  VARCHAR(4096) NOT NULL,
+  credential_public_key VARCHAR(8192) NOT NULL,
+  attestation_statement  VARCHAR(8192) NOT NULL,
 );
 
 -- User-Group relation  --

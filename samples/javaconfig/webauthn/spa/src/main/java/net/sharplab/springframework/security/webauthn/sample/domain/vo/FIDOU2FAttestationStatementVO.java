@@ -7,7 +7,7 @@ import com.webauthn4j.attestation.statement.AttestationCertificatePath;
  */
 public class FIDOU2FAttestationStatementVO implements AttestationStatementVO {
 
-    private static final String FORMAT = "fido-u2f";
+    public static final String FORMAT = "fido-u2f";
 
     private AttestationCertificatePath x5c;
     private byte[] sig;

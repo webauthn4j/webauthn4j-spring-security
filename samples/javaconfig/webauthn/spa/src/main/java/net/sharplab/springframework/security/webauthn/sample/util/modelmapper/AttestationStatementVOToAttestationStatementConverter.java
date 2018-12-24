@@ -1,13 +1,7 @@
 package net.sharplab.springframework.security.webauthn.sample.util.modelmapper;
 
-import com.webauthn4j.attestation.statement.AttestationStatement;
-import com.webauthn4j.attestation.statement.FIDOU2FAttestationStatement;
-import com.webauthn4j.attestation.statement.NoneAttestationStatement;
-import com.webauthn4j.attestation.statement.PackedAttestationStatement;
-import net.sharplab.springframework.security.webauthn.sample.domain.vo.AttestationStatementVO;
-import net.sharplab.springframework.security.webauthn.sample.domain.vo.FIDOU2FAttestationStatementVO;
-import net.sharplab.springframework.security.webauthn.sample.domain.vo.NoneAttestationStatementVO;
-import net.sharplab.springframework.security.webauthn.sample.domain.vo.PackedAttestationStatementVO;
+import com.webauthn4j.attestation.statement.*;
+import net.sharplab.springframework.security.webauthn.sample.domain.vo.*;
 import org.modelmapper.Converter;
 import org.modelmapper.spi.MappingContext;
 
@@ -28,17 +22,32 @@ public class AttestationStatementVOToAttestationStatementConverter implements Co
                 destination = new PackedAttestationStatement();
             }
             context.getMappingEngine().map(context.create((PackedAttestationStatementVO) source, destination));
-        } else if (source.getClass() == FIDOU2FAttestationStatementVO.class) {
+        }
+        else if (source.getClass() == FIDOU2FAttestationStatementVO.class) {
             if (destination == null) {
                 destination = new FIDOU2FAttestationStatement();
             }
             context.getMappingEngine().map(context.create((FIDOU2FAttestationStatementVO) source, destination));
-        } else if (source.getClass() == NoneAttestationStatementVO.class) {
+        }
+        else if (source.getClass() == AndroidKeyAttestationStatementVO.class) {
+            if (destination == null) {
+                destination = new AndroidKeyAttestationStatement();
+            }
+            context.getMappingEngine().map(context.create((AndroidKeyAttestationStatementVO) source, destination));
+        }
+        else if (source.getClass() == AndroidSafetyNetAttestationStatementVO.class) {
+            if (destination == null) {
+                destination = new AndroidSafetyNetAttestationStatement();
+            }
+            context.getMappingEngine().map(context.create((AndroidSafetyNetAttestationStatementVO) source, destination));
+        }
+        else if (source.getClass() == NoneAttestationStatementVO.class) {
             if (destination == null) {
                 destination = new NoneAttestationStatement();
             }
             context.getMappingEngine().map(context.create((NoneAttestationStatementVO) source, destination));
-        } else {
+        }
+        else {
             throw new IllegalArgumentException();
         }
         return destination;
