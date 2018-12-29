@@ -17,6 +17,8 @@
 package net.sharplab.springframework.security.webauthn.config.configurers;
 
 import com.webauthn4j.registry.Registry;
+import com.webauthn4j.request.PublicKeyCredentialParameters;
+import com.webauthn4j.request.PublicKeyCredentialType;
 import com.webauthn4j.response.attestation.statement.COSEAlgorithmIdentifier;
 import net.sharplab.springframework.security.webauthn.WebAuthnProcessingFilter;
 import net.sharplab.springframework.security.webauthn.challenge.ChallengeRepository;
@@ -367,7 +369,10 @@ public final class WebAuthnLoginConfigurer<H extends HttpSecurityBuilder<H>> ext
         private List<PublicKeyCredentialParameters> parameters = new ArrayList<>();
 
         public PublicKeyCredParamsConfig addPublicKeyCredParams(PublicKeyCredentialType type, COSEAlgorithmIdentifier alg){
-            parameters.add(new PublicKeyCredentialParameters(type, alg));
+            PublicKeyCredentialParameters publicKeyCredentialParameters = new PublicKeyCredentialParameters();
+            publicKeyCredentialParameters.setType(type);
+            publicKeyCredentialParameters.setAlg(alg);
+            parameters.add(publicKeyCredentialParameters);
             return this;
         }
 

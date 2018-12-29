@@ -1,5 +1,7 @@
 package net.sharplab.springframework.security.webauthn.options;
 
+import com.webauthn4j.request.PublicKeyCredentialType;
+
 public class Credential {
 
     private PublicKeyCredentialType type;

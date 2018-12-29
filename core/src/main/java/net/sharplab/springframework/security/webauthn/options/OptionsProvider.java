@@ -16,6 +16,8 @@
 
 package net.sharplab.springframework.security.webauthn.options;
 
+import com.webauthn4j.request.PublicKeyCredentialParameters;
+
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 

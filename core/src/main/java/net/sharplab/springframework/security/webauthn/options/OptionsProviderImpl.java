@@ -17,6 +17,8 @@
 package net.sharplab.springframework.security.webauthn.options;
 
 import com.webauthn4j.authenticator.Authenticator;
+import com.webauthn4j.request.PublicKeyCredentialParameters;
+import com.webauthn4j.request.PublicKeyCredentialType;
 import com.webauthn4j.response.client.Origin;
 import com.webauthn4j.response.client.challenge.Challenge;
 import com.webauthn4j.util.Base64UrlUtil;
