@@ -1,7 +1,8 @@
 package net.sharplab.springframework.security.webauthn.sample.domain.vo;
 
-import com.webauthn4j.attestation.authenticator.Curve;
-import com.webauthn4j.attestation.statement.COSEKeyType;
+
+import com.webauthn4j.response.attestation.authenticator.Curve;
+import com.webauthn4j.response.attestation.statement.COSEKeyType;
 
 import java.util.Arrays;
 import java.util.Objects;

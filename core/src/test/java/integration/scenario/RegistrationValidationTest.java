@@ -16,10 +16,12 @@ package integration.scenario;
  * limitations under the License.
  */
 
-import com.webauthn4j.attestation.statement.COSEAlgorithmIdentifier;
-import com.webauthn4j.client.Origin;
-import com.webauthn4j.client.challenge.Challenge;
-import com.webauthn4j.client.challenge.DefaultChallenge;
+import com.webauthn4j.request.*;
+import com.webauthn4j.response.AuthenticatorAttestationResponse;
+import com.webauthn4j.response.attestation.statement.COSEAlgorithmIdentifier;
+import com.webauthn4j.response.client.Origin;
+import com.webauthn4j.response.client.challenge.Challenge;
+import com.webauthn4j.response.client.challenge.DefaultChallenge;
 import com.webauthn4j.server.ServerProperty;
 import com.webauthn4j.test.authenticator.model.WebAuthnModelAuthenticatorAdaptor;
 import com.webauthn4j.test.client.*;

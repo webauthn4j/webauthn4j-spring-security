@@ -1,8 +1,8 @@
 package net.sharplab.springframework.security.webauthn.converter;
 
-import com.webauthn4j.attestation.AttestationObject;
 import com.webauthn4j.converter.AttestationObjectConverter;
 import com.webauthn4j.registry.Registry;
+import com.webauthn4j.response.attestation.AttestationObject;
 import com.webauthn4j.test.TestUtil;
 import org.junit.Test;
 

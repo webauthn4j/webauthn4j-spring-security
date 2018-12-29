@@ -1,11 +1,11 @@
 package net.sharplab.springframework.security.webauthn.request;
 
-import com.webauthn4j.client.ClientDataType;
-import com.webauthn4j.client.Origin;
-import com.webauthn4j.client.challenge.Challenge;
-import com.webauthn4j.client.challenge.DefaultChallenge;
 import com.webauthn4j.converter.AuthenticatorDataConverter;
 import com.webauthn4j.registry.Registry;
+import com.webauthn4j.response.client.ClientDataType;
+import com.webauthn4j.response.client.Origin;
+import com.webauthn4j.response.client.challenge.Challenge;
+import com.webauthn4j.response.client.challenge.DefaultChallenge;
 import com.webauthn4j.server.ServerProperty;
 import com.webauthn4j.test.TestUtil;
 import org.junit.Test;

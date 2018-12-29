@@ -1,6 +1,6 @@
 package net.sharplab.springframework.security.webauthn;
 
-import com.webauthn4j.WebAuthnRegistrationContext;
+import com.webauthn4j.response.WebAuthnRegistrationContext;
 import com.webauthn4j.server.ServerProperty;
 import com.webauthn4j.util.Base64UrlUtil;
 import com.webauthn4j.validator.WebAuthnRegistrationContextValidationResponse;

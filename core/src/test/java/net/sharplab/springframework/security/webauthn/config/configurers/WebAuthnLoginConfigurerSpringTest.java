@@ -1,7 +1,7 @@
 package net.sharplab.springframework.security.webauthn.config.configurers;
 
 
-import com.webauthn4j.client.challenge.DefaultChallenge;
+import com.webauthn4j.response.client.challenge.DefaultChallenge;
 import net.sharplab.springframework.security.webauthn.challenge.ChallengeRepository;
 import net.sharplab.springframework.security.webauthn.challenge.HttpSessionChallengeRepository;
 import net.sharplab.springframework.security.webauthn.options.OptionsProvider;

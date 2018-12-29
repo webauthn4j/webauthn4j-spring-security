@@ -1,6 +1,7 @@
 package net.sharplab.springframework.security.webauthn.options;
 
-import com.webauthn4j.attestation.statement.COSEAlgorithmIdentifier;
+
+import com.webauthn4j.response.attestation.statement.COSEAlgorithmIdentifier;
 
 public class PublicKeyCredentialParameters {
 

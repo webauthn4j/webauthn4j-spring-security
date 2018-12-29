@@ -16,8 +16,8 @@
 
 package net.sharplab.springframework.security.webauthn.config.configurers;
 
-import com.webauthn4j.attestation.statement.COSEAlgorithmIdentifier;
 import com.webauthn4j.registry.Registry;
+import com.webauthn4j.response.attestation.statement.COSEAlgorithmIdentifier;
 import net.sharplab.springframework.security.webauthn.WebAuthnProcessingFilter;
 import net.sharplab.springframework.security.webauthn.challenge.ChallengeRepository;
 import net.sharplab.springframework.security.webauthn.challenge.HttpSessionChallengeRepository;

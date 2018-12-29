@@ -1,6 +1,6 @@
 package net.sharplab.springframework.security.webauthn.sample.util.modelmapper;
 
-import com.webauthn4j.attestation.statement.*;
+import com.webauthn4j.response.attestation.statement.*;
 import net.sharplab.springframework.security.webauthn.sample.domain.vo.*;
 import org.modelmapper.Converter;
 import org.modelmapper.spi.MappingContext;

@@ -3,8 +3,8 @@ package net.sharplab.springframework.security.webauthn.sample.domain.vo;
 
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
-import com.webauthn4j.attestation.statement.COSEAlgorithmIdentifier;
-import com.webauthn4j.attestation.statement.COSEKeyType;
+import com.webauthn4j.response.attestation.statement.COSEAlgorithmIdentifier;
+import com.webauthn4j.response.attestation.statement.COSEKeyType;
 
 import java.io.Serializable;
 import java.util.Arrays;

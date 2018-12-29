@@ -16,7 +16,7 @@
 
 package net.sharplab.springframework.security.webauthn.challenge;
 
-import com.webauthn4j.client.challenge.Challenge;
+import com.webauthn4j.response.client.challenge.Challenge;
 import org.junit.Test;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpSession;

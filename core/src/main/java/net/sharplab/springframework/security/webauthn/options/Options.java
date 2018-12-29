@@ -16,7 +16,7 @@
 
 package net.sharplab.springframework.security.webauthn.options;
 
-import com.webauthn4j.client.challenge.Challenge;
+import com.webauthn4j.response.client.challenge.Challenge;
 
 import java.util.List;
 

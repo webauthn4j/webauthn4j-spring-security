@@ -16,8 +16,8 @@
 
 package net.sharplab.springframework.security.webauthn.server;
 
-import com.webauthn4j.client.Origin;
-import com.webauthn4j.client.challenge.Challenge;
+import com.webauthn4j.response.client.Origin;
+import com.webauthn4j.response.client.challenge.Challenge;
 import com.webauthn4j.server.ServerProperty;
 import net.sharplab.springframework.security.webauthn.challenge.ChallengeRepository;
 import net.sharplab.springframework.security.webauthn.options.OptionsProvider;

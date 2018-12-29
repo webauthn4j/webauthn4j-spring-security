@@ -1,6 +1,7 @@
 package net.sharplab.springframework.security.webauthn.sample.domain.vo;
 
-import com.webauthn4j.attestation.statement.JWS;
+
+import com.webauthn4j.response.attestation.statement.JWS;
 
 public class AndroidSafetyNetAttestationStatementVO implements AttestationStatementVO{
 

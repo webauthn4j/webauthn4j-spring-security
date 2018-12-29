@@ -1,6 +1,7 @@
 package net.sharplab.springframework.security.webauthn.sample.domain.vo;
 
-import com.webauthn4j.attestation.statement.AttestationCertificatePath;
+
+import com.webauthn4j.response.attestation.statement.AttestationCertificatePath;
 
 /**
  * FIDOU2FAttestationStatementVO
