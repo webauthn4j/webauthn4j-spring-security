@@ -3,9 +3,8 @@ package net.sharplab.springframework.security.webauthn.config.configurers;
 
 import com.webauthn4j.response.client.challenge.DefaultChallenge;
 import net.sharplab.springframework.security.webauthn.challenge.ChallengeRepository;
-import net.sharplab.springframework.security.webauthn.challenge.HttpSessionChallengeRepository;
-import net.sharplab.springframework.security.webauthn.options.OptionsProvider;
-import net.sharplab.springframework.security.webauthn.options.OptionsProviderImpl;
+import net.sharplab.springframework.security.webauthn.endpoint.OptionsProvider;
+import net.sharplab.springframework.security.webauthn.endpoint.OptionsProviderImpl;
 import net.sharplab.springframework.security.webauthn.server.ServerPropertyProvider;
 import net.sharplab.springframework.security.webauthn.server.ServerPropertyProviderImpl;
 import net.sharplab.springframework.security.webauthn.userdetails.WebAuthnUserDetails;
@@ -16,10 +15,10 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Bean;
-import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
@@ -29,6 +28,8 @@ import java.util.Collections;
 
 import static net.sharplab.springframework.security.webauthn.config.configurers.WebAuthnLoginConfigurer.webAuthnLogin;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.anonymous;
@@ -54,7 +55,9 @@ public class WebAuthnLoginConfigurerSpringTest {
     public void setup() {
         WebAuthnUserDetails mockUserDetails = mock(WebAuthnUserDetails.class);
         when(mockUserDetails.getAuthenticators()).thenReturn(Collections.emptyList());
-        when(userDetailsService.loadUserByUsername(any())).thenReturn(mockUserDetails);
+        when(mockUserDetails.getUserHandle()).thenReturn(new byte[32]);
+        doThrow(new UsernameNotFoundException(null)).when(userDetailsService).loadUserByUsername(null);
+        when(userDetailsService.loadUserByUsername(anyString())).thenReturn(mockUserDetails);
     }
 
 
@@ -79,7 +82,7 @@ public class WebAuthnLoginConfigurerSpringTest {
         mvc
                 .perform(get("/webauthn/options").with(anonymous()))
                 .andExpect(unauthenticated())
-                .andExpect(content().json("{\"relyingParty\":{\"id\":\"localhost\",\"name\":null},\"challenge\":\"aFglXMZdQTKD4krvNzJBzA\",\"pubKeyCredParams\":[],\"credentials\":[],\"parameters\":{\"username\":\"username\",\"password\":\"password\",\"credentialId\":\"credentialId\",\"clientData\":\"clientData\",\"authenticatorData\":\"authenticatorData\",\"signature\":\"signature\",\"clientExtensionsJSON\":\"clientExtensionsJSON\"}}"))
+                .andExpect(content().json("{\"relyingParty\":{\"id\":\"example.com\",\"name\":null},\"challenge\":\"aFglXMZdQTKD4krvNzJBzA\",\"pubKeyCredParams\":[],\"credentials\":[],\"parameters\":{\"username\":\"username\",\"password\":\"password\",\"credentialId\":\"credentialId\",\"clientData\":\"clientData\",\"authenticatorData\":\"authenticatorData\",\"signature\":\"signature\",\"clientExtensionsJSON\":\"clientExtensionsJSON\"}}"))
                 .andExpect(status().isOk());
     }
 
@@ -98,7 +101,7 @@ public class WebAuthnLoginConfigurerSpringTest {
     }
 
     @Test
-    public void conditionEndpointPath_with_authenticated_user_test() throws Exception {
+    public void optionsEndpointPath_with_authenticated_user_test() throws Exception {
         mvc = MockMvcBuilders.standaloneSetup()
                 .addFilter(springSecurityFilterChain)
                 .build();

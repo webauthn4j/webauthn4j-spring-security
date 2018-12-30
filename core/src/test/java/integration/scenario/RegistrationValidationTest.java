@@ -59,26 +59,24 @@ public class RegistrationValidationTest {
         when(serverPropertyProvider.provide(any())).thenReturn(serverProperty);
 
 
-        AuthenticatorSelectionCriteria authenticatorSelectionCriteria = new AuthenticatorSelectionCriteria();
-        authenticatorSelectionCriteria.setAuthenticatorAttachment(AuthenticatorAttachment.CROSS_PLATFORM);
-        authenticatorSelectionCriteria.setRequireResidentKey(true);
-        authenticatorSelectionCriteria.setUserVerificationRequirement(UserVerificationRequirement.REQUIRED);
+        AuthenticatorSelectionCriteria authenticatorSelectionCriteria =
+                new AuthenticatorSelectionCriteria(AuthenticatorAttachment.CROSS_PLATFORM, true, UserVerificationRequirement.REQUIRED);
 
-        PublicKeyCredentialParameters publicKeyCredentialParameters = new PublicKeyCredentialParameters();
-        publicKeyCredentialParameters.setAlg(COSEAlgorithmIdentifier.ES256);
-        publicKeyCredentialParameters.setType(PublicKeyCredentialType.PUBLIC_KEY);
+        PublicKeyCredentialParameters publicKeyCredentialParameters = new PublicKeyCredentialParameters(PublicKeyCredentialType.PUBLIC_KEY, COSEAlgorithmIdentifier.ES256);
 
         PublicKeyCredentialUserEntity publicKeyCredentialUserEntity = new PublicKeyCredentialUserEntity();
-        publicKeyCredentialParameters.setAlg(COSEAlgorithmIdentifier.ES256);
-        publicKeyCredentialParameters.setType(PublicKeyCredentialType.PUBLIC_KEY);
 
-        PublicKeyCredentialCreationOptions credentialCreationOptions = new PublicKeyCredentialCreationOptions();
-        credentialCreationOptions.setRp(new PublicKeyCredentialRpEntity(rpId, "example.com"));
-        credentialCreationOptions.setChallenge(challenge);
-        credentialCreationOptions.setAttestation(AttestationConveyancePreference.NONE);
-        credentialCreationOptions.setAuthenticatorSelection(authenticatorSelectionCriteria);
-        credentialCreationOptions.setPubKeyCredParams(Collections.singletonList(publicKeyCredentialParameters));
-        credentialCreationOptions.setUser(publicKeyCredentialUserEntity);
+        PublicKeyCredentialCreationOptions credentialCreationOptions = new PublicKeyCredentialCreationOptions(
+                new PublicKeyCredentialRpEntity(rpId, "example.com"),
+                publicKeyCredentialUserEntity,
+                challenge,
+                Collections.singletonList(publicKeyCredentialParameters),
+                null,
+                null,
+                authenticatorSelectionCriteria,
+                AttestationConveyancePreference.NONE,
+                null
+        );
 
         AuthenticatorAttestationResponse registrationRequest = clientPlatform.create(credentialCreationOptions).getAuthenticatorResponse();
 

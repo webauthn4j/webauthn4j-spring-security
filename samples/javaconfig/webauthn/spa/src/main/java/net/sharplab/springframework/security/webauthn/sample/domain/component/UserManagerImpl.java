@@ -1,5 +1,6 @@
 package net.sharplab.springframework.security.webauthn.sample.domain.component;
 
+import com.webauthn4j.util.Base64UrlUtil;
 import net.sharplab.springframework.security.webauthn.exception.CredentialIdNotFoundException;
 import net.sharplab.springframework.security.webauthn.sample.domain.constant.MessageCodes;
 import net.sharplab.springframework.security.webauthn.sample.domain.entity.AuthenticatorEntity;
@@ -63,10 +64,8 @@ public class UserManagerImpl implements UserManager, WebAuthnUserDetailsService 
 
     @Override
     public WebAuthnUserDetails loadUserByCredentialId(byte[] credentialId) {
-        AuthenticatorEntity authenticatorEntity = authenticatorEntityRepository.findOneByCredentialId(credentialId);
-        if (authenticatorEntity == null) {
-            throw new CredentialIdNotFoundException(String.format("User with credentialId'%s' is not found.", new String(credentialId, StandardCharsets.UTF_8)));
-        }
+        AuthenticatorEntity authenticatorEntity = authenticatorEntityRepository.findOneByCredentialId(credentialId)
+                .orElseThrow(()-> new CredentialIdNotFoundException(String.format("Authenticator with credentialId'%s' is not found.", Base64UrlUtil.encodeToString(credentialId))));
         return modelMapper.map(authenticatorEntity.getUser(), User.class);
     }
 
@@ -110,7 +109,7 @@ public class UserManagerImpl implements UserManager, WebAuthnUserDetailsService 
      */
     @Override
     public void deleteUser(int id) {
-        UserEntity userEntity = userEntityRepository.findById(id)
+        userEntityRepository.findById(id)
                 .orElseThrow(() -> new WebAuthnSampleEntityNotFoundException(ResultMessages.error().add(MessageCodes.Error.User.USER_NOT_FOUND)));
         userEntityRepository.deleteById(id);
     }

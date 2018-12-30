@@ -2,6 +2,7 @@ package net.sharplab.springframework.security.webauthn.sample.app.config;
 
 import com.webauthn4j.anchor.TrustAnchorProvider;
 import com.webauthn4j.registry.Registry;
+import com.webauthn4j.validator.WebAuthnAuthenticationContextValidator;
 import com.webauthn4j.validator.WebAuthnRegistrationContextValidator;
 import com.webauthn4j.validator.attestation.androidkey.AndroidKeyAttestationStatementValidator;
 import com.webauthn4j.validator.attestation.androidsafetynet.AndroidSafetyNetAttestationStatementValidator;
@@ -14,8 +15,8 @@ import net.sharplab.springframework.security.webauthn.WebAuthnRegistrationReques
 import net.sharplab.springframework.security.webauthn.anchor.CertFileResourcesTrustAnchorProvider;
 import net.sharplab.springframework.security.webauthn.challenge.ChallengeRepository;
 import net.sharplab.springframework.security.webauthn.challenge.HttpSessionChallengeRepository;
-import net.sharplab.springframework.security.webauthn.options.OptionsProvider;
-import net.sharplab.springframework.security.webauthn.options.OptionsProviderImpl;
+import net.sharplab.springframework.security.webauthn.endpoint.OptionsProvider;
+import net.sharplab.springframework.security.webauthn.endpoint.OptionsProviderImpl;
 import net.sharplab.springframework.security.webauthn.server.ServerPropertyProvider;
 import net.sharplab.springframework.security.webauthn.server.ServerPropertyProviderImpl;
 import net.sharplab.springframework.security.webauthn.userdetails.WebAuthnUserDetailsService;
@@ -93,6 +94,11 @@ public class WebSecurityBeanConfig {
                 new DefaultECDAATrustworthinessValidator(),
                 new DefaultSelfAttestationTrustworthinessValidator()
         );
+    }
+
+    @Bean
+    public WebAuthnAuthenticationContextValidator webAuthnAuthenticationContextValidator(Registry registry){
+        return new WebAuthnAuthenticationContextValidator(registry);
     }
 
     @Bean

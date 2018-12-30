@@ -19,7 +19,7 @@ package net.sharplab.springframework.security.webauthn;
 import com.webauthn4j.response.WebAuthnRegistrationContext;
 import com.webauthn4j.response.attestation.AttestationObject;
 import com.webauthn4j.response.client.CollectedClientData;
-import com.webauthn4j.response.extension.client.ClientExtensionOutput;
+import com.webauthn4j.response.extension.client.AuthenticationExtensionsClientOutputs;
 import com.webauthn4j.server.ServerProperty;
 import com.webauthn4j.util.Base64UrlUtil;
 import com.webauthn4j.validator.WebAuthnRegistrationContextValidationResponse;
@@ -34,8 +34,6 @@ import org.mockito.junit.MockitoRule;
 import org.springframework.mock.web.MockHttpServletRequest;
 
 import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
@@ -68,7 +66,7 @@ public class WebAuthnRegistrationRequestValidatorTest {
 
         CollectedClientData collectedClientData = mock(CollectedClientData.class);
         AttestationObject attestationObject = mock(AttestationObject.class);
-        Map<String, ClientExtensionOutput> clientExtensionOutputs = new HashMap<>();
+        AuthenticationExtensionsClientOutputs clientExtensionOutputs = new AuthenticationExtensionsClientOutputs();
         when(registrationContextValidator.validate(any())).thenReturn(
                 new WebAuthnRegistrationContextValidationResponse(collectedClientData, attestationObject, clientExtensionOutputs));
 

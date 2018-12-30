@@ -11,7 +11,7 @@
 [source, xml]
 ----
 <dependency>
-	<groupId>net.sharplab.springframework.security.extensions</groupId>
+	<groupId>net.sharplab.springframework.security.registrationExtensions</groupId>
 	<artifactId>spring-security-webauthn-core</artifactId>
 	<version>${version}</version>
 </dependency>

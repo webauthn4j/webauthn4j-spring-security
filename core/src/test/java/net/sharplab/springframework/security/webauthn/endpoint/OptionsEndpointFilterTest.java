@@ -1,6 +1,7 @@
-package net.sharplab.springframework.security.webauthn.options;
+package net.sharplab.springframework.security.webauthn.endpoint;
 
 import com.webauthn4j.registry.Registry;
+import net.sharplab.springframework.security.webauthn.endpoint.OptionsEndpointFilter;
 import org.junit.Test;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.security.authentication.*;
@@ -21,7 +22,7 @@ public class OptionsEndpointFilterTest {
         AuthenticationTrustResolver trustResolver = new AuthenticationTrustResolverImpl();
         optionsEndpointFilter.setMFATokenEvaluator(mfaTokenEvaluator);
         optionsEndpointFilter.setTrustResolver(trustResolver);
-        assertThat(optionsEndpointFilter.getMfaTokenEvaluator()).isEqualTo(mfaTokenEvaluator);
+        assertThat(optionsEndpointFilter.getMFATokenEvaluator()).isEqualTo(mfaTokenEvaluator);
         assertThat(optionsEndpointFilter.getTrustResolver()).isEqualTo(trustResolver);
     }
 
@@ -35,7 +36,7 @@ public class OptionsEndpointFilterTest {
 
         assertThat(response.getStatus()).isEqualTo(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
         assertThat(response.getContentType()).isEqualTo("application/json");
-        assertThat(response.getContentAsString()).isEqualTo("{\"type\":\"server_error\",\"message\":\"The server encountered an internal error\"}");
+        assertThat(response.getContentAsString()).isEqualTo("{\"status\":\"failed\",\"errorMessage\":\"The server encountered an internal error\"}");
     }
 
     @Test
@@ -48,6 +49,6 @@ public class OptionsEndpointFilterTest {
 
         assertThat(response.getStatus()).isEqualTo(HttpServletResponse.SC_FORBIDDEN);
         assertThat(response.getContentType()).isEqualTo("application/json");
-        assertThat(response.getContentAsString()).isEqualTo("{\"type\":\"not_authenticated\",\"message\":\"Anonymous access is prohibited\"}");
+        assertThat(response.getContentAsString()).isEqualTo("{\"status\":\"failed\",\"errorMessage\":\"Anonymous access is prohibited\"}");
     }
 }

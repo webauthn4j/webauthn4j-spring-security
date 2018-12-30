@@ -1,5 +1,7 @@
 package net.sharplab.springframework.security.webauthn.sample.domain.model;
 
+import com.webauthn4j.response.attestation.authenticator.AttestedCredentialData;
+import com.webauthn4j.response.attestation.statement.AttestationStatement;
 import net.sharplab.springframework.security.webauthn.authenticator.WebAuthnAuthenticator;
 
 
@@ -12,11 +14,11 @@ public class Authenticator extends WebAuthnAuthenticator {
     private Integer id;
 
     public Authenticator() {
-        this("Authenticator");
+        this("Authenticator", null, null, 0);
     }
 
-    public Authenticator(String name) {
-        super(name);
+    public Authenticator(String name, AttestedCredentialData attestedCredentialData, AttestationStatement attestationStatement, long counter) {
+        super(name, attestedCredentialData, attestationStatement, counter);
     }
 
     public Integer getId() {

@@ -17,17 +17,12 @@
 package net.sharplab.springframework.security.webauthn.config.configurers;
 
 import com.webauthn4j.registry.Registry;
-import com.webauthn4j.request.PublicKeyCredentialParameters;
-import com.webauthn4j.request.PublicKeyCredentialType;
-import com.webauthn4j.response.attestation.statement.COSEAlgorithmIdentifier;
 import net.sharplab.springframework.security.webauthn.WebAuthnProcessingFilter;
 import net.sharplab.springframework.security.webauthn.challenge.ChallengeRepository;
-import net.sharplab.springframework.security.webauthn.challenge.HttpSessionChallengeRepository;
-import net.sharplab.springframework.security.webauthn.options.*;
+import net.sharplab.springframework.security.webauthn.endpoint.OptionsEndpointFilter;
+import net.sharplab.springframework.security.webauthn.endpoint.OptionsProvider;
 import net.sharplab.springframework.security.webauthn.server.ServerPropertyProvider;
-import net.sharplab.springframework.security.webauthn.userdetails.WebAuthnUserDetailsService;
 import org.springframework.context.ApplicationContext;
-import org.springframework.security.authentication.AuthenticationTrustResolver;
 import org.springframework.security.authentication.MFATokenEvaluator;
 import org.springframework.security.config.annotation.web.HttpSecurityBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -40,11 +35,6 @@ import org.springframework.security.web.session.SessionManagementFilter;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.security.web.util.matcher.RequestMatcher;
 import org.springframework.util.Assert;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import static net.sharplab.springframework.security.webauthn.WebAuthnProcessingFilter.*;
 
 /**
  * Adds webAuthnLogin authentication. All attributes have reasonable defaults making all
@@ -83,24 +73,19 @@ public final class WebAuthnLoginConfigurer<H extends HttpSecurityBuilder<H>> ext
 
     //~ Instance fields
     // ================================================================================================
-    private ChallengeRepository challengeRepository;
-    private OptionsProvider optionsProvider;
-    private Registry registry;
-    private ServerPropertyProvider serverPropertyProvider;
+    private OptionsProvider optionsProvider = null;
+    private Registry registry = null;
+    private ServerPropertyProvider serverPropertyProvider = null;
 
-    private String rpId;
-    private String rpName;
-    private List<PublicKeyCredentialParameters> publicKeyCredParams = new ArrayList<>();
+    private String usernameParameter = null;
+    private String passwordParameter = null;
+    private String credentialIdParameter = null;
+    private String clientDataParameter = null;
+    private String authenticatorDataParameter = null;
+    private String signatureParameter = null;
+    private String clientExtensionsJSONParameter = null;
 
-    private String usernameParameter = SPRING_SECURITY_FORM_USERNAME_KEY;
-    private String passwordParameter = SPRING_SECURITY_FORM_PASSWORD_KEY;
-    private String credentialIdParameter = SPRING_SECURITY_FORM_CREDENTIAL_ID_KEY;
-    private String clientDataParameter = SPRING_SECURITY_FORM_CLIENTDATA_KEY;
-    private String authenticatorDataParameter = SPRING_SECURITY_FORM_AUTHENTICATOR_DATA_KEY;
-    private String signatureParameter = SPRING_SECURITY_FORM_SIGNATURE_KEY;
-    private String clientExtensionsJSONParameter = SPRING_SECURITY_FORM_CLIENT_EXTENSIONS_JSON_KEY;
-
-    private final WebAuthnLoginConfigurer<H>.PublicKeyCredParamsConfig publicKeyCredParamsConfigurer = new WebAuthnLoginConfigurer<H>.PublicKeyCredParamsConfig();
+    private final WebAuthnLoginConfigurer<H>.OptionsEndpointConfig optionsEndpointConfig = new WebAuthnLoginConfigurer<H>.OptionsEndpointConfig();
 
     public WebAuthnLoginConfigurer() {
         super(new WebAuthnProcessingFilter(), null);
@@ -115,40 +100,6 @@ public final class WebAuthnLoginConfigurer<H extends HttpSecurityBuilder<H>> ext
      */
     @Override
     public void init(H http) throws Exception {
-        ApplicationContext applicationContext = http.getSharedObject(ApplicationContext.class);
-
-        if (challengeRepository == null) {
-            String[] beanNames = applicationContext.getBeanNamesForType(ChallengeRepository.class);
-            if (beanNames.length == 0) {
-                challengeRepository = new HttpSessionChallengeRepository();
-            } else {
-                challengeRepository = applicationContext.getBean(ChallengeRepository.class);
-            }
-        }
-        http.setSharedObject(ChallengeRepository.class, challengeRepository);
-
-        if (optionsProvider == null) {
-            WebAuthnUserDetailsService userDetailsService = applicationContext.getBean(WebAuthnUserDetailsService.class);
-            optionsProvider = new OptionsProviderImpl(userDetailsService, challengeRepository);
-        }
-        http.setSharedObject(OptionsProvider.class, optionsProvider);
-
-        if (registry == null){
-            String[] beanNames = applicationContext.getBeanNamesForType(Registry.class);
-            if (beanNames.length == 0) {
-                registry = new Registry();
-            } else {
-                registry = applicationContext.getBean(Registry.class);
-            }
-        }
-
-        if (serverPropertyProvider == null) {
-            // Since ServerPropertyProvider requires initialization,
-            // it is not instantiated manually, but retrieved from applicationContext.
-            serverPropertyProvider = applicationContext.getBean(ServerPropertyProvider.class);
-        }
-        http.setSharedObject(ServerPropertyProvider.class, serverPropertyProvider);
-
         super.init(http);
     }
 
@@ -158,59 +109,56 @@ public final class WebAuthnLoginConfigurer<H extends HttpSecurityBuilder<H>> ext
     @Override
     public void configure(H http) throws Exception {
         super.configure(http);
+        if(optionsProvider == null){
+            optionsProvider = WebAuthnConfigurerUtil.getOptionsProvider(http);
+        }
+        http.setSharedObject(OptionsProvider.class, optionsProvider);
+        if(registry == null){
+            registry = WebAuthnConfigurerUtil.getRegistry(http);
+        }
+        http.setSharedObject(Registry.class, registry);
+        if (serverPropertyProvider == null) {
+            serverPropertyProvider = WebAuthnConfigurerUtil.getServerPropertyProvider(http);
+        }
+        http.setSharedObject(ServerPropertyProvider.class, serverPropertyProvider);
 
         this.getAuthenticationFilter().setServerPropertyProvider(serverPropertyProvider);
 
-        this.optionsProvider.setRpId(rpId);
-        this.optionsProvider.setRpName(rpName);
-        this.optionsProvider.setPublicKeyCredParams(this.publicKeyCredParamsConfigurer.parameters);
 
-        this.getAuthenticationFilter().setUsernameParameter(usernameParameter);
-        this.optionsProvider.setUsernameParameter(usernameParameter);
-        getAuthenticationFilter().setPasswordParameter(passwordParameter);
-        this.optionsProvider.setPasswordParameter(passwordParameter);
-        this.getAuthenticationFilter().setCredentialIdParameter(credentialIdParameter);
-        this.optionsProvider.setCredentialIdParameter(credentialIdParameter);
-        this.getAuthenticationFilter().setClientDataParameter(clientDataParameter);
-        this.optionsProvider.setClientDataParameter(clientDataParameter);
-        this.getAuthenticationFilter().setAuthenticatorDataParameter(authenticatorDataParameter);
-        this.optionsProvider.setAuthenticatorDataParameter(authenticatorDataParameter);
-        this.getAuthenticationFilter().setSignatureParameter(signatureParameter);
-        this.optionsProvider.setSignatureParameter(signatureParameter);
-        this.getAuthenticationFilter().setClientExtensionsJSONParameter(clientExtensionsJSONParameter);
-        this.optionsProvider.setClientExtensionsJSONParameter(clientExtensionsJSONParameter);
+        configureParameters();
 
-        configureOptionsEndpointFilter(http);
+        this.optionsEndpointConfig.configure(http);
     }
 
-    private void configureOptionsEndpointFilter(H http) {
-        OptionsEndpointFilter optionsEndpointFilter = new OptionsEndpointFilter(optionsProvider, registry);
-
-        MFATokenEvaluator mfaTokenEvaluator = http.getSharedObject(MFATokenEvaluator.class);
-        if (mfaTokenEvaluator != null) {
-            optionsEndpointFilter.setMFATokenEvaluator(mfaTokenEvaluator);
+    private void configureParameters() {
+        if(usernameParameter != null){
+            this.getAuthenticationFilter().setUsernameParameter(usernameParameter);
+            this.optionsProvider.setUsernameParameter(usernameParameter);
         }
-
-        AuthenticationTrustResolver trustResolver = http.getSharedObject(AuthenticationTrustResolver.class);
-        if (trustResolver != null) {
-            optionsEndpointFilter.setTrustResolver(trustResolver);
+        if(passwordParameter != null){
+            this.getAuthenticationFilter().setPasswordParameter(passwordParameter);
+            this.optionsProvider.setPasswordParameter(passwordParameter);
         }
-
-        http.addFilterAfter(optionsEndpointFilter, SessionManagementFilter.class);
-    }
-
-    public WebAuthnLoginConfigurer<H> rpId(String rpId) {
-        this.rpId = rpId;
-        return this;
-    }
-
-    public WebAuthnLoginConfigurer<H> rpName(String rpName) {
-        this.rpName = rpName;
-        return this;
-    }
-
-    public WebAuthnLoginConfigurer<H>.PublicKeyCredParamsConfig publicKeyCredParams() {
-        return this.publicKeyCredParamsConfigurer;
+        if(credentialIdParameter != null){
+            this.getAuthenticationFilter().setCredentialIdParameter(credentialIdParameter);
+            this.optionsProvider.setCredentialIdParameter(credentialIdParameter);
+        }
+        if(clientDataParameter != null){
+            this.getAuthenticationFilter().setClientDataParameter(clientDataParameter);
+            this.optionsProvider.setClientDataParameter(clientDataParameter);
+        }
+        if(authenticatorDataParameter != null){
+            this.getAuthenticationFilter().setAuthenticatorDataParameter(authenticatorDataParameter);
+            this.optionsProvider.setAuthenticatorDataParameter(authenticatorDataParameter);
+        }
+        if(signatureParameter != null){
+            this.getAuthenticationFilter().setSignatureParameter(signatureParameter);
+            this.optionsProvider.setSignatureParameter(signatureParameter);
+        }
+        if(clientExtensionsJSONParameter != null){
+            this.getAuthenticationFilter().setClientExtensionsJSONParameter(clientExtensionsJSONParameter);
+            this.optionsProvider.setClientExtensionsJSONParameter(clientExtensionsJSONParameter);
+        }
     }
 
     /**
@@ -346,12 +294,6 @@ public final class WebAuthnLoginConfigurer<H extends HttpSecurityBuilder<H>> ext
         return new AntPathRequestMatcher(loginProcessingUrl, "POST");
     }
 
-    public WebAuthnLoginConfigurer<H> challengeRepository(ChallengeRepository challengeRepository) {
-        Assert.notNull(challengeRepository, "challengeRepository cannot be null");
-        this.challengeRepository = challengeRepository;
-        return this;
-    }
-
     public WebAuthnLoginConfigurer<H> optionsProvider(OptionsProvider optionsProvider){
         Assert.notNull(optionsProvider, "optionsProvider cannot be null");
         this.optionsProvider = optionsProvider;
@@ -364,15 +306,33 @@ public final class WebAuthnLoginConfigurer<H extends HttpSecurityBuilder<H>> ext
         return this;
     }
 
-    public class PublicKeyCredParamsConfig {
+    public WebAuthnLoginConfigurer<H>.OptionsEndpointConfig optionsEndpoint(){
+        return optionsEndpointConfig;
+    }
 
-        private List<PublicKeyCredentialParameters> parameters = new ArrayList<>();
+    public class OptionsEndpointConfig {
 
-        public PublicKeyCredParamsConfig addPublicKeyCredParams(PublicKeyCredentialType type, COSEAlgorithmIdentifier alg){
-            PublicKeyCredentialParameters publicKeyCredentialParameters = new PublicKeyCredentialParameters();
-            publicKeyCredentialParameters.setType(type);
-            publicKeyCredentialParameters.setAlg(alg);
-            parameters.add(publicKeyCredentialParameters);
+        private String processingUrl = OptionsEndpointFilter.FILTER_URL;
+
+        private OptionsEndpointConfig(){}
+
+        private void configure(H http) {
+            OptionsEndpointFilter optionsEndpointFilter;
+            ApplicationContext applicationContext = http.getSharedObject(ApplicationContext.class);
+            String[] beanNames = applicationContext.getBeanNamesForType(OptionsEndpointFilter.class);
+            if (beanNames.length == 0) {
+                optionsEndpointFilter = new OptionsEndpointFilter(optionsProvider, registry);
+                optionsEndpointFilter.setFilterProcessesUrl(processingUrl);
+            }
+            else {
+                optionsEndpointFilter = applicationContext.getBean(OptionsEndpointFilter.class);
+            }
+
+            http.addFilterAfter(optionsEndpointFilter, SessionManagementFilter.class);
+        }
+
+        public WebAuthnLoginConfigurer<H>.OptionsEndpointConfig processingUrl(String processingUrl) {
+            this.processingUrl = processingUrl;
             return this;
         }
 
@@ -381,5 +341,6 @@ public final class WebAuthnLoginConfigurer<H extends HttpSecurityBuilder<H>> ext
         }
 
     }
+
 
 }

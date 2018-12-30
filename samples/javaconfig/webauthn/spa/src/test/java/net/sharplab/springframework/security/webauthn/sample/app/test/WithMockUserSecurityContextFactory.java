@@ -33,7 +33,10 @@ public class WithMockUserSecurityContextFactory implements WithSecurityContextFa
         SecurityContext context = SecurityContextHolder.createEmptyContext();
         List<Authority> authorities = Arrays.stream(user.authorities()).map(Authority::new).collect(Collectors.toList());
         List<Group> groups = Arrays.stream(user.groups()).map(Group::new).collect(Collectors.toList());
-        List<Authenticator> authenticators = Arrays.stream(user.authenticators()).map(Authenticator::new).collect(Collectors.toList());
+        List<Authenticator> authenticators =
+                Arrays.stream(user.authenticators())
+                        .map((name) -> new Authenticator(name, null, null, 0))
+                        .collect(Collectors.toList());
 
         User principal =
                 new User(

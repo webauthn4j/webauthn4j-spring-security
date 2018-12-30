@@ -3,6 +3,7 @@ package net.sharplab.springframework.security.webauthn.sample.app.config;
 import com.webauthn4j.registry.Registry;
 import com.webauthn4j.request.PublicKeyCredentialType;
 import com.webauthn4j.response.attestation.statement.COSEAlgorithmIdentifier;
+import com.webauthn4j.validator.WebAuthnAuthenticationContextValidator;
 import net.sharplab.springframework.security.webauthn.authenticator.WebAuthnAuthenticatorService;
 import net.sharplab.springframework.security.webauthn.config.configurers.WebAuthnAuthenticationProviderConfigurer;
 import net.sharplab.springframework.security.webauthn.userdetails.WebAuthnUserDetailsService;
@@ -24,6 +25,8 @@ import org.springframework.security.web.authentication.AuthenticationSuccessHand
 import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
 import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 
+import static net.sharplab.springframework.security.webauthn.config.configurers.WebAuthnConfigurer.webAuthn;
+import static net.sharplab.springframework.security.webauthn.config.configurers.FidoServerConfigurer.fidoServer;
 import static net.sharplab.springframework.security.webauthn.config.configurers.WebAuthnLoginConfigurer.webAuthnLogin;
 
 
@@ -62,13 +65,14 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     private WebAuthnAuthenticatorService authenticatorService;
 
     @Autowired
+    private WebAuthnAuthenticationContextValidator webAuthnAuthenticationContextValidator;
+
+    @Autowired
     private Registry registry;
 
     @Override
     public void configure(AuthenticationManagerBuilder builder) throws Exception {
-        WebAuthnAuthenticationProviderConfigurer<AuthenticationManagerBuilder, WebAuthnUserDetailsService, WebAuthnAuthenticatorService> configurer =
-                new WebAuthnAuthenticationProviderConfigurer<>(userDetailsService, authenticatorService);
-        builder.apply(configurer.registry(registry));
+        builder.apply(new WebAuthnAuthenticationProviderConfigurer<>(userDetailsService, authenticatorService, webAuthnAuthenticationContextValidator));
         builder.apply(new MultiFactorAuthenticationProviderConfigurer<>(daoAuthenticationProvider));
     }
 
@@ -89,14 +93,19 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
 
+        http.apply(webAuthn())
+                .rpName("Spring Security WebAuthn Sample")
+                .publicKeyCredParams()
+                    .addPublicKeyCredParams(PublicKeyCredentialType.PUBLIC_KEY, COSEAlgorithmIdentifier.RS256)  // Windows Hello
+                    .addPublicKeyCredParams(PublicKeyCredentialType.PUBLIC_KEY, COSEAlgorithmIdentifier.ES256); // FIDO U2F Key, etc
+
+        // FIDO Server Endpoints
+        http.apply(fidoServer())
+                .fidoServerAttestationOptionsEndpoint();
+
         // WebAuthn Login
         http.apply(webAuthnLogin())
-                .rpName("Spring Security WebAuthn Sample")
                 .loginPage("/login")
-                .publicKeyCredParams()
-                    .addPublicKeyCredParams(PublicKeyCredentialType.PUBLIC_KEY, COSEAlgorithmIdentifier.RS256) // Windows Hello
-                    .addPublicKeyCredParams(PublicKeyCredentialType.PUBLIC_KEY, COSEAlgorithmIdentifier.ES256) // FIDO U2F Key, etc
-                .and()
                 .usernameParameter("username")
                 .passwordParameter("password")
                 .credentialIdParameter("credentialId")
@@ -134,6 +143,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
         //TODO:
         http.csrf().csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse());
+
+        http.csrf().ignoringAntMatchers("/webauthn/**");
+
 
     }
 

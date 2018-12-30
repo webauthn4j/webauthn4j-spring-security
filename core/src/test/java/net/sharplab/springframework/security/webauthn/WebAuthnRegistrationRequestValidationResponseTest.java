@@ -3,12 +3,9 @@ package net.sharplab.springframework.security.webauthn;
 import com.webauthn4j.response.attestation.AttestationObject;
 import com.webauthn4j.response.client.ClientDataType;
 import com.webauthn4j.response.client.CollectedClientData;
-import com.webauthn4j.response.extension.client.ClientExtensionOutput;
+import com.webauthn4j.response.extension.client.AuthenticationExtensionsClientOutputs;
 import com.webauthn4j.test.TestUtil;
 import org.junit.Test;
-
-import java.util.HashMap;
-import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -18,7 +15,7 @@ public class WebAuthnRegistrationRequestValidationResponseTest {
     public void equals_hashCode_test() {
         CollectedClientData clientData = TestUtil.createClientData(ClientDataType.CREATE);
         AttestationObject attestationObject = TestUtil.createAttestationObjectWithFIDOU2FAttestationStatement();
-        Map<String, ClientExtensionOutput> clientExtensions = new HashMap<>();
+        AuthenticationExtensionsClientOutputs clientExtensions = new AuthenticationExtensionsClientOutputs();
         WebAuthnRegistrationRequestValidationResponse instanceA =
                 new WebAuthnRegistrationRequestValidationResponse(clientData, attestationObject, clientExtensions);
         WebAuthnRegistrationRequestValidationResponse instanceB =
@@ -31,12 +28,12 @@ public class WebAuthnRegistrationRequestValidationResponseTest {
     public void getter_test(){
         CollectedClientData clientData = TestUtil.createClientData(ClientDataType.CREATE);
         AttestationObject attestationObject = TestUtil.createAttestationObjectWithFIDOU2FAttestationStatement();
-        Map<String, ClientExtensionOutput> clientExtensions = new HashMap<>();
+        AuthenticationExtensionsClientOutputs clientExtensions = new AuthenticationExtensionsClientOutputs();
         WebAuthnRegistrationRequestValidationResponse instance =
                 new WebAuthnRegistrationRequestValidationResponse(clientData, attestationObject, clientExtensions);
 
         assertThat(instance.getCollectedClientData()).isEqualTo(clientData);
         assertThat(instance.getAttestationObject()).isEqualTo(attestationObject);
-        assertThat(instance.getClientExtensionOutputs()).isEqualTo(clientExtensions);
+        assertThat(instance.getRegistrationExtensionsClientOutputs()).isEqualTo(clientExtensions);
     }
 }

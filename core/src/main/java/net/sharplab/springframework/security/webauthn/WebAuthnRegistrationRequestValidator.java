@@ -42,7 +42,7 @@ public class WebAuthnRegistrationRequestValidator {
         return new WebAuthnRegistrationRequestValidationResponse(
                 response.getCollectedClientData(),
                 response.getAttestationObject(),
-                response.getClientExtensionOutputs());
+                response.getRegistrationExtensionsClientOutputs());
     }
 
     WebAuthnRegistrationContext createRegistrationContext(HttpServletRequest request,

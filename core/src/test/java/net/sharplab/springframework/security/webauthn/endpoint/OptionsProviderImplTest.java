@@ -1,6 +1,7 @@
-package net.sharplab.springframework.security.webauthn.options;
+package net.sharplab.springframework.security.webauthn.endpoint;
 
 import com.webauthn4j.authenticator.Authenticator;
+import com.webauthn4j.request.PublicKeyCredentialParameters;
 import com.webauthn4j.response.client.challenge.Challenge;
 import com.webauthn4j.response.client.challenge.DefaultChallenge;
 import com.webauthn4j.util.Base64UrlUtil;
@@ -8,10 +9,11 @@ import net.sharplab.springframework.security.webauthn.challenge.ChallengeReposit
 import net.sharplab.springframework.security.webauthn.userdetails.WebAuthnUserDetails;
 import net.sharplab.springframework.security.webauthn.userdetails.WebAuthnUserDetailsService;
 import org.assertj.core.util.Lists;
+
 import org.junit.Test;
 import org.springframework.mock.web.MockHttpServletRequest;
 
-import java.util.ArrayList;
+import java.math.BigInteger;
 import java.util.Collections;
 import java.util.List;
 
@@ -34,6 +36,7 @@ public class OptionsProviderImplTest {
         MockHttpServletRequest mockRequest = new MockHttpServletRequest();
 
         when(userDetailsService.loadUserByUsername(any())).thenReturn(userDetails);
+        doReturn(new byte[0]).when(userDetails).getUserHandle();
         doReturn(authenticators).when(userDetails).getAuthenticators();
         when(authenticator.getAttestedCredentialData().getCredentialId()).thenReturn(credentialId);
         when(challengeRepository.loadOrGenerateChallenge(mockRequest)).thenReturn(challenge);
@@ -42,7 +45,7 @@ public class OptionsProviderImplTest {
         optionsProvider.setRpId("example.com");
         optionsProvider.setRpName("rpName");
 
-        Options options = optionsProvider.provide(mockRequest,"dummy");
+        Options options = optionsProvider.provide(mockRequest,"dummy", "dummy");
         assertThat(options.getRelyingParty().getId()).isEqualTo("example.com");
         assertThat(options.getRelyingParty().getName()).isEqualTo("rpName");
         assertThat(options.getChallenge()).isEqualTo(challenge);
@@ -60,11 +63,11 @@ public class OptionsProviderImplTest {
         assertThat(optionsProvider.getRpId()).isEqualTo("example.com");
         optionsProvider.setRpName("example");
         assertThat(optionsProvider.getRpName()).isEqualTo("example");
-        List publicKeyCredParams = Lists.emptyList();
-        optionsProvider.setPublicKeyCredParams(publicKeyCredParams);
-        assertThat(optionsProvider.getPublicKeyCredParams()).isEqualTo(publicKeyCredParams);
-        optionsProvider.setTimeout(10000);
-        assertThat(optionsProvider.getTimeout()).isEqualTo(10000);
+        List<PublicKeyCredentialParameters> publicKeyCredParams = Lists.emptyList();
+        optionsProvider.setPubKeyCredParams(publicKeyCredParams);
+        assertThat(optionsProvider.getPubKeyCredParams()).isEqualTo(publicKeyCredParams);
+        optionsProvider.setRegistrationTimeout(BigInteger.valueOf(10000));
+        assertThat(optionsProvider.getRegistrationTimeout()).isEqualTo(BigInteger.valueOf(10000));
 
         optionsProvider.setUsernameParameter("usernameParameter");
         assertThat(optionsProvider.getUsernameParameter()).isEqualTo("usernameParameter");

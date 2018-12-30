@@ -94,6 +94,7 @@ public class WebAuthnAuthenticationProviderTest {
         GrantedAuthority grantedAuthority = new SimpleGrantedAuthority("ROLE_ADMIN");
         WebAuthnAuthenticator authenticator = mock(WebAuthnAuthenticator.class, RETURNS_DEEP_STUBS);
         WebAuthnUserDetailsImpl user = new WebAuthnUserDetailsImpl(
+                new byte[0],
                 "dummy",
                 "dummy",
                 Collections.singletonList(authenticator),
@@ -128,6 +129,7 @@ public class WebAuthnAuthenticationProviderTest {
         GrantedAuthority grantedAuthority = new SimpleGrantedAuthority("ROLE_ADMIN");
         WebAuthnAuthenticator authenticator = mock(WebAuthnAuthenticator.class, RETURNS_DEEP_STUBS);
         WebAuthnUserDetailsImpl user = new WebAuthnUserDetailsImpl(
+                new byte[0],
                 "dummy",
                 "dummy",
                 Collections.singletonList(authenticator),
@@ -157,6 +159,7 @@ public class WebAuthnAuthenticationProviderTest {
         GrantedAuthority grantedAuthority = new SimpleGrantedAuthority("ROLE_ADMIN");
         WebAuthnAuthenticator authenticator = mock(WebAuthnAuthenticator.class, RETURNS_DEEP_STUBS);
         WebAuthnUserDetailsImpl user = new WebAuthnUserDetailsImpl(
+                new byte[0],
                 "dummy",
                 "dummy",
                 Collections.singletonList(authenticator),
@@ -294,6 +297,7 @@ public class WebAuthnAuthenticationProviderTest {
         GrantedAuthority grantedAuthority = new SimpleGrantedAuthority("ROLE_ADMIN");
         Authenticator authenticator = new AuthenticatorImpl(null, null, 0);
         WebAuthnUserDetailsImpl userDetails = new WebAuthnUserDetailsImpl(
+                new byte[0],
                 "dummy",
                 "dummy",
                 Collections.singletonList(authenticator),
@@ -306,6 +310,7 @@ public class WebAuthnAuthenticationProviderTest {
         GrantedAuthority grantedAuthority = new SimpleGrantedAuthority("ROLE_ADMIN");
         Authenticator authenticator = new AuthenticatorImpl(null, null, 0);
         WebAuthnUserDetailsImpl userDetails = new WebAuthnUserDetailsImpl(
+                new byte[0],
                 "dummy",
                 "dummy",
                 Collections.singletonList(authenticator),
@@ -323,6 +328,7 @@ public class WebAuthnAuthenticationProviderTest {
         GrantedAuthority grantedAuthority = new SimpleGrantedAuthority("ROLE_ADMIN");
         Authenticator authenticator = new AuthenticatorImpl(null, null, 0);
         WebAuthnUserDetailsImpl userDetails = new WebAuthnUserDetailsImpl(
+                new byte[0],
                 "dummy",
                 "dummy",
                 Collections.singletonList(authenticator),
@@ -340,6 +346,7 @@ public class WebAuthnAuthenticationProviderTest {
         GrantedAuthority grantedAuthority = new SimpleGrantedAuthority("ROLE_ADMIN");
         Authenticator authenticator = new AuthenticatorImpl(null, null, 0);
         WebAuthnUserDetailsImpl userDetails = new WebAuthnUserDetailsImpl(
+                new byte[0],
                 "dummy",
                 "dummy",
                 Collections.singletonList(authenticator),
@@ -357,6 +364,7 @@ public class WebAuthnAuthenticationProviderTest {
         GrantedAuthority grantedAuthority = new SimpleGrantedAuthority("ROLE_ADMIN");
         Authenticator authenticator = new AuthenticatorImpl(null, null, 0);
         WebAuthnUserDetailsImpl userDetails = new WebAuthnUserDetailsImpl(
+                new byte[0],
                 "dummy",
                 "dummy",
                 Collections.singletonList(authenticator),

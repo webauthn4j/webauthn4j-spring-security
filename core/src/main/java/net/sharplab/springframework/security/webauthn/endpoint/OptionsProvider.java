@@ -14,22 +14,34 @@
  * limitations under the License.
  */
 
-package net.sharplab.springframework.security.webauthn.options;
+package net.sharplab.springframework.security.webauthn.endpoint;
 
 import com.webauthn4j.request.PublicKeyCredentialParameters;
 
 import javax.servlet.http.HttpServletRequest;
+import java.math.BigInteger;
 import java.util.List;
 
 public interface OptionsProvider {
 
+
     /**
-     * provides Options. If <code>username</code> is <code>null</code>, <code>credentials</code> are not populated.
+     * provides AttestationOptions. If <code>username</code> is <code>null</code>, <code>user</code>, <code>credentials</code> are not populated.
      * @param request request
      * @param username username
+     * @param renewChallenge if true, challenge is renewed even though a challenge is already stored
      * @return {@link Options} instance
      */
-    Options provide(HttpServletRequest request, String username);
+    AttestationOptions getAttestationOptions(HttpServletRequest request, String username, boolean renewChallenge);
+
+    /**
+     * provides AssertionOptions. If <code>username</code> is <code>null</code>, <code>credentials</code> are not populated.
+     * @param request request
+     * @param username username
+     * @param renewChallenge if true, challenge is renewed even though a challenge is already stored
+     * @return {@link Options} instance
+     */
+    AssertionOptions getAssertionOptions(HttpServletRequest request, String username, boolean renewChallenge);
 
     /**
      * returns effective rpId based on request origin and configured <code>rpId</code>.
@@ -62,16 +74,29 @@ public interface OptionsProvider {
     void setRpName(String rpName);
 
     /**
+     * returns rpIcon
+     * @return rpIcon
+     */
+    String getRpIcon();
+
+    void setRpIcon(String rpIcon);
+
+    /**
      * returns {@link PublicKeyCredentialParameters} list
      * @return {@link PublicKeyCredentialParameters} list
      */
-    List<PublicKeyCredentialParameters> getPublicKeyCredParams();
+    List<PublicKeyCredentialParameters> getPubKeyCredParams();
 
     /**
-     * configures publicKeyCredParams
-     * @param publicKeyCredParams {@link PublicKeyCredentialParameters} list
+     * configures pubKeyCredParams
+     * @param pubKeyCredParams {@link PublicKeyCredentialParameters} list
      */
-    void setPublicKeyCredParams(List<PublicKeyCredentialParameters> publicKeyCredParams);
+    void setPubKeyCredParams(List<PublicKeyCredentialParameters> pubKeyCredParams);
+
+    BigInteger getRegistrationTimeout();
+    void setRegistrationTimeout(BigInteger registrationTimeout);
+    BigInteger getAuthenticationTimeout();
+    void setAuthenticationTimeout(BigInteger authenticationTimeout);
 
     String getUsernameParameter();
 

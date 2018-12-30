@@ -31,4 +31,5 @@ public interface WebAuthnUserDetails extends MFAUserDetails {
 
     void setSingleFactorAuthenticationAllowed(boolean singleFactorAuthenticationAllowed);
 
+    byte[] getUserHandle();
 }

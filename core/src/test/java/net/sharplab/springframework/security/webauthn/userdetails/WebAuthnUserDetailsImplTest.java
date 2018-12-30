@@ -18,6 +18,7 @@ public class WebAuthnUserDetailsImplTest {
         GrantedAuthority grantedAuthority = new SimpleGrantedAuthority("ROLE_ADMIN");
         Authenticator authenticator = new AuthenticatorImpl(null, null, 0);
         WebAuthnUserDetailsImpl userDetails = new WebAuthnUserDetailsImpl(
+                new byte[0],
                 "dummy",
                 "dummy",
                 Collections.singletonList(authenticator),

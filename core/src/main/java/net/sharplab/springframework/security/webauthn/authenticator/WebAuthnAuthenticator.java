@@ -1,6 +1,8 @@
 package net.sharplab.springframework.security.webauthn.authenticator;
 
 import com.webauthn4j.authenticator.AuthenticatorImpl;
+import com.webauthn4j.response.attestation.authenticator.AttestedCredentialData;
+import com.webauthn4j.response.attestation.statement.AttestationStatement;
 
 import java.util.Objects;
 
@@ -14,7 +16,8 @@ public class WebAuthnAuthenticator extends AuthenticatorImpl {
      *
      * @param name authenticator's friendly name
      */
-    public WebAuthnAuthenticator(String name) {
+    public WebAuthnAuthenticator(String name, AttestedCredentialData attestedCredentialData, AttestationStatement attestationStatement, long counter) {
+        super(attestedCredentialData, attestationStatement, counter);
         this.setName(name);
     }
 
