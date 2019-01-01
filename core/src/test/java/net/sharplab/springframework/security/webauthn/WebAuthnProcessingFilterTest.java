@@ -86,7 +86,7 @@ public class WebAuthnProcessingFilterTest {
     public void attemptAuthentication_test_with_credential() {
 
         String credentialId = "AAhdofeLeQWG6Y6gwwytZKNCDFB1WaIgqDsOwVYR5UavKQhAti4ic9_Dz-_CQEPpN0To6hiDRSCvmFHXaG6HK5yvvhm4DJRVJXzSvZiq5NefbXSYIr2uUaKbsoBe1lulhNdL9dRt6Dkkp38uq02YIR5CDaoxD-HQgMsS667aWlhHVKE884Sq0d1VVgGTDb1ds-Py_H7CDqk9SDErb8-XtQ9L";
-        String clientData = "eyJjaGFsbGVuZ2UiOiJGT3JHWklmSFJfeURaSklydTVPdXBBIiwiaGFzaEFsZyI6IlMyNTYiLCJvcmlnaW4iOiJsb2NhbGhvc3QifQ";
+        String clientDataJSON = "eyJjaGFsbGVuZ2UiOiJGT3JHWklmSFJfeURaSklydTVPdXBBIiwiaGFzaEFsZyI6IlMyNTYiLCJvcmlnaW4iOiJsb2NhbGhvc3QifQ";
         String authenticatorData = "SZYN5YgOjGh0NBcPZHZgW4_krrmihjLHmVzzuoMdl2MBAAABaQ";
         String signature = "MEUCIGBYMUVg2KkMG7V7UEsGxUeKVaO8x587JyVoZkk6FmsgAiEA5XRKxlYe2Vpwn-JYEJhcEVJ3-0nYFG-JfheOk4rA3dc";
         String clientExtensionsJSON = "";
@@ -98,7 +98,7 @@ public class WebAuthnProcessingFilterTest {
         mockHttpServletRequest.setMethod("POST");
         mockHttpServletRequest.setServerName("example.com");
         mockHttpServletRequest.setParameter("credentialId", credentialId);
-        mockHttpServletRequest.setParameter("clientData", clientData);
+        mockHttpServletRequest.setParameter("clientDataJSON", clientDataJSON);
         mockHttpServletRequest.setParameter("authenticatorData", authenticatorData);
         mockHttpServletRequest.setParameter("signature", signature);
         mockHttpServletRequest.setParameter("clientExtensionsJSON", clientExtensionsJSON);
@@ -115,7 +115,7 @@ public class WebAuthnProcessingFilterTest {
         assertThat(authenticationToken.getPrincipal()).isNull();
         assertThat(authenticationToken.getCredentials()).isInstanceOf(WebAuthnAuthenticationRequest.class);
         assertThat(authenticationToken.getCredentials().getCredentialId()).isEqualTo(Base64UrlUtil.decode(credentialId));
-        assertThat(authenticationToken.getCredentials().getClientDataJSON()).isEqualTo(Base64UrlUtil.decode(clientData));
+        assertThat(authenticationToken.getCredentials().getClientDataJSON()).isEqualTo(Base64UrlUtil.decode(clientDataJSON));
         assertThat(authenticationToken.getCredentials().getAuthenticatorData()).isEqualTo(Base64UrlUtil.decode(authenticatorData));
         assertThat(authenticationToken.getCredentials().getSignature()).isEqualTo(Base64UrlUtil.decode(signature));
         assertThat(authenticationToken.getCredentials().getClientExtensionsJSON()).isEqualTo(clientExtensionsJSON);
@@ -127,7 +127,7 @@ public class WebAuthnProcessingFilterTest {
     public void attemptAuthentication_test_with_get_method() {
 
         String credentialId = "AAhdofeLeQWG6Y6gwwytZKNCDFB1WaIgqDsOwVYR5UavKQhAti4ic9_Dz-_CQEPpN0To6hiDRSCvmFHXaG6HK5yvvhm4DJRVJXzSvZiq5NefbXSYIr2uUaKbsoBe1lulhNdL9dRt6Dkkp38uq02YIR5CDaoxD-HQgMsS667aWlhHVKE884Sq0d1VVgGTDb1ds-Py_H7CDqk9SDErb8-XtQ9L";
-        String clientData = "eyJjaGFsbGVuZ2UiOiJGT3JHWklmSFJfeURaSklydTVPdXBBIiwiaGFzaEFsZyI6IlMyNTYiLCJvcmlnaW4iOiJsb2NhbGhvc3QifQ";
+        String clientDataJSON = "eyJjaGFsbGVuZ2UiOiJGT3JHWklmSFJfeURaSklydTVPdXBBIiwiaGFzaEFsZyI6IlMyNTYiLCJvcmlnaW4iOiJsb2NhbGhvc3QifQ";
         String authenticatorData = "SZYN5YgOjGh0NBcPZHZgW4_krrmihjLHmVzzuoMdl2MBAAABaQ";
         String signature = "MEUCIGBYMUVg2KkMG7V7UEsGxUeKVaO8x587JyVoZkk6FmsgAiEA5XRKxlYe2Vpwn-JYEJhcEVJ3-0nYFG-JfheOk4rA3dc";
         String clientExtensionsJSON = "";
@@ -139,7 +139,7 @@ public class WebAuthnProcessingFilterTest {
         mockHttpServletRequest.setMethod("GET");
         mockHttpServletRequest.setServerName("example.com");
         mockHttpServletRequest.setParameter("credentialId", credentialId);
-        mockHttpServletRequest.setParameter("clientData", clientData);
+        mockHttpServletRequest.setParameter("clientDataJSON", clientDataJSON);
         mockHttpServletRequest.setParameter("authenticatorData", authenticatorData);
         mockHttpServletRequest.setParameter("signature", signature);
         mockHttpServletRequest.setParameter("clientExtensionsJSON", clientExtensionsJSON);
@@ -156,7 +156,7 @@ public class WebAuthnProcessingFilterTest {
         assertThat(authenticationToken.getPrincipal()).isNull();
         assertThat(authenticationToken.getCredentials()).isInstanceOf(WebAuthnAuthenticationRequest.class);
         assertThat(authenticationToken.getCredentials().getCredentialId()).isEqualTo(Base64UrlUtil.decode(credentialId));
-        assertThat(authenticationToken.getCredentials().getClientDataJSON()).isEqualTo(Base64UrlUtil.decode(clientData));
+        assertThat(authenticationToken.getCredentials().getClientDataJSON()).isEqualTo(Base64UrlUtil.decode(clientDataJSON));
         assertThat(authenticationToken.getCredentials().getAuthenticatorData()).isEqualTo(Base64UrlUtil.decode(authenticatorData));
         assertThat(authenticationToken.getCredentials().getSignature()).isEqualTo(Base64UrlUtil.decode(signature));
         assertThat(authenticationToken.getCredentials().getClientExtensionsJSON()).isEqualTo(clientExtensionsJSON);
@@ -171,13 +171,13 @@ public class WebAuthnProcessingFilterTest {
         String usernameParameter = "param_username";
         String passwordParameter = "param_password";
         String credentialIdParameter = "param_credentialId";
-        String clientDataParameter = "param_clientData";
+        String clientDataJSONParameter = "param_clientDataJSON";
         String authenticatorDataParameter = "param_authenticatorData";
         String signatureParameter = "param_signature";
         String clientExtensionsJSONParameter = "param_clientExtensionsJSON";
 
         String credentialId = "AAhdofeLeQWG6Y6gwwytZKNCDFB1WaIgqDsOwVYR5UavKQhAti4ic9_Dz-_CQEPpN0To6hiDRSCvmFHXaG6HK5yvvhm4DJRVJXzSvZiq5NefbXSYIr2uUaKbsoBe1lulhNdL9dRt6Dkkp38uq02YIR5CDaoxD-HQgMsS667aWlhHVKE884Sq0d1VVgGTDb1ds-Py_H7CDqk9SDErb8-XtQ9L";
-        String clientData = "eyJjaGFsbGVuZ2UiOiJGT3JHWklmSFJfeURaSklydTVPdXBBIiwiaGFzaEFsZyI6IlMyNTYiLCJvcmlnaW4iOiJsb2NhbGhvc3QifQ";
+        String clientDataJSON = "eyJjaGFsbGVuZ2UiOiJGT3JHWklmSFJfeURaSklydTVPdXBBIiwiaGFzaEFsZyI6IlMyNTYiLCJvcmlnaW4iOiJsb2NhbGhvc3QifQ";
         String authenticatorData = "SZYN5YgOjGh0NBcPZHZgW4_krrmihjLHmVzzuoMdl2MBAAABaQ";
         String signature = "MEUCIGBYMUVg2KkMG7V7UEsGxUeKVaO8x587JyVoZkk6FmsgAiEA5XRKxlYe2Vpwn-JYEJhcEVJ3-0nYFG-JfheOk4rA3dc";
         String clientExtensionsJSON = "";
@@ -188,7 +188,7 @@ public class WebAuthnProcessingFilterTest {
         target.setUsernameParameter(usernameParameter);
         target.setPasswordParameter(passwordParameter);
         target.setCredentialIdParameter(credentialIdParameter);
-        target.setClientDataParameter(clientDataParameter);
+        target.setClientDataJSONParameter(clientDataJSONParameter);
         target.setAuthenticatorDataParameter(authenticatorDataParameter);
         target.setSignatureParameter(signatureParameter);
         target.setClientExtensionsJSONParameter(clientExtensionsJSONParameter);
@@ -196,7 +196,7 @@ public class WebAuthnProcessingFilterTest {
         mockHttpServletRequest.setMethod("POST");
         mockHttpServletRequest.setServerName("example.com");
         mockHttpServletRequest.setParameter(credentialIdParameter, credentialId);
-        mockHttpServletRequest.setParameter(clientDataParameter, clientData);
+        mockHttpServletRequest.setParameter(clientDataJSONParameter, clientDataJSON);
         mockHttpServletRequest.setParameter(authenticatorDataParameter, authenticatorData);
         mockHttpServletRequest.setParameter(signatureParameter, signature);
         mockHttpServletRequest.setParameter(clientExtensionsJSONParameter, clientExtensionsJSON);
@@ -211,7 +211,7 @@ public class WebAuthnProcessingFilterTest {
         assertThat(target.getUsernameParameter()).isEqualTo(usernameParameter);
         assertThat(target.getPasswordParameter()).isEqualTo(passwordParameter);
         assertThat(target.getCredentialIdParameter()).isEqualTo(credentialIdParameter);
-        assertThat(target.getClientDataParameter()).isEqualTo(clientDataParameter);
+        assertThat(target.getClientDataJSONParameter()).isEqualTo(clientDataJSONParameter);
         assertThat(target.getAuthenticatorDataParameter()).isEqualTo(authenticatorDataParameter);
         assertThat(target.getSignatureParameter()).isEqualTo(signatureParameter);
         assertThat(target.getClientExtensionsJSONParameter()).isEqualTo(clientExtensionsJSONParameter);
@@ -223,7 +223,7 @@ public class WebAuthnProcessingFilterTest {
         assertThat(authenticationToken.getPrincipal()).isNull();
         assertThat(authenticationToken.getCredentials()).isInstanceOf(WebAuthnAuthenticationRequest.class);
         assertThat(authenticationToken.getCredentials().getCredentialId()).isEqualTo(Base64UrlUtil.decode(credentialId));
-        assertThat(authenticationToken.getCredentials().getClientDataJSON()).isEqualTo(Base64UrlUtil.decode(clientData));
+        assertThat(authenticationToken.getCredentials().getClientDataJSON()).isEqualTo(Base64UrlUtil.decode(clientDataJSON));
         assertThat(authenticationToken.getCredentials().getAuthenticatorData()).isEqualTo(Base64UrlUtil.decode(authenticatorData));
         assertThat(authenticationToken.getCredentials().getSignature()).isEqualTo(Base64UrlUtil.decode(signature));
         assertThat(authenticationToken.getCredentials().getClientExtensionsJSON()).isEqualTo(clientExtensionsJSON);

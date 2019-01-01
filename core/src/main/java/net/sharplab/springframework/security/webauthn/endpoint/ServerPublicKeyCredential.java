@@ -12,11 +12,11 @@ public class ServerPublicKeyCredential<T extends ServerAuthenticatorResponse> {
     private String id;
     private PublicKeyCredentialType type = PublicKeyCredentialType.PUBLIC_KEY;
     private T response;
-    private AuthenticationExtensionsClientOutputs clientExtensionResults;
+    private String clientExtensionResults;
 
     public ServerPublicKeyCredential(
             String id, PublicKeyCredentialType type, T response,
-            AuthenticationExtensionsClientOutputs clientExtensionResults) {
+            String clientExtensionResults) {
         this.id = id;
         this.type = type;
         this.response = response;
@@ -68,12 +68,12 @@ public class ServerPublicKeyCredential<T extends ServerAuthenticatorResponse> {
     }
 
     @JsonGetter
-    public AuthenticationExtensionsClientOutputs getClientExtensionResults() {
+    public String getClientExtensionResults() {
         return clientExtensionResults;
     }
 
     @JsonSetter
-    private void setClientExtensionResults(AuthenticationExtensionsClientOutputs clientExtensionResults) {
+    private void setClientExtensionResults(String clientExtensionResults) {
         this.clientExtensionResults = clientExtensionResults;
     }
 

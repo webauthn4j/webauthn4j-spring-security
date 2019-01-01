@@ -44,7 +44,7 @@ public class WebAuthnProcessingFilter extends UsernamePasswordAuthenticationFilt
     // ~ Static fields/initializers
     // =====================================================================================
     public static final String SPRING_SECURITY_FORM_CREDENTIAL_ID_KEY = "credentialId";
-    public static final String SPRING_SECURITY_FORM_CLIENTDATA_KEY = "clientData";
+    public static final String SPRING_SECURITY_FORM_CLIENTDATA_JSON_KEY = "clientDataJSON";
     public static final String SPRING_SECURITY_FORM_AUTHENTICATOR_DATA_KEY = "authenticatorData";
     public static final String SPRING_SECURITY_FORM_SIGNATURE_KEY = "signature";
     public static final String SPRING_SECURITY_FORM_CLIENT_EXTENSIONS_JSON_KEY = "clientExtensionsJSON";
@@ -54,7 +54,7 @@ public class WebAuthnProcessingFilter extends UsernamePasswordAuthenticationFilt
     private List<GrantedAuthority> authorities;
 
     private String credentialIdParameter = SPRING_SECURITY_FORM_CREDENTIAL_ID_KEY;
-    private String clientDataParameter = SPRING_SECURITY_FORM_CLIENTDATA_KEY;
+    private String clientDataJSONParameter = SPRING_SECURITY_FORM_CLIENTDATA_JSON_KEY;
     private String authenticatorDataParameter = SPRING_SECURITY_FORM_AUTHENTICATOR_DATA_KEY;
     private String signatureParameter = SPRING_SECURITY_FORM_SIGNATURE_KEY;
     private String clientExtensionsJSONParameter = SPRING_SECURITY_FORM_CLIENT_EXTENSIONS_JSON_KEY;
@@ -97,7 +97,7 @@ public class WebAuthnProcessingFilter extends UsernamePasswordAuthenticationFilt
         String password = obtainPassword(request);
 
         String credentialId = obtainCredentialId(request);
-        String clientData = obtainClientData(request);
+        String clientDataJSON = obtainClientDataJSON(request);
         String authenticatorData = obtainAuthenticatorData(request);
         String signature = obtainSignatureData(request);
         String clientExtensionsJSON = obtainClientExtensionsJSON(request);
@@ -107,7 +107,7 @@ public class WebAuthnProcessingFilter extends UsernamePasswordAuthenticationFilt
             authRequest = new UsernamePasswordAuthenticationToken(username, password, authorities);
         } else {
             byte[] rawId = Base64Utils.decodeFromUrlSafeString(credentialId);
-            byte[] rawClientData = Base64Utils.decodeFromUrlSafeString(clientData);
+            byte[] rawClientData = Base64Utils.decodeFromUrlSafeString(clientDataJSON);
             byte[] rawAuthenticatorData = Base64Utils.decodeFromUrlSafeString(authenticatorData);
             byte[] signatureBytes = Base64Utils.decodeFromUrlSafeString(signature);
 
@@ -154,12 +154,12 @@ public class WebAuthnProcessingFilter extends UsernamePasswordAuthenticationFilt
         this.credentialIdParameter = credentialIdParameter;
     }
 
-    public String getClientDataParameter() {
-        return clientDataParameter;
+    public String getClientDataJSONParameter() {
+        return clientDataJSONParameter;
     }
 
-    public void setClientDataParameter(String clientDataParameter) {
-        this.clientDataParameter = clientDataParameter;
+    public void setClientDataJSONParameter(String clientDataJSONParameter) {
+        this.clientDataJSONParameter = clientDataJSONParameter;
     }
 
     public String getAuthenticatorDataParameter() {
@@ -195,8 +195,8 @@ public class WebAuthnProcessingFilter extends UsernamePasswordAuthenticationFilt
     }
 
 
-    private String obtainClientData(HttpServletRequest request) {
-        return request.getParameter(clientDataParameter);
+    private String obtainClientDataJSON(HttpServletRequest request) {
+        return request.getParameter(clientDataJSONParameter);
     }
 
     private String obtainCredentialId(HttpServletRequest request) {

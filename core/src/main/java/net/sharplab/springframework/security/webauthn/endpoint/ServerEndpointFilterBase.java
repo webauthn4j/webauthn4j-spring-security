@@ -1,8 +1,11 @@
 package net.sharplab.springframework.security.webauthn.endpoint;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.webauthn4j.registry.Registry;
 import org.springframework.context.support.MessageSourceAccessor;
-import org.springframework.security.authentication.*;
+import org.springframework.security.authentication.AuthenticationTrustResolver;
+import org.springframework.security.authentication.AuthenticationTrustResolverImpl;
+import org.springframework.security.authentication.MFATokenEvaluator;
+import org.springframework.security.authentication.MFATokenEvaluatorImpl;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.SpringSecurityMessageSource;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -15,7 +18,6 @@ import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 public abstract class ServerEndpointFilterBase extends GenericFilterBean {
@@ -27,17 +29,18 @@ public abstract class ServerEndpointFilterBase extends GenericFilterBean {
      */
     protected String filterProcessesUrl;
     protected MessageSourceAccessor messages = SpringSecurityMessageSource.getAccessor();
+    protected Registry registry;
+    protected ServerEndpointFilterUtil serverEndpointFilterUtil;
 
     private AuthenticationTrustResolver trustResolver;
     private MFATokenEvaluator mfaTokenEvaluator;
 
-    protected ObjectMapper objectMapper;
-
     public ServerEndpointFilterBase(
             String filterProcessesUrl,
-            ObjectMapper objectMapper) {
+            Registry registry) {
         this.filterProcessesUrl = filterProcessesUrl;
-        this.objectMapper = objectMapper;
+        this.registry = registry;
+        this.serverEndpointFilterUtil = new ServerEndpointFilterUtil(registry);
         this.trustResolver = new AuthenticationTrustResolverImpl();
         this.mfaTokenEvaluator = new MFATokenEvaluatorImpl();
         checkConfig();
@@ -52,7 +55,7 @@ public abstract class ServerEndpointFilterBase extends GenericFilterBean {
 
     private void checkConfig() {
         Assert.notNull(filterProcessesUrl, "filterProcessesUrl must not be null");
-        Assert.notNull(objectMapper, "objectMapper must not be null");
+        Assert.notNull(registry, "registry must not be null");
         Assert.notNull(trustResolver, "trustResolver must not be null");
         Assert.notNull(mfaTokenEvaluator, "mfaTokenEvaluator must not be null");
     }
@@ -68,36 +71,14 @@ public abstract class ServerEndpointFilterBase extends GenericFilterBean {
 
         try {
             ServerResponse serverResponse = processRequest(fi.getRequest());
-            writeResponse(fi.getResponse(), serverResponse);
+            serverEndpointFilterUtil.writeResponse(fi.getResponse(), serverResponse);
         } catch (RuntimeException e) {
-            writeErrorResponse(fi.getResponse(), e);
+            serverEndpointFilterUtil.writeErrorResponse(fi.getResponse(), e);
         }
 
     }
 
     protected abstract ServerResponse processRequest(HttpServletRequest request);
-
-    void writeResponse(HttpServletResponse httpServletResponse, ServerResponse response) throws IOException {
-        String responseText = objectMapper.writeValueAsString(response);
-        httpServletResponse.setContentType("application/json");
-        httpServletResponse.getWriter().print(responseText);
-    }
-
-    void writeErrorResponse(HttpServletResponse httpServletResponse, RuntimeException e) throws IOException {
-        ErrorResponse errorResponse;
-        int statusCode;
-        if (e instanceof InsufficientAuthenticationException) {
-            errorResponse = new ErrorResponse("Anonymous access is prohibited");
-            statusCode = HttpServletResponse.SC_FORBIDDEN;
-        } else {
-            errorResponse = new ErrorResponse("The server encountered an internal error");
-            statusCode = HttpServletResponse.SC_INTERNAL_SERVER_ERROR;
-        }
-        String errorResponseText = objectMapper.writeValueAsString(errorResponse);
-        httpServletResponse.setContentType("application/json");
-        httpServletResponse.getWriter().print(errorResponseText);
-        httpServletResponse.setStatus(statusCode);
-    }
 
     /**
      * The filter will be used in case the URL of the request contains the FILTER_URL.
@@ -127,14 +108,6 @@ public abstract class ServerEndpointFilterBase extends GenericFilterBean {
     public void setFilterProcessesUrl(String filterProcessesUrl) {
         Assert.hasText(filterProcessesUrl, "filterProcessesUrl parameter must not be empty or null");
         this.filterProcessesUrl = filterProcessesUrl;
-    }
-
-    public ObjectMapper getObjectMapper() {
-        return objectMapper;
-    }
-
-    public void setObjectMapper(ObjectMapper objectMapper) {
-        this.objectMapper = objectMapper;
     }
 
     public AuthenticationTrustResolver getTrustResolver() {

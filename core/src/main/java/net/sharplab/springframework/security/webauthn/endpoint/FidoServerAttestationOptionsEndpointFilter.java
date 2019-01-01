@@ -1,6 +1,8 @@
 package net.sharplab.springframework.security.webauthn.endpoint;
 
 import com.webauthn4j.registry.Registry;
+import com.webauthn4j.response.client.challenge.Challenge;
+import com.webauthn4j.response.client.challenge.DefaultChallenge;
 import com.webauthn4j.util.Base64UrlUtil;
 import org.springframework.security.authentication.AuthenticationServiceException;
 
@@ -27,7 +29,7 @@ public class FidoServerAttestationOptionsEndpointFilter extends ServerEndpointFi
     private OptionsProvider optionsProvider;
 
     public FidoServerAttestationOptionsEndpointFilter(Registry registry, OptionsProvider optionsProvider){
-        super(FILTER_URL, registry.getJsonMapper());
+        super(FILTER_URL, registry);
         this.optionsProvider = optionsProvider;
     }
 
@@ -38,13 +40,14 @@ public class FidoServerAttestationOptionsEndpointFilter extends ServerEndpointFi
         }
         ServerPublicKeyCredentialCreationOptionsRequest serverRequest;
         try {
-            serverRequest = objectMapper.readValue(request.getInputStream(), ServerPublicKeyCredentialCreationOptionsRequest.class);
+            serverRequest = registry.getJsonMapper().readValue(request.getInputStream(), ServerPublicKeyCredentialCreationOptionsRequest.class);
         } catch (IOException e) {
             throw new UncheckedIOException(e);
         }
         String username = serverRequest.getUsername();
         String displayName = serverRequest.getDisplayName();
-        AttestationOptions attestationOptions = optionsProvider.getAttestationOptions(request, username, true);
+        Challenge challenge = serverEndpointFilterUtil.encodeUsername(new DefaultChallenge(), username);
+        AttestationOptions attestationOptions = optionsProvider.getAttestationOptions(request, username, challenge);
         String userHandle;
         if(attestationOptions.getUser() == null){
             userHandle = Base64UrlUtil.encodeToString(generateUserHandle());

@@ -40,7 +40,7 @@ public class OptionsEndpointFilter extends ServerEndpointFilterBase {
     private OptionsProvider optionsProvider;
 
     public OptionsEndpointFilter(OptionsProvider optionsProvider, Registry registry) {
-        super(FILTER_URL, registry.getJsonMapper());
+        super(FILTER_URL, registry);
         this.optionsProvider = optionsProvider;
     }
 
@@ -48,8 +48,8 @@ public class OptionsEndpointFilter extends ServerEndpointFilterBase {
     @Override
     protected ServerResponse processRequest(HttpServletRequest request) {
         String loginUsername = getLoginUsername();
-        AttestationOptions attestationOptions = optionsProvider.getAttestationOptions(request, loginUsername, false);
-        AssertionOptions assertionOptions = optionsProvider.getAssertionOptions(request, loginUsername, false);
+        AttestationOptions attestationOptions = optionsProvider.getAttestationOptions(request, loginUsername, null);
+        AssertionOptions assertionOptions = optionsProvider.getAssertionOptions(request, loginUsername, null);
         return new Options(
                 attestationOptions.getRelyingParty(),
                 attestationOptions.getUser(),

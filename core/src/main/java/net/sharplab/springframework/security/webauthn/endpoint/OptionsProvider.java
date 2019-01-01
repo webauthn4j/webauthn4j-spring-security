@@ -17,6 +17,7 @@
 package net.sharplab.springframework.security.webauthn.endpoint;
 
 import com.webauthn4j.request.PublicKeyCredentialParameters;
+import com.webauthn4j.response.client.challenge.Challenge;
 
 import javax.servlet.http.HttpServletRequest;
 import java.math.BigInteger;
@@ -29,19 +30,19 @@ public interface OptionsProvider {
      * provides AttestationOptions. If <code>username</code> is <code>null</code>, <code>user</code>, <code>credentials</code> are not populated.
      * @param request request
      * @param username username
-     * @param renewChallenge if true, challenge is renewed even though a challenge is already stored
+     * @param challenge if null, new challenge is generated. Otherwise, specified challenge is used.
      * @return {@link Options} instance
      */
-    AttestationOptions getAttestationOptions(HttpServletRequest request, String username, boolean renewChallenge);
+    AttestationOptions getAttestationOptions(HttpServletRequest request, String username, Challenge challenge);
 
     /**
      * provides AssertionOptions. If <code>username</code> is <code>null</code>, <code>credentials</code> are not populated.
      * @param request request
      * @param username username
-     * @param renewChallenge if true, challenge is renewed even though a challenge is already stored
+     * @param challenge if null, new challenge is generated. Otherwise, specified challenge is used.
      * @return {@link Options} instance
      */
-    AssertionOptions getAssertionOptions(HttpServletRequest request, String username, boolean renewChallenge);
+    AssertionOptions getAssertionOptions(HttpServletRequest request, String username, Challenge challenge);
 
     /**
      * returns effective rpId based on request origin and configured <code>rpId</code>.
@@ -110,9 +111,9 @@ public interface OptionsProvider {
 
     void setCredentialIdParameter(String credentialIdParameter);
 
-    String getClientDataParameter();
+    String getClientDataJSONParameter();
 
-    void setClientDataParameter(String clientDataParameter);
+    void setClientDataJSONParameter(String clientDataJSONParameter);
 
     String getAuthenticatorDataParameter();
 

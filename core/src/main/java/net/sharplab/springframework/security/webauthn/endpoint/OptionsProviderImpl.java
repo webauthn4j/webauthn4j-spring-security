@@ -34,8 +34,10 @@ import org.springframework.util.Assert;
 
 import javax.servlet.http.HttpServletRequest;
 import java.math.BigInteger;
-import java.nio.ByteBuffer;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
 
 import static net.sharplab.springframework.security.webauthn.WebAuthnProcessingFilter.*;
 
@@ -55,7 +57,7 @@ public class OptionsProviderImpl implements OptionsProvider {
     private String usernameParameter = SPRING_SECURITY_FORM_USERNAME_KEY;
     private String passwordParameter = SPRING_SECURITY_FORM_PASSWORD_KEY;
     private String credentialIdParameter = SPRING_SECURITY_FORM_CREDENTIAL_ID_KEY;
-    private String clientDataParameter = SPRING_SECURITY_FORM_CLIENTDATA_KEY;
+    private String clientDataJSONParameter = SPRING_SECURITY_FORM_CLIENTDATA_JSON_KEY;
     private String authenticatorDataParameter = SPRING_SECURITY_FORM_AUTHENTICATOR_DATA_KEY;
     private String signatureParameter = SPRING_SECURITY_FORM_SIGNATURE_KEY;
     private String clientExtensionsJSONParameter = SPRING_SECURITY_FORM_CLIENT_EXTENSIONS_JSON_KEY;
@@ -68,7 +70,11 @@ public class OptionsProviderImpl implements OptionsProvider {
         this.challengeRepository = challengeRepository;
     }
 
-    public AttestationOptions getAttestationOptions(HttpServletRequest request, String username, boolean renewChallenge){
+
+    /**
+     * {@inheritDoc}
+     */
+    public AttestationOptions getAttestationOptions(HttpServletRequest request, String username, Challenge challenge){
 
         ServerPublicKeyCredentialUserEntity user;
         Collection<? extends Authenticator> authenticators;
@@ -91,20 +97,18 @@ public class OptionsProviderImpl implements OptionsProvider {
         }
 
         PublicKeyCredentialRpEntity relyingParty = new PublicKeyCredentialRpEntity(getEffectiveRpId(request), rpName, rpIcon);
-        Challenge challenge;
-        if(renewChallenge){
-            challenge = challengeRepository.generateChallenge();
-            challengeRepository.saveChallenge(challenge, request);
+        if(challenge == null){
+            challenge = challengeRepository.loadOrGenerateChallenge(request);
         }
         else {
-            challenge = challengeRepository.loadOrGenerateChallenge(request);
+            challengeRepository.saveChallenge(challenge, request);
         }
 
         return new AttestationOptions(relyingParty, user, challenge, pubKeyCredParams, registrationTimeout,
                 credentials, registrationExtensions);
     }
 
-    public AssertionOptions getAssertionOptions(HttpServletRequest request, String username, boolean renewChallenge){
+    public AssertionOptions getAssertionOptions(HttpServletRequest request, String username, Challenge challenge){
 
         Collection<? extends Authenticator> authenticators;
         try {
@@ -122,17 +126,15 @@ public class OptionsProviderImpl implements OptionsProvider {
             String credentialId = Base64UrlUtil.encodeToString(authenticator.getAttestedCredentialData().getCredentialId());
             credentials.add(new ServerPublicKeyCredentialDescriptor(PublicKeyCredentialType.PUBLIC_KEY, credentialId, null));
         }
-        Challenge challenge;
-        if(renewChallenge){
-            challenge = challengeRepository.generateChallenge();
-            challengeRepository.saveChallenge(challenge, request);
+        if(challenge == null){
+            challenge = challengeRepository.loadOrGenerateChallenge(request);
         }
         else {
-            challenge = challengeRepository.loadOrGenerateChallenge(request);
+            challengeRepository.saveChallenge(challenge, request);
         }
         Parameters parameters
                 = new Parameters(usernameParameter, passwordParameter,
-                clientDataParameter, authenticatorDataParameter, signatureParameter, clientExtensionsJSONParameter);
+                clientDataJSONParameter, authenticatorDataParameter, signatureParameter, clientExtensionsJSONParameter);
 
         return new AssertionOptions(challenge, authenticationTimeout, effectiveRpId, credentials, authenticationExtensions, parameters);
     }
@@ -249,13 +251,13 @@ public class OptionsProviderImpl implements OptionsProvider {
         this.credentialIdParameter = credentialIdParameter;
     }
 
-    public String getClientDataParameter() {
-        return clientDataParameter;
+    public String getClientDataJSONParameter() {
+        return clientDataJSONParameter;
     }
 
-    public void setClientDataParameter(String clientDataParameter) {
-        Assert.hasText(clientDataParameter, "clientDataParameter must not be empty or null");
-        this.clientDataParameter = clientDataParameter;
+    public void setClientDataJSONParameter(String clientDataJSONParameter) {
+        Assert.hasText(clientDataJSONParameter, "clientDataJSONParameter must not be empty or null");
+        this.clientDataJSONParameter = clientDataJSONParameter;
     }
 
     public String getAuthenticatorDataParameter() {

@@ -1,6 +1,8 @@
 package net.sharplab.springframework.security.webauthn.config.configurers;
 
 import com.webauthn4j.registry.Registry;
+import net.sharplab.springframework.security.webauthn.WebAuthnRegistrationRequestValidator;
+import net.sharplab.springframework.security.webauthn.authenticator.FidoServerAuthenticatorService;
 import net.sharplab.springframework.security.webauthn.challenge.ChallengeRepository;
 import net.sharplab.springframework.security.webauthn.challenge.HttpSessionChallengeRepository;
 import net.sharplab.springframework.security.webauthn.endpoint.OptionsProvider;
@@ -64,4 +66,13 @@ class WebAuthnConfigurerUtil {
         return serverPropertyProvider;
     }
 
+    static <H extends HttpSecurityBuilder<H>> FidoServerAuthenticatorService getFidoServerAuthenticatorService(H http) {
+        ApplicationContext applicationContext = http.getSharedObject(ApplicationContext.class);
+        return applicationContext.getBean(FidoServerAuthenticatorService.class);
+    }
+
+    static <H extends HttpSecurityBuilder<H>> WebAuthnRegistrationRequestValidator getWebAuthnRegistrationRequestValidator(H http) {
+        ApplicationContext applicationContext = http.getSharedObject(ApplicationContext.class);
+        return applicationContext.getBean(WebAuthnRegistrationRequestValidator.class);
+    }
 }

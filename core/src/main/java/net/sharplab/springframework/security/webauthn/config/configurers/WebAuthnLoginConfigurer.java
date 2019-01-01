@@ -144,8 +144,8 @@ public final class WebAuthnLoginConfigurer<H extends HttpSecurityBuilder<H>> ext
             this.optionsProvider.setCredentialIdParameter(credentialIdParameter);
         }
         if(clientDataParameter != null){
-            this.getAuthenticationFilter().setClientDataParameter(clientDataParameter);
-            this.optionsProvider.setClientDataParameter(clientDataParameter);
+            this.getAuthenticationFilter().setClientDataJSONParameter(clientDataParameter);
+            this.optionsProvider.setClientDataJSONParameter(clientDataParameter);
         }
         if(authenticatorDataParameter != null){
             this.getAuthenticationFilter().setAuthenticatorDataParameter(authenticatorDataParameter);
@@ -295,13 +295,19 @@ public final class WebAuthnLoginConfigurer<H extends HttpSecurityBuilder<H>> ext
     }
 
     public WebAuthnLoginConfigurer<H> optionsProvider(OptionsProvider optionsProvider){
-        Assert.notNull(optionsProvider, "optionsProvider cannot be null");
+        Assert.notNull(optionsProvider, "optionsProvider must not be null");
         this.optionsProvider = optionsProvider;
         return this;
     }
 
+    public WebAuthnLoginConfigurer<H> registry(Registry registry){
+        Assert.notNull(registry, "registry must not be null");
+        this.registry = registry;
+        return this;
+    }
+
     public WebAuthnLoginConfigurer<H> serverPropertyProvider(ServerPropertyProvider serverPropertyProvider) {
-        Assert.notNull(serverPropertyProvider, "serverPropertyProvider cannot be null");
+        Assert.notNull(serverPropertyProvider, "serverPropertyProvider must not be null");
         this.serverPropertyProvider = serverPropertyProvider;
         return this;
     }

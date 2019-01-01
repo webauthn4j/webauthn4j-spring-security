@@ -82,7 +82,7 @@ public class WebAuthnLoginConfigurerSpringTest {
         mvc
                 .perform(get("/webauthn/options").with(anonymous()))
                 .andExpect(unauthenticated())
-                .andExpect(content().json("{\"relyingParty\":{\"id\":\"example.com\",\"name\":null},\"challenge\":\"aFglXMZdQTKD4krvNzJBzA\",\"pubKeyCredParams\":[],\"credentials\":[],\"parameters\":{\"username\":\"username\",\"password\":\"password\",\"credentialId\":\"credentialId\",\"clientData\":\"clientData\",\"authenticatorData\":\"authenticatorData\",\"signature\":\"signature\",\"clientExtensionsJSON\":\"clientExtensionsJSON\"}}"))
+                .andExpect(content().json("{\"relyingParty\":{\"id\":\"example.com\",\"name\":null},\"challenge\":\"aFglXMZdQTKD4krvNzJBzA\",\"pubKeyCredParams\":[],\"credentials\":[],\"parameters\":{\"username\":\"username\",\"password\":\"password\",\"clientDataJSON\":\"clientDataJSON\",\"authenticatorData\":\"authenticatorData\",\"signature\":\"signature\",\"clientExtensionsJSON\":\"clientExtensionsJSON\"}}"))
                 .andExpect(status().isOk());
     }
 

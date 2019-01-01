@@ -24,7 +24,7 @@ import static org.mockito.Mockito.*;
 public class OptionsProviderImplTest {
 
     @Test
-    public void provide_test() {
+    public void getAttestationOptions_test() {
         Challenge challenge = new DefaultChallenge();
         byte[] credentialId = new byte[]{0x01, 0x23, 0x45};
         WebAuthnUserDetailsService userDetailsService = mock(WebAuthnUserDetailsService.class);
@@ -45,11 +45,11 @@ public class OptionsProviderImplTest {
         optionsProvider.setRpId("example.com");
         optionsProvider.setRpName("rpName");
 
-        Options options = optionsProvider.provide(mockRequest,"dummy", "dummy");
-        assertThat(options.getRelyingParty().getId()).isEqualTo("example.com");
-        assertThat(options.getRelyingParty().getName()).isEqualTo("rpName");
-        assertThat(options.getChallenge()).isEqualTo(challenge);
-        assertThat(options.getCredentials()).extracting("id").containsExactly(Base64UrlUtil.encodeToString(credentialId));
+        AttestationOptions attestationOptions = optionsProvider.getAttestationOptions(mockRequest,"dummy", null);
+        assertThat(attestationOptions.getRelyingParty().getId()).isEqualTo("example.com");
+        assertThat(attestationOptions.getRelyingParty().getName()).isEqualTo("rpName");
+        assertThat(attestationOptions.getChallenge()).isEqualTo(challenge);
+        assertThat(attestationOptions.getCredentials()).extracting("id").containsExactly(Base64UrlUtil.encodeToString(credentialId));
 
     }
 
@@ -75,8 +75,8 @@ public class OptionsProviderImplTest {
         assertThat(optionsProvider.getPasswordParameter()).isEqualTo("passwordParameter");
         optionsProvider.setCredentialIdParameter("credentialIdParameter");
         assertThat(optionsProvider.getCredentialIdParameter()).isEqualTo("credentialIdParameter");
-        optionsProvider.setClientDataParameter("clientDataParameter");
-        assertThat(optionsProvider.getClientDataParameter()).isEqualTo("clientDataParameter");
+        optionsProvider.setClientDataJSONParameter("clientDataParameter");
+        assertThat(optionsProvider.getClientDataJSONParameter()).isEqualTo("clientDataParameter");
         optionsProvider.setAuthenticatorDataParameter("authenticatorDataParameter");
         assertThat(optionsProvider.getAuthenticatorDataParameter()).isEqualTo("authenticatorDataParameter");
         optionsProvider.setSignatureParameter("signatureParameter");

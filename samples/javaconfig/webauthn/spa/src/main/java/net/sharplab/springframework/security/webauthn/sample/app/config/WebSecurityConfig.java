@@ -4,7 +4,8 @@ import com.webauthn4j.registry.Registry;
 import com.webauthn4j.request.PublicKeyCredentialType;
 import com.webauthn4j.response.attestation.statement.COSEAlgorithmIdentifier;
 import com.webauthn4j.validator.WebAuthnAuthenticationContextValidator;
-import net.sharplab.springframework.security.webauthn.authenticator.WebAuthnAuthenticatorService;
+import net.sharplab.springframework.security.webauthn.WebAuthnRegistrationRequestValidator;
+import net.sharplab.springframework.security.webauthn.authenticator.FidoServerAuthenticatorService;
 import net.sharplab.springframework.security.webauthn.config.configurers.WebAuthnAuthenticationProviderConfigurer;
 import net.sharplab.springframework.security.webauthn.userdetails.WebAuthnUserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,8 +26,8 @@ import org.springframework.security.web.authentication.AuthenticationSuccessHand
 import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
 import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 
-import static net.sharplab.springframework.security.webauthn.config.configurers.WebAuthnConfigurer.webAuthn;
 import static net.sharplab.springframework.security.webauthn.config.configurers.FidoServerConfigurer.fidoServer;
+import static net.sharplab.springframework.security.webauthn.config.configurers.WebAuthnConfigurer.webAuthn;
 import static net.sharplab.springframework.security.webauthn.config.configurers.WebAuthnLoginConfigurer.webAuthnLogin;
 
 
@@ -62,10 +63,13 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     private WebAuthnUserDetailsService userDetailsService;
 
     @Autowired
-    private WebAuthnAuthenticatorService authenticatorService;
+    private FidoServerAuthenticatorService authenticatorService;
 
     @Autowired
     private WebAuthnAuthenticationContextValidator webAuthnAuthenticationContextValidator;
+
+    @Autowired
+    private WebAuthnRegistrationRequestValidator webAuthnRegistrationRequestValidator;
 
     @Autowired
     private Registry registry;
@@ -93,6 +97,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
 
+        // WebAuthn Config
         http.apply(webAuthn())
                 .rpName("Spring Security WebAuthn Sample")
                 .publicKeyCredParams()
@@ -101,7 +106,15 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
         // FIDO Server Endpoints
         http.apply(fidoServer())
-                .fidoServerAttestationOptionsEndpoint();
+                .fidoServerAttestationOptionsEndpoint()
+                .and()
+                .fidoServerAttestationResultEndpointConfig()
+                    .fidoServerAuthenticatorService(authenticatorService)
+                    .webAuthnRegistrationRequestValidator(webAuthnRegistrationRequestValidator)
+                .and()
+                .fidoServerAssertionOptionsEndpointConfig()
+                .and()
+                .fidoServerAssertionResultEndpoint();
 
         // WebAuthn Login
         http.apply(webAuthnLogin())

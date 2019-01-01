@@ -26,29 +26,5 @@ public class OptionsEndpointFilterTest {
         assertThat(optionsEndpointFilter.getTrustResolver()).isEqualTo(trustResolver);
     }
 
-    @Test
-    public void writeErrorResponse_with_RuntimeException_test() throws IOException {
-        OptionsEndpointFilter optionsEndpointFilter = new OptionsEndpointFilter(null, registry);
 
-        MockHttpServletResponse response = new MockHttpServletResponse();
-        RuntimeException exception = new RuntimeException();
-        optionsEndpointFilter.writeErrorResponse(response, exception);
-
-        assertThat(response.getStatus()).isEqualTo(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-        assertThat(response.getContentType()).isEqualTo("application/json");
-        assertThat(response.getContentAsString()).isEqualTo("{\"status\":\"failed\",\"errorMessage\":\"The server encountered an internal error\"}");
-    }
-
-    @Test
-    public void writeErrorResponse_with_InsufficientAuthenticationException_test() throws IOException {
-        OptionsEndpointFilter optionsEndpointFilter = new OptionsEndpointFilter(null, registry);
-
-        MockHttpServletResponse response = new MockHttpServletResponse();
-        InsufficientAuthenticationException exception = new InsufficientAuthenticationException("not privileged");
-        optionsEndpointFilter.writeErrorResponse(response, exception);
-
-        assertThat(response.getStatus()).isEqualTo(HttpServletResponse.SC_FORBIDDEN);
-        assertThat(response.getContentType()).isEqualTo("application/json");
-        assertThat(response.getContentAsString()).isEqualTo("{\"status\":\"failed\",\"errorMessage\":\"Anonymous access is prohibited\"}");
-    }
 }
