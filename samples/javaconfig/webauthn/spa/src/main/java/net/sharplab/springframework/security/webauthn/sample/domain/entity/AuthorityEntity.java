@@ -1,5 +1,7 @@
 package net.sharplab.springframework.security.webauthn.sample.domain.entity;
 
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
 import org.springframework.security.core.GrantedAuthority;
 
 import javax.persistence.*;
@@ -18,6 +20,7 @@ public class AuthorityEntity implements GrantedAuthority {
     private Integer id;
 
     @ManyToMany
+    @LazyCollection(LazyCollectionOption.FALSE)
     @JoinTable(
             name = "r_user_authority",
             joinColumns = {@JoinColumn(name = "user_id", referencedColumnName = "id")},
@@ -26,6 +29,7 @@ public class AuthorityEntity implements GrantedAuthority {
     private List<UserEntity> users;
 
     @ManyToMany
+    @LazyCollection(LazyCollectionOption.FALSE)
     @JoinTable(
             name = "r_group_authority",
             joinColumns = {@JoinColumn(name = "group_id", referencedColumnName = "id")},
@@ -41,7 +45,7 @@ public class AuthorityEntity implements GrantedAuthority {
         //NOP
     }
 
-    public AuthorityEntity(int id, String authority) {
+    public AuthorityEntity(Integer id, String authority) {
         this.id = id;
         this.authority = authority;
     }

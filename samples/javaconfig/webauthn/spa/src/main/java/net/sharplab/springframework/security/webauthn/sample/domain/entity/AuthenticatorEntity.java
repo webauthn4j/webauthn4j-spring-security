@@ -1,18 +1,18 @@
 package net.sharplab.springframework.security.webauthn.sample.domain.entity;
 
-import net.sharplab.springframework.security.webauthn.sample.domain.vo.AttestationStatementVO;
-import net.sharplab.springframework.security.webauthn.sample.domain.vo.AttestedCredentialDataVO;
-import net.sharplab.springframework.security.webauthn.sample.infrastructure.util.jpa.converter.AttestationStatementVOConverter;
+import com.webauthn4j.authenticator.Authenticator;
+import com.webauthn4j.response.attestation.authenticator.AttestedCredentialData;
+import com.webauthn4j.response.attestation.statement.AttestationStatement;
+import net.sharplab.springframework.security.webauthn.sample.infrastructure.util.jpa.converter.AttestationStatementConverter;
 
 import javax.persistence.*;
-import java.io.Serializable;
 
 /**
- * AuthenticatorEntity
+ * Authenticator model
  */
 @Entity
 @Table(name = "m_authenticator")
-public class AuthenticatorEntity implements Serializable {
+public class AuthenticatorEntity implements Authenticator {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -26,7 +26,7 @@ public class AuthenticatorEntity implements Serializable {
     private long counter;
 
     @Embedded
-    private AttestedCredentialDataVO attestedCredentialData;
+    private AttestedCredentialData attestedCredentialData;
 
     //TODO: extensions?
 
@@ -35,8 +35,8 @@ public class AuthenticatorEntity implements Serializable {
     }
 
     @Column(columnDefinition = "text")
-    @Convert(converter = AttestationStatementVOConverter.class)
-    private AttestationStatementVO attestationStatement;
+    @Convert(converter = AttestationStatementConverter.class)
+    private AttestationStatement attestationStatement;
 
     public Integer getId() {
         return id;
@@ -70,19 +70,19 @@ public class AuthenticatorEntity implements Serializable {
         this.counter = counter;
     }
 
-    public AttestedCredentialDataVO getAttestedCredentialData() {
+    public AttestedCredentialData getAttestedCredentialData() {
         return attestedCredentialData;
     }
 
-    public void setAttestedCredentialData(AttestedCredentialDataVO attestedCredentialData) {
+    public void setAttestedCredentialData(AttestedCredentialData attestedCredentialData) {
         this.attestedCredentialData = attestedCredentialData;
     }
 
-    public AttestationStatementVO getAttestationStatement() {
+    public AttestationStatement getAttestationStatement() {
         return attestationStatement;
     }
 
-    public void setAttestationStatement(AttestationStatementVO attestationStatement) {
+    public void setAttestationStatement(AttestationStatement attestationStatement) {
         this.attestationStatement = attestationStatement;
     }
 }

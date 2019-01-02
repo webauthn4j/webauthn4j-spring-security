@@ -1,9 +1,9 @@
 package net.sharplab.springframework.security.webauthn.sample.domain.service;
 
 import net.sharplab.springframework.security.webauthn.sample.domain.dto.AuthorityUpdateDto;
-import net.sharplab.springframework.security.webauthn.sample.domain.model.Authority;
-import net.sharplab.springframework.security.webauthn.sample.domain.model.Group;
-import net.sharplab.springframework.security.webauthn.sample.domain.model.User;
+import net.sharplab.springframework.security.webauthn.sample.domain.entity.AuthorityEntity;
+import net.sharplab.springframework.security.webauthn.sample.domain.entity.GroupEntity;
+import net.sharplab.springframework.security.webauthn.sample.domain.entity.UserEntity;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -13,19 +13,19 @@ import java.util.List;
  * 権限サービス
  */
 public interface AuthorityService {
-    Page<Authority> findAllByKeyword(Pageable pageable, String keyword);
+    Page<AuthorityEntity> findAllByKeyword(Pageable pageable, String keyword);
 
-    Authority findOne(Integer authorityId);
+    AuthorityEntity findOne(Integer authorityId);
 
-    List<Authority> findAll();
+    List<AuthorityEntity> findAll();
 
-    Page<Authority> findAll(Pageable pageable);
+    Page<AuthorityEntity> findAll(Pageable pageable);
 
-    void update(Authority authority);
+    AuthorityEntity update(AuthorityEntity authorityEntity);
 
-    void update(AuthorityUpdateDto authorityUpdateDto);
+    AuthorityEntity update(AuthorityUpdateDto authorityUpdateDto);
 
-    Page<User> findAllCandidateUsersByKeyword(Pageable pageable, String keyword);
+    Page<UserEntity> findAllCandidateUsersByKeyword(Pageable pageable, String keyword);
 
-    Page<Group> findAllCandidateGroupsByKeyword(Pageable pageable, String keyword);
+    Page<GroupEntity> findAllCandidateGroupsByKeyword(Pageable pageable, String keyword);
 }

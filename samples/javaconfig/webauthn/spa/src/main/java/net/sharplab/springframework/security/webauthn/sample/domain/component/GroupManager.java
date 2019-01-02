@@ -1,14 +1,14 @@
 package net.sharplab.springframework.security.webauthn.sample.domain.component;
 
 
-import net.sharplab.springframework.security.webauthn.sample.domain.model.Authority;
-import net.sharplab.springframework.security.webauthn.sample.domain.model.Group;
-import net.sharplab.springframework.security.webauthn.sample.domain.model.User;
+import net.sharplab.springframework.security.webauthn.sample.domain.entity.AuthorityEntity;
+import net.sharplab.springframework.security.webauthn.sample.domain.entity.GroupEntity;
+import net.sharplab.springframework.security.webauthn.sample.domain.entity.UserEntity;
 
 import java.util.List;
 
 /**
- * Group manager
+ * GroupEntity manager
  */
 @SuppressWarnings("WeakerAccess")
 public interface GroupManager {
@@ -19,14 +19,14 @@ public interface GroupManager {
      * @param groupId the group to locate
      * @return the group
      */
-    Group findGroup(int groupId);
+    GroupEntity findGroup(int groupId);
 
     /**
      * Returns all groups that this group manager controls.
      *
      * @return all groups
      */
-    List<Group> findAllGroups();
+    List<GroupEntity> findAllGroups();
 
 
     /**
@@ -35,7 +35,7 @@ public interface GroupManager {
      * @param groupId the group whose members are required
      * @return the users of the group members
      */
-    List<User> findUsersInGroup(int groupId);
+    List<UserEntity> findUsersInGroup(int groupId);
 
     /**
      * Locates the users who are members of a group
@@ -43,15 +43,15 @@ public interface GroupManager {
      * @param groupName the group whose members are required
      * @return the users of the group
      */
-    List<User> findUsersInGroup(String groupName);
+    List<UserEntity> findUsersInGroup(String groupName);
 
     /**
-     * Creates a new group with the specified list of authorityEntities.
+     * Creates a new groupEntity with the specified list of authorityEntities.
      *
-     * @param group the name for the new group
-     * @return the created group
+     * @param groupEntity the name for the new groupEntity
+     * @return the created groupEntity
      */
-    Group createGroup(Group group);
+    GroupEntity createGroup(GroupEntity groupEntity);
 
     /**
      * Removes a group, including all members and authorityEntities.
@@ -90,21 +90,21 @@ public interface GroupManager {
      * @param groupId the group
      * @return the list of authority the group owns
      */
-    List<Authority> findGroupAuthorities(int groupId);
+    List<AuthorityEntity> findGroupAuthorities(int groupId);
 
     /**
-     * Assigns a new authority to a group.
+     * Assigns a new authorityEntity to a group.
      *
-     * @param groupId   the group to assign a new authority
-     * @param authority the authority to be assigned
+     * @param groupId   the group to assign a new authorityEntity
+     * @param authorityEntity the authorityEntity to be assigned
      */
-    void addGroupAuthority(int groupId, Authority authority);
+    void addGroupAuthority(int groupId, AuthorityEntity authorityEntity);
 
     /**
-     * Deletes an authority from those assigned to a group
+     * Deletes an authorityEntity from those assigned to a group
      *
      * @param groupId   the group
-     * @param authority the authority to be removed
+     * @param authorityEntity the authorityEntity to be removed
      */
-    void removeGroupAuthority(int groupId, Authority authority);
+    void removeGroupAuthority(int groupId, AuthorityEntity authorityEntity);
 }

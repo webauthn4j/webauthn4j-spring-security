@@ -8,9 +8,9 @@ import net.sharplab.springframework.security.webauthn.sample.app.api.ProfileUpda
 import net.sharplab.springframework.security.webauthn.sample.app.api.admin.UserCreateForm;
 import net.sharplab.springframework.security.webauthn.sample.app.api.admin.UserForm;
 import net.sharplab.springframework.security.webauthn.sample.app.api.admin.UserUpdateForm;
+import net.sharplab.springframework.security.webauthn.sample.domain.entity.AuthenticatorEntity;
+import net.sharplab.springframework.security.webauthn.sample.domain.entity.UserEntity;
 import net.sharplab.springframework.security.webauthn.sample.domain.exception.WebAuthnSampleEntityNotFoundException;
-import net.sharplab.springframework.security.webauthn.sample.domain.model.Authenticator;
-import net.sharplab.springframework.security.webauthn.sample.domain.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -28,153 +28,157 @@ public class AppSpecificMapper {
     @Autowired
     PasswordEncoder passwordEncoder;
 
-    public User mapForCreate(UserCreateForm userForm){
-        User user = new User();
-        user.setId(null);
-        user.setUserHandle(mapFromBase64Url(userForm.getUserHandle()));
-        user.setFirstName(userForm.getFirstName());
-        user.setLastName(userForm.getLastName());
-        user.setEmailAddress(userForm.getEmailAddress());
+    public UserEntity mapForCreate(UserCreateForm userForm){
+        UserEntity userEntity = new UserEntity();
+        userEntity.setId(null);
+        userEntity.setUserHandle(mapFromBase64Url(userForm.getUserHandle()));
+        userEntity.setFirstName(userForm.getFirstName());
+        userEntity.setLastName(userForm.getLastName());
+        userEntity.setEmailAddress(userForm.getEmailAddress());
 
         // authenticators
         if(userForm.getAuthenticators() == null){
             userForm.setAuthenticators(new ArrayList<>());
         }
-        if(user.getAuthenticators() == null){
-            user.setAuthenticators(new ArrayList<>());
+        if(userEntity.getAuthenticators() == null){
+            userEntity.setAuthenticators(new ArrayList<>());
         }
-        mapToAuthenticatorListForCreate(userForm.getAuthenticators(), user.getAuthenticators());
+        mapToAuthenticatorListForCreate(userForm.getAuthenticators(), userEntity.getAuthenticators());
+        userEntity.getAuthenticators().forEach(authenticatorEntity -> authenticatorEntity.setUser(userEntity));
 
-        user.setSingleFactorAuthenticationAllowed(userForm.isSingleFactorAuthenticationAllowed());
-        user.setLocked(userForm.isLocked());
+        userEntity.setSingleFactorAuthenticationAllowed(userForm.isSingleFactorAuthenticationAllowed());
+        userEntity.setLocked(userForm.isLocked());
 
-        return user;
+        return userEntity;
     }
 
-    public User mapForUpdate(UserUpdateForm userForm, User user){
-        user.setUserHandle(mapFromBase64Url(userForm.getUserHandle()));
-        user.setFirstName(userForm.getFirstName());
-        user.setLastName(userForm.getLastName());
-        user.setEmailAddress(userForm.getEmailAddress());
+    public UserEntity mapForUpdate(UserUpdateForm userForm, UserEntity userEntity){
+        userEntity.setUserHandle(mapFromBase64Url(userForm.getUserHandle()));
+        userEntity.setFirstName(userForm.getFirstName());
+        userEntity.setLastName(userForm.getLastName());
+        userEntity.setEmailAddress(userForm.getEmailAddress());
 
         // authenticators
         if(userForm.getAuthenticators() == null){
             userForm.setAuthenticators(new ArrayList<>());
         }
-        mapToAuthenticatorListForUpdate(userForm.getAuthenticators(), user.getAuthenticators());
+        mapToAuthenticatorListForUpdate(userForm.getAuthenticators(), userEntity.getAuthenticators());
+        userEntity.getAuthenticators().forEach(authenticatorEntity -> authenticatorEntity.setUser(userEntity));
 
-        user.setSingleFactorAuthenticationAllowed(userForm.isSingleFactorAuthenticationAllowed());
-        user.setLocked(userForm.isLocked());
+        userEntity.setSingleFactorAuthenticationAllowed(userForm.isSingleFactorAuthenticationAllowed());
+        userEntity.setLocked(userForm.isLocked());
 
-        return user;
+        return userEntity;
     }
 
-    public UserForm mapToUserForm(User user) {
+    public UserForm mapToUserForm(UserEntity userEntity) {
         UserForm userForm = new UserForm();
-        userForm.setId(user.getId());
-        userForm.setUserHandle(mapToBase64Url(user.getUserHandle()));
-        userForm.setFirstName(user.getFirstName());
-        userForm.setLastName(user.getLastName());
-        userForm.setEmailAddress(user.getEmailAddress());
+        userForm.setId(userEntity.getId());
+        userForm.setUserHandle(mapToBase64Url(userEntity.getUserHandle()));
+        userForm.setFirstName(userEntity.getFirstName());
+        userForm.setLastName(userEntity.getLastName());
+        userForm.setEmailAddress(userEntity.getEmailAddress());
 
         // authenticators
-        mapToAuthenticatorFormList(user.getAuthenticators(), userForm.getAuthenticators());
-        userForm.setSingleFactorAuthenticationAllowed(user.isSingleFactorAuthenticationAllowed());
-        userForm.setLocked(user.isLocked());
+        mapToAuthenticatorFormList(userEntity.getAuthenticators(), userForm.getAuthenticators());
+        userForm.setSingleFactorAuthenticationAllowed(userEntity.isSingleFactorAuthenticationAllowed());
+        userForm.setLocked(userEntity.isLocked());
 
         return userForm;
     }
 
-    public ProfileForm mapToProfileForm(User user) {
+    public ProfileForm mapToProfileForm(UserEntity userEntity) {
         ProfileForm profileForm = new ProfileForm();
-        profileForm.setId(user.getId());
-        profileForm.setUserHandle(mapToBase64Url(user.getUserHandle()));
-        profileForm.setFirstName(user.getFirstName());
-        profileForm.setLastName(user.getLastName());
-        profileForm.setEmailAddress(user.getEmailAddress());
+        profileForm.setId(userEntity.getId());
+        profileForm.setUserHandle(mapToBase64Url(userEntity.getUserHandle()));
+        profileForm.setFirstName(userEntity.getFirstName());
+        profileForm.setLastName(userEntity.getLastName());
+        profileForm.setEmailAddress(userEntity.getEmailAddress());
 
         // authenticators
         profileForm.setAuthenticators(new ArrayList<>());
-        mapToAuthenticatorFormList(user.getAuthenticators(), profileForm.getAuthenticators());
-        profileForm.setSingleFactorAuthenticationAllowed(user.isSingleFactorAuthenticationAllowed());
+        mapToAuthenticatorFormList(userEntity.getAuthenticators(), profileForm.getAuthenticators());
+        profileForm.setSingleFactorAuthenticationAllowed(userEntity.isSingleFactorAuthenticationAllowed());
 
         return profileForm;
     }
 
-    public Page<UserForm> mapToUserPage(Page<User> users) {
+    public Page<UserForm> mapToUserPage(Page<UserEntity> users) {
         return new PageImpl<>(users.stream().map(this::mapToUserForm).collect(Collectors.toList()), users.getPageable(), users.getTotalElements());
     }
 
-    private Authenticator mapForCreate(AuthenticatorForm authenticatorForm){
-        Authenticator authenticator = new Authenticator();
-        authenticator.setName(authenticatorForm.getName());
-        authenticator.setAttestationStatement(authenticatorForm.getAttestationObject().getAttestationObject().getAttestationStatement());
-        authenticator.setAttestedCredentialData(authenticatorForm.getAttestationObject().getAttestationObject().getAuthenticatorData().getAttestedCredentialData());
-        return authenticator;
+    private AuthenticatorEntity mapForCreate(AuthenticatorForm authenticatorForm){
+        AuthenticatorEntity authenticatorEntity = new AuthenticatorEntity();
+        authenticatorEntity.setName(authenticatorForm.getName());
+        authenticatorEntity.setAttestationStatement(authenticatorForm.getAttestationObject().getAttestationObject().getAttestationStatement());
+        authenticatorEntity.setAttestedCredentialData(authenticatorForm.getAttestationObject().getAttestationObject().getAuthenticatorData().getAttestedCredentialData());
+        return authenticatorEntity;
     }
 
-    private Authenticator mapForUpdate(AuthenticatorForm authenticatorForm, Authenticator authenticator){
-        authenticator.setName(authenticatorForm.getName());
+    private AuthenticatorEntity mapForUpdate(AuthenticatorForm authenticatorForm, AuthenticatorEntity authenticatorEntity){
+        authenticatorEntity.setName(authenticatorForm.getName());
         // attestationStatement and attestedCredentialData won't be updated
-        return authenticator;
+        return authenticatorEntity;
     }
 
-    private AuthenticatorForm mapToAuthenticatorForm(Authenticator authenticator) {
+    private AuthenticatorForm mapToAuthenticatorForm(AuthenticatorEntity authenticatorEntity) {
         AuthenticatorForm authenticatorForm = new AuthenticatorForm();
-        authenticatorForm.setId(authenticator.getId());
-        authenticatorForm.setCredentialId(Base64UrlUtil.encodeToString(authenticator.getAttestedCredentialData().getCredentialId()));
-        authenticatorForm.setName(authenticator.getName());
+        authenticatorForm.setId(authenticatorEntity.getId());
+        authenticatorForm.setCredentialId(Base64UrlUtil.encodeToString(authenticatorEntity.getAttestedCredentialData().getCredentialId()));
+        authenticatorForm.setName(authenticatorEntity.getName());
         return authenticatorForm;
     }
 
-    public User mapForCreate(ProfileCreateForm profileCreateForm) {
-        User user = new User();
-        user.setId(null);
-        user.setUserHandle(mapFromBase64Url(profileCreateForm.getUserHandle()));
-        user.setFirstName(profileCreateForm.getFirstName());
-        user.setLastName(profileCreateForm.getLastName());
-        user.setEmailAddress(profileCreateForm.getEmailAddress());
-        user.setPassword(passwordEncoder.encode(profileCreateForm.getPassword()));
+    public UserEntity mapForCreate(ProfileCreateForm profileCreateForm) {
+        UserEntity userEntity = new UserEntity();
+        userEntity.setId(null);
+        userEntity.setUserHandle(mapFromBase64Url(profileCreateForm.getUserHandle()));
+        userEntity.setFirstName(profileCreateForm.getFirstName());
+        userEntity.setLastName(profileCreateForm.getLastName());
+        userEntity.setEmailAddress(profileCreateForm.getEmailAddress());
+        userEntity.setPassword(passwordEncoder.encode(profileCreateForm.getPassword()));
 
         // authenticators
-        user.setAuthenticators(new ArrayList<>());
-        mapToAuthenticatorListForCreate(profileCreateForm.getAuthenticators(), user.getAuthenticators());
-        user.setSingleFactorAuthenticationAllowed(profileCreateForm.isSingleFactorAuthenticationAllowed());
+        userEntity.setAuthenticators(new ArrayList<>());
+        mapToAuthenticatorListForCreate(profileCreateForm.getAuthenticators(), userEntity.getAuthenticators());
+        userEntity.getAuthenticators().forEach(authenticatorEntity -> authenticatorEntity.setUser(userEntity));
+        userEntity.setSingleFactorAuthenticationAllowed(profileCreateForm.isSingleFactorAuthenticationAllowed());
 
-        return user;
+        return userEntity;
     }
 
-    public User mapForUpdate(ProfileUpdateForm profileUpdateForm, User user){
-        user.setUserHandle(mapFromBase64Url(profileUpdateForm.getUserHandle()));
-        user.setFirstName(profileUpdateForm.getFirstName());
-        user.setLastName(profileUpdateForm.getLastName());
-        user.setEmailAddress(profileUpdateForm.getEmailAddress());
+    public UserEntity mapForUpdate(ProfileUpdateForm profileUpdateForm, UserEntity userEntity){
+        userEntity.setUserHandle(mapFromBase64Url(profileUpdateForm.getUserHandle()));
+        userEntity.setFirstName(profileUpdateForm.getFirstName());
+        userEntity.setLastName(profileUpdateForm.getLastName());
+        userEntity.setEmailAddress(profileUpdateForm.getEmailAddress());
 
         // authenticators
         List<AuthenticatorForm> authenticatorForms = profileUpdateForm.getAuthenticators();
-        mapToAuthenticatorListForUpdate(authenticatorForms, user.getAuthenticators());
+        mapToAuthenticatorListForUpdate(authenticatorForms, userEntity.getAuthenticators());
+        userEntity.getAuthenticators().forEach(authenticatorEntity -> authenticatorEntity.setUser(userEntity));
 
 
-        user.setSingleFactorAuthenticationAllowed(profileUpdateForm.isSingleFactorAuthenticationAllowed());
+        userEntity.setSingleFactorAuthenticationAllowed(profileUpdateForm.isSingleFactorAuthenticationAllowed());
 
-        return user;
+        return userEntity;
     }
 
-    private List<AuthenticatorForm> mapToAuthenticatorFormList(List<Authenticator> authenticators, List<AuthenticatorForm> authenticatorForms) {
-        for(Authenticator authenticator: authenticators){
-            authenticatorForms.add(mapToAuthenticatorForm(authenticator));
+    private List<AuthenticatorForm> mapToAuthenticatorFormList(List<AuthenticatorEntity> authenticatorEntities, List<AuthenticatorForm> authenticatorForms) {
+        for(AuthenticatorEntity authenticatorEntity : authenticatorEntities){
+            authenticatorForms.add(mapToAuthenticatorForm(authenticatorEntity));
         }
         return authenticatorForms;
     }
 
-    private List<Authenticator> mapToAuthenticatorListForCreate(List<AuthenticatorForm> authenticatorForms, List<Authenticator> authenticators) {
+    private List<AuthenticatorEntity> mapToAuthenticatorListForCreate(List<AuthenticatorForm> authenticatorForms, List<AuthenticatorEntity> authenticatorEntities) {
         for(AuthenticatorForm authenticatorForm: authenticatorForms){
-            authenticators.add(mapForCreate(authenticatorForm));
+            authenticatorEntities.add(mapForCreate(authenticatorForm));
         }
-        return authenticators;
+        return authenticatorEntities;
     }
 
-    private List<Authenticator> mapToAuthenticatorListForUpdate(List<AuthenticatorForm> authenticatorForms, List<Authenticator> authenticators) {
+    private List<AuthenticatorEntity> mapToAuthenticatorListForUpdate(List<AuthenticatorForm> authenticatorForms, List<AuthenticatorEntity> authenticatorEntities) {
         int[] sortedKeptIds = authenticatorForms.stream()
                 .filter(authenticator -> authenticator.getId() != null)
                 .mapToInt(AuthenticatorForm::getId).sorted().toArray();
@@ -182,26 +186,26 @@ public class AppSpecificMapper {
             Integer id = authenticatorForm.getId();
             // add new authenticator
             if(id == null){
-                authenticators.add(mapForCreate(authenticatorForm));
+                authenticatorEntities.add(mapForCreate(authenticatorForm));
             }
             // update existing authenticator
             else {
-                Authenticator correspondingAuthenticator =
-                        authenticators.stream().filter(item -> item.getId().equals(id))
+                AuthenticatorEntity correspondingAuthenticatorEntity =
+                        authenticatorEntities.stream().filter(item -> item.getId().equals(id))
                                 .findFirst().orElseThrow(()-> new WebAuthnSampleEntityNotFoundException("Corresponding authenticator is not found."));
-                mapForUpdate(authenticatorForm, correspondingAuthenticator);
+                mapForUpdate(authenticatorForm, correspondingAuthenticatorEntity);
             }
 
         }
-        // delete authenticators if it is not included in authenticatorForms
-        authenticators.removeIf(authenticator -> {
-            Integer id = authenticator.getId();
+        // delete authenticatorEntities if it is not included in authenticatorForms
+        authenticatorEntities.removeIf(authenticatorEntity -> {
+            Integer id = authenticatorEntity.getId();
             if(id == null){
                 return false;
             }
             return Arrays.binarySearch(sortedKeptIds, id) < 0;
         });
-        return authenticators;
+        return authenticatorEntities;
     }
 
     public byte[] mapFromBase64Url(String base64url){

@@ -41,7 +41,7 @@ public class AuthenticatorFormValidator {
                         form.getClientExtensionsJSON());
             }
             catch (ValidationException exception){
-                errors.reject("e.AuthenticatorFormValidator.invalidAuthenticator", "Authenticator is invalid.");
+                errors.reject("e.AuthenticatorFormValidator.invalidAuthenticator", "AuthenticatorEntity is invalid.");
             }
 
         }

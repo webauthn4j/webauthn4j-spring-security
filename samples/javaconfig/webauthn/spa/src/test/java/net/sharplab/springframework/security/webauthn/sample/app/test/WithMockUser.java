@@ -6,14 +6,14 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
 /**
- * Annotation for instructing to use User's Mock
+ * Annotation for instructing to use UserEntity's Mock
  */
 @Retention(RetentionPolicy.RUNTIME)
 @WithSecurityContext(factory = WithMockUserSecurityContextFactory.class)
 public @interface WithMockUser {
 
     int id() default 0;
-    String  userHandleString() default "";
+    String userHandleBase64Url() default "";
     String  firstName() default "";
     String  lastName() default "";
     String  emailAddress() default "";
@@ -23,6 +23,6 @@ public @interface WithMockUser {
     String[] authenticators() default {};
 
     boolean locked() default false;
-    boolean passwordAuthenticationAllowed() default false;
+    boolean singleFactorAuthenticationAllowed() default false;
 
 }

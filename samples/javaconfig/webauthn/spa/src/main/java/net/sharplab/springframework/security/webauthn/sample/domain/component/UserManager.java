@@ -1,7 +1,7 @@
 package net.sharplab.springframework.security.webauthn.sample.domain.component;
 
 
-import net.sharplab.springframework.security.webauthn.sample.domain.model.User;
+import net.sharplab.springframework.security.webauthn.sample.domain.entity.UserEntity;
 import org.springframework.security.core.userdetails.UserDetailsService;
 
 /**
@@ -10,19 +10,19 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 public interface UserManager extends UserDetailsService {
 
     /**
-     * create a user
+     * create a userEntity
      *
-     * @param user user
-     * @return created user
+     * @param userEntity userEntity
+     * @return created userEntity
      */
-    User createUser(User user);
+    UserEntity createUser(UserEntity userEntity);
 
     /**
-     * update a user
+     * update a userEntity
      *
-     * @param user user
+     * @param userEntity userEntity
      */
-    void updateUser(User user);
+    void updateUser(UserEntity userEntity);
 
     /**
      * delete the specified user
@@ -60,6 +60,6 @@ public interface UserManager extends UserDetailsService {
      * @param id userId
      * @return user
      */
-    User findById(int id);
+    UserEntity findById(int id);
 
 }

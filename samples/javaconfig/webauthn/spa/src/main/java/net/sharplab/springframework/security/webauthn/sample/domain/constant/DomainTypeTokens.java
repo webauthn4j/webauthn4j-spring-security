@@ -1,12 +1,8 @@
 package net.sharplab.springframework.security.webauthn.sample.domain.constant;
 
-import net.sharplab.springframework.security.webauthn.sample.domain.entity.AuthenticatorEntity;
 import net.sharplab.springframework.security.webauthn.sample.domain.entity.AuthorityEntity;
 import net.sharplab.springframework.security.webauthn.sample.domain.entity.GroupEntity;
-import net.sharplab.springframework.security.webauthn.sample.domain.model.Authenticator;
-import net.sharplab.springframework.security.webauthn.sample.domain.model.Authority;
-import net.sharplab.springframework.security.webauthn.sample.domain.model.Group;
-import net.sharplab.springframework.security.webauthn.sample.domain.model.User;
+import net.sharplab.springframework.security.webauthn.sample.domain.entity.UserEntity;
 import org.modelmapper.TypeToken;
 import org.springframework.data.domain.PageImpl;
 
@@ -18,27 +14,20 @@ import java.util.ArrayList;
  */
 public class DomainTypeTokens {
 
-    public static final Type UserList = new TypeToken<ArrayList<User>>() {
+    public static final Type UserEntityList = new TypeToken<ArrayList<net.sharplab.springframework.security.webauthn.sample.domain.entity.GroupEntity>>() {
     }.getType();
-    public static final Type GroupList = new TypeToken<ArrayList<Group>>() {
+    public static final Type GroupEntityList = new TypeToken<ArrayList<net.sharplab.springframework.security.webauthn.sample.domain.entity.GroupEntity>>() {
     }.getType();
-    public static final Type AuthorityList = new TypeToken<ArrayList<Authority>>() {
+    public static final Type AuthorityEntityList = new TypeToken<ArrayList<net.sharplab.springframework.security.webauthn.sample.domain.entity.AuthorityEntity>>() {
     }.getType();
-    public static final Type AuthenticatorList = new TypeToken<ArrayList<Authenticator>>() {
-    }.getType();
-
-    public static final Type GroupEntityList = new TypeToken<ArrayList<GroupEntity>>() {
-    }.getType();
-    public static final Type AuthorityEntityList = new TypeToken<ArrayList<AuthorityEntity>>() {
-    }.getType();
-    public static final Type AuthenticatorEntityList = new TypeToken<ArrayList<AuthenticatorEntity>>() {
+    public static final Type AuthenticatorEntityList = new TypeToken<ArrayList<net.sharplab.springframework.security.webauthn.sample.domain.entity.AuthenticatorEntity>>() {
     }.getType();
 
-    public static final Type UserPage = new TypeToken<PageImpl<User>>() {
+    public static final Type UserPage = new TypeToken<PageImpl<UserEntity>>() {
     }.getType();
-    public static final Type GroupPage = new TypeToken<PageImpl<Group>>() {
+    public static final Type GroupPage = new TypeToken<PageImpl<GroupEntity>>() {
     }.getType();
-    public static final Type AuthorityPage = new TypeToken<PageImpl<Authority>>() {
+    public static final Type AuthorityPage = new TypeToken<PageImpl<AuthorityEntity>>() {
     }.getType();
 
     private DomainTypeTokens() {

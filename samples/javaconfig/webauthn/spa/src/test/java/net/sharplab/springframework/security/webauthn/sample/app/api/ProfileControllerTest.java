@@ -2,13 +2,11 @@ package net.sharplab.springframework.security.webauthn.sample.app.api;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.webauthn4j.util.Base64UrlUtil;
-import net.sharplab.springframework.security.webauthn.sample.app.api.admin.UserCreateForm;
-import net.sharplab.springframework.security.webauthn.sample.app.api.admin.UserUpdateForm;
 import net.sharplab.springframework.security.webauthn.sample.app.config.AppConfig;
 import net.sharplab.springframework.security.webauthn.sample.app.config.TestSecurityConfig;
 import net.sharplab.springframework.security.webauthn.sample.app.service.ProfileAppService;
 import net.sharplab.springframework.security.webauthn.sample.app.test.WithMockUser;
-import net.sharplab.springframework.security.webauthn.sample.domain.model.User;
+import net.sharplab.springframework.security.webauthn.sample.domain.entity.UserEntity;
 import net.sharplab.springframework.security.webauthn.sample.infrastructure.config.InfrastructureMockConfig;
 import net.sharplab.springframework.security.webauthn.sample.util.UUIDUtil;
 import org.junit.Test;
@@ -55,16 +53,16 @@ public class ProfileControllerTest {
     public void show_test() throws Exception{
         int userId = 1;
 
-        User user = new User();
-        user.setUserHandle(new byte[0]);
-        user.setId(userId);
-        user.setFirstName("John");
-        user.setLastName("Doe");
-        user.setEmailAddress("john.doe@example.com");
-        user.setAuthenticators(Collections.emptyList());
-        user.setSingleFactorAuthenticationAllowed(true);
+        UserEntity userEntity = new UserEntity();
+        userEntity.setUserHandle(new byte[0]);
+        userEntity.setId(userId);
+        userEntity.setFirstName("John");
+        userEntity.setLastName("Doe");
+        userEntity.setEmailAddress("john.doe@example.com");
+        userEntity.setAuthenticators(Collections.emptyList());
+        userEntity.setSingleFactorAuthenticationAllowed(true);
 
-        when(profileAppService.findOne(userId)).thenReturn(user);
+        when(profileAppService.findOne(userId)).thenReturn(userEntity);
 
         //When
         mvc.perform(get("/api/profile"))
@@ -93,16 +91,16 @@ public class ProfileControllerTest {
         userCreateForm.setAuthenticators(Collections.emptyList());
         userCreateForm.setSingleFactorAuthenticationAllowed(true);
 
-        User user = new User();
-        user.setId(1);
-        user.setUserHandle(Base64UrlUtil.decode("ORZClsZpTvWrYGl7mXL5Wg"));
-        user.setFirstName("John");
-        user.setLastName("Doe");
-        user.setEmailAddress("john.doe@example.com");
-        user.setAuthenticators(Collections.emptyList());
-        user.setSingleFactorAuthenticationAllowed(true);
+        UserEntity userEntity = new UserEntity();
+        userEntity.setId(1);
+        userEntity.setUserHandle(Base64UrlUtil.decode("ORZClsZpTvWrYGl7mXL5Wg"));
+        userEntity.setFirstName("John");
+        userEntity.setLastName("Doe");
+        userEntity.setEmailAddress("john.doe@example.com");
+        userEntity.setAuthenticators(Collections.emptyList());
+        userEntity.setSingleFactorAuthenticationAllowed(true);
 
-        when(profileAppService.create(any())).thenReturn(user);
+        when(profileAppService.create(any())).thenReturn(userEntity);
 
         //When
         mvc.perform(
@@ -139,23 +137,23 @@ public class ProfileControllerTest {
 
         byte[] userHandle = UUIDUtil.toByteArray(UUID.randomUUID());
 
-        User user = new User();
-        user.setId(userId);
-        user.setUserHandle(userHandle);
-        user.setId(userId);
-        user.setFirstName("John");
-        user.setLastName("Smith");
-        user.setEmailAddress("john.smith@example.com");
-        user.setAuthenticators(Collections.emptyList());
-        user.setSingleFactorAuthenticationAllowed(true);
+        UserEntity userEntity = new UserEntity();
+        userEntity.setId(userId);
+        userEntity.setUserHandle(userHandle);
+        userEntity.setId(userId);
+        userEntity.setFirstName("John");
+        userEntity.setLastName("Smith");
+        userEntity.setEmailAddress("john.smith@example.com");
+        userEntity.setAuthenticators(Collections.emptyList());
+        userEntity.setSingleFactorAuthenticationAllowed(true);
 
-        when(profileAppService.update(anyInt(), any())).thenReturn(user);
+        when(profileAppService.update(anyInt(), any())).thenReturn(userEntity);
 
         //When
         mvc.perform(
                 put("/api/profile")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(user))
+                        .content(objectMapper.writeValueAsString(userEntity))
                         .with(SecurityMockMvcRequestPostProcessors.csrf())
         )
         //Then

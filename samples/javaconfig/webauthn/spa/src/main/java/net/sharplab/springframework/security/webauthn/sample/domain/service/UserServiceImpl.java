@@ -1,10 +1,8 @@
 package net.sharplab.springframework.security.webauthn.sample.domain.service;
 
 import net.sharplab.springframework.security.webauthn.sample.domain.component.UserManager;
-import net.sharplab.springframework.security.webauthn.sample.domain.constant.DomainTypeTokens;
-import net.sharplab.springframework.security.webauthn.sample.domain.model.User;
+import net.sharplab.springframework.security.webauthn.sample.domain.entity.UserEntity;
 import net.sharplab.springframework.security.webauthn.sample.domain.repository.UserEntityRepository;
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -23,20 +21,18 @@ public class UserServiceImpl implements UserService {
 
     private final UserEntityRepository userEntityRepository;
     private final UserManager userManager;
-    private final ModelMapper modelMapper;
 
     @Autowired
-    public UserServiceImpl(UserEntityRepository userEntityRepository, UserManager userManager, ModelMapper modelMapper) {
+    public UserServiceImpl(UserEntityRepository userEntityRepository, UserManager userManager) {
         this.userEntityRepository = userEntityRepository;
         this.userManager = userManager;
-        this.modelMapper = modelMapper;
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public User findOne(int id) {
+    public UserEntity findOne(int id) {
         return userManager.findById(id);
     }
 
@@ -44,27 +40,27 @@ public class UserServiceImpl implements UserService {
      * {@inheritDoc}
      */
     @Override
-    public List<User> findAll() {
-        return modelMapper.map(userEntityRepository.findAll(), DomainTypeTokens.UserList);
+    public List<UserEntity> findAll() {
+        return userEntityRepository.findAll();
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public Page<User> findAll(Pageable pageable) {
-        return modelMapper.map(userEntityRepository.findAll(pageable), DomainTypeTokens.UserPage);
+    public Page<UserEntity> findAll(Pageable pageable) {
+        return userEntityRepository.findAll(pageable);
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public Page<User> findAllByKeyword(Pageable pageable, String keyword) {
+    public Page<UserEntity> findAllByKeyword(Pageable pageable, String keyword) {
         if (keyword == null) {
-            return modelMapper.map(userEntityRepository.findAll(pageable), DomainTypeTokens.UserPage);
+            return userEntityRepository.findAll(pageable);
         } else {
-            return modelMapper.map(userEntityRepository.findAllByKeyword(pageable, keyword), DomainTypeTokens.UserPage);
+            return userEntityRepository.findAllByKeyword(pageable, keyword);
         }
     }
 
@@ -72,19 +68,19 @@ public class UserServiceImpl implements UserService {
      * {@inheritDoc}
      */
     @Override
-    public User create(User user) {
-        return userManager.createUser(user);
+    public UserEntity create(UserEntity userEntity) {
+        return userManager.createUser(userEntity);
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public User update(int id, Consumer<User> consumer) {
-        User user = findOne(id);
-        consumer.accept(user);
-        userManager.updateUser(user);
-        return user;
+    public UserEntity update(int id, Consumer<UserEntity> consumer) {
+        UserEntity userEntity = findOne(id);
+        consumer.accept(userEntity);
+        userManager.updateUser(userEntity);
+        return userEntity;
     }
 
     /**

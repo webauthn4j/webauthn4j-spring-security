@@ -1,7 +1,7 @@
 package net.sharplab.springframework.security.webauthn.sample.app.api.admin;
 
 import net.sharplab.springframework.security.webauthn.sample.app.util.AppSpecificMapper;
-import net.sharplab.springframework.security.webauthn.sample.domain.model.User;
+import net.sharplab.springframework.security.webauthn.sample.domain.entity.UserEntity;
 import net.sharplab.springframework.security.webauthn.sample.domain.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -27,27 +27,27 @@ public class UserController {
 
     @GetMapping("/")
     public Page<UserForm> list(Pageable pageable, Model model, @RequestParam(required = false, value = "keyword") String keyword){
-        Page<User> users = userService.findAllByKeyword(pageable, keyword);
+        Page<UserEntity> users = userService.findAllByKeyword(pageable, keyword);
         return mapper.mapToUserPage(users);
     }
 
     @GetMapping("/{id}")
     public UserForm show(@PathVariable(value = "id") int id){
-        User user = userService.findOne(id);
-        return mapper.mapToUserForm(user);
+        UserEntity userEntity = userService.findOne(id);
+        return mapper.mapToUserForm(userEntity);
     }
 
     @PostMapping
     public UserForm create(@Valid @RequestBody UserCreateForm userCreateForm){
-        User user = mapper.mapForCreate(userCreateForm);
-        User createdUser = userService.create(user);
-        return mapper.mapToUserForm(createdUser);
+        UserEntity userEntity = mapper.mapForCreate(userCreateForm);
+        UserEntity createdUserEntity = userService.create(userEntity);
+        return mapper.mapToUserForm(createdUserEntity);
     }
 
     @PutMapping("/{id}")
     public UserForm update(@PathVariable(value = "id") int id, @Valid @RequestBody UserUpdateForm userUpdateForm){
-        User updatedUser = userService.update(id, user -> mapper.mapForUpdate(userUpdateForm, user));
-        return mapper.mapToUserForm(updatedUser);
+        UserEntity updatedUserEntity = userService.update(id, user -> mapper.mapForUpdate(userUpdateForm, user));
+        return mapper.mapToUserForm(updatedUserEntity);
     }
 
     @DeleteMapping("/{id}")

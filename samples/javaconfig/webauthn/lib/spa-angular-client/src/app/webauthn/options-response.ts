@@ -10,7 +10,7 @@ export interface OptionsResponse {
     username: string,
     password: string,
     credentialId: string,
-    clientData: string,
+    clientDataJSON: string,
     authenticatorData: string,
     signature: string,
     clientExtensionsJSON: string

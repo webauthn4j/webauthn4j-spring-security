@@ -1,5 +1,8 @@
 package net.sharplab.springframework.security.webauthn.sample.domain.entity;
 
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
+
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.List;
@@ -17,7 +20,15 @@ public class GroupEntity implements Serializable {
     @Column(name = "group_name")
     private String groupName;
 
+    public GroupEntity(String groupName) {
+        this.groupName = groupName;
+    }
+
+    public GroupEntity() {
+    }
+
     @ManyToMany
+    @LazyCollection(LazyCollectionOption.FALSE)
     @JoinTable(
             name = "r_user_group",
             joinColumns = {@JoinColumn(name = "user_id", referencedColumnName = "id")},
@@ -26,11 +37,11 @@ public class GroupEntity implements Serializable {
     private List<UserEntity> users;
 
     @ManyToMany
+    @LazyCollection(LazyCollectionOption.FALSE)
     @JoinTable(
             name = "r_group_authority",
             joinColumns = {@JoinColumn(name = "authority_id", referencedColumnName = "id")},
             inverseJoinColumns = {@JoinColumn(name = "group_id", referencedColumnName = "id")}
-
     )
     private List<AuthorityEntity> authorities;
 

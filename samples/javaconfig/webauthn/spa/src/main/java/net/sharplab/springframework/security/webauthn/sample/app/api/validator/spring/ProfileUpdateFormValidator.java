@@ -46,7 +46,7 @@ public class ProfileUpdateFormValidator implements Validator {
                     authenticatorFormValidator.validate(request, authenticator, errors);
                 }
                 catch (ValidationException exception){
-                    errors.rejectValue("authenticators", "e.ProfileUpdateFormValidator.invalidAuthenticator", "Authenticator is invalid.");
+                    errors.rejectValue("authenticators", "e.ProfileUpdateFormValidator.invalidAuthenticator", "AuthenticatorEntity is invalid.");
                 }
             }
         }

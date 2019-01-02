@@ -7,7 +7,6 @@ import net.sharplab.springframework.security.webauthn.sample.domain.entity.Authe
 import net.sharplab.springframework.security.webauthn.sample.domain.entity.UserEntity;
 import net.sharplab.springframework.security.webauthn.sample.domain.exception.WebAuthnSampleBusinessException;
 import net.sharplab.springframework.security.webauthn.sample.domain.exception.WebAuthnSampleEntityNotFoundException;
-import net.sharplab.springframework.security.webauthn.sample.domain.model.User;
 import net.sharplab.springframework.security.webauthn.sample.domain.repository.AuthenticatorEntityRepository;
 import net.sharplab.springframework.security.webauthn.sample.domain.repository.UserEntityRepository;
 import net.sharplab.springframework.security.webauthn.userdetails.WebAuthnUserDetails;
@@ -21,8 +20,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import org.terasoluna.gfw.common.message.ResultMessages;
 
-import java.nio.charset.StandardCharsets;
-
 /**
  * {@inheritDoc}
  */
@@ -30,7 +27,7 @@ import java.nio.charset.StandardCharsets;
 @Transactional
 public class UserManagerImpl implements UserManager, WebAuthnUserDetailsService {
 
-    ModelMapper modelMapper;
+    private ModelMapper modelMapper;
 
     private UserEntityRepository userEntityRepository;
     private AuthenticatorEntityRepository authenticatorEntityRepository;
@@ -46,10 +43,9 @@ public class UserManagerImpl implements UserManager, WebAuthnUserDetailsService 
      * {@inheritDoc}
      */
     @Override
-    public User findById(int id) {
-        UserEntity userEntity = userEntityRepository.findById(id)
+    public UserEntity findById(int id) {
+        return userEntityRepository.findById(id)
                 .orElseThrow(() -> new WebAuthnSampleEntityNotFoundException(ResultMessages.error().add(MessageCodes.Error.User.USER_NOT_FOUND)));
-        return modelMapper.map(userEntity, User.class);
     }
 
     /**
@@ -57,41 +53,37 @@ public class UserManagerImpl implements UserManager, WebAuthnUserDetailsService 
      */
     @Override
     public WebAuthnUserDetails loadUserByUsername(String username) {
-        UserEntity userEntity = userEntityRepository.findOneByEmailAddress(username)
-                .orElseThrow(() -> new UsernameNotFoundException(String.format("User with username'%s' is not found.", username)));
-        return modelMapper.map(userEntity, User.class);
+        return userEntityRepository.findOneByEmailAddress(username)
+                .orElseThrow(() -> new UsernameNotFoundException(String.format("UserEntity with username'%s' is not found.", username)));
     }
 
     @Override
     public WebAuthnUserDetails loadUserByCredentialId(byte[] credentialId) {
         AuthenticatorEntity authenticatorEntity = authenticatorEntityRepository.findOneByCredentialId(credentialId)
-                .orElseThrow(()-> new CredentialIdNotFoundException(String.format("Authenticator with credentialId'%s' is not found.", Base64UrlUtil.encodeToString(credentialId))));
-        return modelMapper.map(authenticatorEntity.getUser(), User.class);
+                .orElseThrow(()-> new CredentialIdNotFoundException(String.format("AuthenticatorEntity with credentialId'%s' is not found.", Base64UrlUtil.encodeToString(credentialId))));
+        return authenticatorEntity.getUser();
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public User createUser(User user) {
+    public UserEntity createUser(UserEntity user) {
         userEntityRepository.findOneByEmailAddress(user.getEmailAddress()).ifPresent((retrievedUserEntity) -> {
             throw new WebAuthnSampleBusinessException(ResultMessages.error().add(MessageCodes.Error.User.EMAIL_ADDRESS_IS_ALREADY_USED));
         });
-
-        UserEntity userEntity = modelMapper.map(user, UserEntity.class);
-        UserEntity createdUserEntity = userEntityRepository.save(userEntity);
-        return modelMapper.map(createdUserEntity, User.class);
+        return userEntityRepository.save(user);
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public void updateUser(User user) {
+    public void updateUser(UserEntity user) {
 
         UserEntity userEntity = userEntityRepository.findById(user.getId())
                 .orElseThrow(() -> new WebAuthnSampleEntityNotFoundException(ResultMessages.error().add(MessageCodes.Error.User.USER_NOT_FOUND)));
-        modelMapper.map(user, userEntity);
+        userEntityRepository.save(userEntity);
     }
 
     /**
@@ -100,7 +92,7 @@ public class UserManagerImpl implements UserManager, WebAuthnUserDetailsService 
     @Override
     public void deleteUser(String username) {
         UserEntity userEntity = userEntityRepository.findOneByEmailAddress(username)
-                .orElseThrow(() -> new UsernameNotFoundException(String.format("User with username'%s' is not found.", username)));
+                .orElseThrow(() -> new UsernameNotFoundException(String.format("UserEntity with username'%s' is not found.", username)));
         userEntityRepository.delete(userEntity);
     }
 
@@ -119,16 +111,16 @@ public class UserManagerImpl implements UserManager, WebAuthnUserDetailsService 
      */
     @Override
     public void changePassword(String oldPassword, String newPassword) {
-        User currentUser = getCurrentUser();
+        UserEntity currentUserEntity = getCurrentUser();
 
-        if (currentUser == null) {
+        if (currentUserEntity == null) {
             // This would indicate bad coding somewhere
             throw new AccessDeniedException(
                     "Can't change rawPassword as no Authentication object found in context "
                             + "for current user.");
         }
 
-        currentUser.setPassword(newPassword);
+        currentUserEntity.setPassword(newPassword);
     }
 
     /**
@@ -144,7 +136,7 @@ public class UserManagerImpl implements UserManager, WebAuthnUserDetailsService 
      *
      * @return ユーザー
      */
-    private User getCurrentUser() {
-        return (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+    private UserEntity getCurrentUser() {
+        return (UserEntity) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
     }
 }

@@ -2,7 +2,7 @@ package net.sharplab.springframework.security.webauthn.sample.app.service;
 
 import net.sharplab.springframework.security.webauthn.sample.app.api.ProfileUpdateForm;
 import net.sharplab.springframework.security.webauthn.sample.app.util.AppSpecificMapper;
-import net.sharplab.springframework.security.webauthn.sample.domain.model.User;
+import net.sharplab.springframework.security.webauthn.sample.domain.entity.UserEntity;
 import net.sharplab.springframework.security.webauthn.sample.domain.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -23,17 +23,17 @@ public class ProfileAppServiceImpl implements ProfileAppService {
     }
 
     @Override
-    public User findOne(int id) {
+    public UserEntity findOne(int id) {
         return userService.findOne(id);
     }
 
     @Override
-    public User create(User user) {
-        return userService.create(user);
+    public UserEntity create(UserEntity userEntity) {
+        return userService.create(userEntity);
     }
 
     @Override
-    public User update(int id, ProfileUpdateForm profileUpdateForm) {
+    public UserEntity update(int id, ProfileUpdateForm profileUpdateForm) {
         return userService.update(id, user -> mapper.mapForUpdate(profileUpdateForm, user));
     }
 

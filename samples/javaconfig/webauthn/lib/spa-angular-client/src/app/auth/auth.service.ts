@@ -36,7 +36,7 @@ export class AuthService {
       }
       let publicKeyCredential: PublicKeyCredential = data.credential as PublicKeyCredential;
       let assertionResponse: AuthenticatorAssertionResponse = publicKeyCredential.response as AuthenticatorAssertionResponse;
-      let clientData = assertionResponse.clientDataJSON;
+      let clientDataJSON = assertionResponse.clientDataJSON;
       let authenticatorData = assertionResponse.authenticatorData;
       let signature = assertionResponse.signature;
       // let clientExtensions = publicKeyCredential.getClientExtensionResults(); //Edge preview throws exception as of build 180603-1447
@@ -45,7 +45,7 @@ export class AuthService {
       if(publicKeyCredential.response as AuthenticatorAttestationResponse){
         let formData = new FormData();
         formData.set(data.serverOptions.parameters.credentialId, base64url.stringify(new Uint8Array(publicKeyCredential.rawId)));
-        formData.set(data.serverOptions.parameters.clientData, base64url.stringify(new Uint8Array(clientData)));
+        formData.set(data.serverOptions.parameters.clientDataJSON, base64url.stringify(new Uint8Array(clientDataJSON)));
         formData.set(data.serverOptions.parameters.authenticatorData, base64url.stringify(new Uint8Array(authenticatorData)));
         formData.set(data.serverOptions.parameters.signature, base64url.stringify(new Uint8Array(signature)));
 

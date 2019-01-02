@@ -4,7 +4,7 @@ import net.sharplab.springframework.security.webauthn.sample.app.api.validator.s
 import net.sharplab.springframework.security.webauthn.sample.app.api.validator.spring.ProfileUpdateFormValidator;
 import net.sharplab.springframework.security.webauthn.sample.app.service.ProfileAppService;
 import net.sharplab.springframework.security.webauthn.sample.app.util.AppSpecificMapper;
-import net.sharplab.springframework.security.webauthn.sample.domain.model.User;
+import net.sharplab.springframework.security.webauthn.sample.domain.entity.UserEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -44,28 +44,28 @@ public class ProfileController {
     }
 
     @GetMapping
-    public ProfileForm show(@AuthenticationPrincipal User loginUser){
-        User user = profileAppService.findOne(loginUser.getId());
-        return mapper.mapToProfileForm(user);
+    public ProfileForm show(@AuthenticationPrincipal UserEntity loginUserEntity){
+        UserEntity userEntity = profileAppService.findOne(loginUserEntity.getId());
+        return mapper.mapToProfileForm(userEntity);
     }
 
     @PostMapping
     public ProfileForm create(@Valid @RequestBody ProfileCreateForm profileCreateForm){
-        User user = mapper.mapForCreate(profileCreateForm);
-        User createdUser = profileAppService.create(user);
-        return mapper.mapToProfileForm(createdUser);
+        UserEntity userEntity = mapper.mapForCreate(profileCreateForm);
+        UserEntity createdUserEntity = profileAppService.create(userEntity);
+        return mapper.mapToProfileForm(createdUserEntity);
     }
 
     @PutMapping
-    public ProfileForm update(@AuthenticationPrincipal User loginUser, @Valid @RequestBody ProfileUpdateForm profileUpdateForm){
-        int id = loginUser.getId();
-        User updatedUser = profileAppService.update(id, profileUpdateForm);
-        return mapper.mapToProfileForm(updatedUser);
+    public ProfileForm update(@AuthenticationPrincipal UserEntity loginUserEntity, @Valid @RequestBody ProfileUpdateForm profileUpdateForm){
+        int id = loginUserEntity.getId();
+        UserEntity updatedUserEntity = profileAppService.update(id, profileUpdateForm);
+        return mapper.mapToProfileForm(updatedUserEntity);
     }
 
     @DeleteMapping
-    public void delete(@AuthenticationPrincipal User loginUser){
-        int id = loginUser.getId();
+    public void delete(@AuthenticationPrincipal UserEntity loginUserEntity){
+        int id = loginUserEntity.getId();
         profileAppService.delete(id);
         SecurityContextHolder.clearContext();
     }

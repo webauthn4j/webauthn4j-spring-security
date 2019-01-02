@@ -38,7 +38,7 @@ public class AuthenticatorManagerImpl implements AuthenticatorManager {
     @Override
     public void updateCounter(byte[] credentialId, long counter) throws CredentialIdNotFoundException {
         AuthenticatorEntity authenticatorEntity = authenticatorEntityRepository.findOneByCredentialId(credentialId)
-                        .orElseThrow(()-> new CredentialIdNotFoundException("Authenticator not found"));
+                        .orElseThrow(()-> new CredentialIdNotFoundException("AuthenticatorEntity not found"));
         authenticatorEntity.setCounter(counter);
     }
 
@@ -56,9 +56,9 @@ public class AuthenticatorManagerImpl implements AuthenticatorManager {
         Assert.isTrue(credentialId.length > 0, "credentialId must not be empty");
         Assert.hasText(username, "username should have text");
         UserEntity userEntity = userEntityRepository.findOneByEmailAddress(username)
-                .orElseThrow(()-> new UsernameNotFoundException("User not found"));
+                .orElseThrow(()-> new UsernameNotFoundException("UserEntity not found"));
         AuthenticatorEntity authenticatorEntity = authenticatorEntityRepository.findOneByCredentialId(credentialId)
-                .orElseThrow(()-> new CredentialIdNotFoundException("Authenticator not found"));
+                .orElseThrow(()-> new CredentialIdNotFoundException("AuthenticatorEntity not found"));
         userEntity.getAuthenticators().add(authenticatorEntity);
     }
 

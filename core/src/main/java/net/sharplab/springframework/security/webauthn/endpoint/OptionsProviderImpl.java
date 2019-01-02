@@ -134,7 +134,7 @@ public class OptionsProviderImpl implements OptionsProvider {
         }
         Parameters parameters
                 = new Parameters(usernameParameter, passwordParameter,
-                clientDataJSONParameter, authenticatorDataParameter, signatureParameter, clientExtensionsJSONParameter);
+                credentialIdParameter, clientDataJSONParameter, authenticatorDataParameter, signatureParameter, clientExtensionsJSONParameter);
 
         return new AssertionOptions(challenge, authenticationTimeout, effectiveRpId, credentials, authenticationExtensions, parameters);
     }

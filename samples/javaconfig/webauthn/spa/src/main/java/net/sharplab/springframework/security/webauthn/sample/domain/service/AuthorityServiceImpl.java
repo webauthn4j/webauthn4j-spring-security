@@ -1,19 +1,14 @@
 package net.sharplab.springframework.security.webauthn.sample.domain.service;
 
-import net.sharplab.springframework.security.webauthn.sample.domain.constant.DomainTypeTokens;
 import net.sharplab.springframework.security.webauthn.sample.domain.constant.MessageCodes;
 import net.sharplab.springframework.security.webauthn.sample.domain.dto.AuthorityUpdateDto;
 import net.sharplab.springframework.security.webauthn.sample.domain.entity.AuthorityEntity;
 import net.sharplab.springframework.security.webauthn.sample.domain.entity.GroupEntity;
 import net.sharplab.springframework.security.webauthn.sample.domain.entity.UserEntity;
 import net.sharplab.springframework.security.webauthn.sample.domain.exception.WebAuthnSampleEntityNotFoundException;
-import net.sharplab.springframework.security.webauthn.sample.domain.model.Authority;
-import net.sharplab.springframework.security.webauthn.sample.domain.model.Group;
-import net.sharplab.springframework.security.webauthn.sample.domain.model.User;
 import net.sharplab.springframework.security.webauthn.sample.domain.repository.AuthorityEntityRepository;
 import net.sharplab.springframework.security.webauthn.sample.domain.repository.GroupEntityRepository;
 import net.sharplab.springframework.security.webauthn.sample.domain.repository.UserEntityRepository;
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -22,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.terasoluna.gfw.common.message.ResultMessages;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * 権限サービス
@@ -34,82 +30,74 @@ public class AuthorityServiceImpl implements AuthorityService {
     private final GroupEntityRepository groupEntityRepository;
     private final AuthorityEntityRepository authorityEntityRepository;
 
-    private final ModelMapper modelMapper;
-
     @Autowired
-    public AuthorityServiceImpl(UserEntityRepository userEntityRepository, GroupEntityRepository groupEntityRepository, AuthorityEntityRepository authorityEntityRepository, ModelMapper modelMapper) {
+    public AuthorityServiceImpl(UserEntityRepository userEntityRepository, GroupEntityRepository groupEntityRepository, AuthorityEntityRepository authorityEntityRepository) {
         this.userEntityRepository = userEntityRepository;
         this.groupEntityRepository = groupEntityRepository;
         this.authorityEntityRepository = authorityEntityRepository;
-        this.modelMapper = modelMapper;
     }
 
     @Override
-    public Authority findOne(Integer authorityId) {
-        AuthorityEntity retrievedAuthorityEntity = authorityEntityRepository.findById(authorityId)
+    public AuthorityEntity findOne(Integer authorityId) {
+        return authorityEntityRepository.findById(authorityId)
                 .orElseThrow(() -> new WebAuthnSampleEntityNotFoundException(ResultMessages.error().add(MessageCodes.Error.Authority.AUTHORITY_NOT_FOUND)));
-        return modelMapper.map(retrievedAuthorityEntity, Authority.class);
     }
 
     @Override
     @Transactional(readOnly = true)
-    public List<Authority> findAll() {
-        return modelMapper.map(authorityEntityRepository.findAll(), DomainTypeTokens.AuthorityList);
+    public List<AuthorityEntity> findAll() {
+        return authorityEntityRepository.findAll();
     }
 
     @Override
     @Transactional(readOnly = true)
-    public Page<Authority> findAll(Pageable pageable) {
-        return modelMapper.map(authorityEntityRepository.findAll(pageable), DomainTypeTokens.AuthorityPage);
+    public Page<AuthorityEntity> findAll(Pageable pageable) {
+        return authorityEntityRepository.findAll(pageable);
     }
 
     @Override
-    public Page<Authority> findAllByKeyword(Pageable pageable, String keyword) {
+    public Page<AuthorityEntity> findAllByKeyword(Pageable pageable, String keyword) {
         if (keyword == null) {
-            return modelMapper.map(authorityEntityRepository.findAll(pageable), DomainTypeTokens.AuthorityPage);
+            return authorityEntityRepository.findAll(pageable);
         } else {
-            return modelMapper.map(authorityEntityRepository.findAllByKeyword(pageable, keyword), DomainTypeTokens.AuthorityPage);
+            return authorityEntityRepository.findAllByKeyword(pageable, keyword);
         }
 
     }
 
     @Override
-    public void update(Authority authority) {
-        AuthorityEntity retrievedAuthorityEntity = authorityEntityRepository.findById(authority.getId()).orElseThrow(() ->
+    public AuthorityEntity update(AuthorityEntity authorityEntity) {
+        return authorityEntityRepository.findById(authorityEntity.getId()).orElseThrow(() ->
                 new WebAuthnSampleEntityNotFoundException(ResultMessages.error().add(MessageCodes.Error.Authority.AUTHORITY_NOT_FOUND)));
-        modelMapper.map(authority, retrievedAuthorityEntity);
     }
 
     @Override
-    public void update(AuthorityUpdateDto authorityUpdateDto) {
+    public AuthorityEntity update(AuthorityUpdateDto authorityUpdateDto) {
         AuthorityEntity retrievedAuthorityEntity = authorityEntityRepository.findById(authorityUpdateDto.getId())
                 .orElseThrow(() -> new WebAuthnSampleEntityNotFoundException(ResultMessages.error().add(MessageCodes.Error.Authority.AUTHORITY_NOT_FOUND)));
         List<UserEntity> userEntityList = userEntityRepository.findAllById(authorityUpdateDto.getUsers());
         List<GroupEntity> groupEntityList = groupEntityRepository.findAllById(authorityUpdateDto.getGroups());
         retrievedAuthorityEntity.setUsers(userEntityList);
         retrievedAuthorityEntity.setGroups(groupEntityList);
+        return retrievedAuthorityEntity;
     }
 
     @Override
-    public Page<User> findAllCandidateUsersByKeyword(Pageable pageable, String keyword) {
-        Page<UserEntity> userEntities;
+    public Page<UserEntity> findAllCandidateUsersByKeyword(Pageable pageable, String keyword) {
         if (keyword == null) {
-            userEntities = userEntityRepository.findAll(pageable);
+            return userEntityRepository.findAll(pageable);
         } else {
-            userEntities = userEntityRepository.findAllByKeyword(pageable, keyword);
+            return userEntityRepository.findAllByKeyword(pageable, keyword);
         }
-        return modelMapper.map(userEntities, DomainTypeTokens.UserPage);
     }
 
     @Override
-    public Page<Group> findAllCandidateGroupsByKeyword(Pageable pageable, String keyword) {
-        Page<GroupEntity> groupEntities;
+    public Page<GroupEntity> findAllCandidateGroupsByKeyword(Pageable pageable, String keyword) {
         if (keyword == null) {
-            groupEntities = groupEntityRepository.findAll(pageable);
+            return groupEntityRepository.findAll(pageable);
         } else {
-            groupEntities = groupEntityRepository.findAllByKeyword(pageable, keyword);
+            return groupEntityRepository.findAllByKeyword(pageable, keyword);
         }
-        return modelMapper.map(groupEntities, DomainTypeTokens.GroupPage);
     }
 
 

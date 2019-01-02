@@ -1,6 +1,6 @@
 package net.sharplab.springframework.security.webauthn.sample.domain.service;
 
-import net.sharplab.springframework.security.webauthn.sample.domain.model.Group;
+import net.sharplab.springframework.security.webauthn.sample.domain.entity.GroupEntity;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -17,14 +17,14 @@ public interface GroupService {
      * @param id groupId
      * @return group
      */
-    Group findOne(int id);
+    GroupEntity findOne(int id);
 
     /**
      * find all groups
      *
      * @return group list
      */
-    List<Group> findAll();
+    List<GroupEntity> findAll();
 
     /**
      * find all groups with paging
@@ -32,7 +32,7 @@ public interface GroupService {
      * @param pageable paging info
      * @return group list
      */
-    Page<Group> findAll(Pageable pageable);
+    Page<GroupEntity> findAll(Pageable pageable);
 
     /**
      * find all groups by keyword
@@ -41,22 +41,23 @@ public interface GroupService {
      * @param keyword  keyword
      * @return group list
      */
-    Page<Group> findAllByKeyword(Pageable pageable, String keyword);
+    Page<GroupEntity> findAllByKeyword(Pageable pageable, String keyword);
 
     /**
-     * create a group
+     * create a groupEntity
      *
-     * @param group group
-     * @return created group
+     * @param groupEntity groupEntity
+     * @return created groupEntity
      */
-    Group create(Group group);
+    GroupEntity create(GroupEntity groupEntity);
 
     /**
-     * update the specified group
+     * update the specified groupEntity
      *
-     * @param group group
+     * @param groupEntity groupEntity
+     * @return updated groupEntity
      */
-    void update(Group group);
+    GroupEntity update(GroupEntity groupEntity);
 
     /**
      * delete the specified group

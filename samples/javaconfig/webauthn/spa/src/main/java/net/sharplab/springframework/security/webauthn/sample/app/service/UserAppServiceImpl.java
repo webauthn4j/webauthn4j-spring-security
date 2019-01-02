@@ -2,7 +2,7 @@ package net.sharplab.springframework.security.webauthn.sample.app.service;
 
 import net.sharplab.springframework.security.webauthn.sample.app.api.admin.UserUpdateForm;
 import net.sharplab.springframework.security.webauthn.sample.app.util.AppSpecificMapper;
-import net.sharplab.springframework.security.webauthn.sample.domain.model.User;
+import net.sharplab.springframework.security.webauthn.sample.domain.entity.UserEntity;
 import net.sharplab.springframework.security.webauthn.sample.domain.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -24,36 +24,36 @@ public class UserAppServiceImpl implements UserAppService {
 
     @Transactional(readOnly = true)
     @Override
-    public User findOne(int id) {
+    public UserEntity findOne(int id) {
         return userService.findOne(id);
     }
 
     @Transactional(readOnly = true)
     @Override
-    public List<User> findAll() {
+    public List<UserEntity> findAll() {
         return userService.findAll();
     }
 
     @Transactional(readOnly = true)
     @Override
-    public Page<User> findAll(Pageable pageable) {
+    public Page<UserEntity> findAll(Pageable pageable) {
         return userService.findAll(pageable);
     }
 
     @Transactional(readOnly = true)
     @Override
-    public Page<User> findAllByKeyword(Pageable pageable, String keyword) {
+    public Page<UserEntity> findAllByKeyword(Pageable pageable, String keyword) {
         return userService.findAllByKeyword(pageable, keyword);
     }
 
     @Override
-    public User create(User user) {
-        return userService.create(user);
+    public UserEntity create(UserEntity userEntity) {
+        return userService.create(userEntity);
     }
 
     @Transactional
     @Override
-    public User update(int id, UserUpdateForm userUpdateForm) {
+    public UserEntity update(int id, UserUpdateForm userUpdateForm) {
         return userService.update(id, user -> mapper.mapForUpdate(userUpdateForm, user));
     }
 

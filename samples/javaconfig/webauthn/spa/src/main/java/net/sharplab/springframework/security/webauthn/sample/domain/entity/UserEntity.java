@@ -1,7 +1,10 @@
 package net.sharplab.springframework.security.webauthn.sample.domain.entity;
 
+import net.sharplab.springframework.security.webauthn.userdetails.WebAuthnUserDetails;
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
+
 import javax.persistence.*;
-import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -9,7 +12,7 @@ import java.util.List;
  */
 @Entity
 @Table(name = "m_user")
-public class UserEntity implements Serializable {
+public class UserEntity implements WebAuthnUserDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -21,6 +24,7 @@ public class UserEntity implements Serializable {
     private String emailAddress;
 
     @ManyToMany
+    @LazyCollection(LazyCollectionOption.FALSE)
     @JoinTable(
             name = "r_user_group",
             joinColumns = {@JoinColumn(name = "group_id", referencedColumnName = "id")},
@@ -30,6 +34,7 @@ public class UserEntity implements Serializable {
     private List<GroupEntity> groups;
 
     @ManyToMany
+    @LazyCollection(LazyCollectionOption.FALSE)
     @JoinTable(
             name = "r_user_authority",
             joinColumns = {@JoinColumn(name = "authority_id", referencedColumnName = "id")},
@@ -46,7 +51,7 @@ public class UserEntity implements Serializable {
     private boolean locked;
 
     @Column(name = "pwauth_allowed")
-    private boolean passwordAuthenticationAllowed;
+    private boolean singleFactorAuthenticationAllowed;
 
     public Integer getId() {
         return id;
@@ -104,6 +109,7 @@ public class UserEntity implements Serializable {
         this.authorities = authorities;
     }
 
+    @Override
     public List<AuthenticatorEntity> getAuthenticators() {
         return authenticators;
     }
@@ -128,12 +134,39 @@ public class UserEntity implements Serializable {
         this.locked = locked;
     }
 
-    public boolean isPasswordAuthenticationAllowed() {
-        return passwordAuthenticationAllowed;
+    @Override
+    public boolean isSingleFactorAuthenticationAllowed() {
+        return singleFactorAuthenticationAllowed;
     }
 
-    public void setPasswordAuthenticationAllowed(boolean passwordAuthenticationAllowed) {
-        this.passwordAuthenticationAllowed = passwordAuthenticationAllowed;
+    @Override
+    public void setSingleFactorAuthenticationAllowed(boolean singleFactorAuthenticationAllowed) {
+        this.singleFactorAuthenticationAllowed = singleFactorAuthenticationAllowed;
+    }
+
+    @Override
+    public String getUsername() {
+        return getEmailAddress();
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return !isLocked();
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return true;
     }
 
     /**

@@ -3,21 +3,20 @@ package net.sharplab.springframework.security.webauthn.sample.infrastructure.uti
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.webauthn4j.registry.Registry;
-import net.sharplab.springframework.security.webauthn.sample.domain.vo.AttestationStatementVO;
+import com.webauthn4j.response.attestation.authenticator.CredentialPublicKey;
 
 import javax.persistence.AttributeConverter;
+import javax.persistence.Converter;
 import java.io.IOException;
 import java.io.UncheckedIOException;
 
-/**
- * AttestationStatementVOConverter
- */
-public class AttestationStatementVOConverter implements AttributeConverter<AttestationStatementVO, String> {
+@Converter
+public class CredentialPublicKeyConverter implements AttributeConverter<CredentialPublicKey, String> {
 
     private ObjectMapper jsonMapper = new Registry().getJsonMapper();
 
     @Override
-    public String convertToDatabaseColumn(AttestationStatementVO attribute) {
+    public String convertToDatabaseColumn(CredentialPublicKey attribute) {
         try {
             return jsonMapper.writeValueAsString(attribute);
         } catch (JsonProcessingException e) {
@@ -26,9 +25,9 @@ public class AttestationStatementVOConverter implements AttributeConverter<Attes
     }
 
     @Override
-    public AttestationStatementVO convertToEntityAttribute(String dbData) {
+    public CredentialPublicKey convertToEntityAttribute(String dbData) {
         try {
-            return jsonMapper.readValue(dbData, AttestationStatementVO.class);
+            return jsonMapper.readValue(dbData, CredentialPublicKey.class);
         } catch (IOException e) {
             throw new UncheckedIOException(e);
         }

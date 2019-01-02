@@ -1,7 +1,7 @@
 package net.sharplab.springframework.security.webauthn.sample.app.service;
 
 import net.sharplab.springframework.security.webauthn.sample.app.api.ProfileUpdateForm;
-import net.sharplab.springframework.security.webauthn.sample.domain.model.User;
+import net.sharplab.springframework.security.webauthn.sample.domain.entity.UserEntity;
 
 public interface ProfileAppService {
 
@@ -11,22 +11,22 @@ public interface ProfileAppService {
      * @param id userId
      * @return user
      */
-    User findOne(int id);
+    UserEntity findOne(int id);
 
     /**
-     * create a user
+     * create a userEntity
      *
-     * @param user user
-     * @return created user
+     * @param userEntity userEntity
+     * @return created userEntity
      */
-    User create(User user);
+    UserEntity create(UserEntity userEntity);
 
     /**
      * update the specified user
      *
      * @param id userId
      */
-    User update(int id, ProfileUpdateForm profileUpdateForm);
+    UserEntity update(int id, ProfileUpdateForm profileUpdateForm);
 
     /**
      * delete the specified user

@@ -1,7 +1,7 @@
 package net.sharplab.springframework.security.webauthn.sample.app.service;
 
 import net.sharplab.springframework.security.webauthn.sample.app.api.admin.UserUpdateForm;
-import net.sharplab.springframework.security.webauthn.sample.domain.model.User;
+import net.sharplab.springframework.security.webauthn.sample.domain.entity.UserEntity;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,14 +17,14 @@ public interface UserAppService {
      * @param id userId
      * @return user
      */
-    User findOne(int id);
+    UserEntity findOne(int id);
 
     /**
      * find all users
      *
      * @return find all users
      */
-    List<User> findAll();
+    List<UserEntity> findAll();
 
     /**
      * find all users with paging
@@ -32,7 +32,7 @@ public interface UserAppService {
      * @param pageable paging info
      * @return user list
      */
-    Page<User> findAll(Pageable pageable);
+    Page<UserEntity> findAll(Pageable pageable);
 
     /**
      * find all users by keyword
@@ -41,22 +41,22 @@ public interface UserAppService {
      * @param keyword  keyword
      * @return user list
      */
-    Page<User> findAllByKeyword(Pageable pageable, String keyword);
+    Page<UserEntity> findAllByKeyword(Pageable pageable, String keyword);
 
     /**
-     * create a user
+     * create a userEntity
      *
-     * @param user user
-     * @return created user
+     * @param userEntity userEntity
+     * @return created userEntity
      */
-    User create(User user);
+    UserEntity create(UserEntity userEntity);
 
     /**
      * update the specified user
      *
      * @param id userId
      */
-    User update(int id, UserUpdateForm userUpdateForm);
+    UserEntity update(int id, UserUpdateForm userUpdateForm);
 
     /**
      * delete the specified user

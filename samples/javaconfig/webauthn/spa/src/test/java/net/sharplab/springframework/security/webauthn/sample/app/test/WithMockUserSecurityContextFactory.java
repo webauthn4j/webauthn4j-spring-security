@@ -1,16 +1,16 @@
 package net.sharplab.springframework.security.webauthn.sample.app.test;
 
-import net.sharplab.springframework.security.webauthn.sample.domain.model.Authenticator;
-import net.sharplab.springframework.security.webauthn.sample.domain.model.Authority;
-import net.sharplab.springframework.security.webauthn.sample.domain.model.Group;
-import net.sharplab.springframework.security.webauthn.sample.domain.model.User;
+import com.webauthn4j.util.Base64UrlUtil;
+import net.sharplab.springframework.security.webauthn.sample.domain.entity.AuthenticatorEntity;
+import net.sharplab.springframework.security.webauthn.sample.domain.entity.AuthorityEntity;
+import net.sharplab.springframework.security.webauthn.sample.domain.entity.GroupEntity;
+import net.sharplab.springframework.security.webauthn.sample.domain.entity.UserEntity;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.test.context.support.WithSecurityContextFactory;
 
-import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -31,26 +31,29 @@ public class WithMockUserSecurityContextFactory implements WithSecurityContextFa
     public SecurityContext createSecurityContext(WithMockUser user) {
 
         SecurityContext context = SecurityContextHolder.createEmptyContext();
-        List<Authority> authorities = Arrays.stream(user.authorities()).map(Authority::new).collect(Collectors.toList());
-        List<Group> groups = Arrays.stream(user.groups()).map(Group::new).collect(Collectors.toList());
-        List<Authenticator> authenticators =
+        List<AuthorityEntity> authorities = Arrays.stream(user.authorities()).map((name) -> new AuthorityEntity(null, name)).collect(Collectors.toList());
+        List<GroupEntity> groups = Arrays.stream(user.groups()).map(GroupEntity::new).collect(Collectors.toList());
+        List<AuthenticatorEntity> authenticatorEntities =
                 Arrays.stream(user.authenticators())
-                        .map((name) -> new Authenticator(name, null, null, 0))
+                        .map((name) -> {
+                            AuthenticatorEntity authenticatorEntity = new AuthenticatorEntity();
+                            authenticatorEntity.setName(name);
+                            return authenticatorEntity;
+                        })
                         .collect(Collectors.toList());
 
-        User principal =
-                new User(
-                        user.id(),
-                        user.userHandleString().getBytes(StandardCharsets.UTF_8),
-                        user.firstName(),
-                        user.lastName(),
-                        user.emailAddress(),
-                        authorities,
-                        groups,
-                        authenticators,
-                        user.locked(),
-                        user.passwordAuthenticationAllowed()
-                );
+        UserEntity principal = new UserEntity();
+        principal.setId(user.id());
+        principal.setUserHandle(Base64UrlUtil.decode(user.userHandleBase64Url()));
+        principal.setFirstName(user.firstName());
+        principal.setLastName(user.lastName());
+        principal.setEmailAddress(user.emailAddress());
+        principal.setGroups(groups);
+        principal.setAuthorities(authorities);
+        principal.setAuthenticators(authenticatorEntities);
+        principal.setLocked(user.locked());
+        principal.setSingleFactorAuthenticationAllowed(user.singleFactorAuthenticationAllowed());
+
         Authentication auth =
                 new UsernamePasswordAuthenticationToken(principal, "password", principal.getAuthorities());
         context.setAuthentication(auth);
