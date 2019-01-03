@@ -1,9 +1,6 @@
 package net.sharplab.springframework.security.webauthn.endpoint;
 
-import com.fasterxml.jackson.annotation.JsonGetter;
-import com.fasterxml.jackson.annotation.JsonSetter;
 import com.webauthn4j.request.PublicKeyCredentialType;
-import com.webauthn4j.response.extension.client.AuthenticationExtensionsClientOutputs;
 
 import java.util.Objects;
 
@@ -27,53 +24,43 @@ public class ServerPublicKeyCredential<T extends ServerAuthenticatorResponse> {
     public ServerPublicKeyCredential() {
     }
 
-    @JsonGetter
     public String getId() {
         return id;
     }
 
-    @JsonSetter
     private void setId(String id) {
         this.id = id;
     }
 
-    @JsonGetter
     public String getRawId() {
         return rawId;
     }
 
-    @JsonSetter
     private void setRawId(String rawId) {
         this.rawId = rawId;
     }
 
 
-    @JsonGetter
     public PublicKeyCredentialType getType() {
         return type;
     }
 
-    @JsonSetter
     private void setType(PublicKeyCredentialType type) {
         this.type = type;
     }
 
-    @JsonGetter
     public T getResponse() {
         return response;
     }
 
-    @JsonSetter
     private void setResponse(T response) {
         this.response = response;
     }
 
-    @JsonGetter
     public String getClientExtensionResults() {
         return clientExtensionResults;
     }
 
-    @JsonSetter
     private void setClientExtensionResults(String clientExtensionResults) {
         this.clientExtensionResults = clientExtensionResults;
     }
