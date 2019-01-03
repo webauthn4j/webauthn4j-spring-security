@@ -1,6 +1,8 @@
 package net.sharplab.springframework.security.webauthn.sample.app.config;
 
 import com.webauthn4j.anchor.TrustAnchorProvider;
+import com.webauthn4j.extras.fido.metadata.statement.MetadataStatementProvider;
+import com.webauthn4j.extras.fido.metadata.statement.MetadataStatementTrustAnchorProvider;
 import com.webauthn4j.registry.Registry;
 import com.webauthn4j.validator.WebAuthnAuthenticationContextValidator;
 import com.webauthn4j.validator.WebAuthnRegistrationContextValidator;
@@ -17,6 +19,7 @@ import net.sharplab.springframework.security.webauthn.challenge.ChallengeReposit
 import net.sharplab.springframework.security.webauthn.challenge.HttpSessionChallengeRepository;
 import net.sharplab.springframework.security.webauthn.endpoint.OptionsProvider;
 import net.sharplab.springframework.security.webauthn.endpoint.OptionsProviderImpl;
+import net.sharplab.springframework.security.webauthn.metadata.JsonFileResourceMetadataStatementProvider;
 import net.sharplab.springframework.security.webauthn.server.ServerPropertyProvider;
 import net.sharplab.springframework.security.webauthn.server.ServerPropertyProviderImpl;
 import net.sharplab.springframework.security.webauthn.userdetails.WebAuthnUserDetailsService;
@@ -24,6 +27,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
+import org.springframework.core.io.ResourceLoader;
+import org.springframework.core.io.support.ResourcePatternUtils;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.AuthenticationTrustResolver;
 import org.springframework.security.authentication.AuthenticationTrustResolverImpl;
@@ -44,7 +49,10 @@ import org.springframework.security.web.authentication.logout.LogoutSuccessHandl
 import org.springframework.security.web.csrf.InvalidCsrfTokenException;
 import org.springframework.security.web.csrf.MissingCsrfTokenException;
 
+import java.io.IOException;
+import java.io.UncheckedIOException;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 
@@ -103,12 +111,20 @@ public class WebSecurityBeanConfig {
     }
 
     @Bean
-    public TrustAnchorProvider trustAnchorProvider(){
-        List<Resource> certificates = Arrays.asList(
-                new ClassPathResource("certs/google/GSR2.crt"),
-                new ClassPathResource("certs/yubico/yubico-u2f-ca-certs.crt")
-        );
-        return new CertFileResourcesTrustAnchorProvider(certificates);
+    public TrustAnchorProvider trustAnchorProvider(MetadataStatementProvider metadataStatementProvider){
+        return new MetadataStatementTrustAnchorProvider(metadataStatementProvider);
+    }
+
+    @Bean
+    public MetadataStatementProvider metadataStatementProvider(Registry registry, ResourceLoader resourceLoader){
+        JsonFileResourceMetadataStatementProvider jsonFileResourceMetadataStatementProvider = new JsonFileResourceMetadataStatementProvider(registry);
+        try {
+            Resource[] resources = ResourcePatternUtils.getResourcePatternResolver(resourceLoader).getResources("classpath:/metadataStatements/fido-conformance-tools/*.json");
+            jsonFileResourceMetadataStatementProvider.setResources(Arrays.asList(resources));
+            return jsonFileResourceMetadataStatementProvider;
+        } catch (IOException e) {
+            throw new UncheckedIOException(e);
+        }
     }
 
     @Bean
