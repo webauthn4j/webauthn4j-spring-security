@@ -49,7 +49,7 @@ public class FidoServerConfigurer<H extends HttpSecurityBuilder<H>> extends Abst
 
         fidoServerAttestationOptionsEndpointConfig.configure(http);
         fidoServerAttestationResultEndpointConfig.configure(http);
-        fidoServerAttestationOptionsEndpointConfig.configure(http);
+        fidoServerAssertionOptionsEndpointConfig.configure(http);
         fidoServerAssertionResultEndpointConfig.configure(http);
     }
 
