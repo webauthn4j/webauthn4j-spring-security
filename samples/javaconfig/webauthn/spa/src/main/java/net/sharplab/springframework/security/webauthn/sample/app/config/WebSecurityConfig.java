@@ -5,7 +5,7 @@ import com.webauthn4j.request.PublicKeyCredentialType;
 import com.webauthn4j.response.attestation.statement.COSEAlgorithmIdentifier;
 import com.webauthn4j.validator.WebAuthnAuthenticationContextValidator;
 import net.sharplab.springframework.security.webauthn.WebAuthnRegistrationRequestValidator;
-import net.sharplab.springframework.security.webauthn.authenticator.FidoServerAuthenticatorService;
+import net.sharplab.springframework.security.webauthn.authenticator.WebAuthnAuthenticatorService;
 import net.sharplab.springframework.security.webauthn.config.configurers.WebAuthnAuthenticationProviderConfigurer;
 import net.sharplab.springframework.security.webauthn.userdetails.WebAuthnUserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -63,7 +63,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     private WebAuthnUserDetailsService userDetailsService;
 
     @Autowired
-    private FidoServerAuthenticatorService authenticatorService;
+    private WebAuthnAuthenticatorService authenticatorService;
 
     @Autowired
     private WebAuthnAuthenticationContextValidator webAuthnAuthenticationContextValidator;
@@ -109,7 +109,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .fidoServerAttestationOptionsEndpoint()
                 .and()
                 .fidoServerAttestationResultEndpointConfig()
-                    .fidoServerAuthenticatorService(authenticatorService)
+                    .webAuthnUserDetailsService(userDetailsService)
                     .webAuthnRegistrationRequestValidator(webAuthnRegistrationRequestValidator)
                 .and()
                 .fidoServerAssertionOptionsEndpointConfig()

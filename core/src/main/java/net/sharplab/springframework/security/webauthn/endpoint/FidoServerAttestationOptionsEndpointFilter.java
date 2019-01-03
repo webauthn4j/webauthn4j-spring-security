@@ -4,6 +4,7 @@ import com.webauthn4j.registry.Registry;
 import com.webauthn4j.response.client.challenge.Challenge;
 import com.webauthn4j.response.client.challenge.DefaultChallenge;
 import com.webauthn4j.util.Base64UrlUtil;
+import net.sharplab.springframework.security.webauthn.util.BeanAssertUtil;
 import org.springframework.security.authentication.AuthenticationServiceException;
 
 import javax.servlet.http.HttpServletRequest;

@@ -1,54 +1,65 @@
 -- User table  --
 CREATE TABLE m_user (
-  id                SERIAL          NOT NULL,
-  user_handle       bytea           NOT NULL,
+  id                INTEGER        NOT NULL AUTO_INCREMENT,
+  user_handle       BLOB            NOT NULL,
   first_name        VARCHAR(32)    NOT NULL,
   last_name         VARCHAR(32)    NOT NULL,
   email_address     VARCHAR(64)    NOT NULL  UNIQUE,
   password          VARCHAR(64)    NOT NULL,
   pwauth_allowed    BOOLEAN         NOT NULL,
-  locked            BOOLEAN         NOT NULL
+  locked            BOOLEAN         NOT NULL,
+  primary key(id)
 );
 
 -- Group table  --
 CREATE TABLE m_group (
-  id                SERIAL          NOT NULL,
-  group_name        VARCHAR(32)    NOT NULL
+  id                INTEGER        NOT NULL AUTO_INCREMENT,
+  group_name        VARCHAR(32)    NOT NULL,
+  primary key(id)
 );
 
 -- Authority table  --
 CREATE TABLE m_authority (
-  id                SERIAL          NOT NULL,
-  authority         VARCHAR(32)    NOT NULL
+  id                INTEGER        NOT NULL AUTO_INCREMENT,
+  authority         VARCHAR(32)    NOT NULL,
+  primary key(id)
 );
 
 -- AuthenticatorViewModel table  --
 CREATE TABLE m_authenticator(
-  id                SERIAL         NOT NULL,
-  name              VARCHAR(32)    NOT NULL,
-  user_id           INTEGER        NOT NULL  REFERENCES m_user(id),
-  counter           BIGINT         NOT NULL,
-  aa_guid  bytea  NOT NULL,
-  credential_id bytea NOT NULL,
-  credential_public_key VARCHAR(8192) NOT NULL,
+  id                     INTEGER       NOT NULL AUTO_INCREMENT,
+  name                   VARCHAR(32)   NOT NULL,
+  user_id                INTEGER       NOT NULL  REFERENCES m_user(id),
+  counter                BIGINT         NOT NULL,
+  aa_guid                BLOB           NOT NULL,
+  credential_id          BLOB           NOT NULL,
+  credential_public_key  VARCHAR(8192) NOT NULL,
   attestation_statement  VARCHAR(8192) NOT NULL,
+  primary key(id)
 );
 
--- User-Group relation  --
+
+-- ユーザー・グループリレーション  --
 CREATE TABLE r_user_group (
-  user_id           INTEGER       NOT NULL  REFERENCES m_user(id) ON DELETE CASCADE,
-  group_id          INTEGER       NOT NULL  REFERENCES m_group(id) ON DELETE CASCADE
+  user_id           INTEGER        NOT NULL,
+  group_id          INTEGER        NOT NULL,
+  FOREIGN KEY (user_id) REFERENCES m_user(id) ON DELETE CASCADE,
+  FOREIGN KEY (group_id) REFERENCES m_group(id) ON DELETE CASCADE
 );
 
--- User-Authority relation --
+-- ユーザー・権限リレーション --
 CREATE TABLE r_user_authority (
-  user_id           INTEGER       NOT NULL  REFERENCES m_user(id) ON DELETE CASCADE,
-  authority_id      INTEGER       NOT NULL  REFERENCES m_authority(id) ON DELETE CASCADE
+  user_id           INTEGER        NOT NULL,
+  authority_id      INTEGER        NOT NULL,
+  FOREIGN KEY (user_id) REFERENCES m_user(id) ON DELETE CASCADE,
+  FOREIGN KEY (authority_id) REFERENCES m_authority(id) ON DELETE CASCADE
 );
 
--- Group-Authority relation --
+-- グループ・権限リレーション --
 CREATE TABLE r_group_authority (
-  group_id          INTEGER       NOT NULL  REFERENCES m_group(id) ON DELETE CASCADE,
-  authority_id      INTEGER       NOT NULL  REFERENCES m_authority(id) ON DELETE CASCADE
+  group_id           INTEGER        NOT NULL,
+  authority_id       INTEGER        NOT NULL,
+  FOREIGN KEY (group_id) REFERENCES m_group(id) ON DELETE CASCADE,
+  FOREIGN KEY (authority_id) REFERENCES m_authority(id) ON DELETE CASCADE
 );
 

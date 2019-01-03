@@ -30,6 +30,13 @@ public class MessageCodes {
             }
         }
 
+        public class Authenticator {
+            public static final String AUTHENTICATOR_NOT_FOUND = "e.authenticator.authenticator_not_found";
+
+            private Authenticator() {
+            }
+        }
+
         public static final String UNKNOWN = "e.unknown";
 
         private Error() {

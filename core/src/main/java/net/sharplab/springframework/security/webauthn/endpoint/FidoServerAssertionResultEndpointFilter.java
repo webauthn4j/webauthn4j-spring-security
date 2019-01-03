@@ -8,6 +8,7 @@ import com.webauthn4j.util.Base64UrlUtil;
 import net.sharplab.springframework.security.webauthn.WebAuthnAssertionAuthenticationToken;
 import net.sharplab.springframework.security.webauthn.request.WebAuthnAuthenticationRequest;
 import net.sharplab.springframework.security.webauthn.server.ServerPropertyProvider;
+import net.sharplab.springframework.security.webauthn.util.BeanAssertUtil;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationServiceException;
 import org.springframework.security.core.Authentication;
@@ -67,6 +68,7 @@ public class FidoServerAssertionResultEndpointFilter extends AbstractAuthenticat
         } catch (IOException e) {
             throw new UncheckedIOException(e);
         }
+        BeanAssertUtil.validate(credential);
 
         ServerAuthenticatorAssertionResponse assertionResponse = credential.getResponse();
 

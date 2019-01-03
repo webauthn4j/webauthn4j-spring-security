@@ -2,9 +2,9 @@ package net.sharplab.springframework.security.webauthn.config.configurers;
 
 import com.webauthn4j.registry.Registry;
 import net.sharplab.springframework.security.webauthn.WebAuthnRegistrationRequestValidator;
-import net.sharplab.springframework.security.webauthn.authenticator.FidoServerAuthenticatorService;
 import net.sharplab.springframework.security.webauthn.endpoint.*;
 import net.sharplab.springframework.security.webauthn.server.ServerPropertyProvider;
+import net.sharplab.springframework.security.webauthn.userdetails.WebAuthnUserDetailsService;
 import org.springframework.context.ApplicationContext;
 import org.springframework.security.config.annotation.web.HttpSecurityBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -95,7 +95,7 @@ public class FidoServerConfigurer<H extends HttpSecurityBuilder<H>> extends Abst
 
     public class FidoServerAttestationResultEndpointConfig extends AbstractServerEndpointConfig<FidoServerAttestationResultEndpointFilter>{
 
-        private FidoServerAuthenticatorService fidoServerAuthenticatorService;
+        private WebAuthnUserDetailsService webAuthnUserDetailsService;
         private WebAuthnRegistrationRequestValidator webAuthnRegistrationRequestValidator;
 
         FidoServerAttestationResultEndpointConfig() {
@@ -105,19 +105,19 @@ public class FidoServerConfigurer<H extends HttpSecurityBuilder<H>> extends Abst
         @Override
         void configure(H http) {
             super.configure(http);
-            if(fidoServerAuthenticatorService == null){
-                fidoServerAuthenticatorService = WebAuthnConfigurerUtil.getFidoServerAuthenticatorService(http);
+            if(webAuthnUserDetailsService == null){
+                webAuthnUserDetailsService = WebAuthnConfigurerUtil.getWebAuthnUserDetailsService(http);
             }
-            http.setSharedObject(FidoServerAuthenticatorService.class, fidoServerAuthenticatorService);
+            http.setSharedObject(WebAuthnUserDetailsService.class, webAuthnUserDetailsService);
             if(webAuthnRegistrationRequestValidator == null){
                 webAuthnRegistrationRequestValidator = WebAuthnConfigurerUtil.getWebAuthnRegistrationRequestValidator(http);
             }
             http.setSharedObject(WebAuthnRegistrationRequestValidator.class, webAuthnRegistrationRequestValidator);
         }
 
-        public FidoServerAttestationResultEndpointConfig fidoServerAuthenticatorService(FidoServerAuthenticatorService fidoServerAuthenticatorService){
-            Assert.notNull(fidoServerAuthenticatorService, "fidoServerAuthenticatorService must not be null");
-            this.fidoServerAuthenticatorService = fidoServerAuthenticatorService;
+        public FidoServerAttestationResultEndpointConfig webAuthnUserDetailsService(WebAuthnUserDetailsService webAuthnUserDetailsService){
+            Assert.notNull(webAuthnUserDetailsService, "webAuthnUserDetailsService must not be null");
+            this.webAuthnUserDetailsService = webAuthnUserDetailsService;
             return this;
         }
 
@@ -129,7 +129,7 @@ public class FidoServerConfigurer<H extends HttpSecurityBuilder<H>> extends Abst
 
         @Override
         protected FidoServerAttestationResultEndpointFilter createInstance() {
-            return new FidoServerAttestationResultEndpointFilter(registry, fidoServerAuthenticatorService, webAuthnRegistrationRequestValidator);
+            return new FidoServerAttestationResultEndpointFilter(registry, webAuthnUserDetailsService, webAuthnRegistrationRequestValidator);
         }
     }
 

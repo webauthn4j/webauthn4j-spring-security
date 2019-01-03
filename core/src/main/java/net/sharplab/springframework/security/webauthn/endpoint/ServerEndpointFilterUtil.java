@@ -33,7 +33,7 @@ class ServerEndpointFilterUtil {
             errorResponse = new ErrorResponse("Anonymous access is prohibited");
             statusCode = HttpServletResponse.SC_FORBIDDEN;
         } else {
-            errorResponse = new ErrorResponse("The server encountered an internal error");
+            errorResponse = new ErrorResponse("The server encountered an internal error" + e.getMessage() + "\n" + e.getStackTrace().toString());
             statusCode = HttpServletResponse.SC_INTERNAL_SERVER_ERROR;
         }
         String errorResponseText = jsonConverter.writeValueAsString(errorResponse);

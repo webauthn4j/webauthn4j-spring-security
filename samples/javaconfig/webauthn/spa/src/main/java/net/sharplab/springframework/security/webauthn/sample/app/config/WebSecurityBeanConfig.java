@@ -83,18 +83,18 @@ public class WebSecurityBeanConfig {
 
     @Bean
     public WebAuthnRegistrationContextValidator webAuthnRegistrationContextValidator(TrustAnchorProvider trustAnchorProvider) {
-        return WebAuthnRegistrationContextValidator.createNonStrictRegistrationContextValidator();
-//        return new WebAuthnRegistrationContextValidator(
-//                Arrays.asList(
-//                        new PackedAttestationStatementValidator(),
-//                        new FIDOU2FAttestationStatementValidator(),
-//                        new AndroidKeyAttestationStatementValidator(),
-//                        new AndroidSafetyNetAttestationStatementValidator()
-//                ),
-//                new TrustAnchorCertPathTrustworthinessValidator(trustAnchorProvider),
-//                new DefaultECDAATrustworthinessValidator(),
-//                new DefaultSelfAttestationTrustworthinessValidator()
-//        );
+//        return WebAuthnRegistrationContextValidator.createNonStrictRegistrationContextValidator();
+        return new WebAuthnRegistrationContextValidator(
+                Arrays.asList(
+                        new PackedAttestationStatementValidator(),
+                        new FIDOU2FAttestationStatementValidator(),
+                        new AndroidKeyAttestationStatementValidator(),
+                        new AndroidSafetyNetAttestationStatementValidator()
+                ),
+                new TrustAnchorCertPathTrustworthinessValidator(trustAnchorProvider),
+                new DefaultECDAATrustworthinessValidator(),
+                new DefaultSelfAttestationTrustworthinessValidator()
+        );
     }
 
     @Bean

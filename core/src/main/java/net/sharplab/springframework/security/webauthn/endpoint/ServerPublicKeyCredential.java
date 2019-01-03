@@ -10,7 +10,8 @@ import java.util.Objects;
 public class ServerPublicKeyCredential<T extends ServerAuthenticatorResponse> {
 
     private String id;
-    private PublicKeyCredentialType type = PublicKeyCredentialType.PUBLIC_KEY;
+    private String rawId;
+    private PublicKeyCredentialType type;
     private T response;
     private String clientExtensionResults;
 
@@ -38,12 +39,12 @@ public class ServerPublicKeyCredential<T extends ServerAuthenticatorResponse> {
 
     @JsonGetter
     public String getRawId() {
-        return id;
+        return rawId;
     }
 
     @JsonSetter
     private void setRawId(String rawId) {
-        this.id = rawId;
+        this.rawId = rawId;
     }
 
 
@@ -81,8 +82,9 @@ public class ServerPublicKeyCredential<T extends ServerAuthenticatorResponse> {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        ServerPublicKeyCredential that = (ServerPublicKeyCredential) o;
+        ServerPublicKeyCredential<?> that = (ServerPublicKeyCredential<?>) o;
         return Objects.equals(id, that.id) &&
+                Objects.equals(rawId, that.rawId) &&
                 type == that.type &&
                 Objects.equals(response, that.response) &&
                 Objects.equals(clientExtensionResults, that.clientExtensionResults);
@@ -91,6 +93,6 @@ public class ServerPublicKeyCredential<T extends ServerAuthenticatorResponse> {
     @Override
     public int hashCode() {
 
-        return Objects.hash(id, type, response, clientExtensionResults);
+        return Objects.hash(id, rawId, type, response, clientExtensionResults);
     }
 }

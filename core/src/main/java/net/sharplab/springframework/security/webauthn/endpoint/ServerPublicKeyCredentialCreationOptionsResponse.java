@@ -16,7 +16,7 @@ public class ServerPublicKeyCredentialCreationOptionsResponse extends ServerResp
     private String challenge;
     private List<PublicKeyCredentialParameters> pubKeyCredParams;
     private BigInteger timeout;
-    private List<ServerPublicKeyCredentialDescriptor> excludedCredentials;
+    private List<ServerPublicKeyCredentialDescriptor> excludeCredentials;
     private AuthenticatorSelectionCriteria authenticatorSelection;
     private AttestationConveyancePreference attestation;
     private AuthenticationExtensionsClientInputs extensions;
@@ -27,7 +27,7 @@ public class ServerPublicKeyCredentialCreationOptionsResponse extends ServerResp
             String challenge,
             List<PublicKeyCredentialParameters> pubKeyCredParams,
             BigInteger timeout,
-            List<ServerPublicKeyCredentialDescriptor> excludedCredentials,
+            List<ServerPublicKeyCredentialDescriptor> excludeCredentials,
             AuthenticatorSelectionCriteria authenticatorSelection,
             AttestationConveyancePreference attestation,
             AuthenticationExtensionsClientInputs extensions) {
@@ -38,7 +38,7 @@ public class ServerPublicKeyCredentialCreationOptionsResponse extends ServerResp
         this.challenge = challenge;
         this.pubKeyCredParams = pubKeyCredParams;
         this.timeout = timeout;
-        this.excludedCredentials = excludedCredentials;
+        this.excludeCredentials = excludeCredentials;
         this.authenticatorSelection = authenticatorSelection;
         this.attestation = attestation;
         this.extensions = extensions;
@@ -66,8 +66,8 @@ public class ServerPublicKeyCredentialCreationOptionsResponse extends ServerResp
         return timeout;
     }
 
-    public List<ServerPublicKeyCredentialDescriptor> getExcludedCredentials() {
-        return excludedCredentials;
+    public List<ServerPublicKeyCredentialDescriptor> getExcludeCredentials() {
+        return excludeCredentials;
     }
 
     public AuthenticatorSelectionCriteria getAuthenticatorSelection() {

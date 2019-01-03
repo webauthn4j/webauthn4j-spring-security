@@ -1,6 +1,8 @@
 package net.sharplab.springframework.security.webauthn.endpoint;
 
 import com.webauthn4j.registry.Registry;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.security.authentication.AuthenticationTrustResolver;
 import org.springframework.security.authentication.AuthenticationTrustResolverImpl;
@@ -24,6 +26,7 @@ public abstract class ServerEndpointFilterBase extends GenericFilterBean {
 
     //~ Instance fields
     // ================================================================================================
+    private Logger logger = LoggerFactory.getLogger(ServerEndpointFilterBase.class);
     /**
      * Url this filter should get activated on.
      */
@@ -73,6 +76,7 @@ public abstract class ServerEndpointFilterBase extends GenericFilterBean {
             ServerResponse serverResponse = processRequest(fi.getRequest());
             serverEndpointFilterUtil.writeResponse(fi.getResponse(), serverResponse);
         } catch (RuntimeException e) {
+            logger.debug("RuntimeException is thrown", e);
             serverEndpointFilterUtil.writeErrorResponse(fi.getResponse(), e);
         }
 
