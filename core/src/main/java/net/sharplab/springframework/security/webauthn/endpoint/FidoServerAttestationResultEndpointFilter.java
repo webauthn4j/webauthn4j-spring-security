@@ -11,6 +11,7 @@ import net.sharplab.springframework.security.webauthn.authenticator.WebAuthnAuth
 import net.sharplab.springframework.security.webauthn.userdetails.WebAuthnUserDetailsImpl;
 import net.sharplab.springframework.security.webauthn.userdetails.WebAuthnUserDetailsService;
 import net.sharplab.springframework.security.webauthn.util.BeanAssertUtil;
+import net.sharplab.springframework.security.webauthn.validator.ServerPublicKeyCredentialValidator;
 import org.springframework.security.authentication.AuthenticationServiceException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
@@ -30,6 +31,7 @@ public class FidoServerAttestationResultEndpointFilter extends ServerEndpointFil
     private AttestationObjectConverter attestationObjectConverter;
     private CollectedClientDataConverter collectedClientDataConverter;
     private WebAuthnRegistrationRequestValidator webAuthnRegistrationRequestValidator;
+    private ServerPublicKeyCredentialValidator serverPublicKeyCredentialValidator;
 
     public FidoServerAttestationResultEndpointFilter(
             Registry registry,
@@ -40,7 +42,7 @@ public class FidoServerAttestationResultEndpointFilter extends ServerEndpointFil
         this.attestationObjectConverter = new AttestationObjectConverter(registry);
         this.collectedClientDataConverter = new CollectedClientDataConverter(registry);
         this.webAuthnRegistrationRequestValidator = webAuthnRegistrationRequestValidator;
-
+        this.serverPublicKeyCredentialValidator = new ServerPublicKeyCredentialValidator();
     }
 
     @Override
@@ -55,7 +57,7 @@ public class FidoServerAttestationResultEndpointFilter extends ServerEndpointFil
         } catch (IOException e) {
             throw new UncheckedIOException(e);
         }
-        BeanAssertUtil.validate(credential);
+        serverPublicKeyCredentialValidator.validate(credential);
         ServerAuthenticatorAttestationResponse response = credential.getResponse();
         AttestationObject attestationObject = attestationObjectConverter.convert(response.getAttestationObject());
         CollectedClientData collectedClientData = collectedClientDataConverter.convert(response.getClientDataJSON());
