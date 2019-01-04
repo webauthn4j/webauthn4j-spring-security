@@ -18,9 +18,6 @@ import java.io.IOException;
 
 public abstract class ServerEndpointFilterBase extends GenericFilterBean {
 
-    //~ Instance fields
-    // ================================================================================================
-    private Logger logger = LoggerFactory.getLogger(ServerEndpointFilterBase.class);
     /**
      * Url this filter should get activated on.
      */
@@ -28,6 +25,9 @@ public abstract class ServerEndpointFilterBase extends GenericFilterBean {
     protected MessageSourceAccessor messages = SpringSecurityMessageSource.getAccessor();
     protected Registry registry;
     protected ServerEndpointFilterUtil serverEndpointFilterUtil;
+    //~ Instance fields
+    // ================================================================================================
+    private Logger logger = LoggerFactory.getLogger(ServerEndpointFilterBase.class);
 
 
     public ServerEndpointFilterBase(
@@ -39,7 +39,8 @@ public abstract class ServerEndpointFilterBase extends GenericFilterBean {
         checkConfig();
     }
 
-    public ServerEndpointFilterBase(){}
+    public ServerEndpointFilterBase() {
+    }
 
     @Override
     public void afterPropertiesSet() {

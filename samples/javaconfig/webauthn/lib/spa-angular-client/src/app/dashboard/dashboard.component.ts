@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {ProfileService} from "../profile/profile.service";
 import {DashboardViewModel} from "./dashboard.view-model";
 

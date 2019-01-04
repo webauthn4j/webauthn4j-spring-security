@@ -13,9 +13,20 @@ public class ServerPublicKeyCredential<T extends ServerAuthenticatorResponse> {
     private String clientExtensionResults;
 
     public ServerPublicKeyCredential(
+            String id, String rawId, PublicKeyCredentialType type, T response,
+            String clientExtensionResults) {
+        this.id = id;
+        this.rawId =rawId;
+        this.type = type;
+        this.response = response;
+        this.clientExtensionResults = clientExtensionResults;
+    }
+
+    public ServerPublicKeyCredential(
             String id, PublicKeyCredentialType type, T response,
             String clientExtensionResults) {
         this.id = id;
+        this.rawId = id;
         this.type = type;
         this.response = response;
         this.clientExtensionResults = clientExtensionResults;
@@ -28,41 +39,20 @@ public class ServerPublicKeyCredential<T extends ServerAuthenticatorResponse> {
         return id;
     }
 
-    private void setId(String id) {
-        this.id = id;
-    }
-
     public String getRawId() {
         return rawId;
     }
 
-    private void setRawId(String rawId) {
-        this.rawId = rawId;
-    }
-
-
     public PublicKeyCredentialType getType() {
         return type;
-    }
-
-    private void setType(PublicKeyCredentialType type) {
-        this.type = type;
     }
 
     public T getResponse() {
         return response;
     }
 
-    private void setResponse(T response) {
-        this.response = response;
-    }
-
     public String getClientExtensionResults() {
         return clientExtensionResults;
-    }
-
-    private void setClientExtensionResults(String clientExtensionResults) {
-        this.clientExtensionResults = clientExtensionResults;
     }
 
     @Override

@@ -14,7 +14,8 @@ import org.springframework.security.config.annotation.web.HttpSecurityBuilder;
 
 public class WebAuthnConfigurerUtil {
 
-    private WebAuthnConfigurerUtil(){}
+    private WebAuthnConfigurerUtil() {
+    }
 
     static <H extends HttpSecurityBuilder<H>> ChallengeRepository getChallengeRepository(H http) {
         ApplicationContext applicationContext = http.getSharedObject(ApplicationContext.class);
@@ -41,7 +42,7 @@ public class WebAuthnConfigurerUtil {
         return optionsProvider;
     }
 
-    public static <H extends HttpSecurityBuilder<H>> Registry getRegistry(H http){
+    public static <H extends HttpSecurityBuilder<H>> Registry getRegistry(H http) {
         ApplicationContext applicationContext = http.getSharedObject(ApplicationContext.class);
         Registry registry;
         String[] beanNames = applicationContext.getBeanNamesForType(Registry.class);
@@ -53,7 +54,7 @@ public class WebAuthnConfigurerUtil {
         return registry;
     }
 
-    public static <H extends HttpSecurityBuilder<H>> ServerPropertyProvider getServerPropertyProvider(H http){
+    public static <H extends HttpSecurityBuilder<H>> ServerPropertyProvider getServerPropertyProvider(H http) {
         ApplicationContext applicationContext = http.getSharedObject(ApplicationContext.class);
         ServerPropertyProvider serverPropertyProvider;
         String[] beanNames = applicationContext.getBeanNamesForType(ServerPropertyProvider.class);

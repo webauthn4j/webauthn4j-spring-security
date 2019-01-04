@@ -112,7 +112,7 @@ public class OptionsEndpointFilter extends GenericFilterBean {
                 attestationOptions.getRegistrationExtensions(),
                 assertionOptions.getAuthenticationExtensions(),
                 assertionOptions.getParameters()
-                );
+        );
     }
 
     public AuthenticationTrustResolver getTrustResolver() {
@@ -155,7 +155,7 @@ public class OptionsEndpointFilter extends GenericFilterBean {
             errorResponse = new Response("Anonymous access is prohibited");
             statusCode = HttpServletResponse.SC_FORBIDDEN;
         } else {
-            errorResponse = new Response("The server encountered an internal error" + e.getMessage() + "\n" + e.getStackTrace().toString());
+            errorResponse = new Response("The server encountered an internal error");
             statusCode = HttpServletResponse.SC_INTERNAL_SERVER_ERROR;
         }
         String errorResponseText = registry.getJsonMapper().writeValueAsString(errorResponse);
@@ -164,12 +164,11 @@ public class OptionsEndpointFilter extends GenericFilterBean {
         httpServletResponse.setStatus(statusCode);
     }
 
-    String getLoginUsername(){
+    String getLoginUsername() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (trustResolver.isAnonymous(authentication) && !mfaTokenEvaluator.isMultiFactorAuthentication(authentication)) {
             return null;
-        }
-        else {
+        } else {
             return authentication.getName();
         }
     }

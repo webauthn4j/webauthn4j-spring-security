@@ -1,4 +1,4 @@
-import { Authenticator } from './authenticator';
+import {Authenticator} from './authenticator';
 
 export class RegisteringAuthenticator implements Authenticator {
 

@@ -1,6 +1,6 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import {async, ComponentFixture, TestBed} from '@angular/core/testing';
 
-import { PasswordLoginComponent } from './password-login.component';
+import {PasswordLoginComponent} from './password-login.component';
 import {AuthService} from "../auth/auth.service";
 import {NgbAlertModule} from "@ng-bootstrap/ng-bootstrap";
 import {FormsModule} from "@angular/forms";

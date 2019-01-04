@@ -1,7 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {RegisteringAuthenticatorViewModel} from "../webauthn/registering-authenticator.view-model";
 import {WebauthnService} from "../webauthn/webauthn.service";
-import { base64url } from "rfc4648";
+import {base64url} from "rfc4648";
 import {AuthenticatorDialogComponent} from "../authenticator-dialog/authenticator-dialog.component";
 import {Router} from "@angular/router";
 import {NgbModal} from "@ng-bootstrap/ng-bootstrap";

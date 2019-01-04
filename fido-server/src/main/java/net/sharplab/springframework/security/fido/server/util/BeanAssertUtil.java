@@ -7,7 +7,7 @@ public class BeanAssertUtil {
 
     public static void validate(ServerPublicKeyCredential serverPublicKeyCredential) {
 
-        if(serverPublicKeyCredential == null){
+        if (serverPublicKeyCredential == null) {
             throw new ConstraintViolationException("serverPublicKeyCredential must not be null");
         }
         if (serverPublicKeyCredential.getId() == null) {

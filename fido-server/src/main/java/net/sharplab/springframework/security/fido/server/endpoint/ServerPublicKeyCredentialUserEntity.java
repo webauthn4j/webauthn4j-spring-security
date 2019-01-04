@@ -9,7 +9,7 @@ public class ServerPublicKeyCredentialUserEntity extends PublicKeyCredentialEnti
     private String id;
     private String displayName;
 
-    public ServerPublicKeyCredentialUserEntity(String id, String name, String displayName,  String icon) {
+    public ServerPublicKeyCredentialUserEntity(String id, String name, String displayName, String icon) {
         super(name, icon);
         this.id = id;
         this.displayName = displayName;

@@ -22,7 +22,8 @@ public class ServerPublicKeyCredentialCreationOptionsRequest implements ServerRe
         this.attestation = attestation;
     }
 
-    public ServerPublicKeyCredentialCreationOptionsRequest(){}
+    public ServerPublicKeyCredentialCreationOptionsRequest() {
+    }
 
     public String getUsername() {
         return username;

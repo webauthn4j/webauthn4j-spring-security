@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {PasswordLoginCredential} from "../auth/password-login-credential";
 import {AuthService} from "../auth/auth.service";
 import {WebauthnService} from "../webauthn/webauthn.service";

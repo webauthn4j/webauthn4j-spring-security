@@ -17,7 +17,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.terasoluna.gfw.common.message.ResultMessages;
 
 import java.util.List;
-import java.util.Set;
 
 /**
  * 権限サービス

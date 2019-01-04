@@ -28,7 +28,6 @@ dependencies {
     compile project(':spring-security-webauthn-thymeleaf')
     compile project(':spring-security-webauthn-samples/javaconfig/webauthn/lib/spa-angular-client')
 
-
     // Spring Framework
     compile('org.springframework.boot:spring-boot-starter-data-jpa')
     compile('org.springframework.boot:spring-boot-starter-web')

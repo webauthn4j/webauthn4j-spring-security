@@ -1,4 +1,4 @@
-import { AuthenticatorViewModel } from './authenticator.view-model';
+import {AuthenticatorViewModel} from './authenticator.view-model';
 
 export class ExistingAuthenticatorViewModel implements AuthenticatorViewModel{
   id: number;

@@ -5,10 +5,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.webauthn4j.registry.Registry;
 import com.webauthn4j.server.ServerProperty;
 import com.webauthn4j.util.Base64UrlUtil;
+import net.sharplab.springframework.security.fido.server.util.BeanAssertUtil;
 import net.sharplab.springframework.security.webauthn.WebAuthnAssertionAuthenticationToken;
 import net.sharplab.springframework.security.webauthn.request.WebAuthnAuthenticationRequest;
 import net.sharplab.springframework.security.webauthn.server.ServerPropertyProvider;
-import net.sharplab.springframework.security.fido.server.util.BeanAssertUtil;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationServiceException;
 import org.springframework.security.core.Authentication;
@@ -36,7 +36,7 @@ public class FidoServerAssertionResultEndpointFilter extends AbstractAuthenticat
     public FidoServerAssertionResultEndpointFilter(
             Registry registry,
             ServerPropertyProvider serverPropertyProvider,
-            RequestMatcher requiresAuthenticationRequestMatcher){
+            RequestMatcher requiresAuthenticationRequestMatcher) {
         super(requiresAuthenticationRequestMatcher);
 
         this.jsonMapper = registry.getJsonMapper();
@@ -64,7 +64,8 @@ public class FidoServerAssertionResultEndpointFilter extends AbstractAuthenticat
         ServerPublicKeyCredential<ServerAuthenticatorAssertionResponse> credential;
         try {
             credential = jsonMapper.readValue(request.getInputStream(),
-                    new TypeReference<ServerPublicKeyCredential<ServerAuthenticatorAssertionResponse>>(){});
+                    new TypeReference<ServerPublicKeyCredential<ServerAuthenticatorAssertionResponse>>() {
+                    });
         } catch (IOException e) {
             throw new UncheckedIOException(e);
         }

@@ -32,7 +32,7 @@ public class Base64StringToAttestationObjectConverter implements Converter<Strin
 
     // ~ Constructor
     // ========================================================================================================
-    public Base64StringToAttestationObjectConverter(Registry registry){
+    public Base64StringToAttestationObjectConverter(Registry registry) {
         converter = new AttestationObjectConverter(registry);
     }
 

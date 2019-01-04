@@ -9,7 +9,6 @@ import net.sharplab.springframework.security.webauthn.challenge.ChallengeReposit
 import net.sharplab.springframework.security.webauthn.userdetails.WebAuthnUserDetails;
 import net.sharplab.springframework.security.webauthn.userdetails.WebAuthnUserDetailsService;
 import org.assertj.core.util.Lists;
-
 import org.junit.Test;
 import org.springframework.mock.web.MockHttpServletRequest;
 
@@ -45,7 +44,7 @@ public class OptionsProviderImplTest {
         optionsProvider.setRpId("example.com");
         optionsProvider.setRpName("rpName");
 
-        AttestationOptions attestationOptions = optionsProvider.getAttestationOptions(mockRequest,"dummy", null);
+        AttestationOptions attestationOptions = optionsProvider.getAttestationOptions(mockRequest, "dummy", null);
         assertThat(attestationOptions.getRelyingParty().getId()).isEqualTo("example.com");
         assertThat(attestationOptions.getRelyingParty().getName()).isEqualTo("rpName");
         assertThat(attestationOptions.getChallenge()).isEqualTo(challenge);
@@ -54,7 +53,7 @@ public class OptionsProviderImplTest {
     }
 
     @Test
-    public void getter_setter_test(){
+    public void getter_setter_test() {
         WebAuthnUserDetailsService userDetailsService = mock(WebAuthnUserDetailsService.class);
         ChallengeRepository challengeRepository = mock(ChallengeRepository.class);
         OptionsProviderImpl optionsProvider = new OptionsProviderImpl(userDetailsService, challengeRepository);

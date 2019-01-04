@@ -15,16 +15,13 @@ import java.util.List;
 
 public class WebAuthnConfigurer<H extends HttpSecurityBuilder<H>> extends AbstractHttpConfigurer<WebAuthnConfigurer<H>, H> {
 
+    private final WebAuthnConfigurer<H>.PublicKeyCredParamsConfig publicKeyCredParamsConfig = new WebAuthnConfigurer<H>.PublicKeyCredParamsConfig();
     private OptionsProvider optionsProvider;
-
     private String rpId = null;
     private String rpName = null;
     private String rpIcon = null;
     private BigInteger registrationTimeout;
     private BigInteger authenticationTimeout;
-
-    private final WebAuthnConfigurer<H>.PublicKeyCredParamsConfig publicKeyCredParamsConfig = new WebAuthnConfigurer<H>.PublicKeyCredParamsConfig();
-
 
     public static WebAuthnConfigurer<HttpSecurity> webAuthn() {
         return new WebAuthnConfigurer<>();
@@ -34,7 +31,7 @@ public class WebAuthnConfigurer<H extends HttpSecurityBuilder<H>> extends Abstra
     public void init(H http) throws Exception {
         super.init(http);
 
-        if(optionsProvider == null){
+        if (optionsProvider == null) {
             optionsProvider = WebAuthnConfigurerUtil.getOptionsProvider(http);
         }
         http.setSharedObject(OptionsProvider.class, optionsProvider);
@@ -44,20 +41,20 @@ public class WebAuthnConfigurer<H extends HttpSecurityBuilder<H>> extends Abstra
     public void configure(H http) throws Exception {
         super.configure(http);
 
-        if(rpId != null){
+        if (rpId != null) {
             optionsProvider.setRpId(rpId);
         }
-        if(rpName != null){
+        if (rpName != null) {
             optionsProvider.setRpName(rpName);
         }
-        if(rpIcon != null){
+        if (rpIcon != null) {
             optionsProvider.setRpIcon(rpIcon);
         }
         optionsProvider.getPubKeyCredParams().addAll(publicKeyCredParamsConfig.publicKeyCredentialParameters);
-        if(registrationTimeout != null){
+        if (registrationTimeout != null) {
             optionsProvider.setRegistrationTimeout(registrationTimeout);
         }
-        if(authenticationTimeout != null){
+        if (authenticationTimeout != null) {
             optionsProvider.setAuthenticationTimeout(authenticationTimeout);
         }
     }
@@ -99,7 +96,7 @@ public class WebAuthnConfigurer<H extends HttpSecurityBuilder<H>> extends Abstra
 
         private List<PublicKeyCredentialParameters> publicKeyCredentialParameters = new ArrayList<>();
 
-        public WebAuthnConfigurer.PublicKeyCredParamsConfig addPublicKeyCredParams(PublicKeyCredentialType type, COSEAlgorithmIdentifier alg){
+        public WebAuthnConfigurer.PublicKeyCredParamsConfig addPublicKeyCredParams(PublicKeyCredentialType type, COSEAlgorithmIdentifier alg) {
             publicKeyCredentialParameters.add(new PublicKeyCredentialParameters(type, alg));
             return this;
         }

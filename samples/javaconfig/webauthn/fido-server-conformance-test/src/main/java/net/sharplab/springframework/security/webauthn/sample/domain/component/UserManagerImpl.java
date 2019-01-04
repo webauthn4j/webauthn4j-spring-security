@@ -63,7 +63,7 @@ public class UserManagerImpl implements UserManager, WebAuthnUserDetailsService 
     @Override
     public WebAuthnUserDetails loadUserByCredentialId(byte[] credentialId) {
         AuthenticatorEntity authenticatorEntity = authenticatorEntityRepository.findOneByCredentialId(credentialId)
-                .orElseThrow(()-> new CredentialIdNotFoundException(String.format("AuthenticatorEntity with credentialId'%s' is not found.", Base64UrlUtil.encodeToString(credentialId))));
+                .orElseThrow(() -> new CredentialIdNotFoundException(String.format("AuthenticatorEntity with credentialId'%s' is not found.", Base64UrlUtil.encodeToString(credentialId))));
         return authenticatorEntity.getUser();
     }
 
@@ -136,6 +136,7 @@ public class UserManagerImpl implements UserManager, WebAuthnUserDetailsService 
 
     /**
      * return current login user
+     *
      * @return login user
      */
     private UserEntity getCurrentUser() {
@@ -153,21 +154,21 @@ public class UserManagerImpl implements UserManager, WebAuthnUserDetailsService 
     }
 
     @Override
-    public void removeAuthenticator(String username, WebAuthnAuthenticator authenticator)  {
+    public void removeAuthenticator(String username, WebAuthnAuthenticator authenticator) {
         UserEntity userEntity = userEntityRepository.findOneByEmailAddress(username)
                 .orElseThrow(() -> new WebAuthnSampleEntityNotFoundException(ResultMessages.error().add(MessageCodes.Error.User.USER_NOT_FOUND)));
         boolean found = userEntity.getAuthenticators().remove(authenticator);
-        if(!found){
+        if (!found) {
             throw new WebAuthnSampleEntityNotFoundException(ResultMessages.error().add(MessageCodes.Error.Authenticator.AUTHENTICATOR_NOT_FOUND));
         }
     }
 
     @Override
-    public void removeAuthenticator(String username, byte[] credentialId)  {
+    public void removeAuthenticator(String username, byte[] credentialId) {
         UserEntity userEntity = userEntityRepository.findOneByEmailAddress(username)
                 .orElseThrow(() -> new WebAuthnSampleEntityNotFoundException(ResultMessages.error().add(MessageCodes.Error.User.USER_NOT_FOUND)));
         boolean found = userEntity.getAuthenticators().removeIf(item -> Arrays.equals(item.getAttestedCredentialData().getCredentialId(), credentialId));
-        if(!found){
+        if (!found) {
             throw new WebAuthnSampleEntityNotFoundException(ResultMessages.error().add(MessageCodes.Error.Authenticator.AUTHENTICATOR_NOT_FOUND));
         }
     }

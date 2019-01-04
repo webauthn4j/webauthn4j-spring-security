@@ -32,7 +32,7 @@ public class FidoServerAttestationOptionsEndpointFilter extends ServerEndpointFi
 
     private OptionsProvider optionsProvider;
 
-    public FidoServerAttestationOptionsEndpointFilter(Registry registry, OptionsProvider optionsProvider){
+    public FidoServerAttestationOptionsEndpointFilter(Registry registry, OptionsProvider optionsProvider) {
         super(FILTER_URL, registry);
         this.optionsProvider = optionsProvider;
     }
@@ -53,10 +53,9 @@ public class FidoServerAttestationOptionsEndpointFilter extends ServerEndpointFi
         Challenge challenge = serverEndpointFilterUtil.encodeUsername(new DefaultChallenge(), username);
         AttestationOptions attestationOptions = optionsProvider.getAttestationOptions(request, username, challenge);
         String userHandle;
-        if(attestationOptions.getUser() == null){
+        if (attestationOptions.getUser() == null) {
             userHandle = Base64UrlUtil.encodeToString(generateUserHandle());
-        }
-        else {
+        } else {
             userHandle = attestationOptions.getUser().getUserHandle();
         }
         ServerPublicKeyCredentialUserEntity user = new ServerPublicKeyCredentialUserEntity(userHandle, username, displayName, null);
@@ -75,7 +74,7 @@ public class FidoServerAttestationOptionsEndpointFilter extends ServerEndpointFi
     }
 
 
-    private byte[] generateUserHandle(){
+    private byte[] generateUserHandle() {
         UUID uuid = UUID.randomUUID();
         long hi = uuid.getMostSignificantBits();
         long lo = uuid.getLeastSignificantBits();

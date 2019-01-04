@@ -1,13 +1,11 @@
 package net.sharplab.springframework.security.webauthn.endpoint;
 
 import com.webauthn4j.registry.Registry;
-import net.sharplab.springframework.security.webauthn.endpoint.OptionsEndpointFilter;
 import org.junit.Test;
-import org.springframework.mock.web.MockHttpServletResponse;
-import org.springframework.security.authentication.*;
-
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
+import org.springframework.security.authentication.AuthenticationTrustResolver;
+import org.springframework.security.authentication.AuthenticationTrustResolverImpl;
+import org.springframework.security.authentication.MFATokenEvaluator;
+import org.springframework.security.authentication.MFATokenEvaluatorImpl;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

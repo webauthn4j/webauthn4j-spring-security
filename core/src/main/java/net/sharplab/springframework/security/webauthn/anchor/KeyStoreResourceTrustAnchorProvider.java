@@ -32,7 +32,7 @@ public class KeyStoreResourceTrustAnchorProvider extends CachingTrustAnchorProvi
         checkConfig();
     }
 
-    private void checkConfig(){
+    private void checkConfig() {
         AssertUtil.notNull(keyStore, "keyStore must not be null");
     }
 

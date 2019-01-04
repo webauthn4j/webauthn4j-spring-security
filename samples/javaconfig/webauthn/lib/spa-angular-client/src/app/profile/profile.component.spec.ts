@@ -1,6 +1,6 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import {async, ComponentFixture, TestBed} from '@angular/core/testing';
 
-import { ProfileComponent } from './profile.component';
+import {ProfileComponent} from './profile.component';
 import {FormsModule} from "@angular/forms";
 import {NgbAlertModule} from "@ng-bootstrap/ng-bootstrap";
 import {of} from "rxjs/internal/observable/of";

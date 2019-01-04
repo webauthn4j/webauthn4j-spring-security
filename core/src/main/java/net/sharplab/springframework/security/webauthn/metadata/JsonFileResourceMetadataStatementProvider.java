@@ -34,10 +34,10 @@ public class JsonFileResourceMetadataStatementProvider implements MetadataStatem
         this.resources = resources;
     }
 
-    MetadataStatement readJsonFile(Resource resource){
-        try(InputStream inputStream = resource.getInputStream()){
+    MetadataStatement readJsonFile(Resource resource) {
+        try (InputStream inputStream = resource.getInputStream()) {
             return registry.getJsonMapper().readValue(inputStream, MetadataStatement.class);
-        }catch (IOException e) {
+        } catch (IOException e) {
             throw new UncheckedIOException("Failed to load a metadata statement json file", e);
         }
     }

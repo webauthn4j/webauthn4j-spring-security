@@ -14,7 +14,6 @@ import com.webauthn4j.validator.attestation.trustworthiness.ecdaa.DefaultECDAATr
 import com.webauthn4j.validator.attestation.trustworthiness.self.DefaultSelfAttestationTrustworthinessValidator;
 import com.webauthn4j.validator.attestation.u2f.FIDOU2FAttestationStatementValidator;
 import net.sharplab.springframework.security.webauthn.WebAuthnRegistrationRequestValidator;
-import net.sharplab.springframework.security.webauthn.anchor.CertFileResourcesTrustAnchorProvider;
 import net.sharplab.springframework.security.webauthn.challenge.ChallengeRepository;
 import net.sharplab.springframework.security.webauthn.challenge.HttpSessionChallengeRepository;
 import net.sharplab.springframework.security.webauthn.endpoint.OptionsProvider;
@@ -25,7 +24,6 @@ import net.sharplab.springframework.security.webauthn.server.ServerPropertyProvi
 import net.sharplab.springframework.security.webauthn.userdetails.WebAuthnUserDetailsService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.core.io.support.ResourcePatternUtils;
@@ -52,9 +50,7 @@ import org.springframework.security.web.csrf.MissingCsrfTokenException;
 import java.io.IOException;
 import java.io.UncheckedIOException;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.LinkedHashMap;
-import java.util.List;
 
 @Configuration
 public class WebSecurityBeanConfig {
@@ -65,12 +61,12 @@ public class WebSecurityBeanConfig {
     }
 
     @Bean
-    public AuthenticationTrustResolver authenticationTrustResolver(){
+    public AuthenticationTrustResolver authenticationTrustResolver() {
         return new AuthenticationTrustResolverImpl();
     }
 
     @Bean
-    public MFATokenEvaluator mfaTokenEvaluator(){
+    public MFATokenEvaluator mfaTokenEvaluator() {
         return new MFATokenEvaluatorImpl();
     }
 
@@ -80,7 +76,7 @@ public class WebSecurityBeanConfig {
     }
 
     @Bean
-    public OptionsProvider optionsProvider(WebAuthnUserDetailsService webAuthnUserDetailsService, ChallengeRepository challengeRepository){
+    public OptionsProvider optionsProvider(WebAuthnUserDetailsService webAuthnUserDetailsService, ChallengeRepository challengeRepository) {
         return new OptionsProviderImpl(webAuthnUserDetailsService, challengeRepository);
     }
 
@@ -106,17 +102,17 @@ public class WebSecurityBeanConfig {
     }
 
     @Bean
-    public WebAuthnAuthenticationContextValidator webAuthnAuthenticationContextValidator(Registry registry){
+    public WebAuthnAuthenticationContextValidator webAuthnAuthenticationContextValidator(Registry registry) {
         return new WebAuthnAuthenticationContextValidator(registry);
     }
 
     @Bean
-    public TrustAnchorProvider trustAnchorProvider(MetadataStatementProvider metadataStatementProvider){
+    public TrustAnchorProvider trustAnchorProvider(MetadataStatementProvider metadataStatementProvider) {
         return new MetadataStatementTrustAnchorProvider(metadataStatementProvider);
     }
 
     @Bean
-    public MetadataStatementProvider metadataStatementProvider(Registry registry, ResourceLoader resourceLoader){
+    public MetadataStatementProvider metadataStatementProvider(Registry registry, ResourceLoader resourceLoader) {
         JsonFileResourceMetadataStatementProvider jsonFileResourceMetadataStatementProvider = new JsonFileResourceMetadataStatementProvider(registry);
         try {
             Resource[] resources = ResourcePatternUtils.getResourcePatternResolver(resourceLoader).getResources("classpath:/metadataStatements/fido-conformance-tools/*.json");
@@ -143,17 +139,17 @@ public class WebSecurityBeanConfig {
     }
 
     @Bean
-    public Registry registry(){
+    public Registry registry() {
         return new Registry();
     }
 
     @Bean
-    public AuthenticationSuccessHandler authenticationSuccessHandler(){
+    public AuthenticationSuccessHandler authenticationSuccessHandler() {
         return new ForwardAuthenticationSuccessHandler("/api/status/200");
     }
 
     @Bean
-    public AuthenticationFailureHandler authenticationFailureHandler(){
+    public AuthenticationFailureHandler authenticationFailureHandler() {
         LinkedHashMap<Class<? extends AuthenticationException>, AuthenticationFailureHandler> authenticationFailureHandlers = new LinkedHashMap<>();
 
         // authenticator error handler
@@ -167,7 +163,7 @@ public class WebSecurityBeanConfig {
     }
 
     @Bean
-    public LogoutSuccessHandler logoutSuccessHandler(){
+    public LogoutSuccessHandler logoutSuccessHandler() {
         return new ForwardLogoutSuccessHandler("/api/status/200");
     }
 
@@ -193,7 +189,7 @@ public class WebSecurityBeanConfig {
     }
 
     @Bean
-    public AuthenticationEntryPoint authenticationEntryPoint(){
+    public AuthenticationEntryPoint authenticationEntryPoint() {
         LoginUrlAuthenticationEntryPoint authenticationEntryPoint = new LoginUrlAuthenticationEntryPoint("/api/status/401");
         authenticationEntryPoint.setUseForward(true);
         return authenticationEntryPoint;

@@ -26,7 +26,6 @@ dependencies {
     compile project(':spring-security-webauthn-core')
     compile project(':spring-security-webauthn-fido-server')
 
-
     // Spring Framework
     compile('org.springframework.boot:spring-boot-starter-data-jpa')
     compile('org.springframework.boot:spring-boot-starter-web')

@@ -16,7 +16,7 @@ public class FidoServerAssertionResultEndpointSuccessHandler implements Authenti
         this.serverEndpointFilterUtil = new ServerEndpointFilterUtil(registry);
     }
 
-    public FidoServerAssertionResultEndpointSuccessHandler(){
+    public FidoServerAssertionResultEndpointSuccessHandler() {
         this(new Registry());
     }
 

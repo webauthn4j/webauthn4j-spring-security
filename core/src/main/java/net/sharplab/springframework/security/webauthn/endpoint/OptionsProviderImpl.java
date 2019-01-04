@@ -73,7 +73,7 @@ public class OptionsProviderImpl implements OptionsProvider {
     /**
      * {@inheritDoc}
      */
-    public AttestationOptions getAttestationOptions(HttpServletRequest request, String username, Challenge challenge){
+    public AttestationOptions getAttestationOptions(HttpServletRequest request, String username, Challenge challenge) {
 
         WebAuthnUserEntity user;
         Collection<? extends Authenticator> authenticators;
@@ -83,8 +83,7 @@ public class OptionsProviderImpl implements OptionsProvider {
             authenticators = userDetails.getAuthenticators();
             String userHandle = Base64UrlUtil.encodeToString(userDetails.getUserHandle());
             user = new WebAuthnUserEntity(userHandle, username);
-        }
-        catch (UsernameNotFoundException e){
+        } catch (UsernameNotFoundException e) {
             authenticators = Collections.emptyList();
             user = null;
         }
@@ -96,10 +95,9 @@ public class OptionsProviderImpl implements OptionsProvider {
         }
 
         PublicKeyCredentialRpEntity relyingParty = new PublicKeyCredentialRpEntity(getEffectiveRpId(request), rpName, rpIcon);
-        if(challenge == null){
+        if (challenge == null) {
             challenge = challengeRepository.loadOrGenerateChallenge(request);
-        }
-        else {
+        } else {
             challengeRepository.saveChallenge(challenge, request);
         }
 
@@ -107,14 +105,13 @@ public class OptionsProviderImpl implements OptionsProvider {
                 credentials, registrationExtensions);
     }
 
-    public AssertionOptions getAssertionOptions(HttpServletRequest request, String username, Challenge challenge){
+    public AssertionOptions getAssertionOptions(HttpServletRequest request, String username, Challenge challenge) {
 
         Collection<? extends Authenticator> authenticators;
         try {
             WebAuthnUserDetails userDetails = userDetailsService.loadUserByUsername(username);
             authenticators = userDetails.getAuthenticators();
-        }
-        catch (UsernameNotFoundException e){
+        } catch (UsernameNotFoundException e) {
             authenticators = Collections.emptyList();
         }
 
@@ -125,10 +122,9 @@ public class OptionsProviderImpl implements OptionsProvider {
             String credentialId = Base64UrlUtil.encodeToString(authenticator.getAttestedCredentialData().getCredentialId());
             credentials.add(credentialId);
         }
-        if(challenge == null){
+        if (challenge == null) {
             challenge = challengeRepository.loadOrGenerateChallenge(request);
-        }
-        else {
+        } else {
             challengeRepository.saveChallenge(challenge, request);
         }
         Parameters parameters
@@ -138,12 +134,11 @@ public class OptionsProviderImpl implements OptionsProvider {
         return new AssertionOptions(challenge, authenticationTimeout, effectiveRpId, credentials, authenticationExtensions, parameters);
     }
 
-    public String getEffectiveRpId(HttpServletRequest request){
+    public String getEffectiveRpId(HttpServletRequest request) {
         String effectiveRpId;
         if (this.rpId != null) {
             effectiveRpId = this.rpId;
-        }
-        else {
+        } else {
             Origin origin = ServletUtil.getOrigin(request);
             effectiveRpId = origin.getHost();
         }

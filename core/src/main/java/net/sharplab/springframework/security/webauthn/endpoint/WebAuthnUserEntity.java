@@ -12,7 +12,8 @@ public class WebAuthnUserEntity {
         this.username = username;
     }
 
-    public WebAuthnUserEntity(){}
+    public WebAuthnUserEntity() {
+    }
 
     public String getUserHandle() {
         return userHandle;

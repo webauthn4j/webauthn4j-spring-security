@@ -32,7 +32,7 @@ public class Base64StringToCollectedClientDataConverter implements Converter<Str
 
     // ~ Constructor
     // ========================================================================================================
-    public Base64StringToCollectedClientDataConverter(Registry registry){
+    public Base64StringToCollectedClientDataConverter(Registry registry) {
         converter = new CollectedClientDataConverter(registry);
     }
 

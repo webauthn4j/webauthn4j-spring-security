@@ -12,7 +12,8 @@ public class ServerAuthenticatorAttestationResponse implements ServerAuthenticat
         this.attestationObject = attestationObject;
     }
 
-    public ServerAuthenticatorAttestationResponse(){}
+    public ServerAuthenticatorAttestationResponse() {
+    }
 
     public String getClientDataJSON() {
         return clientDataJSON;

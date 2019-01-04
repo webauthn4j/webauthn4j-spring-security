@@ -71,12 +71,12 @@ import org.springframework.util.Assert;
 public final class WebAuthnLoginConfigurer<H extends HttpSecurityBuilder<H>> extends
         AbstractAuthenticationFilterConfigurer<H, WebAuthnLoginConfigurer<H>, WebAuthnProcessingFilter> {
 
+    private final WebAuthnLoginConfigurer<H>.OptionsEndpointConfig optionsEndpointConfig = new WebAuthnLoginConfigurer<H>.OptionsEndpointConfig();
     //~ Instance fields
     // ================================================================================================
     private OptionsProvider optionsProvider = null;
     private Registry registry = null;
     private ServerPropertyProvider serverPropertyProvider = null;
-
     private String usernameParameter = null;
     private String passwordParameter = null;
     private String credentialIdParameter = null;
@@ -84,8 +84,6 @@ public final class WebAuthnLoginConfigurer<H extends HttpSecurityBuilder<H>> ext
     private String authenticatorDataParameter = null;
     private String signatureParameter = null;
     private String clientExtensionsJSONParameter = null;
-
-    private final WebAuthnLoginConfigurer<H>.OptionsEndpointConfig optionsEndpointConfig = new WebAuthnLoginConfigurer<H>.OptionsEndpointConfig();
 
     public WebAuthnLoginConfigurer() {
         super(new WebAuthnProcessingFilter(), null);
@@ -109,11 +107,11 @@ public final class WebAuthnLoginConfigurer<H extends HttpSecurityBuilder<H>> ext
     @Override
     public void configure(H http) throws Exception {
         super.configure(http);
-        if(optionsProvider == null){
+        if (optionsProvider == null) {
             optionsProvider = WebAuthnConfigurerUtil.getOptionsProvider(http);
         }
         http.setSharedObject(OptionsProvider.class, optionsProvider);
-        if(registry == null){
+        if (registry == null) {
             registry = WebAuthnConfigurerUtil.getRegistry(http);
         }
         http.setSharedObject(Registry.class, registry);
@@ -131,31 +129,31 @@ public final class WebAuthnLoginConfigurer<H extends HttpSecurityBuilder<H>> ext
     }
 
     private void configureParameters() {
-        if(usernameParameter != null){
+        if (usernameParameter != null) {
             this.getAuthenticationFilter().setUsernameParameter(usernameParameter);
             this.optionsProvider.setUsernameParameter(usernameParameter);
         }
-        if(passwordParameter != null){
+        if (passwordParameter != null) {
             this.getAuthenticationFilter().setPasswordParameter(passwordParameter);
             this.optionsProvider.setPasswordParameter(passwordParameter);
         }
-        if(credentialIdParameter != null){
+        if (credentialIdParameter != null) {
             this.getAuthenticationFilter().setCredentialIdParameter(credentialIdParameter);
             this.optionsProvider.setCredentialIdParameter(credentialIdParameter);
         }
-        if(clientDataParameter != null){
+        if (clientDataParameter != null) {
             this.getAuthenticationFilter().setClientDataJSONParameter(clientDataParameter);
             this.optionsProvider.setClientDataJSONParameter(clientDataParameter);
         }
-        if(authenticatorDataParameter != null){
+        if (authenticatorDataParameter != null) {
             this.getAuthenticationFilter().setAuthenticatorDataParameter(authenticatorDataParameter);
             this.optionsProvider.setAuthenticatorDataParameter(authenticatorDataParameter);
         }
-        if(signatureParameter != null){
+        if (signatureParameter != null) {
             this.getAuthenticationFilter().setSignatureParameter(signatureParameter);
             this.optionsProvider.setSignatureParameter(signatureParameter);
         }
-        if(clientExtensionsJSONParameter != null){
+        if (clientExtensionsJSONParameter != null) {
             this.getAuthenticationFilter().setClientExtensionsJSONParameter(clientExtensionsJSONParameter);
             this.optionsProvider.setClientExtensionsJSONParameter(clientExtensionsJSONParameter);
         }
@@ -294,13 +292,13 @@ public final class WebAuthnLoginConfigurer<H extends HttpSecurityBuilder<H>> ext
         return new AntPathRequestMatcher(loginProcessingUrl, "POST");
     }
 
-    public WebAuthnLoginConfigurer<H> optionsProvider(OptionsProvider optionsProvider){
+    public WebAuthnLoginConfigurer<H> optionsProvider(OptionsProvider optionsProvider) {
         Assert.notNull(optionsProvider, "optionsProvider must not be null");
         this.optionsProvider = optionsProvider;
         return this;
     }
 
-    public WebAuthnLoginConfigurer<H> registry(Registry registry){
+    public WebAuthnLoginConfigurer<H> registry(Registry registry) {
         Assert.notNull(registry, "registry must not be null");
         this.registry = registry;
         return this;
@@ -312,7 +310,7 @@ public final class WebAuthnLoginConfigurer<H extends HttpSecurityBuilder<H>> ext
         return this;
     }
 
-    public WebAuthnLoginConfigurer<H>.OptionsEndpointConfig optionsEndpoint(){
+    public WebAuthnLoginConfigurer<H>.OptionsEndpointConfig optionsEndpoint() {
         return optionsEndpointConfig;
     }
 
@@ -320,7 +318,8 @@ public final class WebAuthnLoginConfigurer<H extends HttpSecurityBuilder<H>> ext
 
         private String processingUrl = OptionsEndpointFilter.FILTER_URL;
 
-        private OptionsEndpointConfig(){}
+        private OptionsEndpointConfig() {
+        }
 
         private void configure(H http) {
             OptionsEndpointFilter optionsEndpointFilter;
@@ -329,8 +328,7 @@ public final class WebAuthnLoginConfigurer<H extends HttpSecurityBuilder<H>> ext
             if (beanNames.length == 0) {
                 optionsEndpointFilter = new OptionsEndpointFilter(optionsProvider, registry);
                 optionsEndpointFilter.setFilterProcessesUrl(processingUrl);
-            }
-            else {
+            } else {
                 optionsEndpointFilter = applicationContext.getBean(OptionsEndpointFilter.class);
             }
 

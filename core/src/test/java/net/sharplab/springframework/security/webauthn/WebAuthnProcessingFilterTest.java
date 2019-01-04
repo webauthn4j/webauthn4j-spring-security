@@ -245,7 +245,7 @@ public class WebAuthnProcessingFilterTest {
     }
 
     @Test
-    public void constructor_test(){
+    public void constructor_test() {
         ServerPropertyProvider serverPropertyProvider = mock(ServerPropertyProvider.class);
         WebAuthnProcessingFilter webAuthnProcessingFilter = new WebAuthnProcessingFilter(AuthorityUtils.NO_AUTHORITIES, serverPropertyProvider);
         assertThat(webAuthnProcessingFilter.getServerPropertyProvider()).isEqualTo(serverPropertyProvider);

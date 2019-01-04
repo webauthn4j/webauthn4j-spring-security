@@ -28,8 +28,9 @@ public interface OptionsProvider {
 
     /**
      * provides AttestationOptions. If <code>username</code> is <code>null</code>, <code>user</code>, <code>credentials</code> are not populated.
-     * @param request request
-     * @param username username
+     *
+     * @param request   request
+     * @param username  username
      * @param challenge if null, new challenge is generated. Otherwise, specified challenge is used.
      * @return {@link Options} instance
      */
@@ -37,8 +38,9 @@ public interface OptionsProvider {
 
     /**
      * provides AssertionOptions. If <code>username</code> is <code>null</code>, <code>credentials</code> are not populated.
-     * @param request request
-     * @param username username
+     *
+     * @param request   request
+     * @param username  username
      * @param challenge if null, new challenge is generated. Otherwise, specified challenge is used.
      * @return {@link Options} instance
      */
@@ -46,6 +48,7 @@ public interface OptionsProvider {
 
     /**
      * returns effective rpId based on request origin and configured <code>rpId</code>.
+     *
      * @param request request
      * @return effective rpId
      */
@@ -53,6 +56,7 @@ public interface OptionsProvider {
 
     /**
      * returns configured rpId
+     *
      * @return rpId
      */
     String getRpId();
@@ -64,18 +68,21 @@ public interface OptionsProvider {
 
     /**
      * returns rpName
+     *
      * @return rpName
      */
     String getRpName();
 
     /**
      * configures rpName
+     *
      * @param rpName rpName
      */
     void setRpName(String rpName);
 
     /**
      * returns rpIcon
+     *
      * @return rpIcon
      */
     String getRpIcon();
@@ -84,19 +91,24 @@ public interface OptionsProvider {
 
     /**
      * returns {@link PublicKeyCredentialParameters} list
+     *
      * @return {@link PublicKeyCredentialParameters} list
      */
     List<PublicKeyCredentialParameters> getPubKeyCredParams();
 
     /**
      * configures pubKeyCredParams
+     *
      * @param pubKeyCredParams {@link PublicKeyCredentialParameters} list
      */
     void setPubKeyCredParams(List<PublicKeyCredentialParameters> pubKeyCredParams);
 
     BigInteger getRegistrationTimeout();
+
     void setRegistrationTimeout(BigInteger registrationTimeout);
+
     BigInteger getAuthenticationTimeout();
+
     void setAuthenticationTimeout(BigInteger authenticationTimeout);
 
     String getUsernameParameter();

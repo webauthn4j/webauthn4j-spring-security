@@ -16,7 +16,8 @@ public class ServerAuthenticatorAssertionResponse implements ServerAuthenticator
         this.userHandle = userHandle;
     }
 
-    public ServerAuthenticatorAssertionResponse(){}
+    public ServerAuthenticatorAssertionResponse() {
+    }
 
     public String getClientDataJSON() {
         return clientDataJSON;

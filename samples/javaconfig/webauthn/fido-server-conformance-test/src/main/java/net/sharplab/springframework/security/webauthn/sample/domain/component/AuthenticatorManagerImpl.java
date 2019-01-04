@@ -23,7 +23,7 @@ public class AuthenticatorManagerImpl implements AuthenticatorManager {
     @Override
     public void updateCounter(byte[] credentialId, long counter) throws CredentialIdNotFoundException {
         AuthenticatorEntity authenticatorEntity = authenticatorEntityRepository.findOneByCredentialId(credentialId)
-                        .orElseThrow(()-> new CredentialIdNotFoundException("AuthenticatorEntity not found"));
+                .orElseThrow(() -> new CredentialIdNotFoundException("AuthenticatorEntity not found"));
         authenticatorEntity.setCounter(counter);
     }
 

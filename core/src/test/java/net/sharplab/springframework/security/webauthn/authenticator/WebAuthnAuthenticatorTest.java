@@ -8,7 +8,7 @@ public class WebAuthnAuthenticatorTest {
 
     @Test
     public void equals_hashCode_test() {
-        WebAuthnAuthenticator instanceA = new WebAuthnAuthenticator("authenticator", null ,null, 0);
+        WebAuthnAuthenticator instanceA = new WebAuthnAuthenticator("authenticator", null, null, 0);
         WebAuthnAuthenticator instanceB = new WebAuthnAuthenticator("authenticator", null, null, 0);
         assertThat(instanceA).isEqualTo(instanceB);
         assertThat(instanceA).hasSameHashCodeAs(instanceB);

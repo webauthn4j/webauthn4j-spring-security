@@ -18,7 +18,7 @@ public class CertFileResourcesTrustAnchorProvider extends CachingTrustAnchorProv
 
     private List<Resource> pemFiles;
 
-    public CertFileResourcesTrustAnchorProvider(){
+    public CertFileResourcesTrustAnchorProvider() {
     }
 
     public CertFileResourcesTrustAnchorProvider(List<Resource> pemFiles) {
@@ -30,7 +30,7 @@ public class CertFileResourcesTrustAnchorProvider extends CachingTrustAnchorProv
         checkConfig();
     }
 
-    private void checkConfig(){
+    private void checkConfig() {
         AssertUtil.notNull(pemFiles, "pemFile must not be null");
     }
 
@@ -47,7 +47,7 @@ public class CertFileResourcesTrustAnchorProvider extends CachingTrustAnchorProv
         this.pemFiles = pemFiles;
     }
 
-    private TrustAnchor loadTrustAnchor(Resource pemFile){
+    private TrustAnchor loadTrustAnchor(Resource pemFile) {
         checkConfig();
         try {
             X509Certificate certificate = CertificateUtil.generateX509Certificate(pemFile.getInputStream());

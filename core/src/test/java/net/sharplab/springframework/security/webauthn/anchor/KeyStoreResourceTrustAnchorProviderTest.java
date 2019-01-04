@@ -36,7 +36,7 @@ public class KeyStoreResourceTrustAnchorProviderTest {
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void afterPropertiesSet_test(){
+    public void afterPropertiesSet_test() {
         KeyStoreResourceTrustAnchorProvider trustAnchorProvider = new KeyStoreResourceTrustAnchorProvider();
         trustAnchorProvider.afterPropertiesSet();
     }

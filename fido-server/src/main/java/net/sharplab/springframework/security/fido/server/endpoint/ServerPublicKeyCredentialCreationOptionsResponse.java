@@ -44,7 +44,8 @@ public class ServerPublicKeyCredentialCreationOptionsResponse extends ServerResp
         this.extensions = extensions;
     }
 
-    public ServerPublicKeyCredentialCreationOptionsResponse(){}
+    public ServerPublicKeyCredentialCreationOptionsResponse() {
+    }
 
     public PublicKeyCredentialRpEntity getRp() {
         return rp;

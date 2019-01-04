@@ -1,16 +1,16 @@
-import { BrowserModule } from '@angular/platform-browser';
-import { NgModule } from '@angular/core';
+import {BrowserModule} from '@angular/platform-browser';
+import {NgModule} from '@angular/core';
 
-import { AppComponent } from './app.component';
-import { LoginComponent } from './login/login.component';
-import { AppRoutingModule } from "./app-routing.module";
-import { RouterModule } from "@angular/router";
-import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
-import { NgbModule} from "@ng-bootstrap/ng-bootstrap"
-import { FormsModule } from "@angular/forms";
+import {AppComponent} from './app.component';
+import {LoginComponent} from './login/login.component';
+import {AppRoutingModule} from "./app-routing.module";
+import {RouterModule} from "@angular/router";
+import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
+import {NgbModule} from "@ng-bootstrap/ng-bootstrap"
+import {FormsModule} from "@angular/forms";
 import {HTTP_INTERCEPTORS, HttpClientModule} from "@angular/common/http";
-import { AuthenticatorLoginComponent } from './authenticator-login/authenticator-login.component';
-import { PasswordLoginComponent } from './password-login/password-login.component';
+import {AuthenticatorLoginComponent} from './authenticator-login/authenticator-login.component';
+import {PasswordLoginComponent} from './password-login/password-login.component';
 import {DashboardComponent} from "./dashboard/dashboard.component";
 import {SignupComponent} from "./signup/signup.component";
 import {AuthenticatorDialogComponent} from "./authenticator-dialog/authenticator-dialog.component";
@@ -20,7 +20,7 @@ import {PageNotFoundComponent} from "./page-not-found/page-not-found.component";
 import {HeaderComponent} from "./header/header.component";
 import {AuthGuard} from "./auth/auth.guard";
 import {AuthInterceptor} from "./auth/auth.interceptor";
-import { ResidentKeyRequirementDialogComponent } from './resident-key-requirement-dialog/resident-key-requirement-dialog.component';
+import {ResidentKeyRequirementDialogComponent} from './resident-key-requirement-dialog/resident-key-requirement-dialog.component';
 
 @NgModule({
   declarations: [
@@ -45,12 +45,12 @@ import { ResidentKeyRequirementDialogComponent } from './resident-key-requiremen
     FormsModule,
     NgbModule
   ],
-  exports:[
+  exports: [
     RouterModule
   ],
   providers: [
     AuthGuard,
-    { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
+    {provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true},
   ],
   bootstrap: [AppComponent],
   entryComponents: [
@@ -60,4 +60,5 @@ import { ResidentKeyRequirementDialogComponent } from './resident-key-requiremen
   ]
 
 })
-export class AppModule { }
+export class AppModule {
+}

@@ -18,7 +18,7 @@ public class ServerPublicKeyCredentialGetOptionsRequest implements ServerRequest
         this.userVerification = UserVerificationRequirement.PREFERRED;
     }
 
-    public ServerPublicKeyCredentialGetOptionsRequest(){
+    public ServerPublicKeyCredentialGetOptionsRequest() {
         this.userVerification = UserVerificationRequirement.PREFERRED;
     }
 

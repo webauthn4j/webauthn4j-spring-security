@@ -28,9 +28,9 @@ import org.springframework.security.web.authentication.AuthenticationSuccessHand
 import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
 import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 
+import static net.sharplab.springframework.security.fido.server.config.configurer.FidoServerConfigurer.fidoServer;
 import static net.sharplab.springframework.security.webauthn.config.configurers.WebAuthnConfigurer.webAuthn;
 import static net.sharplab.springframework.security.webauthn.config.configurers.WebAuthnLoginConfigurer.webAuthnLogin;
-import static net.sharplab.springframework.security.fido.server.config.configurer.FidoServerConfigurer.fidoServer;
 
 
 /**
@@ -107,17 +107,17 @@ WebSecurityConfig extends WebSecurityConfigurerAdapter {
         http.apply(webAuthn())
                 .rpName("Spring Security WebAuthn Sample")
                 .publicKeyCredParams()
-                    .addPublicKeyCredParams(PublicKeyCredentialType.PUBLIC_KEY, COSEAlgorithmIdentifier.RS256)  // Windows Hello
-                    .addPublicKeyCredParams(PublicKeyCredentialType.PUBLIC_KEY, COSEAlgorithmIdentifier.ES256); // FIDO U2F Key, etc
+                .addPublicKeyCredParams(PublicKeyCredentialType.PUBLIC_KEY, COSEAlgorithmIdentifier.RS256)  // Windows Hello
+                .addPublicKeyCredParams(PublicKeyCredentialType.PUBLIC_KEY, COSEAlgorithmIdentifier.ES256); // FIDO U2F Key, etc
 
         // FIDO Server Endpoints
         http.apply(fidoServer())
                 .fidoServerAttestationOptionsEndpoint()
                 .and()
                 .fidoServerAttestationResultEndpointConfig()
-                    .webAuthnUserDetailsService(userDetailsService)
-                    .webAuthnRegistrationRequestValidator(webAuthnRegistrationRequestValidator)
-                    .usernameNotFoundHandler(new SampleUsernameNotFoundHandler(userManager))
+                .webAuthnUserDetailsService(userDetailsService)
+                .webAuthnRegistrationRequestValidator(webAuthnRegistrationRequestValidator)
+                .usernameNotFoundHandler(new SampleUsernameNotFoundHandler(userManager))
                 .and()
                 .fidoServerAssertionOptionsEndpointConfig()
                 .and()

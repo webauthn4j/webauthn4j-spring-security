@@ -9,5 +9,5 @@ include "samples/javaconfig/webauthn/fido-server-conformance-test"
 rootProject.name = 'spring-security-webauthn'
 
 rootProject.children.each { project ->
-	project.name = "spring-security-webauthn-${project.name}"
+    project.name = "spring-security-webauthn-${project.name}"
 }

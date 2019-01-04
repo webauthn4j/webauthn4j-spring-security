@@ -58,6 +58,7 @@ public interface ChallengeRepository {
 
     /**
      * Loads or generates {@link Challenge} from the {@link HttpServletRequest}
+     *
      * @param request the {@link HttpServletRequest} to use
      * @return the {@link Challenge} or null if none exists
      */

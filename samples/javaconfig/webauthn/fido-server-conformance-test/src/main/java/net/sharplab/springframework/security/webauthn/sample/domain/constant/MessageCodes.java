@@ -6,7 +6,15 @@ package net.sharplab.springframework.security.webauthn.sample.domain.constant;
 @SuppressWarnings("squid:S2068")
 public class MessageCodes {
 
+    private MessageCodes() {
+    }
+
     public class Error {
+        public static final String UNKNOWN = "e.unknown";
+
+        private Error() {
+        }
+
         public class User {
             public static final String USER_NOT_FOUND = "e.user.user_not_found";
             public static final String EMAIL_ADDRESS_IS_ALREADY_USED = "e.user.email_address_is_already_used";
@@ -35,11 +43,6 @@ public class MessageCodes {
 
             private Authenticator() {
             }
-        }
-
-        public static final String UNKNOWN = "e.unknown";
-
-        private Error() {
         }
     }
 
@@ -85,8 +88,5 @@ public class MessageCodes {
             private Authority() {
             }
         }
-    }
-
-    private MessageCodes() {
     }
 }

@@ -3,7 +3,7 @@ package net.sharplab.springframework.security.webauthn.endpoint;
 import java.io.Serializable;
 import java.util.Objects;
 
-public class Parameters implements Serializable{
+public class Parameters implements Serializable {
 
     private String username;
     private String password;

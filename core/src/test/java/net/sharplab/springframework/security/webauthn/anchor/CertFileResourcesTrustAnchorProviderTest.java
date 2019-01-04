@@ -14,7 +14,7 @@ public class CertFileResourcesTrustAnchorProviderTest {
 
 
     @Test
-    public void load_pemFile_test(){
+    public void load_pemFile_test() {
         CertFileResourcesTrustAnchorProvider trustAnchorProvider = new CertFileResourcesTrustAnchorProvider();
         Resource resource = new ClassPathResource("certs/3tier-test-root-CA.pem");
         trustAnchorProvider.setPemFiles(Collections.singletonList(resource));
@@ -23,7 +23,7 @@ public class CertFileResourcesTrustAnchorProviderTest {
     }
 
     @Test
-    public void load_derFile_test(){
+    public void load_derFile_test() {
         CertFileResourcesTrustAnchorProvider trustAnchorProvider = new CertFileResourcesTrustAnchorProvider();
         Resource resource = new ClassPathResource("certs/3tier-test-root-CA.der");
         trustAnchorProvider.setPemFiles(Collections.singletonList(resource));
@@ -32,7 +32,7 @@ public class CertFileResourcesTrustAnchorProviderTest {
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void afterPropertiesSet_test(){
+    public void afterPropertiesSet_test() {
         CertFileResourcesTrustAnchorProvider trustAnchorProvider = new CertFileResourcesTrustAnchorProvider();
         trustAnchorProvider.afterPropertiesSet();
     }

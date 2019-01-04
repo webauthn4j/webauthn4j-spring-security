@@ -2,7 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import {ProfileCreateViewModel} from "../profile/profile-create.view-model";
 import {RegisteringAuthenticatorViewModel} from "../webauthn/registering-authenticator.view-model";
 import {Alert} from "../alert/alert";
-import { Router } from '@angular/router';
+import {Router} from '@angular/router';
 import {NgbModal} from "@ng-bootstrap/ng-bootstrap";
 import {AuthenticatorDialogComponent} from "../authenticator-dialog/authenticator-dialog.component";
 import {AuthenticatorRegistrationReconfirmationDialogComponent} from "../authenticator-registration-reconfirmation-dialog/authenticator-registration-reconfirmation-dialog.component";

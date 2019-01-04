@@ -29,7 +29,7 @@ public class FidoServerAssertionOptionsEndpointFilter extends ServerEndpointFilt
 
     private OptionsProvider optionsProvider;
 
-    public FidoServerAssertionOptionsEndpointFilter(Registry registry, OptionsProvider optionsProvider){
+    public FidoServerAssertionOptionsEndpointFilter(Registry registry, OptionsProvider optionsProvider) {
         super(FILTER_URL, registry);
         this.optionsProvider = optionsProvider;
     }

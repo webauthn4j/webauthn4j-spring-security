@@ -35,7 +35,7 @@ public class FidoServerAttestationResultEndpointFilter extends ServerEndpointFil
     public FidoServerAttestationResultEndpointFilter(
             Registry registry,
             WebAuthnUserDetailsService webAuthnUserDetailsService,
-            WebAuthnRegistrationRequestValidator webAuthnRegistrationRequestValidator){
+            WebAuthnRegistrationRequestValidator webAuthnRegistrationRequestValidator) {
         super(FILTER_URL, registry);
         this.webAuthnUserDetailsService = webAuthnUserDetailsService;
         this.attestationObjectConverter = new AttestationObjectConverter(registry);
@@ -52,7 +52,8 @@ public class FidoServerAttestationResultEndpointFilter extends ServerEndpointFil
         ServerPublicKeyCredential<ServerAuthenticatorAttestationResponse> credential;
         try {
             credential = registry.getJsonMapper().readValue(request.getInputStream(),
-                    new TypeReference<ServerPublicKeyCredential<ServerAuthenticatorAttestationResponse>>(){});
+                    new TypeReference<ServerPublicKeyCredential<ServerAuthenticatorAttestationResponse>>() {
+                    });
         } catch (IOException e) {
             throw new UncheckedIOException(e);
         }
@@ -73,10 +74,9 @@ public class FidoServerAttestationResultEndpointFilter extends ServerEndpointFil
                         attestationObject.getAttestationStatement(),
                         attestationObject.getAuthenticatorData().getSignCount());
         String loginUsername = serverEndpointFilterUtil.decodeUsername(collectedClientData.getChallenge());
-        try{
+        try {
             webAuthnUserDetailsService.loadUserByUsername(loginUsername);
-        }
-        catch (UsernameNotFoundException e){
+        } catch (UsernameNotFoundException e) {
             usernameNotFoundHandler.onUsernameNotFound(loginUsername);
         }
         webAuthnUserDetailsService.addAuthenticator(loginUsername, webAuthnAuthenticator);

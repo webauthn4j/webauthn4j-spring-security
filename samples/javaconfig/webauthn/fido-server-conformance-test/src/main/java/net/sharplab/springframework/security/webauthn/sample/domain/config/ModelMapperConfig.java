@@ -1,7 +1,9 @@
 package net.sharplab.springframework.security.webauthn.sample.domain.config;
 
 import net.sharplab.springframework.security.webauthn.sample.domain.entity.UserEntity;
-import net.sharplab.springframework.security.webauthn.sample.util.modelmapper.*;
+import net.sharplab.springframework.security.webauthn.sample.util.modelmapper.PageImplConverter;
+import net.sharplab.springframework.security.webauthn.sample.util.modelmapper.PageImplProvider;
+import net.sharplab.springframework.security.webauthn.sample.util.modelmapper.StringToChallengeConverter;
 import org.modelmapper.ModelMapper;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -14,6 +16,15 @@ import org.springframework.data.domain.PageImpl;
 @Configuration
 public class ModelMapperConfig {
 
+
+    /**
+     * creates ModelMapper instance
+     *
+     * @return ModelMapper
+     */
+    public static ModelMapper createModelMapper() {
+        return new ModelMapperConfig().modelMapper();
+    }
 
     @Bean
     public ModelMapper modelMapper() {
@@ -29,16 +40,6 @@ public class ModelMapperConfig {
                 .setFieldAccessLevel(org.modelmapper.config.Configuration.AccessLevel.PRIVATE);
 
         return modelMapper;
-    }
-
-
-    /**
-     * creates ModelMapper instance
-     *
-     * @return ModelMapper
-     */
-    public static ModelMapper createModelMapper() {
-        return new ModelMapperConfig().modelMapper();
     }
 
 }

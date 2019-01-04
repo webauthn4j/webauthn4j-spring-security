@@ -25,7 +25,7 @@ public class WebAuthnRegistrationRequestValidationResponseTest {
     }
 
     @Test
-    public void getter_test(){
+    public void getter_test() {
         CollectedClientData clientData = TestUtil.createClientData(ClientDataType.CREATE);
         AttestationObject attestationObject = TestUtil.createAttestationObjectWithFIDOU2FAttestationStatement();
         AuthenticationExtensionsClientOutputs clientExtensions = new AuthenticationExtensionsClientOutputs();

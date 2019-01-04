@@ -8,7 +8,7 @@ public interface WebAuthnAuthenticatorService {
      * Updates Authenticator counter
      *
      * @param credentialId credentialId
-     * @param counter counter
+     * @param counter      counter
      * @throws CredentialIdNotFoundException if the authenticator could not be found
      */
     @SuppressWarnings("squid:RedundantThrowsDeclarationCheck")

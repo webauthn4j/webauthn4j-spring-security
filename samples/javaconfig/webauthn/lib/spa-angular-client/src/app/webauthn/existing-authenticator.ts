@@ -1,4 +1,4 @@
-import { Authenticator } from './authenticator';
+import {Authenticator} from './authenticator';
 
 export class ExistingAuthenticator implements Authenticator{
   id: number;

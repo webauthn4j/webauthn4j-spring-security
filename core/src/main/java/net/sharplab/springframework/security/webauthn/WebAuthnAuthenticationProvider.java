@@ -91,7 +91,7 @@ public class WebAuthnAuthenticationProvider implements AuthenticationProvider {
                     "Bad credentials"));
         }
 
-         byte[] credentialId = credentials.getCredentialId();
+        byte[] credentialId = credentials.getCredentialId();
 
         WebAuthnUserDetails user = retrieveWebAuthnUserDetails(credentialId);
         Authenticator authenticator = user.getAuthenticators().stream()

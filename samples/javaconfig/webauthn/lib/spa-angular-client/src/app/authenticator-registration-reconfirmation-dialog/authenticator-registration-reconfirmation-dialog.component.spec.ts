@@ -1,6 +1,6 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import {async, ComponentFixture, TestBed} from '@angular/core/testing';
 
-import { AuthenticatorRegistrationReconfirmationDialogComponent } from './authenticator-registration-reconfirmation-dialog.component';
+import {AuthenticatorRegistrationReconfirmationDialogComponent} from './authenticator-registration-reconfirmation-dialog.component';
 import {FormsModule} from "@angular/forms";
 import {NgbActiveModal, NgbModalModule} from "@ng-bootstrap/ng-bootstrap";
 

@@ -69,7 +69,7 @@ public class Options implements Serializable {
         return relyingParty;
     }
 
-    public WebAuthnUserEntity getUser(){
+    public WebAuthnUserEntity getUser() {
         return user;
     }
 
@@ -93,11 +93,11 @@ public class Options implements Serializable {
         return credentials;
     }
 
-    public AuthenticationExtensionsClientInputs getRegistrationExtensions(){
+    public AuthenticationExtensionsClientInputs getRegistrationExtensions() {
         return registrationExtensions;
     }
 
-    public AuthenticationExtensionsClientInputs getAuthenticationExtensions(){
+    public AuthenticationExtensionsClientInputs getAuthenticationExtensions() {
         return authenticationExtensions;
     }
 

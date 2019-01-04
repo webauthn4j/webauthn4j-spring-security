@@ -3,7 +3,7 @@ import {HttpClient} from "@angular/common/http";
 import {RegisteringAuthenticatorViewModel} from "../webauthn/registering-authenticator.view-model";
 import {WebauthnService} from "../webauthn/webauthn.service";
 import {Observable} from "rxjs/internal/Observable";
-import { base64url } from "rfc4648";
+import {base64url} from "rfc4648";
 import {ProfileUpdateViewModel} from "./profile-update.view-model";
 import {ProfileViewModel} from "./profile.view-model";
 import {ProfileCreateViewModel} from "./profile-create.view-model";

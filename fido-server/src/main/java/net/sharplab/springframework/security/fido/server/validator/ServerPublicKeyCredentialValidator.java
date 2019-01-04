@@ -8,18 +8,17 @@ import net.sharplab.springframework.security.webauthn.exception.BadCredentialIdE
 
 public class ServerPublicKeyCredentialValidator<T extends ServerAuthenticatorResponse> {
 
-    public void validate(ServerPublicKeyCredential<T> serverPublicKeyCredential){
+    public void validate(ServerPublicKeyCredential<T> serverPublicKeyCredential) {
 
         BeanAssertUtil.validate(serverPublicKeyCredential);
 
-        if(!serverPublicKeyCredential.getId().equals(serverPublicKeyCredential.getRawId())){
+        if (!serverPublicKeyCredential.getId().equals(serverPublicKeyCredential.getRawId())) {
             throw new BadCredentialIdException("id and rawId doesn't match");
         }
 
-        try{
+        try {
             Base64UrlUtil.decode(serverPublicKeyCredential.getId());
-        }
-        catch (IllegalArgumentException e){
+        } catch (IllegalArgumentException e) {
             throw new BadCredentialIdException("id cannot be parsed as base64url", e);
         }
     }

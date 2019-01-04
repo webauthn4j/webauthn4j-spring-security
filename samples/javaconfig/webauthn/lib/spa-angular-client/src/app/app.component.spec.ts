@@ -1,5 +1,5 @@
-import { TestBed, async } from '@angular/core/testing';
-import { AppComponent } from './app.component';
+import {async, TestBed} from '@angular/core/testing';
+import {AppComponent} from './app.component';
 import {RouterTestingModule} from "@angular/router/testing";
 import {HeaderComponent} from "./header/header.component";
 import {of} from "rxjs/internal/observable/of";
@@ -16,11 +16,11 @@ describe('AppComponent', () => {
         RouterTestingModule
       ]
     }).overrideComponent(AppComponent, {
-      set:{
+      set: {
         providers: [
           {
             provide: AuthService,
-            useFactory: ()=>{
+            useFactory: () => {
               let authServiceMock = new AuthService(null, null);
               spyOn(authServiceMock, "loginWithPublicKeyCredential").and.returnValue(of(null));
               spyOn(authServiceMock, "getAuthenticationStatus").and.returnValue(of("Anonymous"));

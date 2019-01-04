@@ -1,9 +1,9 @@
-import { Injectable } from '@angular/core';
+import {Injectable} from '@angular/core';
 import {HttpClient} from "@angular/common/http";
-import { base64url } from "rfc4648";
+import {base64url} from "rfc4648";
 import {WebauthnService} from "../webauthn/webauthn.service";
 import {Observable} from "rxjs/internal/Observable";
-import { from } from 'rxjs';
+import {from} from 'rxjs';
 import {map, mergeMap} from 'rxjs/operators';
 import {throwError} from "rxjs/internal/observable/throwError";
 import {WebAuthn4NGCredentialRequestOptions} from "../webauthn/webauthn4ng-credential-request-options";

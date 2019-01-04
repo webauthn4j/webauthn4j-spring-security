@@ -24,7 +24,8 @@ public class ServerPublicKeyCredentialDescriptor implements Serializable {
         this.transports = null;
     }
 
-    public ServerPublicKeyCredentialDescriptor(){}
+    public ServerPublicKeyCredentialDescriptor() {
+    }
 
     public PublicKeyCredentialType getType() {
         return type;

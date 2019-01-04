@@ -15,7 +15,7 @@ class ServerEndpointFilterUtil {
     private JsonConverter jsonConverter;
     private CborConverter cborConverter;
 
-    ServerEndpointFilterUtil(Registry registry){
+    ServerEndpointFilterUtil(Registry registry) {
         this.jsonConverter = new JsonConverter(registry.getJsonMapper());
         this.cborConverter = new CborConverter(registry.getCborMapper());
     }
@@ -42,7 +42,7 @@ class ServerEndpointFilterUtil {
         httpServletResponse.setStatus(statusCode);
     }
 
-    Challenge encodeUsername(Challenge challenge, String username){
+    Challenge encodeUsername(Challenge challenge, String username) {
         UsernameEncordedChallengeEnvelope envelope = new UsernameEncordedChallengeEnvelope();
         envelope.setChallenge(challenge.getValue());
         envelope.setUsername(username);
@@ -50,17 +50,16 @@ class ServerEndpointFilterUtil {
         return new DefaultChallenge(bytes);
     }
 
-    String decodeUsername(Challenge challenge){
-        try{
+    String decodeUsername(Challenge challenge) {
+        try {
             UsernameEncordedChallengeEnvelope envelope = cborConverter.readValue(challenge.getValue(), UsernameEncordedChallengeEnvelope.class);
             return envelope.getUsername();
-        }
-        catch (RuntimeException e){
+        } catch (RuntimeException e) {
             return null;
         }
     }
 
-    static class UsernameEncordedChallengeEnvelope{
+    static class UsernameEncordedChallengeEnvelope {
         private String username;
         private byte[] challenge;
 

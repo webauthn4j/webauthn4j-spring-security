@@ -4,7 +4,7 @@ import com.webauthn4j.registry.Registry;
 import net.sharplab.springframework.security.fido.server.endpoint.*;
 import net.sharplab.springframework.security.webauthn.WebAuthnRegistrationRequestValidator;
 import net.sharplab.springframework.security.webauthn.config.configurers.WebAuthnConfigurerUtil;
-import net.sharplab.springframework.security.webauthn.endpoint.*;
+import net.sharplab.springframework.security.webauthn.endpoint.OptionsProvider;
 import net.sharplab.springframework.security.webauthn.server.ServerPropertyProvider;
 import net.sharplab.springframework.security.webauthn.userdetails.WebAuthnUserDetailsService;
 import org.springframework.context.ApplicationContext;
@@ -19,15 +19,14 @@ import org.springframework.util.Assert;
 public class FidoServerConfigurer<H extends HttpSecurityBuilder<H>> extends AbstractHttpConfigurer<FidoServerConfigurer<H>, H> {
 
 
-    //~ Instance fields
-    // ================================================================================================
-    private OptionsProvider optionsProvider;
-    private Registry registry;
-
     private final FidoServerAttestationOptionsEndpointConfig fidoServerAttestationOptionsEndpointConfig = new FidoServerAttestationOptionsEndpointConfig();
     private final FidoServerAttestationResultEndpointConfig fidoServerAttestationResultEndpointConfig = new FidoServerAttestationResultEndpointConfig();
     private final FidoServerAssertionOptionsEndpointConfig fidoServerAssertionOptionsEndpointConfig = new FidoServerAssertionOptionsEndpointConfig();
     private final FidoServerAssertionResultEndpointConfig fidoServerAssertionResultEndpointConfig = new FidoServerAssertionResultEndpointConfig();
+    //~ Instance fields
+    // ================================================================================================
+    private OptionsProvider optionsProvider;
+    private Registry registry;
 
     public static FidoServerConfigurer<HttpSecurity> fidoServer() {
         return new FidoServerConfigurer<>();
@@ -41,11 +40,11 @@ public class FidoServerConfigurer<H extends HttpSecurityBuilder<H>> extends Abst
     @Override
     public void configure(H http) throws Exception {
         super.configure(http);
-        if(optionsProvider == null){
+        if (optionsProvider == null) {
             optionsProvider = WebAuthnConfigurerUtil.getOptionsProvider(http);
         }
         http.setSharedObject(OptionsProvider.class, optionsProvider);
-        if(registry == null){
+        if (registry == null) {
             registry = WebAuthnConfigurerUtil.getRegistry(http);
         }
         http.setSharedObject(Registry.class, registry);
@@ -68,23 +67,23 @@ public class FidoServerConfigurer<H extends HttpSecurityBuilder<H>> extends Abst
         return this.fidoServerAssertionOptionsEndpointConfig;
     }
 
-    public FidoServerAssertionResultEndpointConfig fidoServerAssertionResultEndpoint(){
+    public FidoServerAssertionResultEndpointConfig fidoServerAssertionResultEndpoint() {
         return this.fidoServerAssertionResultEndpointConfig;
     }
 
-    public FidoServerConfigurer<H> optionsProvider(OptionsProvider optionsProvider){
+    public FidoServerConfigurer<H> optionsProvider(OptionsProvider optionsProvider) {
         Assert.notNull(optionsProvider, "optionsProvider must not be null");
         this.optionsProvider = optionsProvider;
         return this;
     }
 
-    public FidoServerConfigurer<H> registry(Registry registry){
+    public FidoServerConfigurer<H> registry(Registry registry) {
         Assert.notNull(registry, "registry must not be null");
         this.registry = registry;
         return this;
     }
 
-    public class FidoServerAttestationOptionsEndpointConfig extends AbstractServerEndpointConfig{
+    public class FidoServerAttestationOptionsEndpointConfig extends AbstractServerEndpointConfig {
 
         FidoServerAttestationOptionsEndpointConfig() {
             super(FidoServerAttestationOptionsEndpointFilter.class);
@@ -96,7 +95,7 @@ public class FidoServerConfigurer<H extends HttpSecurityBuilder<H>> extends Abst
         }
     }
 
-    public class FidoServerAttestationResultEndpointConfig extends AbstractServerEndpointConfig<FidoServerAttestationResultEndpointFilter>{
+    public class FidoServerAttestationResultEndpointConfig extends AbstractServerEndpointConfig<FidoServerAttestationResultEndpointFilter> {
 
         private WebAuthnUserDetailsService webAuthnUserDetailsService;
         private WebAuthnRegistrationRequestValidator webAuthnRegistrationRequestValidator;
@@ -109,29 +108,29 @@ public class FidoServerConfigurer<H extends HttpSecurityBuilder<H>> extends Abst
         @Override
         void configure(H http) {
             super.configure(http);
-            if(webAuthnUserDetailsService == null){
+            if (webAuthnUserDetailsService == null) {
                 webAuthnUserDetailsService = WebAuthnConfigurerUtil.getWebAuthnUserDetailsService(http);
             }
             http.setSharedObject(WebAuthnUserDetailsService.class, webAuthnUserDetailsService);
-            if(webAuthnRegistrationRequestValidator == null){
+            if (webAuthnRegistrationRequestValidator == null) {
                 webAuthnRegistrationRequestValidator = WebAuthnConfigurerUtil.getWebAuthnRegistrationRequestValidator(http);
             }
             http.setSharedObject(WebAuthnRegistrationRequestValidator.class, webAuthnRegistrationRequestValidator);
         }
 
-        public FidoServerAttestationResultEndpointConfig webAuthnUserDetailsService(WebAuthnUserDetailsService webAuthnUserDetailsService){
+        public FidoServerAttestationResultEndpointConfig webAuthnUserDetailsService(WebAuthnUserDetailsService webAuthnUserDetailsService) {
             Assert.notNull(webAuthnUserDetailsService, "webAuthnUserDetailsService must not be null");
             this.webAuthnUserDetailsService = webAuthnUserDetailsService;
             return this;
         }
 
-        public FidoServerAttestationResultEndpointConfig webAuthnRegistrationRequestValidator(WebAuthnRegistrationRequestValidator webAuthnRegistrationRequestValidator){
+        public FidoServerAttestationResultEndpointConfig webAuthnRegistrationRequestValidator(WebAuthnRegistrationRequestValidator webAuthnRegistrationRequestValidator) {
             Assert.notNull(webAuthnRegistrationRequestValidator, "webAuthnRegistrationRequestValidator must not be null");
             this.webAuthnRegistrationRequestValidator = webAuthnRegistrationRequestValidator;
             return this;
         }
 
-        public FidoServerAttestationResultEndpointConfig usernameNotFoundHandler(UsernameNotFoundHandler usernameNotFoundHandler){
+        public FidoServerAttestationResultEndpointConfig usernameNotFoundHandler(UsernameNotFoundHandler usernameNotFoundHandler) {
             Assert.notNull(usernameNotFoundHandler, "usernameNotFoundHandler must not be null");
             this.usernameNotFoundHandler = usernameNotFoundHandler;
             return this;
@@ -145,7 +144,7 @@ public class FidoServerConfigurer<H extends HttpSecurityBuilder<H>> extends Abst
         }
     }
 
-    public class FidoServerAssertionOptionsEndpointConfig extends AbstractServerEndpointConfig<FidoServerAssertionOptionsEndpointFilter>{
+    public class FidoServerAssertionOptionsEndpointConfig extends AbstractServerEndpointConfig<FidoServerAssertionOptionsEndpointFilter> {
 
         FidoServerAssertionOptionsEndpointConfig() {
             super(FidoServerAssertionOptionsEndpointFilter.class);
@@ -157,7 +156,7 @@ public class FidoServerConfigurer<H extends HttpSecurityBuilder<H>> extends Abst
         }
     }
 
-    private class FidoServerAssertionResultEndpointConfig{
+    private class FidoServerAssertionResultEndpointConfig {
 
         private String filterProcessingUrl = null;
         private AuthenticationManager authenticationManager;
@@ -168,7 +167,7 @@ public class FidoServerConfigurer<H extends HttpSecurityBuilder<H>> extends Abst
 
         void configure(H http) {
 
-            if(authenticationManager == null){
+            if (authenticationManager == null) {
                 authenticationManager = http.getSharedObject(AuthenticationManager.class);
             }
             http.setSharedObject(AuthenticationManager.class, authenticationManager);
@@ -184,11 +183,10 @@ public class FidoServerConfigurer<H extends HttpSecurityBuilder<H>> extends Abst
             String[] beanNames = applicationContext.getBeanNamesForType(FidoServerAssertionResultEndpointFilter.class);
             if (beanNames.length == 0) {
                 serverEndpointFilter = new FidoServerAssertionResultEndpointFilter(registry, serverPropertyProvider);
-                if(filterProcessingUrl != null){
+                if (filterProcessingUrl != null) {
                     serverEndpointFilter.setFilterProcessesUrl(filterProcessingUrl);
                 }
-            }
-            else {
+            } else {
                 serverEndpointFilter = applicationContext.getBean(FidoServerAssertionResultEndpointFilter.class);
             }
             serverEndpointFilter.setAuthenticationManager(authenticationManager);
@@ -213,12 +211,12 @@ public class FidoServerConfigurer<H extends HttpSecurityBuilder<H>> extends Abst
 
     }
 
-    public abstract class AbstractServerEndpointConfig<F extends ServerEndpointFilterBase>{
+    public abstract class AbstractServerEndpointConfig<F extends ServerEndpointFilterBase> {
 
         private Class<F> filterClass;
         private String filterProcessingUrl = null;
 
-        AbstractServerEndpointConfig(Class<F> filterClass){
+        AbstractServerEndpointConfig(Class<F> filterClass) {
             this.filterClass = filterClass;
         }
 
@@ -228,11 +226,10 @@ public class FidoServerConfigurer<H extends HttpSecurityBuilder<H>> extends Abst
             String[] beanNames = applicationContext.getBeanNamesForType(filterClass);
             if (beanNames.length == 0) {
                 serverEndpointFilter = createInstance();
-                if(filterProcessingUrl != null){
+                if (filterProcessingUrl != null) {
                     serverEndpointFilter.setFilterProcessesUrl(filterProcessingUrl);
                 }
-            }
-            else {
+            } else {
                 serverEndpointFilter = applicationContext.getBean(filterClass);
             }
             http.setSharedObject(filterClass, serverEndpointFilter);

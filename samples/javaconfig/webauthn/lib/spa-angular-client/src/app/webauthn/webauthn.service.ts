@@ -1,9 +1,9 @@
 /// <reference types="webappsec-credential-management" />
 // DO NOT REMOVE: The above comment is mandatory to use webappsec-credential-management type definition
 
-import { Injectable } from '@angular/core';
+import {Injectable} from '@angular/core';
 import {HttpClient} from "@angular/common/http";
-import { base64url } from "rfc4648";
+import {base64url} from "rfc4648";
 import {WebAuthn4NGCredentialCreationOptions} from "./webauthn4ng-credential-creation-options";
 import {WebAuthn4NGCredentialRequestOptions} from "./webauthn4ng-credential-request-options";
 import {ServerOptions} from "./server-options";

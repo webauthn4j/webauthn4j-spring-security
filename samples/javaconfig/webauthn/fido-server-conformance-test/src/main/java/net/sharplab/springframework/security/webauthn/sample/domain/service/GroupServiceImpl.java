@@ -1,11 +1,9 @@
 package net.sharplab.springframework.security.webauthn.sample.domain.service;
 
-import net.sharplab.springframework.security.webauthn.sample.domain.constant.DomainTypeTokens;
 import net.sharplab.springframework.security.webauthn.sample.domain.constant.MessageCodes;
 import net.sharplab.springframework.security.webauthn.sample.domain.entity.GroupEntity;
 import net.sharplab.springframework.security.webauthn.sample.domain.exception.WebAuthnSampleEntityNotFoundException;
 import net.sharplab.springframework.security.webauthn.sample.domain.repository.GroupEntityRepository;
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

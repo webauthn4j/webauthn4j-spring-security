@@ -19,14 +19,6 @@ public class GroupEntity implements Serializable {
     private Integer id;
     @Column(name = "group_name")
     private String groupName;
-
-    public GroupEntity(String groupName) {
-        this.groupName = groupName;
-    }
-
-    public GroupEntity() {
-    }
-
     @ManyToMany
     @LazyCollection(LazyCollectionOption.FALSE)
     @JoinTable(
@@ -35,7 +27,6 @@ public class GroupEntity implements Serializable {
             inverseJoinColumns = {@JoinColumn(name = "group_id", referencedColumnName = "id")}
     )
     private List<UserEntity> users;
-
     @ManyToMany
     @LazyCollection(LazyCollectionOption.FALSE)
     @JoinTable(
@@ -44,6 +35,13 @@ public class GroupEntity implements Serializable {
             inverseJoinColumns = {@JoinColumn(name = "group_id", referencedColumnName = "id")}
     )
     private List<AuthorityEntity> authorities;
+
+    public GroupEntity(String groupName) {
+        this.groupName = groupName;
+    }
+
+    public GroupEntity() {
+    }
 
     /**
      * String representation of the group
