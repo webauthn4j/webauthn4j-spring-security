@@ -49,7 +49,7 @@ public class OptionsProviderImplTest {
         assertThat(attestationOptions.getRelyingParty().getId()).isEqualTo("example.com");
         assertThat(attestationOptions.getRelyingParty().getName()).isEqualTo("rpName");
         assertThat(attestationOptions.getChallenge()).isEqualTo(challenge);
-        assertThat(attestationOptions.getCredentials()).extracting("id").containsExactly(Base64UrlUtil.encodeToString(credentialId));
+        assertThat(attestationOptions.getCredentials()).containsExactly(Base64UrlUtil.encodeToString(credentialId));
 
     }
 

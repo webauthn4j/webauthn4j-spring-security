@@ -1,4 +1,4 @@
-package net.sharplab.springframework.security.webauthn.endpoint;
+package net.sharplab.springframework.security.fido.server.endpoint;
 
 import com.webauthn4j.registry.Registry;
 import org.junit.Test;

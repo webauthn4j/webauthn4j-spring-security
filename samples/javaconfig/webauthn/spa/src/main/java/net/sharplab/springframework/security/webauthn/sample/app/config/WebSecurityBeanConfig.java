@@ -1,34 +1,18 @@
 package net.sharplab.springframework.security.webauthn.sample.app.config;
 
-import com.webauthn4j.anchor.TrustAnchorProvider;
-import com.webauthn4j.extras.fido.metadata.statement.MetadataStatementProvider;
-import com.webauthn4j.extras.fido.metadata.statement.MetadataStatementTrustAnchorProvider;
 import com.webauthn4j.registry.Registry;
 import com.webauthn4j.validator.WebAuthnAuthenticationContextValidator;
 import com.webauthn4j.validator.WebAuthnRegistrationContextValidator;
-import com.webauthn4j.validator.attestation.androidkey.AndroidKeyAttestationStatementValidator;
-import com.webauthn4j.validator.attestation.androidsafetynet.AndroidSafetyNetAttestationStatementValidator;
-import com.webauthn4j.validator.attestation.packed.PackedAttestationStatementValidator;
-import com.webauthn4j.validator.attestation.trustworthiness.certpath.TrustAnchorCertPathTrustworthinessValidator;
-import com.webauthn4j.validator.attestation.trustworthiness.ecdaa.DefaultECDAATrustworthinessValidator;
-import com.webauthn4j.validator.attestation.trustworthiness.self.DefaultSelfAttestationTrustworthinessValidator;
-import com.webauthn4j.validator.attestation.u2f.FIDOU2FAttestationStatementValidator;
 import net.sharplab.springframework.security.webauthn.WebAuthnRegistrationRequestValidator;
-import net.sharplab.springframework.security.webauthn.anchor.CertFileResourcesTrustAnchorProvider;
 import net.sharplab.springframework.security.webauthn.challenge.ChallengeRepository;
 import net.sharplab.springframework.security.webauthn.challenge.HttpSessionChallengeRepository;
 import net.sharplab.springframework.security.webauthn.endpoint.OptionsProvider;
 import net.sharplab.springframework.security.webauthn.endpoint.OptionsProviderImpl;
-import net.sharplab.springframework.security.webauthn.metadata.JsonFileResourceMetadataStatementProvider;
 import net.sharplab.springframework.security.webauthn.server.ServerPropertyProvider;
 import net.sharplab.springframework.security.webauthn.server.ServerPropertyProviderImpl;
 import net.sharplab.springframework.security.webauthn.userdetails.WebAuthnUserDetailsService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.core.io.Resource;
-import org.springframework.core.io.ResourceLoader;
-import org.springframework.core.io.support.ResourcePatternUtils;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.AuthenticationTrustResolver;
 import org.springframework.security.authentication.AuthenticationTrustResolverImpl;
@@ -49,12 +33,7 @@ import org.springframework.security.web.authentication.logout.LogoutSuccessHandl
 import org.springframework.security.web.csrf.InvalidCsrfTokenException;
 import org.springframework.security.web.csrf.MissingCsrfTokenException;
 
-import java.io.IOException;
-import java.io.UncheckedIOException;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.LinkedHashMap;
-import java.util.List;
 
 @Configuration
 public class WebSecurityBeanConfig {
@@ -90,41 +69,13 @@ public class WebSecurityBeanConfig {
     }
 
     @Bean
-    public WebAuthnRegistrationContextValidator webAuthnRegistrationContextValidator(TrustAnchorProvider trustAnchorProvider) {
-//        return WebAuthnRegistrationContextValidator.createNonStrictRegistrationContextValidator();
-        return new WebAuthnRegistrationContextValidator(
-                Arrays.asList(
-                        new PackedAttestationStatementValidator(),
-                        new FIDOU2FAttestationStatementValidator(),
-                        new AndroidKeyAttestationStatementValidator(),
-                        new AndroidSafetyNetAttestationStatementValidator()
-                ),
-                new TrustAnchorCertPathTrustworthinessValidator(trustAnchorProvider),
-                new DefaultECDAATrustworthinessValidator(),
-                new DefaultSelfAttestationTrustworthinessValidator()
-        );
+    public WebAuthnRegistrationContextValidator webAuthnRegistrationContextValidator() {
+        return WebAuthnRegistrationContextValidator.createNonStrictRegistrationContextValidator();
     }
 
     @Bean
     public WebAuthnAuthenticationContextValidator webAuthnAuthenticationContextValidator(Registry registry){
         return new WebAuthnAuthenticationContextValidator(registry);
-    }
-
-    @Bean
-    public TrustAnchorProvider trustAnchorProvider(MetadataStatementProvider metadataStatementProvider){
-        return new MetadataStatementTrustAnchorProvider(metadataStatementProvider);
-    }
-
-    @Bean
-    public MetadataStatementProvider metadataStatementProvider(Registry registry, ResourceLoader resourceLoader){
-        JsonFileResourceMetadataStatementProvider jsonFileResourceMetadataStatementProvider = new JsonFileResourceMetadataStatementProvider(registry);
-        try {
-            Resource[] resources = ResourcePatternUtils.getResourcePatternResolver(resourceLoader).getResources("classpath:/metadataStatements/fido-conformance-tools/*.json");
-            jsonFileResourceMetadataStatementProvider.setResources(Arrays.asList(resources));
-            return jsonFileResourceMetadataStatementProvider;
-        } catch (IOException e) {
-            throw new UncheckedIOException(e);
-        }
     }
 
     @Bean

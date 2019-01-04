@@ -6,18 +6,16 @@ import com.webauthn4j.converter.CollectedClientDataConverter;
 import com.webauthn4j.registry.Registry;
 import com.webauthn4j.response.attestation.AttestationObject;
 import com.webauthn4j.response.client.CollectedClientData;
+import net.sharplab.springframework.security.fido.server.validator.ServerPublicKeyCredentialValidator;
 import net.sharplab.springframework.security.webauthn.WebAuthnRegistrationRequestValidator;
 import net.sharplab.springframework.security.webauthn.authenticator.WebAuthnAuthenticator;
-import net.sharplab.springframework.security.webauthn.userdetails.WebAuthnUserDetailsImpl;
 import net.sharplab.springframework.security.webauthn.userdetails.WebAuthnUserDetailsService;
-import net.sharplab.springframework.security.fido.server.validator.ServerPublicKeyCredentialValidator;
 import org.springframework.security.authentication.AuthenticationServiceException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.io.UncheckedIOException;
-import java.util.Collections;
 
 public class FidoServerAttestationResultEndpointFilter extends ServerEndpointFilterBase {
 
@@ -30,7 +28,9 @@ public class FidoServerAttestationResultEndpointFilter extends ServerEndpointFil
     private AttestationObjectConverter attestationObjectConverter;
     private CollectedClientDataConverter collectedClientDataConverter;
     private WebAuthnRegistrationRequestValidator webAuthnRegistrationRequestValidator;
-    private ServerPublicKeyCredentialValidator serverPublicKeyCredentialValidator;
+    private ServerPublicKeyCredentialValidator<ServerAuthenticatorAttestationResponse> serverPublicKeyCredentialValidator;
+
+    private UsernameNotFoundHandler usernameNotFoundHandler = new DefaultUsernameNotFoundHandler();
 
     public FidoServerAttestationResultEndpointFilter(
             Registry registry,
@@ -41,7 +41,7 @@ public class FidoServerAttestationResultEndpointFilter extends ServerEndpointFil
         this.attestationObjectConverter = new AttestationObjectConverter(registry);
         this.collectedClientDataConverter = new CollectedClientDataConverter(registry);
         this.webAuthnRegistrationRequestValidator = webAuthnRegistrationRequestValidator;
-        this.serverPublicKeyCredentialValidator = new ServerPublicKeyCredentialValidator();
+        this.serverPublicKeyCredentialValidator = new ServerPublicKeyCredentialValidator<>();
     }
 
     @Override
@@ -77,10 +77,26 @@ public class FidoServerAttestationResultEndpointFilter extends ServerEndpointFil
             webAuthnUserDetailsService.loadUserByUsername(loginUsername);
         }
         catch (UsernameNotFoundException e){
-            byte[] userHandle = new byte[0];
-            webAuthnUserDetailsService.createUser(new WebAuthnUserDetailsImpl(userHandle, loginUsername, "", Collections.emptyList(), Collections.emptyList()));
+            usernameNotFoundHandler.onUsernameNotFound(loginUsername);
         }
         webAuthnUserDetailsService.addAuthenticator(loginUsername, webAuthnAuthenticator);
         return new AttestationResultSuccessResponse();
     }
+
+    public UsernameNotFoundHandler getUsernameNotFoundHandler() {
+        return usernameNotFoundHandler;
+    }
+
+    public void setUsernameNotFoundHandler(UsernameNotFoundHandler usernameNotFoundHandler) {
+        this.usernameNotFoundHandler = usernameNotFoundHandler;
+    }
+
+    private class DefaultUsernameNotFoundHandler implements UsernameNotFoundHandler {
+        @Override
+        public void onUsernameNotFound(String loginUsername) {
+            throw new UsernameNotFoundException("Username not found");
+        }
+    }
+
+
 }

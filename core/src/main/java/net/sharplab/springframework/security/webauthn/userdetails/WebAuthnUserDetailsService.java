@@ -37,8 +37,6 @@ public interface WebAuthnUserDetailsService extends UserDetailsService {
     @SuppressWarnings("squid:RedundantThrowsDeclarationCheck")
     WebAuthnUserDetails loadUserByCredentialId(byte[] credentialId) throws CredentialIdNotFoundException;
 
-    WebAuthnUserDetails createUser(final WebAuthnUserDetails user);
-
     void addAuthenticator(String username, WebAuthnAuthenticator authenticator);
 
     void removeAuthenticator(String username, WebAuthnAuthenticator authenticator);

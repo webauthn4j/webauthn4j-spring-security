@@ -69,9 +69,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     private WebAuthnAuthenticationContextValidator webAuthnAuthenticationContextValidator;
 
     @Autowired
-    private WebAuthnRegistrationRequestValidator webAuthnRegistrationRequestValidator;
-
-    @Autowired
     private Registry registry;
 
     @Override
@@ -103,18 +100,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .publicKeyCredParams()
                     .addPublicKeyCredParams(PublicKeyCredentialType.PUBLIC_KEY, COSEAlgorithmIdentifier.RS256)  // Windows Hello
                     .addPublicKeyCredParams(PublicKeyCredentialType.PUBLIC_KEY, COSEAlgorithmIdentifier.ES256); // FIDO U2F Key, etc
-
-        // FIDO Server Endpoints
-        http.apply(fidoServer())
-                .fidoServerAttestationOptionsEndpoint()
-                .and()
-                .fidoServerAttestationResultEndpointConfig()
-                    .webAuthnUserDetailsService(userDetailsService)
-                    .webAuthnRegistrationRequestValidator(webAuthnRegistrationRequestValidator)
-                .and()
-                .fidoServerAssertionOptionsEndpointConfig()
-                .and()
-                .fidoServerAssertionResultEndpoint();
 
         // WebAuthn Login
         http.apply(webAuthnLogin())

@@ -1,0 +1,70 @@
+plugins {
+    id "org.springframework.boot"
+    id "io.spring.dependency-management"
+}
+
+group 'net.sharplab.springframework.security.extensions'
+description = "Spring Security WebAuthn Angular Sample"
+
+repositories {
+    flatDir {
+        dirs "../../../../libs"
+    }
+}
+
+bootJar {
+    baseName = "spring-security-webauthn-sample-spa"
+    version = null
+}
+
+dependencies {
+    // Custom Spring Security
+    compile('org.springframework.security:spring-security-core:5.1.0.BUILD-SNAPSHOT')
+    compile('org.springframework.security:spring-security-config:5.1.0.BUILD-SNAPSHOT')
+    compile('org.springframework.security:spring-security-web:5.1.0.BUILD-SNAPSHOT')
+
+    compile project(':spring-security-webauthn-core')
+    compile project(':spring-security-webauthn-fido-server')
+
+
+    // Spring Framework
+    compile('org.springframework.boot:spring-boot-starter-data-jpa')
+    compile('org.springframework.boot:spring-boot-starter-web')
+    compile('org.springframework.boot:spring-boot-starter-security')
+
+    //Terasoluna
+    compile("org.terasoluna.gfw:terasoluna-gfw-common:${terasolunaVersion}")
+    compile("org.terasoluna.gfw:terasoluna-gfw-web:${terasolunaVersion}")
+
+    //Others
+    compile("org.slf4j:jcl-over-slf4j")
+    compile('ch.qos.logback:logback-classic')
+    compile('javax.xml.bind:jaxb-api')
+    compile("org.modelmapper:modelmapper:${modelMapperVersion}")
+    compile('org.flywaydb:flyway-core')
+    runtime('com.h2database:h2')
+    runtime('mysql:mysql-connector-java')
+    compile("org.lazyluke:log4jdbc-remix:${log4jdbcVersion}")
+
+    //Test
+    testCompile("com.webauthn4j:webauthn4j-test:${webauthn4jVersion}")
+    testCompile('org.springframework.boot:spring-boot-starter-test')
+    testCompile('org.springframework.security:spring-security-test')
+    testCompile('junit:junit')
+    testCompile('org.mockito:mockito-core')
+    testCompile('org.assertj:assertj-core')
+    testCompile("org.dbunit:dbunit:${dbunitVersion}")
+    testCompile("com.github.springtestdbunit:spring-test-dbunit:${springTestDbunitVersion}")
+
+}
+
+dependencyManagement {
+    imports {
+        mavenBom "org.springframework.boot:spring-boot-dependencies:${springBootVersion}"
+        mavenBom "org.springframework.security:spring-security-bom:${springSecurityVersion}"
+    }
+}
+
+sonarqube {
+    skipProject = true
+}

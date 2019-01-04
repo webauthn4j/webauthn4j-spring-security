@@ -100,6 +100,7 @@ public class FidoServerConfigurer<H extends HttpSecurityBuilder<H>> extends Abst
 
         private WebAuthnUserDetailsService webAuthnUserDetailsService;
         private WebAuthnRegistrationRequestValidator webAuthnRegistrationRequestValidator;
+        private UsernameNotFoundHandler usernameNotFoundHandler;
 
         FidoServerAttestationResultEndpointConfig() {
             super(FidoServerAttestationResultEndpointFilter.class);
@@ -130,9 +131,17 @@ public class FidoServerConfigurer<H extends HttpSecurityBuilder<H>> extends Abst
             return this;
         }
 
+        public FidoServerAttestationResultEndpointConfig usernameNotFoundHandler(UsernameNotFoundHandler usernameNotFoundHandler){
+            Assert.notNull(usernameNotFoundHandler, "usernameNotFoundHandler must not be null");
+            this.usernameNotFoundHandler = usernameNotFoundHandler;
+            return this;
+        }
+
         @Override
         protected FidoServerAttestationResultEndpointFilter createInstance() {
-            return new FidoServerAttestationResultEndpointFilter(registry, webAuthnUserDetailsService, webAuthnRegistrationRequestValidator);
+            FidoServerAttestationResultEndpointFilter filter = new FidoServerAttestationResultEndpointFilter(registry, webAuthnUserDetailsService, webAuthnRegistrationRequestValidator);
+            filter.setUsernameNotFoundHandler(usernameNotFoundHandler);
+            return filter;
         }
     }
 

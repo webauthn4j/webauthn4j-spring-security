@@ -68,21 +68,6 @@ public class UserManagerImpl implements UserManager, WebAuthnUserDetailsService 
         return authenticatorEntity.getUser();
     }
 
-    @Override
-    public WebAuthnUserDetails createUser(WebAuthnUserDetails user) {
-        UserEntity userEntity = new UserEntity();
-        userEntity.setUserHandle(user.getUserHandle());
-        userEntity.setEmailAddress(user.getUsername());
-        userEntity.setLastName("dummy");
-        userEntity.setFirstName("dummy");
-        userEntity.setSingleFactorAuthenticationAllowed(user.isSingleFactorAuthenticationAllowed());
-        userEntity.setPassword("dummy");
-        userEntity.setGroups(Collections.emptyList());
-        userEntity.setAuthorities(Collections.emptyList());
-        userEntity.setAuthenticators(Collections.emptyList());
-        return createUser(userEntity);
-    }
-
     /**
      * {@inheritDoc}
      */
