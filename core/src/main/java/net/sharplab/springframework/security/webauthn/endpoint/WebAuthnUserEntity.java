@@ -1,8 +1,9 @@
 package net.sharplab.springframework.security.webauthn.endpoint;
 
+import java.io.Serializable;
 import java.util.Objects;
 
-public class WebAuthnUserEntity {
+public class WebAuthnUserEntity implements Serializable {
 
     private String userHandle;
     private String username;

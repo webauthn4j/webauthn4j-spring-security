@@ -97,14 +97,6 @@ public final class WebAuthnLoginConfigurer<H extends HttpSecurityBuilder<H>> ext
      * {@inheritDoc}
      */
     @Override
-    public void init(H http) throws Exception {
-        super.init(http);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
     public void configure(H http) throws Exception {
         super.configure(http);
         if (optionsProvider == null) {
