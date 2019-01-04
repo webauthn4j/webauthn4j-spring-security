@@ -19,7 +19,6 @@ package net.sharplab.springframework.security.webauthn.endpoint;
 import com.webauthn4j.authenticator.Authenticator;
 import com.webauthn4j.request.PublicKeyCredentialParameters;
 import com.webauthn4j.request.PublicKeyCredentialRpEntity;
-import com.webauthn4j.request.PublicKeyCredentialType;
 import com.webauthn4j.request.extension.client.AuthenticationExtensionsClientInputs;
 import com.webauthn4j.response.client.Origin;
 import com.webauthn4j.response.client.challenge.Challenge;
@@ -76,24 +75,24 @@ public class OptionsProviderImpl implements OptionsProvider {
      */
     public AttestationOptions getAttestationOptions(HttpServletRequest request, String username, Challenge challenge){
 
-        ServerPublicKeyCredentialUserEntity user;
+        WebAuthnUserEntity user;
         Collection<? extends Authenticator> authenticators;
 
         try {
             WebAuthnUserDetails userDetails = userDetailsService.loadUserByUsername(username);
             authenticators = userDetails.getAuthenticators();
             String userHandle = Base64UrlUtil.encodeToString(userDetails.getUserHandle());
-            user = new ServerPublicKeyCredentialUserEntity(userHandle, username, null);
+            user = new WebAuthnUserEntity(userHandle, username);
         }
         catch (UsernameNotFoundException e){
             authenticators = Collections.emptyList();
             user = null;
         }
 
-        List<ServerPublicKeyCredentialDescriptor> credentials = new ArrayList<>();
+        List<String> credentials = new ArrayList<>();
         for (Authenticator authenticator : authenticators) {
             String credentialId = Base64UrlUtil.encodeToString(authenticator.getAttestedCredentialData().getCredentialId());
-            credentials.add(new ServerPublicKeyCredentialDescriptor(PublicKeyCredentialType.PUBLIC_KEY, credentialId, null));
+            credentials.add(credentialId);
         }
 
         PublicKeyCredentialRpEntity relyingParty = new PublicKeyCredentialRpEntity(getEffectiveRpId(request), rpName, rpIcon);
@@ -121,10 +120,10 @@ public class OptionsProviderImpl implements OptionsProvider {
 
         String effectiveRpId = getEffectiveRpId(request);
 
-        List<ServerPublicKeyCredentialDescriptor> credentials = new ArrayList<>();
+        List<String> credentials = new ArrayList<>();
         for (Authenticator authenticator : authenticators) {
             String credentialId = Base64UrlUtil.encodeToString(authenticator.getAttestedCredentialData().getCredentialId());
-            credentials.add(new ServerPublicKeyCredentialDescriptor(PublicKeyCredentialType.PUBLIC_KEY, credentialId, null));
+            credentials.add(credentialId);
         }
         if(challenge == null){
             challenge = challengeRepository.loadOrGenerateChallenge(request);

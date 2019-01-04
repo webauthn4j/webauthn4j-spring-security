@@ -21,32 +21,33 @@ import com.webauthn4j.request.PublicKeyCredentialRpEntity;
 import com.webauthn4j.request.extension.client.AuthenticationExtensionsClientInputs;
 import com.webauthn4j.response.client.challenge.Challenge;
 
+import java.io.Serializable;
 import java.math.BigInteger;
 import java.util.List;
 
-public class Options extends ServerResponseBase {
+public class Options implements Serializable {
 
     //~ Instance fields
     // ================================================================================================
     private PublicKeyCredentialRpEntity relyingParty;
-    private ServerPublicKeyCredentialUserEntity user;
+    private WebAuthnUserEntity user;
     private Challenge challenge;
     private List<PublicKeyCredentialParameters> pubKeyCredParams;
     private BigInteger registrationTimeout;
     private BigInteger authenticationTimeout;
-    private List<ServerPublicKeyCredentialDescriptor> credentials;
+    private List<String> credentials;
     private AuthenticationExtensionsClientInputs registrationExtensions;
     private AuthenticationExtensionsClientInputs authenticationExtensions;
     private Parameters parameters;
 
     public Options(
             PublicKeyCredentialRpEntity relyingParty,
-            ServerPublicKeyCredentialUserEntity user,
+            WebAuthnUserEntity user,
             Challenge challenge,
             List<PublicKeyCredentialParameters> pubKeyCredParams,
             BigInteger registrationTimeout,
             BigInteger authenticationTimeout,
-            List<ServerPublicKeyCredentialDescriptor> credentials,
+            List<String> credentials,
             AuthenticationExtensionsClientInputs registrationExtensions,
             AuthenticationExtensionsClientInputs authenticationExtensions,
             Parameters parameters) {
@@ -68,7 +69,7 @@ public class Options extends ServerResponseBase {
         return relyingParty;
     }
 
-    public ServerPublicKeyCredentialUserEntity getUser(){
+    public WebAuthnUserEntity getUser(){
         return user;
     }
 
@@ -88,7 +89,7 @@ public class Options extends ServerResponseBase {
         return authenticationTimeout;
     }
 
-    public List<ServerPublicKeyCredentialDescriptor> getCredentials() {
+    public List<String> getCredentials() {
         return credentials;
     }
 

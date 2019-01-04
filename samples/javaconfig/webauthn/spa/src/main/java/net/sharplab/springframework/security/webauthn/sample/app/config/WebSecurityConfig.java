@@ -26,9 +26,9 @@ import org.springframework.security.web.authentication.AuthenticationSuccessHand
 import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
 import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 
-import static net.sharplab.springframework.security.webauthn.config.configurers.FidoServerConfigurer.fidoServer;
 import static net.sharplab.springframework.security.webauthn.config.configurers.WebAuthnConfigurer.webAuthn;
 import static net.sharplab.springframework.security.webauthn.config.configurers.WebAuthnLoginConfigurer.webAuthnLogin;
+import static net.sharplab.springframework.security.fido.server.config.configurer.FidoServerConfigurer.fidoServer;
 
 
 /**

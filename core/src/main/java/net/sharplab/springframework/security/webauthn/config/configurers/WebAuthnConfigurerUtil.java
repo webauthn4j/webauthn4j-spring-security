@@ -12,7 +12,7 @@ import net.sharplab.springframework.security.webauthn.userdetails.WebAuthnUserDe
 import org.springframework.context.ApplicationContext;
 import org.springframework.security.config.annotation.web.HttpSecurityBuilder;
 
-class WebAuthnConfigurerUtil {
+public class WebAuthnConfigurerUtil {
 
     private WebAuthnConfigurerUtil(){}
 
@@ -28,7 +28,7 @@ class WebAuthnConfigurerUtil {
         return challengeRepository;
     }
 
-    static <H extends HttpSecurityBuilder<H>> OptionsProvider getOptionsProvider(H http) {
+    public static <H extends HttpSecurityBuilder<H>> OptionsProvider getOptionsProvider(H http) {
         ApplicationContext applicationContext = http.getSharedObject(ApplicationContext.class);
         OptionsProvider optionsProvider;
         String[] beanNames = applicationContext.getBeanNamesForType(OptionsProvider.class);
@@ -41,7 +41,7 @@ class WebAuthnConfigurerUtil {
         return optionsProvider;
     }
 
-    static <H extends HttpSecurityBuilder<H>> Registry getRegistry(H http){
+    public static <H extends HttpSecurityBuilder<H>> Registry getRegistry(H http){
         ApplicationContext applicationContext = http.getSharedObject(ApplicationContext.class);
         Registry registry;
         String[] beanNames = applicationContext.getBeanNamesForType(Registry.class);
@@ -53,7 +53,7 @@ class WebAuthnConfigurerUtil {
         return registry;
     }
 
-    static <H extends HttpSecurityBuilder<H>> ServerPropertyProvider getServerPropertyProvider(H http){
+    public static <H extends HttpSecurityBuilder<H>> ServerPropertyProvider getServerPropertyProvider(H http){
         ApplicationContext applicationContext = http.getSharedObject(ApplicationContext.class);
         ServerPropertyProvider serverPropertyProvider;
         String[] beanNames = applicationContext.getBeanNamesForType(ServerPropertyProvider.class);
@@ -65,13 +65,14 @@ class WebAuthnConfigurerUtil {
         return serverPropertyProvider;
     }
 
-    static <H extends HttpSecurityBuilder<H>> WebAuthnUserDetailsService getWebAuthnUserDetailsService(H http) {
+    public static <H extends HttpSecurityBuilder<H>> WebAuthnUserDetailsService getWebAuthnUserDetailsService(H http) {
         ApplicationContext applicationContext = http.getSharedObject(ApplicationContext.class);
         return applicationContext.getBean(WebAuthnUserDetailsService.class);
     }
 
-    static <H extends HttpSecurityBuilder<H>> WebAuthnRegistrationRequestValidator getWebAuthnRegistrationRequestValidator(H http) {
+    public static <H extends HttpSecurityBuilder<H>> WebAuthnRegistrationRequestValidator getWebAuthnRegistrationRequestValidator(H http) {
         ApplicationContext applicationContext = http.getSharedObject(ApplicationContext.class);
         return applicationContext.getBean(WebAuthnRegistrationRequestValidator.class);
     }
+
 }

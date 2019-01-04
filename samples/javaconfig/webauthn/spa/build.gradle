@@ -24,6 +24,7 @@ dependencies {
     compile('org.springframework.security:spring-security-web:5.1.0.BUILD-SNAPSHOT')
 
     compile project(':spring-security-webauthn-core')
+    compile project(':spring-security-webauthn-fido-server')
     compile project(':spring-security-webauthn-thymeleaf')
     compile project(':spring-security-webauthn-samples/javaconfig/webauthn/lib/spa-angular-client')
 

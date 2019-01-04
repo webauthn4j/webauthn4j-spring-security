@@ -1,7 +1,7 @@
 group 'net.sharplab.springframework.security.extensions'
 version "${springSecurityWebAuthnVersion}"
 
-description = "Spring Security WebAuthn Core library"
+description = "Spring Security WebAuthn Thymeleaf Extension library"
 
 repositories {
     flatDir {
@@ -10,30 +10,18 @@ repositories {
 }
 
 dependencies {
-    compile("com.webauthn4j:webauthn4j-core:${webauthn4jVersion}")
-    compile("com.webauthn4j:webauthn4j-extras:${webauthn4jVersion}")
+    compile project(':spring-security-webauthn-core')
 
     // Custom Spring Security
     compile('org.springframework.security:spring-security-core:5.1.0.BUILD-SNAPSHOT')
     compile('org.springframework.security:spring-security-config:5.1.0.BUILD-SNAPSHOT')
     compile('org.springframework.security:spring-security-web:5.1.0.BUILD-SNAPSHOT')
 
-    compile("org.springframework:spring-core")
-    compile("org.springframework:spring-context")
-    compile("org.springframework:spring-aop")
-    compile("org.springframework:spring-jdbc")
-    compile("org.springframework:spring-web")
-    compile("org.springframework.security:spring-security-config")
-
-    provided('javax.servlet:javax.servlet-api')
-
     //Test
-    testCompile("com.webauthn4j:webauthn4j-test:${webauthn4jVersion}")
     testCompile('org.projectlombok:lombok')
-    testCompile("org.springframework:spring-webmvc")
+    testCompile('org.springframework:spring-webmvc')
     testCompile('org.springframework.boot:spring-boot-starter-test')
     testCompile('org.springframework.security:spring-security-test')
-    testCompile('com.h2database:h2')
     testCompile('junit:junit')
     testCompile('org.mockito:mockito-core')
     testCompile('org.assertj:assertj-core')

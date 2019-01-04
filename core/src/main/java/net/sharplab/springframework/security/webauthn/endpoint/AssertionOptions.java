@@ -13,7 +13,7 @@ public class AssertionOptions implements Serializable {
     private Challenge challenge;
     private BigInteger authenticationTimeout;
     private String rpId;
-    private List<ServerPublicKeyCredentialDescriptor> credentials;
+    private List<String> credentials;
     private AuthenticationExtensionsClientInputs authenticationExtensions;
     private Parameters parameters;
 
@@ -21,7 +21,7 @@ public class AssertionOptions implements Serializable {
             Challenge challenge,
             BigInteger authenticationTimeout,
             String rpId,
-            List<ServerPublicKeyCredentialDescriptor> credentials,
+            List<String> credentials,
             AuthenticationExtensionsClientInputs authenticationExtensions,
             Parameters parameters) {
         this.challenge = challenge;
@@ -44,7 +44,7 @@ public class AssertionOptions implements Serializable {
         return rpId;
     }
 
-    public List<ServerPublicKeyCredentialDescriptor> getCredentials() {
+    public List<String> getCredentials() {
         return credentials;
     }
 

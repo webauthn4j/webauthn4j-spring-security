@@ -13,20 +13,20 @@ import java.util.Objects;
 public class AttestationOptions implements Serializable {
 
     private PublicKeyCredentialRpEntity relyingParty;
-    private ServerPublicKeyCredentialUserEntity user;
+    private WebAuthnUserEntity user;
     private Challenge challenge;
     private List<PublicKeyCredentialParameters> pubKeyCredParams;
     private BigInteger registrationTimeout;
-    private List<ServerPublicKeyCredentialDescriptor> credentials;
+    private List<String> credentials;
     private AuthenticationExtensionsClientInputs registrationExtensions;
 
     public AttestationOptions(
             PublicKeyCredentialRpEntity relyingParty,
-            ServerPublicKeyCredentialUserEntity user,
+            WebAuthnUserEntity user,
             Challenge challenge,
             List<PublicKeyCredentialParameters> pubKeyCredParams,
             BigInteger registrationTimeout,
-            List<ServerPublicKeyCredentialDescriptor> credentials,
+            List<String> credentials,
             AuthenticationExtensionsClientInputs registrationExtensions) {
         this.relyingParty = relyingParty;
         this.user = user;
@@ -41,7 +41,7 @@ public class AttestationOptions implements Serializable {
         return relyingParty;
     }
 
-    public ServerPublicKeyCredentialUserEntity getUser() {
+    public WebAuthnUserEntity getUser() {
         return user;
     }
 
@@ -57,7 +57,7 @@ public class AttestationOptions implements Serializable {
         return registrationTimeout;
     }
 
-    public List<ServerPublicKeyCredentialDescriptor> getCredentials() {
+    public List<String> getCredentials() {
         return credentials;
     }
 
