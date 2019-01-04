@@ -49,11 +49,6 @@ public class FidoServerConfigurer<H extends HttpSecurityBuilder<H>> extends Abst
     }
 
     @Override
-    public void init(H http) throws Exception {
-        super.init(http);
-    }
-
-    @Override
     public void configure(H http) throws Exception {
         super.configure(http);
         if (optionsProvider == null) {

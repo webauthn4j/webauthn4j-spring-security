@@ -43,7 +43,6 @@ public abstract class ServerEndpointFilterBase extends GenericFilterBean {
     protected ServerEndpointFilterUtil serverEndpointFilterUtil;
     //~ Instance fields
     // ================================================================================================
-    private Logger logger = LoggerFactory.getLogger(ServerEndpointFilterBase.class);
 
 
     public ServerEndpointFilterBase(
