@@ -16,9 +16,7 @@
 
 package net.sharplab.springframework.security.webauthn.exception;
 
-import org.springframework.security.core.AuthenticationException;
-
-public class BadCredentialIdException extends AuthenticationException {
+public class BadCredentialIdException extends ValidationException {
     public BadCredentialIdException(String message, Throwable cause) {
         super(message, cause);
     }

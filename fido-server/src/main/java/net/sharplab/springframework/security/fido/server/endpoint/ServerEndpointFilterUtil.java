@@ -22,6 +22,7 @@ import com.webauthn4j.registry.Registry;
 import com.webauthn4j.response.client.challenge.Challenge;
 import com.webauthn4j.response.client.challenge.DefaultChallenge;
 import org.springframework.security.authentication.InsufficientAuthenticationException;
+import org.springframework.security.core.AuthenticationException;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -48,7 +49,12 @@ class ServerEndpointFilterUtil {
         if (e instanceof InsufficientAuthenticationException) {
             errorResponse = new ErrorResponse("Anonymous access is prohibited");
             statusCode = HttpServletResponse.SC_FORBIDDEN;
-        } else {
+        }
+        else if(e instanceof AuthenticationException){
+            errorResponse = new ErrorResponse("Authentication failed");
+            statusCode = HttpServletResponse.SC_FORBIDDEN;
+        }
+        else {
             errorResponse = new ErrorResponse("The server encountered an internal error");
             statusCode = HttpServletResponse.SC_INTERNAL_SERVER_ERROR;
         }

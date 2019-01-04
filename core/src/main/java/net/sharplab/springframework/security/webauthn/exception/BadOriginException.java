@@ -16,12 +16,10 @@
 
 package net.sharplab.springframework.security.webauthn.exception;
 
-import org.springframework.security.core.AuthenticationException;
-
 /**
  * Thrown if bad origin is specified
  */
-public class BadOriginException extends AuthenticationException {
+public class BadOriginException extends ValidationException {
     public BadOriginException(String message, Throwable cause) {
         super(message, cause);
     }

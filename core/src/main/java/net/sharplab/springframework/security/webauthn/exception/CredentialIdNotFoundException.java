@@ -16,12 +16,10 @@
 
 package net.sharplab.springframework.security.webauthn.exception;
 
-import org.springframework.security.core.AuthenticationException;
-
 /**
  * Thrown if an authentication request is rejected because credentialId is not found.
  */
-public class CredentialIdNotFoundException extends AuthenticationException {
+public class CredentialIdNotFoundException extends ValidationException {
     public CredentialIdNotFoundException(String message) {
         super(message);
     }

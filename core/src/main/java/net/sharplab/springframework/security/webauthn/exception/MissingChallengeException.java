@@ -17,12 +17,10 @@
 package net.sharplab.springframework.security.webauthn.exception;
 
 
-import org.springframework.security.core.AuthenticationException;
-
 /**
  * Thrown if the challenge doesn't exist in the session
  */
-public class MissingChallengeException extends AuthenticationException {
+public class MissingChallengeException extends ValidationException {
     public MissingChallengeException(String message, Throwable cause) {
         super(message, cause);
     }

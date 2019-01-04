@@ -37,6 +37,7 @@ public class ServerPublicKeyCredentialCreationOptionsResponse extends ServerResp
     private AttestationConveyancePreference attestation;
     private AuthenticationExtensionsClientInputs extensions;
 
+    @SuppressWarnings("squid:S00107")
     public ServerPublicKeyCredentialCreationOptionsResponse(
             PublicKeyCredentialRpEntity rp,
             ServerPublicKeyCredentialUserEntity user,

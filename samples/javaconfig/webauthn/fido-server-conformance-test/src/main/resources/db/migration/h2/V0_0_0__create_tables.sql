@@ -31,7 +31,7 @@ CREATE TABLE m_authenticator(
   name                   VARCHAR(32)   NOT NULL,
   user_id                INTEGER       NOT NULL  REFERENCES m_user(id),
   counter                BIGINT         NOT NULL,
-  aa_guid                BLOB           NOT NULL,
+  aaguid                BLOB           NOT NULL,
   credential_id          BLOB           NOT NULL,
   credential_public_key  VARCHAR(8192) NOT NULL,
   attestation_statement  VARCHAR(8192) NOT NULL,

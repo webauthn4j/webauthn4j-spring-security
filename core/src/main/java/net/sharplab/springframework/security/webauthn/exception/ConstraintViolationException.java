@@ -16,7 +16,6 @@
 
 package net.sharplab.springframework.security.webauthn.exception;
 
-import com.webauthn4j.validator.exception.ValidationException;
 
 /**
  * Thrown if the value violates constraints

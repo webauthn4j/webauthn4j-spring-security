@@ -16,12 +16,10 @@
 
 package net.sharplab.springframework.security.webauthn.exception;
 
-import org.springframework.security.core.AuthenticationException;
-
 /**
  * Thrown if user is to be verified but not verified
  */
-public class UserNotVerifiedException extends AuthenticationException {
+public class UserNotVerifiedException extends ValidationException {
 
     public UserNotVerifiedException(String message, Throwable cause) {
         super(message, cause);

@@ -16,12 +16,10 @@
 
 package net.sharplab.springframework.security.webauthn.exception;
 
-import org.springframework.security.core.AuthenticationException;
-
 /**
  * Thrown if bad challenge is detected
  */
-public class BadChallengeException extends AuthenticationException {
+public class BadChallengeException extends ValidationException {
 
     public BadChallengeException(String message, Throwable cause) {
         super(message, cause);

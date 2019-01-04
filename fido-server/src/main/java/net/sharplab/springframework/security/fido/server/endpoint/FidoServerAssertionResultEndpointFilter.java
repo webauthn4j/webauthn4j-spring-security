@@ -25,6 +25,7 @@ import net.sharplab.springframework.security.fido.server.util.BeanAssertUtil;
 import net.sharplab.springframework.security.webauthn.WebAuthnAssertionAuthenticationToken;
 import net.sharplab.springframework.security.webauthn.request.WebAuthnAuthenticationRequest;
 import net.sharplab.springframework.security.webauthn.server.ServerPropertyProvider;
+import net.sharplab.springframework.security.webauthn.util.ExceptionUtil;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationServiceException;
 import org.springframework.security.core.Authentication;
@@ -82,7 +83,10 @@ public class FidoServerAssertionResultEndpointFilter extends AbstractAuthenticat
             credential = jsonMapper.readValue(request.getInputStream(),
                     new TypeReference<ServerPublicKeyCredential<ServerAuthenticatorAssertionResponse>>() {
                     });
-        } catch (IOException e) {
+        } catch (RuntimeException e) {
+            throw ExceptionUtil.wrapWithAuthenticationException(e);
+        }
+        catch (IOException e) {
             throw new UncheckedIOException(e);
         }
         BeanAssertUtil.validate(credential);

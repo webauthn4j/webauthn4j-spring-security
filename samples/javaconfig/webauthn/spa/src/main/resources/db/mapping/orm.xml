@@ -22,7 +22,7 @@
                  version="2.1">
     <embeddable class="com.webauthn4j.response.attestation.authenticator.AttestedCredentialData">
         <attributes>
-            <basic name="aaGuid">
+            <basic name="aaguid">
                 <column column-definition="blob" />
             </basic>
             <basic name="credentialId">

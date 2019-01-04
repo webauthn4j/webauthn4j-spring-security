@@ -22,6 +22,7 @@ import com.webauthn4j.util.Base64UrlUtil;
 import com.webauthn4j.validator.WebAuthnRegistrationContextValidationResponse;
 import com.webauthn4j.validator.WebAuthnRegistrationContextValidator;
 import net.sharplab.springframework.security.webauthn.server.ServerPropertyProvider;
+import net.sharplab.springframework.security.webauthn.util.ExceptionUtil;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
@@ -55,10 +56,15 @@ public class WebAuthnRegistrationRequestValidator {
     ) {
         WebAuthnRegistrationContext registrationContext = createRegistrationContext(httpServletRequest, clientDataBase64, attestationObjectBase64, clientExtensionsJSON);
         WebAuthnRegistrationContextValidationResponse response = registrationContextValidator.validate(registrationContext);
-        return new WebAuthnRegistrationRequestValidationResponse(
-                response.getCollectedClientData(),
-                response.getAttestationObject(),
-                response.getRegistrationExtensionsClientOutputs());
+
+        try {
+            return new WebAuthnRegistrationRequestValidationResponse(
+                    response.getCollectedClientData(),
+                    response.getAttestationObject(),
+                    response.getRegistrationExtensionsClientOutputs());
+        } catch (RuntimeException e) {
+            throw ExceptionUtil.wrapWithAuthenticationException(e);
+        }
     }
 
     WebAuthnRegistrationContext createRegistrationContext(HttpServletRequest request,

@@ -16,15 +16,14 @@
 
 package net.sharplab.springframework.security.webauthn.exception;
 
-/**
- * Thrown if unexpected extension is contained
- */
-public class UnexpectedExtensionException extends ValidationException {
-    public UnexpectedExtensionException(String msg, Throwable cause) {
-        super(msg, cause);
+import org.springframework.security.core.AuthenticationException;
+
+public class DataConversionException extends AuthenticationException {
+    public DataConversionException(String message) {
+        super(message);
     }
 
-    public UnexpectedExtensionException(String msg) {
-        super(msg);
+    public DataConversionException(String message, Throwable cause) {
+        super(message, cause);
     }
 }

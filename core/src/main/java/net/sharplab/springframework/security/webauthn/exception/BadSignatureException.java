@@ -17,12 +17,10 @@
 package net.sharplab.springframework.security.webauthn.exception;
 
 
-import org.springframework.security.core.AuthenticationException;
-
 /**
  * Thrown if bad signature is specified
  */
-public class BadSignatureException extends AuthenticationException {
+public class BadSignatureException extends ValidationException {
     public BadSignatureException(String message, Throwable cause) {
         super(message, cause);
     }

@@ -17,8 +17,10 @@
 package net.sharplab.springframework.security.fido.server.endpoint;
 
 import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.exc.MismatchedInputException;
 import com.webauthn4j.converter.AttestationObjectConverter;
 import com.webauthn4j.converter.CollectedClientDataConverter;
+import com.webauthn4j.converter.util.JsonConverter;
 import com.webauthn4j.registry.Registry;
 import com.webauthn4j.response.attestation.AttestationObject;
 import com.webauthn4j.response.client.CollectedClientData;
@@ -26,6 +28,7 @@ import net.sharplab.springframework.security.fido.server.validator.ServerPublicK
 import net.sharplab.springframework.security.webauthn.WebAuthnRegistrationRequestValidator;
 import net.sharplab.springframework.security.webauthn.authenticator.WebAuthnAuthenticator;
 import net.sharplab.springframework.security.webauthn.userdetails.WebAuthnUserDetailsService;
+import net.sharplab.springframework.security.webauthn.util.ExceptionUtil;
 import org.springframework.security.authentication.AuthenticationServiceException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
@@ -70,7 +73,10 @@ public class FidoServerAttestationResultEndpointFilter extends ServerEndpointFil
             credential = registry.getJsonMapper().readValue(request.getInputStream(),
                     new TypeReference<ServerPublicKeyCredential<ServerAuthenticatorAttestationResponse>>() {
                     });
-        } catch (IOException e) {
+        } catch (RuntimeException e) {
+            throw ExceptionUtil.wrapWithAuthenticationException(e);
+        }
+        catch (IOException e) {
             throw new UncheckedIOException(e);
         }
         serverPublicKeyCredentialValidator.validate(credential);
