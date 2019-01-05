@@ -33,8 +33,8 @@ CREATE TABLE m_authenticator(
   counter                BIGINT         NOT NULL,
   aaguid                BLOB           NOT NULL,
   credential_id          BLOB           NOT NULL,
-  credential_public_key  VARCHAR(8192) NOT NULL,
-  attestation_statement  VARCHAR(8192) NOT NULL,
+  credential_public_key  TEXT NOT NULL,
+  attestation_statement  TEXT NOT NULL,
   primary key(id)
 );
 

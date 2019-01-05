@@ -45,7 +45,7 @@ public class AuthenticatorEntity implements Authenticator {
     private AttestedCredentialData attestedCredentialData;
 
     //TODO: extensions?
-    @Column(columnDefinition = "text")
+    @Lob
     @Convert(converter = AttestationStatementConverter.class)
     private AttestationStatement attestationStatement;
 

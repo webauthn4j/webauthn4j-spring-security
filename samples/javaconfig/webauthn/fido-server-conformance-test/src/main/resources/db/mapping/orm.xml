@@ -29,7 +29,7 @@
                 <column column-definition="blob"/>
             </basic>
             <basic name="credentialPublicKey">
-                <column column-definition="text"/>
+                <column column-definition="clob"/>
                 <convert
                         converter="net.sharplab.springframework.security.webauthn.sample.infrastructure.util.jpa.converter.CredentialPublicKeyConverter"/>
             </basic>
