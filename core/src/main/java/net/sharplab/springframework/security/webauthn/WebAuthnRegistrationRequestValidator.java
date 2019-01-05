@@ -23,6 +23,7 @@ import com.webauthn4j.validator.WebAuthnRegistrationContextValidationResponse;
 import com.webauthn4j.validator.WebAuthnRegistrationContextValidator;
 import net.sharplab.springframework.security.webauthn.server.ServerPropertyProvider;
 import net.sharplab.springframework.security.webauthn.util.ExceptionUtil;
+import org.springframework.util.Assert;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
@@ -50,11 +51,16 @@ public class WebAuthnRegistrationRequestValidator {
     }
 
     public WebAuthnRegistrationRequestValidationResponse validate(HttpServletRequest httpServletRequest,
-                                                                  String clientDataBase64,
-                                                                  String attestationObjectBase64,
+                                                                  String clientDataBase64url,
+                                                                  String attestationObjectBase64url,
                                                                   String clientExtensionsJSON
     ) {
-        WebAuthnRegistrationContext registrationContext = createRegistrationContext(httpServletRequest, clientDataBase64, attestationObjectBase64, clientExtensionsJSON);
+        Assert.notNull(httpServletRequest, "httpServletRequest must not be null");
+        Assert.hasText(clientDataBase64url, "clientDataBase64url must have text");
+        Assert.hasText(attestationObjectBase64url, "attestationObjectBase64url must have text");
+        Assert.hasText(clientExtensionsJSON, "clientExtensionsJSON must have text");
+
+        WebAuthnRegistrationContext registrationContext = createRegistrationContext(httpServletRequest, clientDataBase64url, attestationObjectBase64url, clientExtensionsJSON);
         WebAuthnRegistrationContextValidationResponse response = registrationContextValidator.validate(registrationContext);
 
         try {
@@ -108,6 +114,7 @@ public class WebAuthnRegistrationRequestValidator {
     }
 
     public void setExpectedRegistrationExtensionIds(List<String> expectedRegistrationExtensionIds) {
+        Assert.notNull(expectedRegistrationExtensionIds, "expectedRegistrationExtensionIds must not be null");
         this.expectedRegistrationExtensionIds = expectedRegistrationExtensionIds;
     }
 }

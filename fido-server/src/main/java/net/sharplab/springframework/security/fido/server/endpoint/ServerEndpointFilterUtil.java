@@ -50,7 +50,7 @@ class ServerEndpointFilterUtil {
             errorResponse = new ErrorResponse("Anonymous access is prohibited");
             statusCode = HttpServletResponse.SC_FORBIDDEN;
         }
-        else if(e instanceof AuthenticationException){
+        else if(e instanceof AuthenticationException || e instanceof IllegalArgumentException){
             errorResponse = new ErrorResponse("Authentication failed");
             statusCode = HttpServletResponse.SC_FORBIDDEN;
         }
