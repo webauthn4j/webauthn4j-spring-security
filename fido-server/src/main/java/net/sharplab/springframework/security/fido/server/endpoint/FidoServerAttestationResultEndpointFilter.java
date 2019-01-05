@@ -19,6 +19,7 @@ package net.sharplab.springframework.security.fido.server.endpoint;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.webauthn4j.converter.AttestationObjectConverter;
 import com.webauthn4j.converter.CollectedClientDataConverter;
+import com.webauthn4j.converter.util.JsonConverter;
 import com.webauthn4j.registry.Registry;
 import com.webauthn4j.response.attestation.AttestationObject;
 import com.webauthn4j.response.client.CollectedClientData;
@@ -26,12 +27,12 @@ import net.sharplab.springframework.security.fido.server.validator.ServerPublicK
 import net.sharplab.springframework.security.webauthn.WebAuthnRegistrationRequestValidator;
 import net.sharplab.springframework.security.webauthn.authenticator.WebAuthnAuthenticator;
 import net.sharplab.springframework.security.webauthn.userdetails.WebAuthnUserDetailsService;
-import net.sharplab.springframework.security.webauthn.util.ExceptionUtil;
-import org.springframework.security.authentication.AuthenticationServiceException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.util.Assert;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.UncheckedIOException;
 
 public class FidoServerAttestationResultEndpointFilter extends ServerEndpointFilterBase {
@@ -48,39 +49,50 @@ public class FidoServerAttestationResultEndpointFilter extends ServerEndpointFil
     private ServerPublicKeyCredentialValidator<ServerAuthenticatorAttestationResponse> serverPublicKeyCredentialValidator;
 
     private UsernameNotFoundHandler usernameNotFoundHandler = new DefaultUsernameNotFoundHandler();
+    private TypeReference<ServerPublicKeyCredential<ServerAuthenticatorAttestationResponse>> credentialTypeRef
+                = new TypeReference<ServerPublicKeyCredential<ServerAuthenticatorAttestationResponse>>() {};
 
     public FidoServerAttestationResultEndpointFilter(
             Registry registry,
             WebAuthnUserDetailsService webAuthnUserDetailsService,
             WebAuthnRegistrationRequestValidator webAuthnRegistrationRequestValidator) {
         super(FILTER_URL, registry);
-        this.webAuthnUserDetailsService = webAuthnUserDetailsService;
         this.attestationObjectConverter = new AttestationObjectConverter(registry);
         this.collectedClientDataConverter = new CollectedClientDataConverter(registry);
-        this.webAuthnRegistrationRequestValidator = webAuthnRegistrationRequestValidator;
         this.serverPublicKeyCredentialValidator = new ServerPublicKeyCredentialValidator<>();
+
+        this.webAuthnUserDetailsService = webAuthnUserDetailsService;
+        this.webAuthnRegistrationRequestValidator = webAuthnRegistrationRequestValidator;
+        checkConfig();
+    }
+
+    @Override
+    public void afterPropertiesSet(){
+        super.afterPropertiesSet();
+        checkConfig();
+    }
+
+    @SuppressWarnings("squid:S2177")
+    private void checkConfig(){
+        Assert.notNull(webAuthnUserDetailsService, "webAuthnUserDetailsService must not be null");
+        Assert.notNull(webAuthnRegistrationRequestValidator, "webAuthnRegistrationRequestValidator must not be null");
     }
 
     @Override
     protected ServerResponse processRequest(HttpServletRequest request) {
-        if (!request.getMethod().equals("POST")) {
-            throw new AuthenticationServiceException("Authentication method not supported: " + request.getMethod());
-        }
-        ServerPublicKeyCredential<ServerAuthenticatorAttestationResponse> credential;
+        InputStream inputStream;
         try {
-            credential = registry.getJsonMapper().readValue(request.getInputStream(),
-                    new TypeReference<ServerPublicKeyCredential<ServerAuthenticatorAttestationResponse>>() {
-                    });
-        } catch (RuntimeException e) {
-            throw ExceptionUtil.wrapWithAuthenticationException(e);
+            inputStream = request.getInputStream();
         }
         catch (IOException e) {
             throw new UncheckedIOException(e);
         }
+        ServerPublicKeyCredential<ServerAuthenticatorAttestationResponse> credential =
+                new JsonConverter(registry.getJsonMapper()).readValue(inputStream, credentialTypeRef);
         serverPublicKeyCredentialValidator.validate(credential);
         ServerAuthenticatorAttestationResponse response = credential.getResponse();
-        AttestationObject attestationObject = attestationObjectConverter.convert(response.getAttestationObject());
         CollectedClientData collectedClientData = collectedClientDataConverter.convert(response.getClientDataJSON());
+        AttestationObject attestationObject = attestationObjectConverter.convert(response.getAttestationObject());
         webAuthnRegistrationRequestValidator.validate(
                 request,
                 response.getClientDataJSON(),

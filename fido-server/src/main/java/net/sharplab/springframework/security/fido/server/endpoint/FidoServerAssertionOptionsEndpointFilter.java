@@ -16,15 +16,18 @@
 
 package net.sharplab.springframework.security.fido.server.endpoint;
 
+import com.webauthn4j.converter.util.JsonConverter;
 import com.webauthn4j.registry.Registry;
 import com.webauthn4j.response.client.challenge.DefaultChallenge;
 import com.webauthn4j.util.Base64UrlUtil;
 import net.sharplab.springframework.security.webauthn.endpoint.AssertionOptions;
 import net.sharplab.springframework.security.webauthn.endpoint.OptionsProvider;
 import org.springframework.security.authentication.AuthenticationServiceException;
+import org.springframework.util.Assert;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.UncheckedIOException;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -48,17 +51,31 @@ public class FidoServerAssertionOptionsEndpointFilter extends ServerEndpointFilt
     public FidoServerAssertionOptionsEndpointFilter(Registry registry, OptionsProvider optionsProvider) {
         super(FILTER_URL, registry);
         this.optionsProvider = optionsProvider;
+        checkConfig();
+    }
+
+    @Override
+    public void afterPropertiesSet(){
+        super.afterPropertiesSet();
+        checkConfig();
+    }
+
+    @SuppressWarnings("squid:S2177")
+    private void checkConfig(){
+        Assert.notNull(optionsProvider, "optionsProvider must not be null");
     }
 
 
     @Override
     protected ServerResponse processRequest(HttpServletRequest request) {
-        ServerPublicKeyCredentialGetOptionsRequest serverRequest;
+        InputStream inputStream;
         try {
-            serverRequest = registry.getJsonMapper().readValue(request.getInputStream(), ServerPublicKeyCredentialGetOptionsRequest.class);
+            inputStream = request.getInputStream();
         } catch (IOException e) {
             throw new UncheckedIOException(e);
         }
+        ServerPublicKeyCredentialGetOptionsRequest serverRequest =
+                new JsonConverter(registry.getJsonMapper()).readValue(inputStream, ServerPublicKeyCredentialGetOptionsRequest.class);
         String username = serverRequest.getUsername();
         AssertionOptions options = optionsProvider.getAssertionOptions(request, username, new DefaultChallenge());
         List<ServerPublicKeyCredentialDescriptor> credentials = options.getCredentials().stream().map(ServerPublicKeyCredentialDescriptor::new).collect(Collectors.toList());

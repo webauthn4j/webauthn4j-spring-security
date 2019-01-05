@@ -16,6 +16,7 @@
 
 package net.sharplab.springframework.security.fido.server.endpoint;
 
+import com.webauthn4j.converter.util.JsonConverter;
 import com.webauthn4j.registry.Registry;
 import com.webauthn4j.response.client.challenge.Challenge;
 import com.webauthn4j.response.client.challenge.DefaultChallenge;
@@ -24,9 +25,11 @@ import net.sharplab.springframework.security.webauthn.endpoint.AttestationOption
 import net.sharplab.springframework.security.webauthn.endpoint.OptionsProvider;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationServiceException;
+import org.springframework.util.Assert;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.UncheckedIOException;
 import java.nio.ByteBuffer;
 import java.util.List;
@@ -52,20 +55,30 @@ public class FidoServerAttestationOptionsEndpointFilter extends ServerEndpointFi
     public FidoServerAttestationOptionsEndpointFilter(Registry registry, OptionsProvider optionsProvider) {
         super(FILTER_URL, registry);
         this.optionsProvider = optionsProvider;
+        checkConfig();
+    }
+
+    @Override
+    public void afterPropertiesSet(){
+        super.afterPropertiesSet();
+        checkConfig();
+    }
+
+    @SuppressWarnings("squid:S2177")
+    private void checkConfig(){
+        Assert.notNull(optionsProvider, "optionsProvider must not be null");
     }
 
     @Override
     protected ServerResponse processRequest(HttpServletRequest request) {
-
-        if (!request.getMethod().equals(HttpMethod.POST.name())) {
-            throw new AuthenticationServiceException("Authentication method not supported: " + request.getMethod());
-        }
-        ServerPublicKeyCredentialCreationOptionsRequest serverRequest;
+        InputStream inputStream;
         try {
-            serverRequest = registry.getJsonMapper().readValue(request.getInputStream(), ServerPublicKeyCredentialCreationOptionsRequest.class);
+            inputStream = request.getInputStream();
         } catch (IOException e) {
             throw new UncheckedIOException(e);
         }
+        ServerPublicKeyCredentialCreationOptionsRequest serverRequest = new JsonConverter(registry.getJsonMapper())
+                .readValue(inputStream, ServerPublicKeyCredentialCreationOptionsRequest.class);
         String username = serverRequest.getUsername();
         String displayName = serverRequest.getDisplayName();
         Challenge challenge = serverEndpointFilterUtil.encodeUsername(new DefaultChallenge(), username);

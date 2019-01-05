@@ -17,24 +17,25 @@
 package net.sharplab.springframework.security.fido.server.endpoint;
 
 import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.webauthn4j.converter.util.JsonConverter;
 import com.webauthn4j.registry.Registry;
 import com.webauthn4j.server.ServerProperty;
 import com.webauthn4j.util.Base64UrlUtil;
-import net.sharplab.springframework.security.fido.server.util.BeanAssertUtil;
+import net.sharplab.springframework.security.fido.server.validator.ServerPublicKeyCredentialValidator;
 import net.sharplab.springframework.security.webauthn.WebAuthnAssertionAuthenticationToken;
 import net.sharplab.springframework.security.webauthn.request.WebAuthnAuthenticationRequest;
 import net.sharplab.springframework.security.webauthn.server.ServerPropertyProvider;
-import net.sharplab.springframework.security.webauthn.util.ExceptionUtil;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.security.web.util.matcher.RequestMatcher;
+import org.springframework.util.Assert;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.UncheckedIOException;
 
 public class FidoServerAssertionResultEndpointFilter extends AbstractAuthenticationProcessingFilter {
@@ -44,8 +45,11 @@ public class FidoServerAssertionResultEndpointFilter extends AbstractAuthenticat
      */
     public static final String FILTER_URL = "/webauthn/assertion/result";
 
-    private ObjectMapper jsonMapper;
+    private JsonConverter jsonConverter;
     private ServerPropertyProvider serverPropertyProvider;
+    private ServerPublicKeyCredentialValidator<ServerAuthenticatorAssertionResponse> serverPublicKeyCredentialValidator;
+    private TypeReference<ServerPublicKeyCredential<ServerAuthenticatorAssertionResponse>> credentialTypeRef
+             = new TypeReference<ServerPublicKeyCredential<ServerAuthenticatorAssertionResponse>>() {};
 
     public FidoServerAssertionResultEndpointFilter(
             Registry registry,
@@ -53,11 +57,13 @@ public class FidoServerAssertionResultEndpointFilter extends AbstractAuthenticat
             RequestMatcher requiresAuthenticationRequestMatcher) {
         super(requiresAuthenticationRequestMatcher);
 
-        this.jsonMapper = registry.getJsonMapper();
+        this.jsonConverter = new JsonConverter(registry.getJsonMapper());
         this.serverPropertyProvider = serverPropertyProvider;
+        this.serverPublicKeyCredentialValidator = new ServerPublicKeyCredentialValidator<>();
 
         this.setAuthenticationSuccessHandler(new FidoServerAssertionResultEndpointSuccessHandler(registry));
         this.setAuthenticationFailureHandler(new FidoServerAssertionResultEndpointFailureHandler(registry));
+        checkConfig();
     }
 
     public FidoServerAssertionResultEndpointFilter(Registry registry, ServerPropertyProvider serverPropertyProvider, String defaultFilterProcessesUrl) {
@@ -69,19 +75,28 @@ public class FidoServerAssertionResultEndpointFilter extends AbstractAuthenticat
     }
 
     @Override
+    public void afterPropertiesSet(){
+        super.afterPropertiesSet();
+        checkConfig();
+    }
+
+    @SuppressWarnings("squid:S2177")
+    private void checkConfig(){
+        Assert.notNull(serverPropertyProvider, "serverPropertyProvider must not be null");
+    }
+
+    @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) {
-        ServerPublicKeyCredential<ServerAuthenticatorAssertionResponse> credential;
+        InputStream inputStream;
         try {
-            credential = jsonMapper.readValue(request.getInputStream(),
-                    new TypeReference<ServerPublicKeyCredential<ServerAuthenticatorAssertionResponse>>() {
-                    });
-        } catch (RuntimeException e) {
-            throw ExceptionUtil.wrapWithAuthenticationException(e);
+            inputStream = request.getInputStream();
         }
         catch (IOException e) {
             throw new UncheckedIOException(e);
         }
-        BeanAssertUtil.validate(credential);
+        ServerPublicKeyCredential<ServerAuthenticatorAssertionResponse> credential =
+                jsonConverter.readValue(inputStream, credentialTypeRef);
+        serverPublicKeyCredentialValidator.validate(credential);
 
         ServerAuthenticatorAssertionResponse assertionResponse = credential.getResponse();
 
