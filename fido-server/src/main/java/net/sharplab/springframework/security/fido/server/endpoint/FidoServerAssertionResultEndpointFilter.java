@@ -27,7 +27,6 @@ import net.sharplab.springframework.security.webauthn.request.WebAuthnAuthentica
 import net.sharplab.springframework.security.webauthn.server.ServerPropertyProvider;
 import net.sharplab.springframework.security.webauthn.util.ExceptionUtil;
 import org.springframework.http.HttpMethod;
-import org.springframework.security.authentication.AuthenticationServiceException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
@@ -47,8 +46,6 @@ public class FidoServerAssertionResultEndpointFilter extends AbstractAuthenticat
 
     private ObjectMapper jsonMapper;
     private ServerPropertyProvider serverPropertyProvider;
-
-    private boolean postOnly = true;
 
     public FidoServerAssertionResultEndpointFilter(
             Registry registry,
@@ -73,11 +70,6 @@ public class FidoServerAssertionResultEndpointFilter extends AbstractAuthenticat
 
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) {
-
-        if (this.postOnly && !request.getMethod().equals("POST")) {
-            throw new AuthenticationServiceException("Authentication method not supported: " + request.getMethod());
-        }
-
         ServerPublicKeyCredential<ServerAuthenticatorAssertionResponse> credential;
         try {
             credential = jsonMapper.readValue(request.getInputStream(),
@@ -109,24 +101,8 @@ public class FidoServerAssertionResultEndpointFilter extends AbstractAuthenticat
         return this.getAuthenticationManager().authenticate(authRequest);
     }
 
-    /**
-     * Defines whether only HTTP POST requests will be allowed by this filter. If set to
-     * true, and an authentication request is received which is not a POST request, an
-     * exception will be raised immediately and authentication will not be attempted. The
-     * <tt>unsuccessfulAuthentication()</tt> method will be called as if handling a failed
-     * authentication.
-     * <p>
-     * Defaults to <tt>true</tt> but may be overridden by subclasses.
-     *
-     * @param postOnly Flag to restrict HTTP method to POST.
-     */
-    public void setPostOnly(boolean postOnly) {
-        this.postOnly = postOnly;
-    }
-
     protected void setDetails(HttpServletRequest request, WebAuthnAssertionAuthenticationToken authRequest) {
         authRequest.setDetails(this.authenticationDetailsSource.buildDetails(request));
     }
-
 
 }

@@ -22,6 +22,7 @@ import com.webauthn4j.response.client.challenge.DefaultChallenge;
 import com.webauthn4j.util.Base64UrlUtil;
 import net.sharplab.springframework.security.webauthn.endpoint.AttestationOptions;
 import net.sharplab.springframework.security.webauthn.endpoint.OptionsProvider;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationServiceException;
 
 import javax.servlet.http.HttpServletRequest;
@@ -55,7 +56,8 @@ public class FidoServerAttestationOptionsEndpointFilter extends ServerEndpointFi
 
     @Override
     protected ServerResponse processRequest(HttpServletRequest request) {
-        if (!request.getMethod().equals("POST")) {
+
+        if (!request.getMethod().equals(HttpMethod.POST.name())) {
             throw new AuthenticationServiceException("Authentication method not supported: " + request.getMethod());
         }
         ServerPublicKeyCredentialCreationOptionsRequest serverRequest;

@@ -27,6 +27,7 @@ import com.webauthn4j.test.authenticator.model.WebAuthnModelAuthenticatorAdaptor
 import com.webauthn4j.test.client.ClientPlatform;
 import com.webauthn4j.util.Base64UrlUtil;
 import com.webauthn4j.validator.WebAuthnRegistrationContextValidator;
+import net.sharplab.springframework.security.webauthn.WebAuthnRegistrationRequestValidationResponse;
 import net.sharplab.springframework.security.webauthn.WebAuthnRegistrationRequestValidator;
 import net.sharplab.springframework.security.webauthn.server.ServerPropertyProvider;
 import org.junit.Test;
@@ -34,6 +35,7 @@ import org.springframework.mock.web.MockHttpServletRequest;
 
 import java.util.Collections;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -89,7 +91,12 @@ public class RegistrationValidationTest {
         String attestationObjectBase64 = Base64UrlUtil.encodeToString(registrationRequest.getAttestationObject());
         String clientExtensionsJSON = null;
 
-        target.validate(mockHttpServletRequest, clientDataBase64, attestationObjectBase64, clientExtensionsJSON);
+        WebAuthnRegistrationRequestValidationResponse response
+                = target.validate(mockHttpServletRequest, clientDataBase64, attestationObjectBase64, clientExtensionsJSON);
+
+        assertThat(response.getAttestationObject()).isNotNull();
+        assertThat(response.getCollectedClientData()).isNotNull();
+        assertThat(response.getRegistrationExtensionsClientOutputs()).isNull();
     }
 
 }

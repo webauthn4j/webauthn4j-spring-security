@@ -53,9 +53,6 @@ public class FidoServerAssertionOptionsEndpointFilter extends ServerEndpointFilt
 
     @Override
     protected ServerResponse processRequest(HttpServletRequest request) {
-        if (!request.getMethod().equals("POST")) {
-            throw new AuthenticationServiceException("Authentication method not supported: " + request.getMethod());
-        }
         ServerPublicKeyCredentialGetOptionsRequest serverRequest;
         try {
             serverRequest = registry.getJsonMapper().readValue(request.getInputStream(), ServerPublicKeyCredentialGetOptionsRequest.class);

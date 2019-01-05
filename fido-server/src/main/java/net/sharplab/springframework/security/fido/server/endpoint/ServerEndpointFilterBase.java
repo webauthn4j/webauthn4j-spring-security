@@ -17,9 +17,12 @@
 package net.sharplab.springframework.security.fido.server.endpoint;
 
 import com.webauthn4j.registry.Registry;
+import net.sharplab.springframework.security.webauthn.util.ExceptionUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.support.MessageSourceAccessor;
+import org.springframework.http.HttpMethod;
+import org.springframework.security.authentication.AuthenticationServiceException;
 import org.springframework.security.core.SpringSecurityMessageSource;
 import org.springframework.security.web.FilterInvocation;
 import org.springframework.util.Assert;
@@ -30,19 +33,20 @@ import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 public abstract class ServerEndpointFilterBase extends GenericFilterBean {
 
+    //~ Instance fields
+    // ================================================================================================
     /**
      * Url this filter should get activated on.
      */
-    protected String filterProcessesUrl;
+    private String filterProcessesUrl;
     protected MessageSourceAccessor messages = SpringSecurityMessageSource.getAccessor();
     protected Registry registry;
     protected ServerEndpointFilterUtil serverEndpointFilterUtil;
-    //~ Instance fields
-    // ================================================================================================
 
 
     public ServerEndpointFilterBase(
@@ -70,20 +74,30 @@ public abstract class ServerEndpointFilterBase extends GenericFilterBean {
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
         FilterInvocation fi = new FilterInvocation(request, response, chain);
-
-        if (!processFilter(fi.getRequest())) {
-            chain.doFilter(request, response);
-            return;
-        }
-
         try {
-            ServerResponse serverResponse = processRequest(fi.getRequest());
-            serverEndpointFilterUtil.writeResponse(fi.getResponse(), serverResponse);
-        } catch (RuntimeException e) {
+            HttpServletRequest httpServletRequest = fi.getRequest();
+            HttpServletResponse httpServletResponse = fi.getResponse();
+            if (!httpServletRequest.getMethod().equals(HttpMethod.POST.name())) {
+                throw new AuthenticationServiceException("Authentication method not supported: " + httpServletRequest.getMethod());
+            }
+
+            if (!processFilter(httpServletRequest)) {
+                chain.doFilter(request, response);
+                return;
+            }
+
+            try{
+                ServerResponse serverResponse = processRequest(httpServletRequest);
+                serverEndpointFilterUtil.writeResponse(httpServletResponse, serverResponse);
+            }
+            catch (RuntimeException e){
+                throw ExceptionUtil.wrapWithAuthenticationException(e);
+            }
+        }
+        catch (RuntimeException e) {
             logger.debug("RuntimeException is thrown", e);
             serverEndpointFilterUtil.writeErrorResponse(fi.getResponse(), e);
         }
-
     }
 
     protected abstract ServerResponse processRequest(HttpServletRequest request);
