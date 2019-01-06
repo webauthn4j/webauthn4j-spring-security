@@ -35,6 +35,7 @@ import net.sharplab.springframework.security.webauthn.challenge.HttpSessionChall
 import net.sharplab.springframework.security.webauthn.endpoint.OptionsProvider;
 import net.sharplab.springframework.security.webauthn.endpoint.OptionsProviderImpl;
 import net.sharplab.springframework.security.webauthn.metadata.JsonFileResourceMetadataStatementProvider;
+import net.sharplab.springframework.security.webauthn.sample.app.security.ExampleExtensionClientInput;
 import net.sharplab.springframework.security.webauthn.server.ServerPropertyProvider;
 import net.sharplab.springframework.security.webauthn.server.ServerPropertyProviderImpl;
 import net.sharplab.springframework.security.webauthn.userdetails.WebAuthnUserDetailsService;
@@ -93,7 +94,9 @@ public class WebSecurityBeanConfig {
 
     @Bean
     public OptionsProvider optionsProvider(WebAuthnUserDetailsService webAuthnUserDetailsService, ChallengeRepository challengeRepository) {
-        return new OptionsProviderImpl(webAuthnUserDetailsService, challengeRepository);
+        OptionsProvider optionsProvider = new OptionsProviderImpl(webAuthnUserDetailsService, challengeRepository);
+        ((OptionsProviderImpl) optionsProvider).getAuthenticationExtensions().put(ExampleExtensionClientInput.ID, new ExampleExtensionClientInput("In a hole in the ground there lived a hobbit"));
+        return optionsProvider;
     }
 
     @Bean

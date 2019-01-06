@@ -17,6 +17,7 @@
 package net.sharplab.springframework.security.webauthn.endpoint;
 
 import com.webauthn4j.request.PublicKeyCredentialParameters;
+import com.webauthn4j.request.extension.client.AuthenticationExtensionsClientInputs;
 import com.webauthn4j.response.client.challenge.Challenge;
 
 import javax.servlet.http.HttpServletRequest;
@@ -110,6 +111,17 @@ public interface OptionsProvider {
     BigInteger getAuthenticationTimeout();
 
     void setAuthenticationTimeout(BigInteger authenticationTimeout);
+
+
+    AuthenticationExtensionsClientInputs getRegistrationExtensions();
+
+    void setRegistrationExtensions(AuthenticationExtensionsClientInputs registrationExtensions);
+
+    AuthenticationExtensionsClientInputs getAuthenticationExtensions();
+
+    void setAuthenticationExtensions(AuthenticationExtensionsClientInputs authenticationExtensions) ;
+
+
 
     String getUsernameParameter();
 

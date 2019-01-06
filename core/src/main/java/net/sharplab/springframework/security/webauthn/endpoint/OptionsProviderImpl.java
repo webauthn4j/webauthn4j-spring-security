@@ -50,8 +50,8 @@ public class OptionsProviderImpl implements OptionsProvider {
     private List<PublicKeyCredentialParameters> pubKeyCredParams = new ArrayList<>();
     private BigInteger registrationTimeout = null;
     private BigInteger authenticationTimeout = null;
-    private AuthenticationExtensionsClientInputs registrationExtensions;
-    private AuthenticationExtensionsClientInputs authenticationExtensions;
+    private AuthenticationExtensionsClientInputs registrationExtensions = new AuthenticationExtensionsClientInputs();
+    private AuthenticationExtensionsClientInputs authenticationExtensions = new AuthenticationExtensionsClientInputs();
 
     private String usernameParameter = SPRING_SECURITY_FORM_USERNAME_KEY;
     private String passwordParameter = SPRING_SECURITY_FORM_PASSWORD_KEY;
