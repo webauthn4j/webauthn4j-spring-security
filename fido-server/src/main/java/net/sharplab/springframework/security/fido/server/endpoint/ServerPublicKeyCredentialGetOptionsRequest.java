@@ -17,12 +17,20 @@
 package net.sharplab.springframework.security.fido.server.endpoint;
 
 import com.webauthn4j.request.UserVerificationRequirement;
+import com.webauthn4j.request.extension.client.AuthenticationExtensionsClientInputs;
 
 import java.util.Objects;
 
 public class ServerPublicKeyCredentialGetOptionsRequest implements ServerRequest {
     private String username;
     private UserVerificationRequirement userVerification;
+    private AuthenticationExtensionsClientInputs extensions;
+
+    public ServerPublicKeyCredentialGetOptionsRequest(String username, UserVerificationRequirement userVerification, AuthenticationExtensionsClientInputs extensions) {
+        this.username = username;
+        this.userVerification = userVerification;
+        this.extensions = extensions;
+    }
 
     public ServerPublicKeyCredentialGetOptionsRequest(String username, UserVerificationRequirement userVerification) {
         this.username = username;
@@ -46,18 +54,23 @@ public class ServerPublicKeyCredentialGetOptionsRequest implements ServerRequest
         return userVerification;
     }
 
+    public AuthenticationExtensionsClientInputs getExtensions() {
+        return extensions;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         ServerPublicKeyCredentialGetOptionsRequest that = (ServerPublicKeyCredentialGetOptionsRequest) o;
         return Objects.equals(username, that.username) &&
-                userVerification == that.userVerification;
+                userVerification == that.userVerification &&
+                Objects.equals(extensions, that.extensions);
     }
 
     @Override
     public int hashCode() {
 
-        return Objects.hash(username, userVerification);
+        return Objects.hash(username, userVerification, extensions);
     }
 }

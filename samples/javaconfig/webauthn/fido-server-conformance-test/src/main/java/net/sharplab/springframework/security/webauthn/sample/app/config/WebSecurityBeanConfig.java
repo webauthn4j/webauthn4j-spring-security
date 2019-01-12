@@ -20,10 +20,12 @@ import com.webauthn4j.anchor.TrustAnchorProvider;
 import com.webauthn4j.extras.fido.metadata.statement.MetadataStatementProvider;
 import com.webauthn4j.extras.fido.metadata.statement.MetadataStatementTrustAnchorProvider;
 import com.webauthn4j.registry.Registry;
+import com.webauthn4j.request.extension.client.AuthenticationExtensionsClientInputs;
 import com.webauthn4j.validator.WebAuthnAuthenticationContextValidator;
 import com.webauthn4j.validator.WebAuthnRegistrationContextValidator;
 import com.webauthn4j.validator.attestation.androidkey.AndroidKeyAttestationStatementValidator;
 import com.webauthn4j.validator.attestation.androidsafetynet.AndroidSafetyNetAttestationStatementValidator;
+import com.webauthn4j.validator.attestation.none.NoneAttestationStatementValidator;
 import com.webauthn4j.validator.attestation.packed.PackedAttestationStatementValidator;
 import com.webauthn4j.validator.attestation.trustworthiness.certpath.TrustAnchorCertPathTrustworthinessValidator;
 import com.webauthn4j.validator.attestation.trustworthiness.ecdaa.DefaultECDAATrustworthinessValidator;
@@ -95,7 +97,8 @@ public class WebSecurityBeanConfig {
     @Bean
     public OptionsProvider optionsProvider(WebAuthnUserDetailsService webAuthnUserDetailsService, ChallengeRepository challengeRepository) {
         OptionsProvider optionsProvider = new OptionsProviderImpl(webAuthnUserDetailsService, challengeRepository);
-        ((OptionsProviderImpl) optionsProvider).getAuthenticationExtensions().put(ExampleExtensionClientInput.ID, new ExampleExtensionClientInput("In a hole in the ground there lived a hobbit"));
+        optionsProvider.setRegistrationExtensions(null);
+        optionsProvider.setAuthenticationExtensions(null);
         return optionsProvider;
     }
 
@@ -106,13 +109,13 @@ public class WebSecurityBeanConfig {
 
     @Bean
     public WebAuthnRegistrationContextValidator webAuthnRegistrationContextValidator(TrustAnchorProvider trustAnchorProvider) {
-//        return WebAuthnRegistrationContextValidator.createNonStrictRegistrationContextValidator();
         return new WebAuthnRegistrationContextValidator(
                 Arrays.asList(
                         new PackedAttestationStatementValidator(),
                         new FIDOU2FAttestationStatementValidator(),
                         new AndroidKeyAttestationStatementValidator(),
-                        new AndroidSafetyNetAttestationStatementValidator()
+                        new AndroidSafetyNetAttestationStatementValidator(),
+                        new NoneAttestationStatementValidator()
                 ),
                 new TrustAnchorCertPathTrustworthinessValidator(trustAnchorProvider),
                 new DefaultECDAATrustworthinessValidator(),

@@ -18,7 +18,9 @@ package net.sharplab.springframework.security.fido.server.endpoint;
 
 import com.webauthn4j.converter.util.JsonConverter;
 import com.webauthn4j.registry.Registry;
+import com.webauthn4j.request.extension.client.AuthenticationExtensionsClientInputs;
 import com.webauthn4j.response.client.challenge.DefaultChallenge;
+import com.webauthn4j.response.extension.client.AuthenticationExtensionsClientOutputs;
 import com.webauthn4j.util.Base64UrlUtil;
 import net.sharplab.springframework.security.webauthn.endpoint.AssertionOptions;
 import net.sharplab.springframework.security.webauthn.endpoint.OptionsProvider;
@@ -79,13 +81,21 @@ public class FidoServerAssertionOptionsEndpointFilter extends ServerEndpointFilt
         String username = serverRequest.getUsername();
         AssertionOptions options = optionsProvider.getAssertionOptions(request, username, new DefaultChallenge());
         List<ServerPublicKeyCredentialDescriptor> credentials = options.getCredentials().stream().map(ServerPublicKeyCredentialDescriptor::new).collect(Collectors.toList());
+        AuthenticationExtensionsClientInputs authenticationExtensionsClientInputs;
+        if(serverRequest.getExtensions() != null){
+            authenticationExtensionsClientInputs = serverRequest.getExtensions();
+        }
+        else {
+            authenticationExtensionsClientInputs = options.getAuthenticationExtensions();
+        }
+
         return new ServerPublicKeyCredentialGetOptionsResponse(
                 Base64UrlUtil.encodeToString(options.getChallenge().getValue()),
                 options.getAuthenticationTimeout(),
                 options.getRpId(),
                 credentials,
                 serverRequest.getUserVerification(),
-                options.getAuthenticationExtensions());
+                authenticationExtensionsClientInputs);
     }
 
 }
