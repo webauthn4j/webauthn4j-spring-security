@@ -18,13 +18,13 @@ package net.sharplab.springframework.security.webauthn.sample.app.api;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.webauthn4j.util.Base64UrlUtil;
+import com.webauthn4j.util.UUIDUtil;
 import net.sharplab.springframework.security.webauthn.sample.app.config.AppConfig;
 import net.sharplab.springframework.security.webauthn.sample.app.config.TestSecurityConfig;
 import net.sharplab.springframework.security.webauthn.sample.app.service.ProfileAppService;
 import net.sharplab.springframework.security.webauthn.sample.app.test.WithMockUser;
 import net.sharplab.springframework.security.webauthn.sample.domain.entity.UserEntity;
 import net.sharplab.springframework.security.webauthn.sample.infrastructure.config.InfrastructureMockConfig;
-import net.sharplab.springframework.security.webauthn.sample.util.UUIDUtil;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -151,7 +151,7 @@ public class ProfileControllerTest {
         userUpdateForm.setAuthenticators(Collections.emptyList());
         userUpdateForm.setSingleFactorAuthenticationAllowed(true);
 
-        byte[] userHandle = UUIDUtil.toByteArray(UUID.randomUUID());
+        byte[] userHandle = UUIDUtil.convertUUIDToBytes(UUID.randomUUID());
 
         UserEntity userEntity = new UserEntity();
         userEntity.setId(userId);

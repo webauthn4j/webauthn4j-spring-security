@@ -96,7 +96,7 @@ public class WebAuthnLoginConfigurerSpringTest {
         mvc
                 .perform(get("/webauthn/options").with(anonymous()))
                 .andExpect(unauthenticated())
-                .andExpect(content().json("{\"data\":{\"relyingParty\":{\"name\":null,\"icon\":null,\"id\":\"example.com\"},\"user\":null,\"challenge\":\"aFglXMZdQTKD4krvNzJBzA\",\"pubKeyCredParams\":[],\"registrationTimeout\":null,\"authenticationTimeout\":null,\"credentials\":[],\"registrationExtensions\":null,\"authenticationExtensions\":null,\"parameters\":{\"username\":\"username\",\"password\":\"password\",\"credentialId\":\"credentialId\",\"clientDataJSON\":\"clientDataJSON\",\"authenticatorData\":\"authenticatorData\",\"signature\":\"signature\",\"clientExtensionsJSON\":\"clientExtensionsJSON\"}},\"errorMessage\":null}"))
+                .andExpect(content().json("{\"data\":{\"relyingParty\":{\"name\":null,\"icon\":null,\"id\":\"example.com\"},\"user\":null,\"challenge\":\"aFglXMZdQTKD4krvNzJBzA\",\"pubKeyCredParams\":[],\"registrationTimeout\":null,\"authenticationTimeout\":null,\"credentials\":[],\"registrationExtensions\":{},\"authenticationExtensions\":{},\"parameters\":{\"username\":\"username\",\"password\":\"password\",\"credentialId\":\"credentialId\",\"clientDataJSON\":\"clientDataJSON\",\"authenticatorData\":\"authenticatorData\",\"signature\":\"signature\",\"clientExtensionsJSON\":\"clientExtensionsJSON\"}},\"errorMessage\":null}"))
                 .andExpect(status().isOk());
     }
 
