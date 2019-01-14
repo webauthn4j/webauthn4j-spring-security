@@ -17,11 +17,13 @@
 package net.sharplab.springframework.security.webauthn.anchor;
 
 import com.webauthn4j.anchor.KeyStoreException;
+import com.webauthn4j.response.attestation.authenticator.AAGUID;
 import org.junit.Test;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 
 import java.security.cert.TrustAnchor;
+import java.util.Map;
 import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -37,7 +39,7 @@ public class KeyStoreResourceTrustAnchorProviderTest {
         target.setKeyStore(resource);
         target.setPassword("password");
 
-        Set<TrustAnchor> trustAnchors = target.provide();
+        Map<AAGUID, Set<TrustAnchor>> trustAnchors = target.provide();
         assertThat(trustAnchors).isNotEmpty();
     }
 

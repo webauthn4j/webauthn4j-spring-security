@@ -17,6 +17,7 @@
 package net.sharplab.springframework.security.webauthn.anchor;
 
 import com.webauthn4j.anchor.CachingTrustAnchorProviderBase;
+import com.webauthn4j.response.attestation.authenticator.AAGUID;
 import com.webauthn4j.util.AssertUtil;
 import com.webauthn4j.util.CertificateUtil;
 import org.springframework.beans.factory.InitializingBean;
@@ -26,8 +27,7 @@ import java.io.IOException;
 import java.io.UncheckedIOException;
 import java.security.cert.TrustAnchor;
 import java.security.cert.X509Certificate;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class CertFileResourcesTrustAnchorProvider extends CachingTrustAnchorProviderBase implements InitializingBean {
@@ -51,8 +51,9 @@ public class CertFileResourcesTrustAnchorProvider extends CachingTrustAnchorProv
     }
 
     @Override
-    protected Set<TrustAnchor> loadTrustAnchors() {
-        return pemFiles.stream().map(this::loadTrustAnchor).collect(Collectors.toSet());
+    protected Map<AAGUID, Set<TrustAnchor>> loadTrustAnchors() {
+        Set<TrustAnchor> trustAnchors = pemFiles.stream().map(this::loadTrustAnchor).collect(Collectors.toSet());
+        return Collections.singletonMap(null, trustAnchors);
     }
 
     public List<Resource> getPemFiles() {

@@ -37,13 +37,15 @@ public class WebAuthnAuthenticationRequest implements Serializable {
     private final byte[] signature;
     private final String clientExtensionsJSON;
     private final ServerProperty serverProperty;
+    private final boolean userVerificationRequired;
 
     public WebAuthnAuthenticationRequest(byte[] credentialId,
                                          byte[] clientDataJSON,
                                          byte[] authenticatorData,
                                          byte[] signature,
                                          String clientExtensionsJSON,
-                                         ServerProperty serverProperty) {
+                                         ServerProperty serverProperty,
+                                         boolean userVerificationRequired) {
 
         this.credentialId = credentialId;
         this.clientDataJSON = clientDataJSON;
@@ -51,6 +53,7 @@ public class WebAuthnAuthenticationRequest implements Serializable {
         this.signature = signature;
         this.clientExtensionsJSON = clientExtensionsJSON;
         this.serverProperty = serverProperty;
+        this.userVerificationRequired = userVerificationRequired;
     }
 
     public byte[] getCredentialId() {
@@ -77,6 +80,10 @@ public class WebAuthnAuthenticationRequest implements Serializable {
         return serverProperty;
     }
 
+    public boolean isUserVerificationRequired() {
+        return userVerificationRequired;
+    }
+
     /**
      * {@inheritDoc}
      */
@@ -84,13 +91,14 @@ public class WebAuthnAuthenticationRequest implements Serializable {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        WebAuthnAuthenticationRequest that = (WebAuthnAuthenticationRequest) o;
-        return Arrays.equals(credentialId, that.credentialId) &&
-                Arrays.equals(clientDataJSON, that.clientDataJSON) &&
-                Arrays.equals(authenticatorData, that.authenticatorData) &&
-                Arrays.equals(signature, that.signature) &&
-                Objects.equals(clientExtensionsJSON, that.clientExtensionsJSON) &&
-                Objects.equals(serverProperty, that.serverProperty);
+        WebAuthnAuthenticationRequest request = (WebAuthnAuthenticationRequest) o;
+        return userVerificationRequired == request.userVerificationRequired &&
+                Arrays.equals(credentialId, request.credentialId) &&
+                Arrays.equals(clientDataJSON, request.clientDataJSON) &&
+                Arrays.equals(authenticatorData, request.authenticatorData) &&
+                Arrays.equals(signature, request.signature) &&
+                Objects.equals(clientExtensionsJSON, request.clientExtensionsJSON) &&
+                Objects.equals(serverProperty, request.serverProperty);
     }
 
     /**
@@ -99,7 +107,7 @@ public class WebAuthnAuthenticationRequest implements Serializable {
     @Override
     public int hashCode() {
 
-        int result = Objects.hash(clientExtensionsJSON, serverProperty);
+        int result = Objects.hash(clientExtensionsJSON, serverProperty, userVerificationRequired);
         result = 31 * result + Arrays.hashCode(credentialId);
         result = 31 * result + Arrays.hashCode(clientDataJSON);
         result = 31 * result + Arrays.hashCode(authenticatorData);

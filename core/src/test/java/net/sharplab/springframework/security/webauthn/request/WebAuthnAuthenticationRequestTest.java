@@ -48,7 +48,8 @@ public class WebAuthnAuthenticationRequestTest {
                         "example.com",
                         challenge,
                         new byte[]{0x43, 0x21}
-                )
+                ),
+                true
         );
         WebAuthnAuthenticationRequest requestB = new WebAuthnAuthenticationRequest(
                 new byte[]{0x01, 0x23},
@@ -61,7 +62,8 @@ public class WebAuthnAuthenticationRequestTest {
                         "example.com",
                         challenge,
                         new byte[]{0x43, 0x21}
-                )
+                ),
+                true
         );
 
         assertThat(requestA).isEqualTo(requestB);

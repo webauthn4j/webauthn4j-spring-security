@@ -18,6 +18,7 @@ package net.sharplab.springframework.security.webauthn.anchor;
 
 import com.webauthn4j.anchor.CachingTrustAnchorProviderBase;
 import com.webauthn4j.anchor.KeyStoreException;
+import com.webauthn4j.response.attestation.authenticator.AAGUID;
 import com.webauthn4j.util.AssertUtil;
 import com.webauthn4j.util.CertificateUtil;
 import org.springframework.beans.factory.InitializingBean;
@@ -30,10 +31,7 @@ import java.security.NoSuchAlgorithmException;
 import java.security.cert.CertificateException;
 import java.security.cert.TrustAnchor;
 import java.security.cert.X509Certificate;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 public class KeyStoreResourceTrustAnchorProvider extends CachingTrustAnchorProviderBase implements InitializingBean {
 
@@ -58,7 +56,7 @@ public class KeyStoreResourceTrustAnchorProvider extends CachingTrustAnchorProvi
      * @return {@link TrustAnchor} {@link Set}
      */
     @Override
-    protected Set<TrustAnchor> loadTrustAnchors() {
+    protected Map<AAGUID, Set<TrustAnchor>> loadTrustAnchors() {
         checkConfig();
         Resource keystore = getKeyStore();
         try (InputStream inputStream = keystore.getInputStream()) {
@@ -69,7 +67,7 @@ public class KeyStoreResourceTrustAnchorProvider extends CachingTrustAnchorProvi
                 X509Certificate certificate = (X509Certificate) keyStoreObject.getCertificate(alias);
                 trustAnchors.add(new TrustAnchor(certificate, null));
             }
-            return trustAnchors;
+            return Collections.singletonMap(null, trustAnchors);
         } catch (java.security.KeyStoreException | IOException | NoSuchAlgorithmException | CertificateException e) {
             throw new KeyStoreException("Failed to load TrustAnchor from keystore", e);
         }

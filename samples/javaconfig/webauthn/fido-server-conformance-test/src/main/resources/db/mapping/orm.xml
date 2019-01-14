@@ -24,6 +24,7 @@
         <attributes>
             <basic name="aaguid">
                 <column column-definition="blob"/>
+                <convert converter="net.sharplab.springframework.security.webauthn.sample.infrastructure.util.jpa.converter.AAGUIDConverter" />
             </basic>
             <basic name="credentialId">
                 <column column-definition="blob"/>

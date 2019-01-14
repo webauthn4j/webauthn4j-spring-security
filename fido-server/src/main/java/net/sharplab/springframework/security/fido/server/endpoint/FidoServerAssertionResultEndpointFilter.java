@@ -108,7 +108,8 @@ public class FidoServerAssertionResultEndpointFilter extends AbstractAuthenticat
                 Base64UrlUtil.decode(assertionResponse.getAuthenticatorData()),
                 Base64UrlUtil.decode(assertionResponse.getSignature()),
                 credential.getClientExtensionResults(),
-                serverProperty
+                serverProperty,
+                false
         );
 
         WebAuthnAssertionAuthenticationToken authRequest = new WebAuthnAssertionAuthenticationToken(webAuthnAuthenticationRequest);

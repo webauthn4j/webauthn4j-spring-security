@@ -131,11 +131,15 @@ public class WebAuthnAuthenticationProvider implements AuthenticationProvider {
 
     void doAuthenticate(WebAuthnAssertionAuthenticationToken authenticationToken, Authenticator authenticator, WebAuthnUserDetails user) {
 
-        Authentication currentAuthentication = SecurityContextHolder.getContext().getAuthentication();
-        boolean isUserVerified = currentAuthentication != null && Objects.equals(currentAuthentication.getName(), user.getUsername());
-        boolean userVerificationRequired = !isUserVerified; // If user is not verified, user verification is required.
-
         WebAuthnAuthenticationRequest credentials = authenticationToken.getCredentials();
+
+        boolean userVerificationRequired = credentials.isUserVerificationRequired();
+
+        Authentication currentAuthentication = SecurityContextHolder.getContext().getAuthentication();
+        if(currentAuthentication != null && currentAuthentication.isAuthenticated() && Objects.equals(currentAuthentication.getName(), user.getUsername())){
+            userVerificationRequired = false;
+        }
+
         WebAuthnAuthenticationContext authenticationContext = new WebAuthnAuthenticationContext(
                 credentials.getCredentialId(),
                 credentials.getClientDataJSON(),

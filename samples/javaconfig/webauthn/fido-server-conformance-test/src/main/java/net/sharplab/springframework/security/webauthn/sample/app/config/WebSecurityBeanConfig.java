@@ -16,9 +16,15 @@
 
 package net.sharplab.springframework.security.webauthn.sample.app.config;
 
+import com.fasterxml.jackson.databind.jsontype.NamedType;
 import com.webauthn4j.anchor.TrustAnchorProvider;
+import com.webauthn4j.anchor.TrustAnchorResolver;
+import com.webauthn4j.anchor.TrustAnchorResolverImpl;
 import com.webauthn4j.extras.fido.metadata.statement.MetadataStatementProvider;
+import com.webauthn4j.extras.fido.metadata.statement.MetadataStatementResolver;
+import com.webauthn4j.extras.fido.metadata.statement.MetadataStatementResolverImpl;
 import com.webauthn4j.extras.fido.metadata.statement.MetadataStatementTrustAnchorProvider;
+import com.webauthn4j.extras.validator.MetadataStatementCertPathTrustworthinessValidator;
 import com.webauthn4j.registry.Registry;
 import com.webauthn4j.request.extension.client.AuthenticationExtensionsClientInputs;
 import com.webauthn4j.validator.WebAuthnAuthenticationContextValidator;
@@ -27,6 +33,7 @@ import com.webauthn4j.validator.attestation.androidkey.AndroidKeyAttestationStat
 import com.webauthn4j.validator.attestation.androidsafetynet.AndroidSafetyNetAttestationStatementValidator;
 import com.webauthn4j.validator.attestation.none.NoneAttestationStatementValidator;
 import com.webauthn4j.validator.attestation.packed.PackedAttestationStatementValidator;
+import com.webauthn4j.validator.attestation.trustworthiness.certpath.CertPathTrustworthinessValidator;
 import com.webauthn4j.validator.attestation.trustworthiness.certpath.TrustAnchorCertPathTrustworthinessValidator;
 import com.webauthn4j.validator.attestation.trustworthiness.ecdaa.DefaultECDAATrustworthinessValidator;
 import com.webauthn4j.validator.attestation.trustworthiness.self.DefaultSelfAttestationTrustworthinessValidator;
@@ -108,7 +115,9 @@ public class WebSecurityBeanConfig {
     }
 
     @Bean
-    public WebAuthnRegistrationContextValidator webAuthnRegistrationContextValidator(TrustAnchorProvider trustAnchorProvider) {
+    public WebAuthnRegistrationContextValidator webAuthnRegistrationContextValidator(CertPathTrustworthinessValidator certPathTrustworthinessValidator) {
+
+
         return new WebAuthnRegistrationContextValidator(
                 Arrays.asList(
                         new PackedAttestationStatementValidator(),
@@ -117,15 +126,27 @@ public class WebSecurityBeanConfig {
                         new AndroidSafetyNetAttestationStatementValidator(),
                         new NoneAttestationStatementValidator()
                 ),
-                new TrustAnchorCertPathTrustworthinessValidator(trustAnchorProvider),
+                certPathTrustworthinessValidator,
                 new DefaultECDAATrustworthinessValidator(),
                 new DefaultSelfAttestationTrustworthinessValidator()
         );
     }
 
     @Bean
+    public CertPathTrustworthinessValidator certPathTrustworthinessValidator(MetadataStatementResolver metadataStatementResolver){
+        MetadataStatementCertPathTrustworthinessValidator certPathTrustworthinessValidator = new MetadataStatementCertPathTrustworthinessValidator(metadataStatementResolver);
+        certPathTrustworthinessValidator.setFullChainProhibited(true);
+        return certPathTrustworthinessValidator;
+    }
+
+    @Bean
     public WebAuthnAuthenticationContextValidator webAuthnAuthenticationContextValidator(Registry registry) {
         return new WebAuthnAuthenticationContextValidator(registry);
+    }
+
+    @Bean
+    public MetadataStatementResolver metadataStatementResolver(MetadataStatementProvider metadataStatementProvider){
+        return new MetadataStatementResolverImpl(metadataStatementProvider);
     }
 
     @Bean
@@ -162,7 +183,9 @@ public class WebSecurityBeanConfig {
 
     @Bean
     public Registry registry() {
-        return new Registry();
+        Registry registry = new Registry();
+        registry.getJsonMapper().registerSubtypes(new NamedType(ExampleExtensionClientInput.class, ExampleExtensionClientInput.ID));
+        return registry;
     }
 
     @Bean
