@@ -38,6 +38,26 @@ public class WebAuthnAuthenticationRequest implements Serializable {
     private final String clientExtensionsJSON;
     private final ServerProperty serverProperty;
     private final boolean userVerificationRequired;
+    private final boolean userPresenceRequired;
+
+    public WebAuthnAuthenticationRequest(byte[] credentialId,
+                                         byte[] clientDataJSON,
+                                         byte[] authenticatorData,
+                                         byte[] signature,
+                                         String clientExtensionsJSON,
+                                         ServerProperty serverProperty,
+                                         boolean userVerificationRequired,
+                                         boolean userPresenceRequired) {
+
+        this.credentialId = credentialId;
+        this.clientDataJSON = clientDataJSON;
+        this.authenticatorData = authenticatorData;
+        this.signature = signature;
+        this.clientExtensionsJSON = clientExtensionsJSON;
+        this.serverProperty = serverProperty;
+        this.userVerificationRequired = userVerificationRequired;
+        this.userPresenceRequired = userPresenceRequired;
+    }
 
     public WebAuthnAuthenticationRequest(byte[] credentialId,
                                          byte[] clientDataJSON,
@@ -47,13 +67,16 @@ public class WebAuthnAuthenticationRequest implements Serializable {
                                          ServerProperty serverProperty,
                                          boolean userVerificationRequired) {
 
-        this.credentialId = credentialId;
-        this.clientDataJSON = clientDataJSON;
-        this.authenticatorData = authenticatorData;
-        this.signature = signature;
-        this.clientExtensionsJSON = clientExtensionsJSON;
-        this.serverProperty = serverProperty;
-        this.userVerificationRequired = userVerificationRequired;
+        this(
+                credentialId,
+                clientDataJSON,
+                authenticatorData,
+                signature,
+                clientExtensionsJSON,
+                serverProperty,
+                userVerificationRequired,
+                true
+        );
     }
 
     public byte[] getCredentialId() {
@@ -84,15 +107,17 @@ public class WebAuthnAuthenticationRequest implements Serializable {
         return userVerificationRequired;
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    public boolean isUserPresenceRequired() {
+        return userPresenceRequired;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         WebAuthnAuthenticationRequest request = (WebAuthnAuthenticationRequest) o;
         return userVerificationRequired == request.userVerificationRequired &&
+                userPresenceRequired == request.userPresenceRequired &&
                 Arrays.equals(credentialId, request.credentialId) &&
                 Arrays.equals(clientDataJSON, request.clientDataJSON) &&
                 Arrays.equals(authenticatorData, request.authenticatorData) &&
@@ -101,13 +126,10 @@ public class WebAuthnAuthenticationRequest implements Serializable {
                 Objects.equals(serverProperty, request.serverProperty);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public int hashCode() {
 
-        int result = Objects.hash(clientExtensionsJSON, serverProperty, userVerificationRequired);
+        int result = Objects.hash(clientExtensionsJSON, serverProperty, userVerificationRequired, userPresenceRequired);
         result = 31 * result + Arrays.hashCode(credentialId);
         result = 31 * result + Arrays.hashCode(clientDataJSON);
         result = 31 * result + Arrays.hashCode(authenticatorData);

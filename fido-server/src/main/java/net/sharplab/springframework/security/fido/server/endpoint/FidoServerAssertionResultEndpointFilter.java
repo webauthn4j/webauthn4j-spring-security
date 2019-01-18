@@ -109,6 +109,7 @@ public class FidoServerAssertionResultEndpointFilter extends AbstractAuthenticat
                 Base64UrlUtil.decode(assertionResponse.getSignature()),
                 credential.getClientExtensionResults(),
                 serverProperty,
+                false,
                 false
         );
 

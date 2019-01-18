@@ -148,6 +148,7 @@ public class WebAuthnAuthenticationProvider implements AuthenticationProvider {
                 credentials.getClientExtensionsJSON(),
                 credentials.getServerProperty(),
                 userVerificationRequired,
+                credentials.isUserPresenceRequired(),
                 expectedAuthenticationExtensionIds
         );
 

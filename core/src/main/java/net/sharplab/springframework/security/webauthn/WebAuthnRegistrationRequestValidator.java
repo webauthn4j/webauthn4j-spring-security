@@ -36,7 +36,6 @@ public class WebAuthnRegistrationRequestValidator {
     private WebAuthnRegistrationContextValidator registrationContextValidator;
     private ServerPropertyProvider serverPropertyProvider;
 
-    private boolean userVerificationRequired;
     private List<String> expectedRegistrationExtensionIds;
 
     /**
@@ -86,26 +85,9 @@ public class WebAuthnRegistrationRequestValidator {
                 attestationObjectBytes,
                 clientExtensionsJSON,
                 serverProperty,
-                userVerificationRequired,
+                false,
+                false,
                 expectedRegistrationExtensionIds);
-    }
-
-    /**
-     * Check if user verification is required
-     *
-     * @return true if user verification is required
-     */
-    public boolean isUserVerificationRequired() {
-        return userVerificationRequired;
-    }
-
-    /**
-     * Set whether user verification is required
-     *
-     * @param userVerificationRequired true if user verification is required
-     */
-    public void setUserVerificationRequired(boolean userVerificationRequired) {
-        this.userVerificationRequired = userVerificationRequired;
     }
 
     public List<String> getExpectedRegistrationExtensionIds() {
