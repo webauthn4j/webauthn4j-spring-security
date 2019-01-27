@@ -17,7 +17,7 @@
 import {Injectable, OnInit} from '@angular/core';
 import {HttpClient} from "@angular/common/http";
 import {RegisteringAuthenticatorViewModel} from "../webauthn/registering-authenticator.view-model";
-import {WebauthnService} from "../webauthn/webauthn.service";
+import {WebAuthnService} from "../webauthn/web-authn.service";
 import {Observable} from "rxjs/internal/Observable";
 import {base64url} from "rfc4648";
 import {ProfileUpdateViewModel} from "./profile-update.view-model";
@@ -40,7 +40,7 @@ export class ProfileService implements OnInit {
 
   private profileUrl: string = "/api/profile";
 
-  constructor(private webauthnService: WebauthnService, private http: HttpClient) { }
+  constructor(private webauthnService: WebAuthnService, private http: HttpClient) { }
 
   ngOnInit(): void {
   }

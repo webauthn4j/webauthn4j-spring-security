@@ -20,7 +20,6 @@ import com.webauthn4j.extras.fido.metadata.statement.MetadataStatement;
 import com.webauthn4j.extras.fido.metadata.statement.MetadataStatementProvider;
 import com.webauthn4j.registry.Registry;
 import com.webauthn4j.response.attestation.authenticator.AAGUID;
-import com.webauthn4j.util.UUIDUtil;
 import org.springframework.core.io.Resource;
 
 import java.io.IOException;
@@ -29,7 +28,6 @@ import java.io.UncheckedIOException;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 import java.util.stream.Collectors;
 
 public class JsonFileResourceMetadataStatementProvider implements MetadataStatementProvider {

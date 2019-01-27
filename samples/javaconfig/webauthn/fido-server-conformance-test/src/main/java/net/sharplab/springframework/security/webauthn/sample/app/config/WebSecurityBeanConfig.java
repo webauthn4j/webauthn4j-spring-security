@@ -18,31 +18,28 @@ package net.sharplab.springframework.security.webauthn.sample.app.config;
 
 import com.fasterxml.jackson.databind.jsontype.NamedType;
 import com.webauthn4j.anchor.TrustAnchorProvider;
-import com.webauthn4j.anchor.TrustAnchorResolver;
-import com.webauthn4j.anchor.TrustAnchorResolverImpl;
 import com.webauthn4j.extras.fido.metadata.statement.MetadataStatementProvider;
 import com.webauthn4j.extras.fido.metadata.statement.MetadataStatementResolver;
 import com.webauthn4j.extras.fido.metadata.statement.MetadataStatementResolverImpl;
 import com.webauthn4j.extras.fido.metadata.statement.MetadataStatementTrustAnchorProvider;
 import com.webauthn4j.extras.validator.MetadataStatementCertPathTrustworthinessValidator;
 import com.webauthn4j.registry.Registry;
-import com.webauthn4j.request.extension.client.AuthenticationExtensionsClientInputs;
 import com.webauthn4j.validator.WebAuthnAuthenticationContextValidator;
 import com.webauthn4j.validator.WebAuthnRegistrationContextValidator;
 import com.webauthn4j.validator.attestation.androidkey.AndroidKeyAttestationStatementValidator;
 import com.webauthn4j.validator.attestation.androidsafetynet.AndroidSafetyNetAttestationStatementValidator;
 import com.webauthn4j.validator.attestation.none.NoneAttestationStatementValidator;
 import com.webauthn4j.validator.attestation.packed.PackedAttestationStatementValidator;
+import com.webauthn4j.validator.attestation.tpm.TPMAttestationStatementValidator;
 import com.webauthn4j.validator.attestation.trustworthiness.certpath.CertPathTrustworthinessValidator;
-import com.webauthn4j.validator.attestation.trustworthiness.certpath.TrustAnchorCertPathTrustworthinessValidator;
 import com.webauthn4j.validator.attestation.trustworthiness.ecdaa.DefaultECDAATrustworthinessValidator;
 import com.webauthn4j.validator.attestation.trustworthiness.self.DefaultSelfAttestationTrustworthinessValidator;
 import com.webauthn4j.validator.attestation.u2f.FIDOU2FAttestationStatementValidator;
 import net.sharplab.springframework.security.webauthn.WebAuthnRegistrationRequestValidator;
 import net.sharplab.springframework.security.webauthn.challenge.ChallengeRepository;
 import net.sharplab.springframework.security.webauthn.challenge.HttpSessionChallengeRepository;
-import net.sharplab.springframework.security.webauthn.endpoint.OptionsProvider;
-import net.sharplab.springframework.security.webauthn.endpoint.OptionsProviderImpl;
+import net.sharplab.springframework.security.webauthn.options.OptionsProvider;
+import net.sharplab.springframework.security.webauthn.options.OptionsProviderImpl;
 import net.sharplab.springframework.security.webauthn.metadata.JsonFileResourceMetadataStatementProvider;
 import net.sharplab.springframework.security.webauthn.sample.app.security.ExampleExtensionClientInput;
 import net.sharplab.springframework.security.webauthn.server.ServerPropertyProvider;
@@ -124,6 +121,7 @@ public class WebSecurityBeanConfig {
                         new FIDOU2FAttestationStatementValidator(),
                         new AndroidKeyAttestationStatementValidator(),
                         new AndroidSafetyNetAttestationStatementValidator(),
+                        new TPMAttestationStatementValidator(),
                         new NoneAttestationStatementValidator()
                 ),
                 certPathTrustworthinessValidator,

@@ -19,8 +19,8 @@ package net.sharplab.springframework.security.webauthn.config.configurers;
 
 import com.webauthn4j.response.client.challenge.DefaultChallenge;
 import net.sharplab.springframework.security.webauthn.challenge.ChallengeRepository;
-import net.sharplab.springframework.security.webauthn.endpoint.OptionsProvider;
-import net.sharplab.springframework.security.webauthn.endpoint.OptionsProviderImpl;
+import net.sharplab.springframework.security.webauthn.options.OptionsProvider;
+import net.sharplab.springframework.security.webauthn.options.OptionsProviderImpl;
 import net.sharplab.springframework.security.webauthn.server.ServerPropertyProvider;
 import net.sharplab.springframework.security.webauthn.server.ServerPropertyProviderImpl;
 import net.sharplab.springframework.security.webauthn.userdetails.WebAuthnUserDetails;
@@ -96,7 +96,7 @@ public class WebAuthnLoginConfigurerSpringTest {
         mvc
                 .perform(get("/webauthn/options").with(anonymous()))
                 .andExpect(unauthenticated())
-                .andExpect(content().json("{\"data\":{\"relyingParty\":{\"name\":null,\"icon\":null,\"id\":\"example.com\"},\"user\":null,\"challenge\":\"aFglXMZdQTKD4krvNzJBzA\",\"pubKeyCredParams\":[],\"registrationTimeout\":null,\"authenticationTimeout\":null,\"credentials\":[],\"registrationExtensions\":{},\"authenticationExtensions\":{},\"parameters\":{\"username\":\"username\",\"password\":\"password\",\"credentialId\":\"credentialId\",\"clientDataJSON\":\"clientDataJSON\",\"authenticatorData\":\"authenticatorData\",\"signature\":\"signature\",\"clientExtensionsJSON\":\"clientExtensionsJSON\"}},\"errorMessage\":null}"))
+                .andExpect(content().json("{\"relyingParty\":{\"name\":null,\"icon\":null,\"id\":\"example.com\"},\"user\":null,\"challenge\":\"aFglXMZdQTKD4krvNzJBzA\",\"pubKeyCredParams\":[],\"registrationTimeout\":null,\"authenticationTimeout\":null,\"credentials\":[],\"registrationExtensions\":{},\"authenticationExtensions\":{},\"parameters\":{\"username\":\"username\",\"password\":\"password\",\"credentialId\":\"credentialId\",\"clientDataJSON\":\"clientDataJSON\",\"authenticatorData\":\"authenticatorData\",\"signature\":\"signature\",\"clientExtensionsJSON\":\"clientExtensionsJSON\"},\"errorMessage\":null}"))
                 .andExpect(status().isOk());
     }
 

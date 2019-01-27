@@ -16,22 +16,23 @@
   ~    limitations under the License.
   -->
 
-<entity-mappings xmlns="http://xmlns.jcp.org/xml/ns/persistence/orm"
-                 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<entity-mappings xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                 xmlns="http://xmlns.jcp.org/xml/ns/persistence/orm"
                  xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence/orm http://xmlns.jcp.org/xml/ns/persistence/orm_2_1.xsd"
                  version="2.1">
     <embeddable class="com.webauthn4j.response.attestation.authenticator.AttestedCredentialData">
         <attributes>
             <basic name="aaguid">
-                <column column-definition="blob" />
+                <column column-definition="blob"/>
                 <convert converter="net.sharplab.springframework.security.webauthn.sample.infrastructure.util.jpa.converter.AAGUIDConverter" />
             </basic>
             <basic name="credentialId">
-                <column column-definition="blob" />
+                <column column-definition="blob"/>
             </basic>
             <basic name="credentialPublicKey">
-                <column column-definition="text" />
-                <convert converter="net.sharplab.springframework.security.webauthn.sample.infrastructure.util.jpa.converter.CredentialPublicKeyConverter" />
+                <column column-definition="clob"/>
+                <convert
+                        converter="net.sharplab.springframework.security.webauthn.sample.infrastructure.util.jpa.converter.CredentialPublicKeyConverter"/>
             </basic>
         </attributes>
     </embeddable>

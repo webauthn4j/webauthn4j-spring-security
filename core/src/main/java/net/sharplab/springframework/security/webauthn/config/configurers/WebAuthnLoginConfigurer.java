@@ -20,7 +20,7 @@ import com.webauthn4j.registry.Registry;
 import net.sharplab.springframework.security.webauthn.WebAuthnProcessingFilter;
 import net.sharplab.springframework.security.webauthn.challenge.ChallengeRepository;
 import net.sharplab.springframework.security.webauthn.endpoint.OptionsEndpointFilter;
-import net.sharplab.springframework.security.webauthn.endpoint.OptionsProvider;
+import net.sharplab.springframework.security.webauthn.options.OptionsProvider;
 import net.sharplab.springframework.security.webauthn.server.ServerPropertyProvider;
 import org.springframework.context.ApplicationContext;
 import org.springframework.security.authentication.MFATokenEvaluator;

@@ -14,15 +14,7 @@
  * limitations under the License.
  */
 
-export interface WebAuthn4NGCredentialCreationOptions {
-  rp?: PublicKeyCredentialRpEntity;
-  user: PublicKeyCredentialUserEntity;
-  challenge?: BufferSource;
-  pubKeyCredParams?: PublicKeyCredentialParameters[];
-  timeout?: number;
-  excludeCredentials?: PublicKeyCredentialDescriptor[];
-  authenticatorSelection?: AuthenticatorSelectionCriteria;
-  attestation?: AttestationConveyancePreference;
-  extensions?: any;
+export interface WebAuthnPublicKeyCredentialDescriptor {
+  type: PublicKeyCredentialType;
+  id: string;
 }
-

@@ -14,7 +14,7 @@
  *    limitations under the License.
  */
 
-export interface WebAuthn4NGCredentialRequestOptions {
+export interface WebAuthn4NgCredentialRequestOptions {
   challenge?: BufferSource;
   timeout?: number;
   rpId?: string;

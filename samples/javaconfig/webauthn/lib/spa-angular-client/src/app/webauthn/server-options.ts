@@ -13,12 +13,19 @@
  *    See the License for the specific language governing permissions and
  *    limitations under the License.
  */
+/// <reference types="webappsec-credential-management" />
+// DO NOT REMOVE: The above comment is mandatory to use webappsec-credential-management type definition
+
+
+import {WebAuthnPublicKeyCredentialUserEntity} from "./web-authn-public-key-credential-user-entity";
 
 export interface ServerOptions {
   relyingParty: PublicKeyCredentialRpEntity;
+  user?: WebAuthnPublicKeyCredentialUserEntity;
   challenge: BufferSource;
   pubKeyCredParams: PublicKeyCredentialParameters[];
-  timeout?: number,
+  registrationTimeout?: number;
+  authenticationTimeout?: number;
   credentials: PublicKeyCredentialDescriptor[];
   parameters: {
     username: string,

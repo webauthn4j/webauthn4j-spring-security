@@ -1,20 +1,20 @@
 /*
- *    Copyright 2002-2019 the original author or authors.
+ * Copyright 2002-2019 the original author or authors.
  *
- *    Licensed under the Apache License, Version 2.0 (the "License");
- *    you may not use this file except in compliance with the License.
- *    You may obtain a copy of the License at
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
  *
- *        http://www.apache.org/licenses/LICENSE-2.0
+ *     http://www.apache.org/licenses/LICENSE-2.0
  *
- *    Unless required by applicable law or agreed to in writing, software
- *    distributed under the License is distributed on an "AS IS" BASIS,
- *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *    See the License for the specific language governing permissions and
- *    limitations under the License.
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 
-package net.sharplab.springframework.security.webauthn.endpoint;
+package net.sharplab.springframework.security.webauthn.options;
 
 import com.webauthn4j.authenticator.Authenticator;
 import com.webauthn4j.request.PublicKeyCredentialParameters;
@@ -25,6 +25,8 @@ import com.webauthn4j.response.client.challenge.Challenge;
 import com.webauthn4j.util.Base64UrlUtil;
 import com.webauthn4j.util.UnsignedNumberUtil;
 import net.sharplab.springframework.security.webauthn.challenge.ChallengeRepository;
+import net.sharplab.springframework.security.webauthn.endpoint.Parameters;
+import net.sharplab.springframework.security.webauthn.endpoint.WebAuthnPublicKeyCredentialUserEntity;
 import net.sharplab.springframework.security.webauthn.userdetails.WebAuthnUserDetails;
 import net.sharplab.springframework.security.webauthn.userdetails.WebAuthnUserDetailsService;
 import net.sharplab.springframework.security.webauthn.util.ServletUtil;
@@ -75,14 +77,14 @@ public class OptionsProviderImpl implements OptionsProvider {
      */
     public AttestationOptions getAttestationOptions(HttpServletRequest request, String username, Challenge challenge) {
 
-        WebAuthnUserEntity user;
+        WebAuthnPublicKeyCredentialUserEntity user;
         Collection<? extends Authenticator> authenticators;
 
         try {
             WebAuthnUserDetails userDetails = userDetailsService.loadUserByUsername(username);
             authenticators = userDetails.getAuthenticators();
             String userHandle = Base64UrlUtil.encodeToString(userDetails.getUserHandle());
-            user = new WebAuthnUserEntity(userHandle, username);
+            user = new WebAuthnPublicKeyCredentialUserEntity(userHandle, username);
         } catch (UsernameNotFoundException e) {
             authenticators = Collections.emptyList();
             user = null;

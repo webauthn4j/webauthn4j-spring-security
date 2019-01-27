@@ -19,17 +19,17 @@ package net.sharplab.springframework.security.webauthn.endpoint;
 import java.io.Serializable;
 import java.util.Objects;
 
-public class WebAuthnUserEntity implements Serializable {
+public class WebAuthnPublicKeyCredentialUserEntity implements Serializable {
 
     private String userHandle;
     private String username;
 
-    public WebAuthnUserEntity(String userHandle, String username) {
+    public WebAuthnPublicKeyCredentialUserEntity(String userHandle, String username) {
         this.userHandle = userHandle;
         this.username = username;
     }
 
-    public WebAuthnUserEntity() {
+    public WebAuthnPublicKeyCredentialUserEntity() {
     }
 
     public String getUserHandle() {
@@ -44,7 +44,7 @@ public class WebAuthnUserEntity implements Serializable {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        WebAuthnUserEntity that = (WebAuthnUserEntity) o;
+        WebAuthnPublicKeyCredentialUserEntity that = (WebAuthnPublicKeyCredentialUserEntity) o;
         return Objects.equals(userHandle, that.userHandle) &&
                 Objects.equals(username, that.username);
     }

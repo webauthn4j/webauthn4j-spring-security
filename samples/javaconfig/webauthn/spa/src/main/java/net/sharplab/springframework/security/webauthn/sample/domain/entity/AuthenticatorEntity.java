@@ -45,14 +45,13 @@ public class AuthenticatorEntity implements Authenticator {
     private AttestedCredentialData attestedCredentialData;
 
     //TODO: extensions?
+    @Lob
+    @Convert(converter = AttestationStatementConverter.class)
+    private AttestationStatement attestationStatement;
 
     public String getFormat() {
         return attestationStatement.getFormat();
     }
-
-    @Column(columnDefinition = "text")
-    @Convert(converter = AttestationStatementConverter.class)
-    private AttestationStatement attestationStatement;
 
     public Integer getId() {
         return id;

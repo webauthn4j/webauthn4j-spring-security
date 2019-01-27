@@ -21,7 +21,7 @@ import com.webauthn4j.response.client.challenge.Challenge;
 import com.webauthn4j.response.client.challenge.DefaultChallenge;
 import com.webauthn4j.server.ServerProperty;
 import net.sharplab.springframework.security.webauthn.challenge.ChallengeRepository;
-import net.sharplab.springframework.security.webauthn.endpoint.OptionsProvider;
+import net.sharplab.springframework.security.webauthn.options.OptionsProvider;
 import org.junit.Test;
 import org.springframework.mock.web.MockHttpServletRequest;
 

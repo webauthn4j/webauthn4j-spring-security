@@ -16,9 +16,31 @@
 
 package net.sharplab.springframework.security.webauthn.endpoint;
 
-import java.io.Serializable;
+import java.util.Objects;
 
-public interface Response extends Serializable {
+public class ErrorResponse implements Response {
 
-    String getErrorMessage();
+    private String errorMessage;
+
+    public ErrorResponse(String errorMessage) {
+        this.errorMessage = errorMessage;
+    }
+
+    @Override
+    public String getErrorMessage() {
+        return errorMessage;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        ErrorResponse that = (ErrorResponse) o;
+        return Objects.equals(errorMessage, that.errorMessage);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(errorMessage);
+    }
 }

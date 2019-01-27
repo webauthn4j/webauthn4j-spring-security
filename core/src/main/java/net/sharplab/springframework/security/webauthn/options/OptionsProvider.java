@@ -14,11 +14,12 @@
  * limitations under the License.
  */
 
-package net.sharplab.springframework.security.webauthn.endpoint;
+package net.sharplab.springframework.security.webauthn.options;
 
 import com.webauthn4j.request.PublicKeyCredentialParameters;
 import com.webauthn4j.request.extension.client.AuthenticationExtensionsClientInputs;
 import com.webauthn4j.response.client.challenge.Challenge;
+import net.sharplab.springframework.security.webauthn.endpoint.OptionsResponse;
 
 import javax.servlet.http.HttpServletRequest;
 import java.math.BigInteger;
@@ -33,7 +34,7 @@ public interface OptionsProvider {
      * @param request   request
      * @param username  username
      * @param challenge if null, new challenge is generated. Otherwise, specified challenge is used.
-     * @return {@link Options} instance
+     * @return {@link OptionsResponse} instance
      */
     AttestationOptions getAttestationOptions(HttpServletRequest request, String username, Challenge challenge);
 
@@ -43,7 +44,7 @@ public interface OptionsProvider {
      * @param request   request
      * @param username  username
      * @param challenge if null, new challenge is generated. Otherwise, specified challenge is used.
-     * @return {@link Options} instance
+     * @return {@link OptionsResponse} instance
      */
     AssertionOptions getAssertionOptions(HttpServletRequest request, String username, Challenge challenge);
 

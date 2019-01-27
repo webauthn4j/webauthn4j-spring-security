@@ -17,7 +17,7 @@
 import {Component, OnInit} from '@angular/core';
 import {PasswordLoginCredential} from "../auth/password-login-credential";
 import {AuthService} from "../auth/auth.service";
-import {WebauthnService} from "../webauthn/webauthn.service";
+import {WebAuthnService} from "../webauthn/web-authn.service";
 import {Router} from "@angular/router";
 import {Alert} from "../alert/alert";
 
@@ -114,7 +114,7 @@ export class PasswordLoginComponent implements OnInit {
   }
 
   isWebAuthnAvailable(): boolean{
-    return WebauthnService.isWebAuthnAvailable();
+    return WebAuthnService.isWebAuthnAvailable();
   }
 
 }

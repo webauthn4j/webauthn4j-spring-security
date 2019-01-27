@@ -17,12 +17,12 @@
 import {Injectable} from '@angular/core';
 import {HttpClient} from "@angular/common/http";
 import {base64url} from "rfc4648";
-import {WebauthnService} from "../webauthn/webauthn.service";
+import {WebAuthnService} from "../webauthn/web-authn.service";
 import {Observable} from "rxjs/internal/Observable";
 import {from} from 'rxjs';
 import {map, mergeMap} from 'rxjs/operators';
 import {throwError} from "rxjs/internal/observable/throwError";
-import {WebAuthn4NGCredentialRequestOptions} from "../webauthn/webauthn4ng-credential-request-options";
+import {WebAuthn4NgCredentialRequestOptions} from "../webauthn/web-authn-4-ng-credential-request-options";
 import {ServerOptions} from "../webauthn/server-options";
 import {AuthResponse} from "./auth-response";
 import {AuthenticationStatus} from "./authentication-status";
@@ -36,10 +36,10 @@ export class AuthService {
   private logoutUrl: string = "/logout";
   private authStatusUrl: string = "/api/auth/status";
 
-  constructor(private webauthnService: WebauthnService, private http: HttpClient) { }
+  constructor(private webauthnService: WebAuthnService, private http: HttpClient) { }
 
 
-  loginWithPublicKeyCredential(credentialRequestOptions: WebAuthn4NGCredentialRequestOptions): Observable<string> {
+  loginWithPublicKeyCredential(credentialRequestOptions: WebAuthn4NgCredentialRequestOptions): Observable<string> {
     let promise = this.webauthnService.fetchServerOptions().toPromise().then((serverOptions)=>{
       return this.webauthnService.getCredential(credentialRequestOptions, serverOptions).then(credential => {
         return {serverOptions: serverOptions, credential: credential}

@@ -14,11 +14,7 @@
  * limitations under the License.
  */
 
-package net.sharplab.springframework.security.webauthn.endpoint;
-
-import java.io.Serializable;
-
-public interface Response extends Serializable {
-
-    String getErrorMessage();
+export interface WebAuthnPublicKeyCredentialUserEntity {
+  userHandle: string;
+  username: string;
 }

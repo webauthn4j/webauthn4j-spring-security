@@ -17,6 +17,9 @@
 package net.sharplab.springframework.security.webauthn.endpoint;
 
 import com.webauthn4j.registry.Registry;
+import net.sharplab.springframework.security.webauthn.options.AssertionOptions;
+import net.sharplab.springframework.security.webauthn.options.AttestationOptions;
+import net.sharplab.springframework.security.webauthn.options.OptionsProvider;
 import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.security.authentication.*;
 import org.springframework.security.core.Authentication;
@@ -33,6 +36,8 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class OptionsEndpointFilter extends GenericFilterBean {
 
@@ -88,8 +93,8 @@ public class OptionsEndpointFilter extends GenericFilterBean {
         }
 
         try {
-            Options options = processRequest(fi.getRequest());
-            writeResponse(fi.getResponse(), new Response<>(options));
+            OptionsResponse optionsResponse = processRequest(fi.getRequest());
+            writeResponse(fi.getResponse(), optionsResponse);
         } catch (RuntimeException e) {
             logger.debug("RuntimeException is thrown", e);
             writeErrorResponse(fi.getResponse(), e);
@@ -97,18 +102,20 @@ public class OptionsEndpointFilter extends GenericFilterBean {
 
     }
 
-    Options processRequest(HttpServletRequest request) {
+    OptionsResponse processRequest(HttpServletRequest request) {
         String loginUsername = getLoginUsername();
         AttestationOptions attestationOptions = optionsProvider.getAttestationOptions(request, loginUsername, null);
         AssertionOptions assertionOptions = optionsProvider.getAssertionOptions(request, loginUsername, null);
-        return new Options(
+        List<WebAuthnPublicKeyCredentialDescriptor> credentials =
+                attestationOptions.getCredentials().stream().map(WebAuthnPublicKeyCredentialDescriptor::new).collect(Collectors.toList());
+        return new OptionsResponse(
                 attestationOptions.getRelyingParty(),
                 attestationOptions.getUser(),
                 attestationOptions.getChallenge(),
                 attestationOptions.getPubKeyCredParams(),
                 attestationOptions.getRegistrationTimeout(),
                 assertionOptions.getAuthenticationTimeout(),
-                attestationOptions.getCredentials(),
+                credentials,
                 attestationOptions.getRegistrationExtensions(),
                 assertionOptions.getAuthenticationExtensions(),
                 assertionOptions.getParameters()
@@ -152,10 +159,10 @@ public class OptionsEndpointFilter extends GenericFilterBean {
         Response errorResponse;
         int statusCode;
         if (e instanceof InsufficientAuthenticationException) {
-            errorResponse = new Response("Anonymous access is prohibited");
+            errorResponse = new ErrorResponse("Anonymous access is prohibited");
             statusCode = HttpServletResponse.SC_FORBIDDEN;
         } else {
-            errorResponse = new Response("The server encountered an internal error");
+            errorResponse = new ErrorResponse("The server encountered an internal error");
             statusCode = HttpServletResponse.SC_INTERNAL_SERVER_ERROR;
         }
         String errorResponseText = registry.getJsonMapper().writeValueAsString(errorResponse);

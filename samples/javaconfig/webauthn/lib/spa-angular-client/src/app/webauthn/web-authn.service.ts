@@ -20,8 +20,8 @@
 import {Injectable} from '@angular/core';
 import {HttpClient} from "@angular/common/http";
 import {base64url} from "rfc4648";
-import {WebAuthn4NGCredentialCreationOptions} from "./webauthn4ng-credential-creation-options";
-import {WebAuthn4NGCredentialRequestOptions} from "./webauthn4ng-credential-request-options";
+import {WebAuthn4NgCredentialCreationOptions} from "./web-authn-4-ng-credential-creation-options";
+import {WebAuthn4NgCredentialRequestOptions} from "./web-authn-4-ng-credential-request-options";
 import {ServerOptions} from "./server-options";
 import {Observable} from "rxjs/internal/Observable";
 import {OptionsResponse} from "./options-response";
@@ -30,20 +30,20 @@ import {map} from "rxjs/operators";
 @Injectable({
   providedIn: 'root'
 })
-export class WebauthnService {
+export class WebAuthnService {
 
   private _optionsUrl: string = "/webauthn/options";
 
   constructor(private httpClient: HttpClient) {}
 
   createCredential(
-    webAuthnCredentialCreationOptions: WebAuthn4NGCredentialCreationOptions
+    webAuthnCredentialCreationOptions: WebAuthn4NgCredentialCreationOptions
   );
   createCredential(
-    webAuthnCredentialCreationOptions: WebAuthn4NGCredentialCreationOptions, serverOptions: ServerOptions
+    webAuthnCredentialCreationOptions: WebAuthn4NgCredentialCreationOptions, serverOptions: ServerOptions
   );
   createCredential(
-    webAuthnCredentialCreationOptions: WebAuthn4NGCredentialCreationOptions, serverOptions?: ServerOptions
+    webAuthnCredentialCreationOptions: WebAuthn4NgCredentialCreationOptions, serverOptions?: ServerOptions
   ): Promise<Credential> {
     let serverOptionsPromise: Promise<ServerOptions>;
     if(serverOptions === undefined){
@@ -56,11 +56,11 @@ export class WebauthnService {
     return serverOptionsPromise.then(serverOptions => {
 
       let timeout: number;
-      if(typeof webAuthnCredentialCreationOptions.timeout != "undefined"){
+      if(typeof webAuthnCredentialCreationOptions.timeout != "undefined" && webAuthnCredentialCreationOptions.timeout != null){
         timeout = webAuthnCredentialCreationOptions.timeout;
       }
-      else if(typeof serverOptions.timeout != "undefined"){
-        timeout = serverOptions.timeout;
+      else if(typeof serverOptions.registrationTimeout != "undefined" && serverOptions.registrationTimeout != null){
+        timeout = serverOptions.registrationTimeout;
       }
       else {
         timeout = undefined;
@@ -87,13 +87,13 @@ export class WebauthnService {
   }
 
   getCredential(
-    webAuthnCredentialRequestOptions: WebAuthn4NGCredentialRequestOptions
+    webAuthnCredentialRequestOptions: WebAuthn4NgCredentialRequestOptions
   );
   getCredential(
-    webAuthnCredentialRequestOptions: WebAuthn4NGCredentialRequestOptions, serverOptions: ServerOptions
+    webAuthnCredentialRequestOptions: WebAuthn4NgCredentialRequestOptions, serverOptions: ServerOptions
   );
   getCredential(
-    webAuthnCredentialRequestOptions: WebAuthn4NGCredentialRequestOptions, serverOptions?: ServerOptions
+    webAuthnCredentialRequestOptions: WebAuthn4NgCredentialRequestOptions, serverOptions?: ServerOptions
   ): Promise<Credential> {
     let serverOptionsPromise: Promise<ServerOptions>;
     if(serverOptions === undefined){
@@ -105,9 +105,20 @@ export class WebauthnService {
 
     return serverOptionsPromise.then(serverOptions => {
 
+      let timeout: number;
+      if(typeof webAuthnCredentialRequestOptions.timeout != "undefined" && webAuthnCredentialRequestOptions.timeout != null){
+        timeout = webAuthnCredentialRequestOptions.timeout;
+      }
+      else if(typeof serverOptions.authenticationTimeout != "undefined" && serverOptions.authenticationTimeout != null){
+        timeout = serverOptions.authenticationTimeout;
+      }
+      else {
+        timeout = undefined;
+      }
+
       let publicKeyCredentialRequestOptions: PublicKeyCredentialRequestOptions = {
         challenge: webAuthnCredentialRequestOptions.challenge ? webAuthnCredentialRequestOptions.challenge : serverOptions.challenge,
-        timeout: webAuthnCredentialRequestOptions.timeout,
+        timeout: timeout,
         rpId: webAuthnCredentialRequestOptions.rpId ? webAuthnCredentialRequestOptions.rpId : serverOptions.relyingParty.id,
         allowCredentials: webAuthnCredentialRequestOptions.allowCredentials ? webAuthnCredentialRequestOptions.allowCredentials : serverOptions.credentials,
         userVerification: webAuthnCredentialRequestOptions.userVerification ? webAuthnCredentialRequestOptions.userVerification : "preferred",
@@ -127,8 +138,11 @@ export class WebauthnService {
     return this.httpClient.get<OptionsResponse>(this._optionsUrl).pipe(map<OptionsResponse, ServerOptions>(response => {
       return {
         relyingParty: response.relyingParty,
+        user: response.user,
         challenge: base64url.parse(response.challenge, { loose: true }),
         pubKeyCredParams: response.pubKeyCredParams,
+        registrationTimeout: response.registrationTimeout,
+        authenticationTimeout: response.authenticationTimeout,
         credentials: response.credentials.map(credential => {
           return {
             type: credential.type,

@@ -14,10 +14,15 @@
  * limitations under the License.
  */
 
+import {WebAuthnPublicKeyCredentialUserEntity} from "./web-authn-public-key-credential-user-entity";
+
 export interface OptionsResponse {
   relyingParty: PublicKeyCredentialRpEntity;
+  user?: WebAuthnPublicKeyCredentialUserEntity;
   challenge: string;
   pubKeyCredParams: PublicKeyCredentialParameters[];
+  registrationTimeout?: number,
+  authenticationTimeout?: number,
   credentials: {
     type: PublicKeyCredentialType;
     id: string;

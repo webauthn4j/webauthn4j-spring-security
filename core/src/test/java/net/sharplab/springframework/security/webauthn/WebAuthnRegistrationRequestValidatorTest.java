@@ -59,7 +59,6 @@ public class WebAuthnRegistrationRequestValidatorTest {
         WebAuthnRegistrationRequestValidator target = new WebAuthnRegistrationRequestValidator(
                 registrationContextValidator, serverPropertyProvider
         );
-        target.setUserVerificationRequired(true);
 
         ServerProperty serverProperty = mock(ServerProperty.class);
         when(serverPropertyProvider.provide(any())).thenReturn(serverProperty);
@@ -88,7 +87,6 @@ public class WebAuthnRegistrationRequestValidatorTest {
         assertThat(registrationContext.getAttestationObject()).isEqualTo(Base64UrlUtil.decode(attestationObjectBase64));
         assertThat(registrationContext.getClientExtensionsJSON()).isEqualTo(clientExtensionsJSON);
         assertThat(registrationContext.getServerProperty()).isEqualTo(serverProperty);
-        assertThat(registrationContext.isUserVerificationRequired()).isEqualTo(target.isUserVerificationRequired());
         assertThat(registrationContext.getExpectedExtensionIds()).isEqualTo(target.getExpectedRegistrationExtensionIds());
     }
 
@@ -97,9 +95,6 @@ public class WebAuthnRegistrationRequestValidatorTest {
         WebAuthnRegistrationRequestValidator target = new WebAuthnRegistrationRequestValidator(
                 registrationContextValidator, serverPropertyProvider
         );
-
-        target.setUserVerificationRequired(true);
-        assertThat(target.isUserVerificationRequired()).isTrue();
         target.setExpectedRegistrationExtensionIds(Collections.singletonList("appId"));
         assertThat(target.getExpectedRegistrationExtensionIds()).containsExactly("appId");
 

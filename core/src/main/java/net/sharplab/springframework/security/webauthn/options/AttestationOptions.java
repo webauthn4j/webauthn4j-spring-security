@@ -1,26 +1,27 @@
 /*
- *    Copyright 2002-2019 the original author or authors.
+ * Copyright 2002-2019 the original author or authors.
  *
- *    Licensed under the Apache License, Version 2.0 (the "License");
- *    you may not use this file except in compliance with the License.
- *    You may obtain a copy of the License at
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
  *
- *        http://www.apache.org/licenses/LICENSE-2.0
+ *     http://www.apache.org/licenses/LICENSE-2.0
  *
- *    Unless required by applicable law or agreed to in writing, software
- *    distributed under the License is distributed on an "AS IS" BASIS,
- *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *    See the License for the specific language governing permissions and
- *    limitations under the License.
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 
-package net.sharplab.springframework.security.webauthn.endpoint;
+package net.sharplab.springframework.security.webauthn.options;
 
 
 import com.webauthn4j.request.PublicKeyCredentialParameters;
 import com.webauthn4j.request.PublicKeyCredentialRpEntity;
 import com.webauthn4j.request.extension.client.AuthenticationExtensionsClientInputs;
 import com.webauthn4j.response.client.challenge.Challenge;
+import net.sharplab.springframework.security.webauthn.endpoint.WebAuthnPublicKeyCredentialUserEntity;
 
 
 import java.io.Serializable;
@@ -31,7 +32,7 @@ import java.util.Objects;
 public class AttestationOptions implements Serializable {
 
     private PublicKeyCredentialRpEntity relyingParty;
-    private WebAuthnUserEntity user;
+    private WebAuthnPublicKeyCredentialUserEntity user;
     private Challenge challenge;
     private List<PublicKeyCredentialParameters> pubKeyCredParams;
     private BigInteger registrationTimeout;
@@ -40,7 +41,7 @@ public class AttestationOptions implements Serializable {
 
     public AttestationOptions(
             PublicKeyCredentialRpEntity relyingParty,
-            WebAuthnUserEntity user,
+            WebAuthnPublicKeyCredentialUserEntity user,
             Challenge challenge,
             List<PublicKeyCredentialParameters> pubKeyCredParams,
             BigInteger registrationTimeout,
@@ -59,7 +60,7 @@ public class AttestationOptions implements Serializable {
         return relyingParty;
     }
 
-    public WebAuthnUserEntity getUser() {
+    public WebAuthnPublicKeyCredentialUserEntity getUser() {
         return user;
     }
 

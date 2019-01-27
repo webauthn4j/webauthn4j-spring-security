@@ -14,9 +14,12 @@
  *    limitations under the License.
  */
 
+/// <reference types="webappsec-credential-management" />
+// DO NOT REMOVE: The above comment is mandatory to use webappsec-credential-management type definition
+
 import {TestBed} from '@angular/core/testing';
 
-import {WebauthnService} from './webauthn.service';
+import {WebAuthnService} from './web-authn.service';
 import {HttpClientTestingModule, HttpTestingController} from "@angular/common/http/testing";
 import {HttpClient} from "@angular/common/http";
 
@@ -35,7 +38,7 @@ describe('WebAuthnService', () => {
   });
 
   it('should be created', () => {
-    const service: WebauthnService = TestBed.get(WebauthnService);
+    const service: WebAuthnService = TestBed.get(WebAuthnService);
     expect(service).toBeTruthy();
   });
 });

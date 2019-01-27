@@ -22,7 +22,7 @@ import {Router} from '@angular/router';
 import {NgbModal} from "@ng-bootstrap/ng-bootstrap";
 import {AuthenticatorDialogComponent} from "../authenticator-dialog/authenticator-dialog.component";
 import {AuthenticatorRegistrationReconfirmationDialogComponent} from "../authenticator-registration-reconfirmation-dialog/authenticator-registration-reconfirmation-dialog.component";
-import {WebauthnService} from "../webauthn/webauthn.service";
+import {WebAuthnService} from "../webauthn/web-authn.service";
 import {ProfileService} from "../profile/profile.service";
 import {v4 as uuid} from "uuid";
 import {ResidentKeyRequirementDialogComponent} from "../resident-key-requirement-dialog/resident-key-requirement-dialog.component";
@@ -172,6 +172,6 @@ export class SignupComponent implements OnInit {
   }
 
   isWebAuthnAvailable(): boolean{
-    return WebauthnService.isWebAuthnAvailable();
+    return WebAuthnService.isWebAuthnAvailable();
   }
 }

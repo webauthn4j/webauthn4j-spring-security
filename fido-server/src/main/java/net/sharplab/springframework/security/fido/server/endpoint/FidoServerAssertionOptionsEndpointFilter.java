@@ -20,11 +20,9 @@ import com.webauthn4j.converter.util.JsonConverter;
 import com.webauthn4j.registry.Registry;
 import com.webauthn4j.request.extension.client.AuthenticationExtensionsClientInputs;
 import com.webauthn4j.response.client.challenge.DefaultChallenge;
-import com.webauthn4j.response.extension.client.AuthenticationExtensionsClientOutputs;
 import com.webauthn4j.util.Base64UrlUtil;
-import net.sharplab.springframework.security.webauthn.endpoint.AssertionOptions;
-import net.sharplab.springframework.security.webauthn.endpoint.OptionsProvider;
-import org.springframework.security.authentication.AuthenticationServiceException;
+import net.sharplab.springframework.security.webauthn.options.AssertionOptions;
+import net.sharplab.springframework.security.webauthn.options.OptionsProvider;
 import org.springframework.util.Assert;
 
 import javax.servlet.http.HttpServletRequest;
