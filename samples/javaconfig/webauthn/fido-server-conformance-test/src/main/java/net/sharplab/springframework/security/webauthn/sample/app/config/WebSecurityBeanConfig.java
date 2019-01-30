@@ -18,38 +18,33 @@ package net.sharplab.springframework.security.webauthn.sample.app.config;
 
 import com.fasterxml.jackson.databind.jsontype.NamedType;
 import com.webauthn4j.anchor.TrustAnchorProvider;
-import com.webauthn4j.extras.fido.metadata.statement.MetadataStatementProvider;
-import com.webauthn4j.extras.fido.metadata.statement.MetadataStatementResolver;
-import com.webauthn4j.extras.fido.metadata.statement.MetadataStatementResolverImpl;
-import com.webauthn4j.extras.fido.metadata.statement.MetadataStatementTrustAnchorProvider;
+import com.webauthn4j.extras.fido.metadata.FIDOMDSClient;
+import com.webauthn4j.extras.fido.metadata.statement.*;
 import com.webauthn4j.extras.validator.MetadataStatementCertPathTrustworthinessValidator;
 import com.webauthn4j.registry.Registry;
 import com.webauthn4j.validator.WebAuthnAuthenticationContextValidator;
 import com.webauthn4j.validator.WebAuthnRegistrationContextValidator;
-import com.webauthn4j.validator.attestation.androidkey.AndroidKeyAttestationStatementValidator;
-import com.webauthn4j.validator.attestation.androidsafetynet.AndroidSafetyNetAttestationStatementValidator;
-import com.webauthn4j.validator.attestation.none.NoneAttestationStatementValidator;
-import com.webauthn4j.validator.attestation.packed.PackedAttestationStatementValidator;
-import com.webauthn4j.validator.attestation.tpm.TPMAttestationStatementValidator;
+import com.webauthn4j.validator.attestation.statement.androidkey.AndroidKeyAttestationStatementValidator;
+import com.webauthn4j.validator.attestation.statement.androidsafetynet.AndroidSafetyNetAttestationStatementValidator;
+import com.webauthn4j.validator.attestation.statement.none.NoneAttestationStatementValidator;
+import com.webauthn4j.validator.attestation.statement.packed.PackedAttestationStatementValidator;
+import com.webauthn4j.validator.attestation.statement.tpm.TPMAttestationStatementValidator;
+import com.webauthn4j.validator.attestation.statement.u2f.FIDOU2FAttestationStatementValidator;
 import com.webauthn4j.validator.attestation.trustworthiness.certpath.CertPathTrustworthinessValidator;
 import com.webauthn4j.validator.attestation.trustworthiness.ecdaa.DefaultECDAATrustworthinessValidator;
 import com.webauthn4j.validator.attestation.trustworthiness.self.DefaultSelfAttestationTrustworthinessValidator;
-import com.webauthn4j.validator.attestation.u2f.FIDOU2FAttestationStatementValidator;
 import net.sharplab.springframework.security.webauthn.WebAuthnRegistrationRequestValidator;
 import net.sharplab.springframework.security.webauthn.challenge.ChallengeRepository;
 import net.sharplab.springframework.security.webauthn.challenge.HttpSessionChallengeRepository;
+import net.sharplab.springframework.security.webauthn.metadata.FIDOMDSTemplate;
 import net.sharplab.springframework.security.webauthn.options.OptionsProvider;
 import net.sharplab.springframework.security.webauthn.options.OptionsProviderImpl;
-import net.sharplab.springframework.security.webauthn.metadata.JsonFileResourceMetadataStatementProvider;
 import net.sharplab.springframework.security.webauthn.sample.app.security.ExampleExtensionClientInput;
 import net.sharplab.springframework.security.webauthn.server.ServerPropertyProvider;
 import net.sharplab.springframework.security.webauthn.server.ServerPropertyProviderImpl;
 import net.sharplab.springframework.security.webauthn.userdetails.WebAuthnUserDetailsService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.core.io.Resource;
-import org.springframework.core.io.ResourceLoader;
-import org.springframework.core.io.support.ResourcePatternUtils;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.AuthenticationTrustResolver;
 import org.springframework.security.authentication.AuthenticationTrustResolverImpl;
@@ -69,9 +64,8 @@ import org.springframework.security.web.authentication.logout.ForwardLogoutSucce
 import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
 import org.springframework.security.web.csrf.InvalidCsrfTokenException;
 import org.springframework.security.web.csrf.MissingCsrfTokenException;
+import org.springframework.web.client.RestTemplate;
 
-import java.io.IOException;
-import java.io.UncheckedIOException;
 import java.util.Arrays;
 import java.util.LinkedHashMap;
 
@@ -153,15 +147,19 @@ public class WebSecurityBeanConfig {
     }
 
     @Bean
-    public MetadataStatementProvider metadataStatementProvider(Registry registry, ResourceLoader resourceLoader) {
-        JsonFileResourceMetadataStatementProvider jsonFileResourceMetadataStatementProvider = new JsonFileResourceMetadataStatementProvider(registry);
-        try {
-            Resource[] resources = ResourcePatternUtils.getResourcePatternResolver(resourceLoader).getResources("classpath:/metadataStatements/fido-conformance-tools/*.json");
-            jsonFileResourceMetadataStatementProvider.setResources(Arrays.asList(resources));
-            return jsonFileResourceMetadataStatementProvider;
-        } catch (IOException e) {
-            throw new UncheckedIOException(e);
-        }
+    public MetadataStatementProvider metadataStatementProvider(Registry registry, FIDOMDSClient fidomdsClient) {
+        return new FIDOMDSMetadataStatementProvider(registry, fidomdsClient);
+    }
+
+    @Bean
+    public FIDOMDSClient fidoMDSClient(RestTemplate restTemplate){
+        return new FIDOMDSTemplate(restTemplate, "");
+    }
+
+    @Bean
+    public RestTemplate restTemplate(){
+        RestTemplate restTemplate = new RestTemplate();
+        return restTemplate;
     }
 
     @Bean

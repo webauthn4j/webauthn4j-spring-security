@@ -18,8 +18,6 @@ package net.sharplab.springframework.security.fido.server.endpoint;
 
 import com.webauthn4j.registry.Registry;
 import net.sharplab.springframework.security.webauthn.util.ExceptionUtil;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationServiceException;

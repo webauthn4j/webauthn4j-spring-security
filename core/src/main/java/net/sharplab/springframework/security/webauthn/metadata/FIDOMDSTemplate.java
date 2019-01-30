@@ -37,6 +37,7 @@ public class FIDOMDSTemplate implements FIDOMDSClient {
     @Override
     public String fetchMetadataTOC() {
         String url = fidoMetadataServiceEndpoint + "?token=" + token;
+        url = "https://fidoalliance.co.nz/mds/execute/9e01885d1d2c174bd42718cb227b0ba6ea9afbe25ee312e6cc2b8bfc0fe8db4c\n"; //TODO
         return restTemplate.getForObject(url, String.class);
     }
 
