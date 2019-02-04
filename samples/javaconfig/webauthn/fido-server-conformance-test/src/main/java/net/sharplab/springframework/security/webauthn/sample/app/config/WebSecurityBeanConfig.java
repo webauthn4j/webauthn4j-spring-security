@@ -17,11 +17,11 @@
 package net.sharplab.springframework.security.webauthn.sample.app.config;
 
 import com.fasterxml.jackson.databind.jsontype.NamedType;
-import com.webauthn4j.anchor.TrustAnchorProvider;
-import com.webauthn4j.extras.fido.metadata.FIDOMDSClient;
-import com.webauthn4j.extras.fido.metadata.statement.*;
-import com.webauthn4j.extras.validator.MetadataStatementCertPathTrustworthinessValidator;
+import com.webauthn4j.extras.fido.metadata.*;
+import com.webauthn4j.extras.validator.MetadataItemListCertPathTrustworthinessValidator;
 import com.webauthn4j.registry.Registry;
+import com.webauthn4j.util.Base64Util;
+import com.webauthn4j.util.CertificateUtil;
 import com.webauthn4j.validator.WebAuthnAuthenticationContextValidator;
 import com.webauthn4j.validator.WebAuthnRegistrationContextValidator;
 import com.webauthn4j.validator.attestation.statement.androidkey.AndroidKeyAttestationStatementValidator;
@@ -36,7 +36,8 @@ import com.webauthn4j.validator.attestation.trustworthiness.self.DefaultSelfAtte
 import net.sharplab.springframework.security.webauthn.WebAuthnRegistrationRequestValidator;
 import net.sharplab.springframework.security.webauthn.challenge.ChallengeRepository;
 import net.sharplab.springframework.security.webauthn.challenge.HttpSessionChallengeRepository;
-import net.sharplab.springframework.security.webauthn.metadata.FIDOMDSTemplate;
+import net.sharplab.springframework.security.webauthn.metadata.JsonFileResourceMetadataItemListProvider;
+import net.sharplab.springframework.security.webauthn.metadata.RestTemplateAdaptorHttpClient;
 import net.sharplab.springframework.security.webauthn.options.OptionsProvider;
 import net.sharplab.springframework.security.webauthn.options.OptionsProviderImpl;
 import net.sharplab.springframework.security.webauthn.sample.app.security.ExampleExtensionClientInput;
@@ -45,6 +46,9 @@ import net.sharplab.springframework.security.webauthn.server.ServerPropertyProvi
 import net.sharplab.springframework.security.webauthn.userdetails.WebAuthnUserDetailsService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.ResourceLoader;
+import org.springframework.core.io.support.ResourcePatternUtils;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.AuthenticationTrustResolver;
 import org.springframework.security.authentication.AuthenticationTrustResolverImpl;
@@ -66,8 +70,13 @@ import org.springframework.security.web.csrf.InvalidCsrfTokenException;
 import org.springframework.security.web.csrf.MissingCsrfTokenException;
 import org.springframework.web.client.RestTemplate;
 
+import java.io.IOException;
+import java.security.cert.X509Certificate;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Configuration
 public class WebSecurityBeanConfig {
@@ -125,10 +134,10 @@ public class WebSecurityBeanConfig {
     }
 
     @Bean
-    public CertPathTrustworthinessValidator certPathTrustworthinessValidator(MetadataStatementResolver metadataStatementResolver){
-        MetadataStatementCertPathTrustworthinessValidator certPathTrustworthinessValidator = new MetadataStatementCertPathTrustworthinessValidator(metadataStatementResolver);
-        certPathTrustworthinessValidator.setFullChainProhibited(true);
-        return certPathTrustworthinessValidator;
+    public CertPathTrustworthinessValidator certPathTrustworthinessValidator(MetadataItemListResolver<FidoMdsMetadataItem> metadataItemListResolver){
+        MetadataItemListCertPathTrustworthinessValidator<FidoMdsMetadataItem> metadataCertPathTrustworthinessValidator = new MetadataItemListCertPathTrustworthinessValidator<>(metadataItemListResolver);
+        metadataCertPathTrustworthinessValidator.setFullChainProhibited(true);
+        return metadataCertPathTrustworthinessValidator;
     }
 
     @Bean
@@ -137,29 +146,44 @@ public class WebSecurityBeanConfig {
     }
 
     @Bean
-    public MetadataStatementResolver metadataStatementResolver(MetadataStatementProvider metadataStatementProvider){
-        return new MetadataStatementResolverImpl(metadataStatementProvider);
+    public MetadataItemListResolver<FidoMdsMetadataItem> metadataItemListResolver(MetadataItemListProvider<MetadataItem> metadataItemListProvider){
+        return new MetadataItemListResolverImpl<MetadataItem>(metadataItemListProvider);
     }
 
     @Bean
-    public TrustAnchorProvider trustAnchorProvider(MetadataStatementProvider metadataStatementProvider) {
-        return new MetadataStatementTrustAnchorProvider(metadataStatementProvider);
+    public MetadataItemListProvider<MetadataItem> metadataItemListProvider(Registry registry, HttpClient httpClient, ResourceLoader resourceLoader) throws IOException {
+        String[] urls = new String[]{
+                "https://fidoalliance.co.nz/mds/execute/26f215541c4ec9b5f02dccbd5256adc636bfd8697b1e352497cd0992c2e6ed07",
+                "https://fidoalliance.co.nz/mds/execute/64fb580564284282ee31053135a9cf793b2c02cf0910bb061f2f5841e78d9c05",
+                "https://fidoalliance.co.nz/mds/execute/7c8b9d3c35327f21f35473d292de050beae7c3b585c5e99de44855e3b0b64ece",
+                "https://fidoalliance.co.nz/mds/execute/7d3d49bf21ec5fa823df78c584076f965400f461343e413b4090356ce3b25b03",
+                "https://fidoalliance.co.nz/mds/execute/8c0d39150e1c103dbbf489d8ccf6f9410b87a284e86a04ce26b58e9ff5c7aaa4"
+        };
+        X509Certificate conformanceTestCertificate = CertificateUtil.generateX509Certificate(Base64Util.decode("MIICYjCCAeigAwIBAgIPBIdvCXPXJiuD7VW0mgRQMAoGCCqGSM49BAMDMGcxCzAJBgNVBAYTAlVTMRYwFAYDVQQKDA1GSURPIEFsbGlhbmNlMScwJQYDVQQLDB5GQUtFIE1ldGFkYXRhIFRPQyBTaWduaW5nIEZBS0UxFzAVBgNVBAMMDkZBS0UgUm9vdCBGQUtFMB4XDTE3MDIwMTAwMDAwMFoXDTQ1MDEzMTIzNTk1OVowZzELMAkGA1UEBhMCVVMxFjAUBgNVBAoMDUZJRE8gQWxsaWFuY2UxJzAlBgNVBAsMHkZBS0UgTWV0YWRhdGEgVE9DIFNpZ25pbmcgRkFLRTEXMBUGA1UEAwwORkFLRSBSb290IEZBS0UwdjAQBgcqhkjOPQIBBgUrgQQAIgNiAARcVLd6r4fnNHzs5K2zfbg//4X9/oBqmsdRVtZ9iXhlgM9vFYaKviYtqmwkq0D3Lihg3qefeZgXXYi4dFgvzU7ZLBapSNM3CT8RDBe/MBJqsPwaRQbIsGmmItmt/ESNQD6jWjBYMAsGA1UdDwQEAwIBBjAPBgNVHRMBAf8EBTADAQH/MBsGA1UdDgQU3feayBzv4V/ToevbM18w9GoZmVkwGwYDVR0jBBTd95rIHO/hX9Oh69szXzD0ahmZWTAKBggqhkjOPQQDAwNoADBlAjAfT9m8LabIuGS6tXiJmRB91SjJ49dk+sPsn+AKx1/PS3wbHEGnGxDIIcQplYDFcXICMQDi33M/oUlb7RDAmapRBjJxKK+oh7hlSZv4djmZV3YV0JnF1Ed5E4I0f3C04eP0bjw="));
+        List<MetadataItemListProvider<MetadataItem>> list = new ArrayList<>();
+
+        JsonFileResourceMetadataItemListProvider provider = new JsonFileResourceMetadataItemListProvider(registry);
+        Resource[] resources = ResourcePatternUtils.getResourcePatternResolver(resourceLoader).getResources("classpath:metadataStatements/fido-conformance-tools/*.json");
+        provider.setResources(Arrays.asList(resources));
+        list.add(provider);
+
+        Arrays.stream(urls).map(url -> {
+            FidoMdsMetadataItemListProvider metadataItemListProvider = new FidoMdsMetadataItemListProvider(registry, httpClient, conformanceTestCertificate);
+            metadataItemListProvider.setFidoMetadataServiceEndpoint(url);
+            return (MetadataItemListProvider)metadataItemListProvider;
+        }).forEach(list::add);
+
+        return new AggregatingMetadataItemListProvider<>(list);
     }
 
     @Bean
-    public MetadataStatementProvider metadataStatementProvider(Registry registry, FIDOMDSClient fidomdsClient) {
-        return new FIDOMDSMetadataStatementProvider(registry, fidomdsClient);
-    }
-
-    @Bean
-    public FIDOMDSClient fidoMDSClient(RestTemplate restTemplate){
-        return new FIDOMDSTemplate(restTemplate, "");
+    public HttpClient fidoMDSClient(RestTemplate restTemplate){
+        return new RestTemplateAdaptorHttpClient(restTemplate);
     }
 
     @Bean
     public RestTemplate restTemplate(){
-        RestTemplate restTemplate = new RestTemplate();
-        return restTemplate;
+        return new RestTemplate();
     }
 
     @Bean

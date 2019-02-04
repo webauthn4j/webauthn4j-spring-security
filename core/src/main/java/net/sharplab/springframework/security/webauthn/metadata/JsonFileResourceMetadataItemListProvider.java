@@ -16,8 +16,10 @@
 
 package net.sharplab.springframework.security.webauthn.metadata;
 
-import com.webauthn4j.extras.fido.metadata.statement.MetadataStatement;
-import com.webauthn4j.extras.fido.metadata.statement.MetadataStatementProvider;
+import com.webauthn4j.extras.fido.metadata.MetadataItem;
+import com.webauthn4j.extras.fido.metadata.MetadataItemImpl;
+import com.webauthn4j.extras.fido.metadata.MetadataItemListProvider;
+import com.webauthn4j.extras.fido.metadata.MetadataStatement;
 import com.webauthn4j.registry.Registry;
 import com.webauthn4j.response.attestation.authenticator.AAGUID;
 import org.springframework.core.io.Resource;
@@ -30,23 +32,23 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-public class JsonFileResourceMetadataStatementProvider implements MetadataStatementProvider {
+public class JsonFileResourceMetadataItemListProvider implements MetadataItemListProvider<MetadataItem> {
 
     private Registry registry;
     private List<Resource> resources = Collections.emptyList();
-    private Map<AAGUID, List<MetadataStatement>> cachedMetadataStatements;
+    private Map<AAGUID, List<MetadataItem>> cachedMetadataStatements;
 
-    public JsonFileResourceMetadataStatementProvider(Registry registry) {
+    public JsonFileResourceMetadataItemListProvider(Registry registry) {
         this.registry = registry;
     }
 
     @Override
-    public Map<AAGUID, List<MetadataStatement>> provide() {
+    public Map<AAGUID, List<MetadataItem>> provide() {
         if(cachedMetadataStatements == null){
             cachedMetadataStatements =
                     resources.stream()
-                            .map(this::readJsonFile)
-                            .collect(Collectors.groupingBy(this::extractAAGUID));
+                            .map(item -> new MetadataItemImpl(readJsonFile(item)))
+                            .collect(Collectors.groupingBy(item -> extractAAGUID(item.getMetadataStatement())));
         }
         return cachedMetadataStatements;
     }
