@@ -20,7 +20,7 @@ import {base64url} from "rfc4648";
 import {WebAuthnService} from "../webauthn/web-authn.service";
 import {Observable} from "rxjs/internal/Observable";
 import {from} from 'rxjs';
-import {map, mergeMap} from 'rxjs/operators';
+import {map, concatMap} from 'rxjs/operators';
 import {throwError} from "rxjs/internal/observable/throwError";
 import {WebAuthn4NgCredentialRequestOptions} from "../webauthn/web-authn-4-ng-credential-request-options";
 import {ServerOptions} from "../webauthn/server-options";
@@ -46,7 +46,7 @@ export class AuthService {
       });
     });
 
-    return from(promise).pipe( mergeMap<{serverOptions: ServerOptions, credential: Credential}, string>((data) => {
+    return from(promise).pipe(concatMap((data) =>{
       if(data.credential.type != "public-key"){
         throwError("Unexpected credential type");
       }
