@@ -53,8 +53,6 @@ public class ExceptionUtil {
             return new TokenBindingException("Token binding error", e);
         } else if (e instanceof com.webauthn4j.validator.exception.UnexpectedExtensionException) {
             return new UnexpectedExtensionException("Unexpected extension is contained", e);
-        } else if (e instanceof com.webauthn4j.validator.exception.UnsupportedAttestationFormatException) {
-            return new UnsupportedAttestationFormatException("Unsupported attestation format error", e);
         } else if (e instanceof com.webauthn4j.validator.exception.UserNotPresentException) {
             return new UserNotPresentException("User not verified", e);
         } else if (e instanceof com.webauthn4j.validator.exception.UserNotVerifiedException) {

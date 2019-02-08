@@ -16,7 +16,6 @@
 
 package net.sharplab.springframework.security.webauthn.util;
 
-import net.sharplab.springframework.security.webauthn.WebAuthnAuthenticationProviderTest;
 import net.sharplab.springframework.security.webauthn.exception.*;
 import org.junit.Test;
 import org.springframework.security.authentication.AuthenticationServiceException;
@@ -46,7 +45,6 @@ public class ExceptionUtilTest {
         map.put(new com.webauthn4j.validator.exception.SelfAttestationProhibitedException("dummy"), SelfAttestationProhibitedException.class);
         map.put(new com.webauthn4j.validator.exception.TokenBindingException("dummy"), TokenBindingException.class);
         map.put(new com.webauthn4j.validator.exception.UnexpectedExtensionException("dummy"), UnexpectedExtensionException.class);
-        map.put(new com.webauthn4j.validator.exception.UnsupportedAttestationFormatException("dummy"), UnsupportedAttestationFormatException.class);
         map.put(new com.webauthn4j.validator.exception.UserNotPresentException("dummy"), UserNotPresentException.class);
         map.put(new com.webauthn4j.validator.exception.UserNotVerifiedException("dummy"), UserNotVerifiedException.class);
         map.put(new ExceptionUtilTest.UnknownValidationException("dummy"), AuthenticationServiceException.class);
