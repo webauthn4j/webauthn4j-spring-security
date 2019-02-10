@@ -22,6 +22,8 @@ import com.webauthn4j.extras.fido.metadata.MetadataItemListProvider;
 import com.webauthn4j.extras.fido.metadata.MetadataStatement;
 import com.webauthn4j.registry.Registry;
 import com.webauthn4j.response.attestation.authenticator.AAGUID;
+import com.webauthn4j.util.AssertUtil;
+import org.springframework.beans.factory.InitializingBean;
 import org.springframework.core.io.Resource;
 
 import java.io.IOException;
@@ -32,10 +34,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-public class JsonFileResourceMetadataItemListProvider implements MetadataItemListProvider<MetadataItem> {
+public class JsonFileResourceMetadataItemListProvider implements MetadataItemListProvider<MetadataItem>, InitializingBean {
 
     private Registry registry;
-    private List<Resource> resources = Collections.emptyList();
+    private List<Resource> resources;
     private Map<AAGUID, List<MetadataItem>> cachedMetadataStatements;
 
     public JsonFileResourceMetadataItemListProvider(Registry registry) {
@@ -43,7 +45,17 @@ public class JsonFileResourceMetadataItemListProvider implements MetadataItemLis
     }
 
     @Override
+    public void afterPropertiesSet() {
+        checkConfig();
+    }
+
+    private void checkConfig() {
+        AssertUtil.notNull(resources, "resources must not be null");
+    }
+
+    @Override
     public Map<AAGUID, List<MetadataItem>> provide() {
+        checkConfig();
         if(cachedMetadataStatements == null){
             cachedMetadataStatements =
                     resources.stream()

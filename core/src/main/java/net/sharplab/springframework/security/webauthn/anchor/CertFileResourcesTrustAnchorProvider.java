@@ -47,7 +47,7 @@ public class CertFileResourcesTrustAnchorProvider extends CachingTrustAnchorProv
     }
 
     private void checkConfig() {
-        AssertUtil.notNull(certificates, "pemFile must not be null");
+        AssertUtil.notNull(certificates, "certificates must not be null");
     }
 
     @Override
