@@ -32,13 +32,13 @@ import java.util.stream.Collectors;
 
 public class CertFileResourcesTrustAnchorProvider extends CachingTrustAnchorProviderBase implements InitializingBean {
 
-    private List<Resource> pemFiles;
+    private List<Resource> certificates;
 
     public CertFileResourcesTrustAnchorProvider() {
     }
 
-    public CertFileResourcesTrustAnchorProvider(List<Resource> pemFiles) {
-        this.pemFiles = pemFiles;
+    public CertFileResourcesTrustAnchorProvider(List<Resource> certificates) {
+        this.certificates = certificates;
     }
 
     @Override
@@ -47,28 +47,28 @@ public class CertFileResourcesTrustAnchorProvider extends CachingTrustAnchorProv
     }
 
     private void checkConfig() {
-        AssertUtil.notNull(pemFiles, "pemFile must not be null");
+        AssertUtil.notNull(certificates, "pemFile must not be null");
     }
 
     @Override
     protected Map<AAGUID, Set<TrustAnchor>> loadTrustAnchors() {
-        Set<TrustAnchor> trustAnchors = pemFiles.stream().map(this::loadTrustAnchor).collect(Collectors.toSet());
-        return Collections.singletonMap(null, trustAnchors);
+        Set<TrustAnchor> trustAnchors = certificates.stream().map(this::loadTrustAnchor).collect(Collectors.toSet());
+        return Collections.singletonMap(AAGUID.NULL, trustAnchors);
     }
 
-    public List<Resource> getPemFiles() {
-        return pemFiles;
+    public List<Resource> getCertificates() {
+        return certificates;
     }
 
-    public void setPemFiles(List<Resource> pemFiles) {
-        this.pemFiles = pemFiles;
+    public void setCertificates(List<Resource> certificates) {
+        this.certificates = certificates;
     }
 
-    private TrustAnchor loadTrustAnchor(Resource pemFile) {
+    private TrustAnchor loadTrustAnchor(Resource certificate) {
         checkConfig();
         try {
-            X509Certificate certificate = CertificateUtil.generateX509Certificate(pemFile.getInputStream());
-            return new TrustAnchor(certificate, null);
+            X509Certificate x509Certificate = CertificateUtil.generateX509Certificate(certificate.getInputStream());
+            return new TrustAnchor(x509Certificate, null);
         } catch (IOException e) {
             throw new UncheckedIOException(e);
         }

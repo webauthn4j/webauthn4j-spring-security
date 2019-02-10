@@ -18,9 +18,11 @@ package net.sharplab.springframework.security.webauthn.anchor;
 
 import com.webauthn4j.response.attestation.authenticator.AAGUID;
 import org.junit.Test;
+import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 
+import java.io.UncheckedIOException;
 import java.security.cert.TrustAnchor;
 import java.util.Collections;
 import java.util.Map;
@@ -32,19 +34,19 @@ public class CertFileResourcesTrustAnchorProviderTest {
 
 
     @Test
-    public void load_pemFile_test() {
+    public void loadTrustAnchors_with_pemFile_test() {
         CertFileResourcesTrustAnchorProvider trustAnchorProvider = new CertFileResourcesTrustAnchorProvider();
         Resource resource = new ClassPathResource("certs/3tier-test-root-CA.pem");
-        trustAnchorProvider.setPemFiles(Collections.singletonList(resource));
+        trustAnchorProvider.setCertificates(Collections.singletonList(resource));
         Map<AAGUID, Set<TrustAnchor>> trustAnchors = trustAnchorProvider.loadTrustAnchors();
         assertThat(trustAnchors).hasSize(1);
     }
 
     @Test
-    public void load_derFile_test() {
+    public void loadTrustAnchors_with_derFile_test() {
         CertFileResourcesTrustAnchorProvider trustAnchorProvider = new CertFileResourcesTrustAnchorProvider();
         Resource resource = new ClassPathResource("certs/3tier-test-root-CA.der");
-        trustAnchorProvider.setPemFiles(Collections.singletonList(resource));
+        trustAnchorProvider.setCertificates(Collections.singletonList(resource));
         Map<AAGUID, Set<TrustAnchor>> trustAnchors = trustAnchorProvider.loadTrustAnchors();
         assertThat(trustAnchors).hasSize(1);
     }
