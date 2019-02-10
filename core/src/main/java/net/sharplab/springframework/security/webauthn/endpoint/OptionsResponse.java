@@ -24,6 +24,7 @@ import com.webauthn4j.response.client.challenge.Challenge;
 import java.math.BigInteger;
 import java.util.List;
 
+@SuppressWarnings("common-java:DuplicatedBlocks")
 public class OptionsResponse implements Response {
 
     //~ Instance fields

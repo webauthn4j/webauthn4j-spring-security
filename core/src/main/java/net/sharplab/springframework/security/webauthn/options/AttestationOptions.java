@@ -30,6 +30,7 @@ import java.math.BigInteger;
 import java.util.List;
 import java.util.Objects;
 
+@SuppressWarnings("common-java:DuplicatedBlocks")
 public class AttestationOptions implements Serializable {
 
     private PublicKeyCredentialRpEntity relyingParty;
