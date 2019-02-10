@@ -17,6 +17,7 @@
 package net.sharplab.springframework.security.webauthn.config.configurers;
 
 
+import com.webauthn4j.authenticator.Authenticator;
 import com.webauthn4j.request.PublicKeyCredentialType;
 import com.webauthn4j.response.attestation.statement.COSEAlgorithmIdentifier;
 import com.webauthn4j.response.client.challenge.DefaultChallenge;
@@ -44,7 +45,6 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
-import javax.servlet.Filter;
 import java.math.BigInteger;
 import java.util.Collection;
 import java.util.Collections;
@@ -77,6 +77,7 @@ public class WebAuthnLoginConfigurerSpringTest {
     @Autowired
     private ServerPropertyProvider serverPropertyProvider;
 
+    @SuppressWarnings("unchecked")
     @Before
     public void setup() {
         WebAuthnUserDetails mockUserDetails = mock(WebAuthnUserDetails.class);

@@ -42,6 +42,10 @@ subprojects {
 
     sourceCompatibility = 1.8
 
+    tasks.withType(JavaCompile) {
+        options.compilerArgs << "-Xlint:unchecked" << "-Xlint:deprecation" << "-Werror"
+    }
+
     repositories {
         mavenCentral()
 //      maven { url "https://oss.jfrog.org/artifactory/libs-snapshot" }
