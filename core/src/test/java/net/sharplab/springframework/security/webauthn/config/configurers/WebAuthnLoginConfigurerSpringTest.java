@@ -17,9 +17,12 @@
 package net.sharplab.springframework.security.webauthn.config.configurers;
 
 
+import com.webauthn4j.authenticator.Authenticator;
+import com.webauthn4j.authenticator.AuthenticatorImpl;
 import com.webauthn4j.request.PublicKeyCredentialType;
 import com.webauthn4j.response.attestation.statement.COSEAlgorithmIdentifier;
 import com.webauthn4j.response.client.challenge.DefaultChallenge;
+import com.webauthn4j.test.TestUtil;
 import net.sharplab.springframework.security.webauthn.challenge.ChallengeRepository;
 import net.sharplab.springframework.security.webauthn.options.OptionsProvider;
 import net.sharplab.springframework.security.webauthn.options.OptionsProviderImpl;
@@ -43,7 +46,9 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import javax.servlet.Filter;
 import java.math.BigInteger;
+import java.util.Collection;
 import java.util.Collections;
+import java.util.List;
 
 import static net.sharplab.springframework.security.webauthn.config.configurers.WebAuthnConfigurer.webAuthn;
 import static net.sharplab.springframework.security.webauthn.config.configurers.WebAuthnLoginConfigurer.webAuthnLogin;
@@ -72,7 +77,8 @@ public class WebAuthnLoginConfigurerSpringTest {
     @Before
     public void setup() {
         WebAuthnUserDetails mockUserDetails = mock(WebAuthnUserDetails.class);
-        when(mockUserDetails.getAuthenticators()).thenReturn(Collections.emptyList());
+        Collection authenticators = Collections.singletonList(TestUtil.createAuthenticator());
+        when(mockUserDetails.getAuthenticators()).thenReturn(authenticators);
         when(mockUserDetails.getUserHandle()).thenReturn(new byte[32]);
         doThrow(new UsernameNotFoundException(null)).when(userDetailsService).loadUserByUsername(null);
         when(userDetailsService.loadUserByUsername(anyString())).thenReturn(mockUserDetails);
@@ -127,6 +133,7 @@ public class WebAuthnLoginConfigurerSpringTest {
         mvc
                 .perform(get("/webauthn/options").with(user("john")))
                 .andExpect(authenticated())
+                .andExpect(content().json("{\"relyingParty\":{\"name\":\"example\",\"icon\":\"dummy\",\"id\":\"example.com\"},\"user\":{\"userHandle\":\"AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\",\"username\":\"john\"},\"challenge\":\"aFglXMZdQTKD4krvNzJBzA\",\"pubKeyCredParams\":[{\"type\":\"public-key\",\"alg\":-7},{\"type\":\"public-key\",\"alg\":-65535}],\"registrationTimeout\":10000,\"authenticationTimeout\":20000,\"credentials\":[{\"type\":\"public-key\",\"id\":\"AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\"}],\"registrationExtensions\":{},\"authenticationExtensions\":{},\"parameters\":{\"username\":\"username\",\"password\":\"password\",\"credentialId\":\"credentialId\",\"clientDataJSON\":\"clientDataJSON\",\"authenticatorData\":\"authenticatorData\",\"signature\":\"signature\",\"clientExtensionsJSON\":\"clientExtensionsJSON\"},\"errorMessage\":null}"))
                 .andExpect(status().isOk());
     }
 
