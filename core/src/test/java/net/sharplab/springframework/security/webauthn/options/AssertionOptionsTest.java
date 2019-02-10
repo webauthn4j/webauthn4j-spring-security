@@ -57,4 +57,29 @@ public class AssertionOptionsTest {
         assertThat(instanceA).isEqualTo(instanceB);
         assertThat(instanceA).hasSameHashCodeAs(instanceB);
     }
+
+    @Test
+    public void getter_test(){
+        Challenge challenge = new DefaultChallenge();
+        BigInteger authenticationTimeout = BigInteger.valueOf(1000);
+        String rpId = "localhost";
+        List<String> credentialIds = Collections.singletonList("credentialId");
+        AuthenticationExtensionsClientInputs authenticationExtensionsClientInputs = new AuthenticationExtensionsClientInputs();
+        Parameters parameters = new Parameters(
+                "username",
+                "password",
+                "credentialId",
+                "clientDataJSON",
+                "authenticatorData",
+                "signature",
+                "clientExtensionsJSON");
+        AssertionOptions assertionOptions = new AssertionOptions(challenge, authenticationTimeout, rpId, credentialIds, authenticationExtensionsClientInputs, parameters);
+
+        assertThat(assertionOptions.getChallenge()).isEqualTo(challenge);
+        assertThat(assertionOptions.getAuthenticationTimeout()).isEqualTo(authenticationTimeout);
+        assertThat(assertionOptions.getRpId()).isEqualTo(rpId);
+        assertThat(assertionOptions.getCredentials()).isEqualTo(credentialIds);
+        assertThat(assertionOptions.getAuthenticationExtensions()).isEqualTo(authenticationExtensionsClientInputs);
+        assertThat(assertionOptions.getParameters()).isEqualTo(parameters);
+    }
 }
