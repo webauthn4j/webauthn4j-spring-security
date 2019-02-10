@@ -17,6 +17,8 @@
 package net.sharplab.springframework.security.webauthn.config.configurers;
 
 
+import com.webauthn4j.request.PublicKeyCredentialType;
+import com.webauthn4j.response.attestation.statement.COSEAlgorithmIdentifier;
 import com.webauthn4j.response.client.challenge.DefaultChallenge;
 import net.sharplab.springframework.security.webauthn.challenge.ChallengeRepository;
 import net.sharplab.springframework.security.webauthn.options.OptionsProvider;
@@ -40,8 +42,10 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import javax.servlet.Filter;
+import java.math.BigInteger;
 import java.util.Collections;
 
+import static net.sharplab.springframework.security.webauthn.config.configurers.WebAuthnConfigurer.webAuthn;
 import static net.sharplab.springframework.security.webauthn.config.configurers.WebAuthnLoginConfigurer.webAuthnLogin;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -96,7 +100,7 @@ public class WebAuthnLoginConfigurerSpringTest {
         mvc
                 .perform(get("/webauthn/options").with(anonymous()))
                 .andExpect(unauthenticated())
-                .andExpect(content().json("{\"relyingParty\":{\"name\":null,\"icon\":null,\"id\":\"example.com\"},\"user\":null,\"challenge\":\"aFglXMZdQTKD4krvNzJBzA\",\"pubKeyCredParams\":[],\"registrationTimeout\":null,\"authenticationTimeout\":null,\"credentials\":[],\"registrationExtensions\":{},\"authenticationExtensions\":{},\"parameters\":{\"username\":\"username\",\"password\":\"password\",\"credentialId\":\"credentialId\",\"clientDataJSON\":\"clientDataJSON\",\"authenticatorData\":\"authenticatorData\",\"signature\":\"signature\",\"clientExtensionsJSON\":\"clientExtensionsJSON\"},\"errorMessage\":null}"))
+                .andExpect(content().json("{\"relyingParty\":{\"name\":\"example\",\"icon\":\"dummy\",\"id\":\"example.com\"},\"user\":null,\"challenge\":\"aFglXMZdQTKD4krvNzJBzA\",\"pubKeyCredParams\":[{\"type\":\"public-key\", \"alg\": -65535},{\"type\":\"public-key\", \"alg\": -7}],\"registrationTimeout\":10000,\"authenticationTimeout\":20000,\"credentials\":[],\"registrationExtensions\":{},\"authenticationExtensions\":{},\"parameters\":{\"username\":\"username\",\"password\":\"password\",\"credentialId\":\"credentialId\",\"clientDataJSON\":\"clientDataJSON\",\"authenticatorData\":\"authenticatorData\",\"signature\":\"signature\",\"clientExtensionsJSON\":\"clientExtensionsJSON\"},\"errorMessage\":null}"))
                 .andExpect(status().isOk());
     }
 
@@ -152,6 +156,17 @@ public class WebAuthnLoginConfigurerSpringTest {
         protected void configure(HttpSecurity http) throws Exception {
 
             // Authentication
+            http.apply(webAuthn())
+                    .rpId("example.com")
+                    .rpIcon("dummy")
+                    .rpName("example")
+                    .publicKeyCredParams()
+                    .addPublicKeyCredParams(PublicKeyCredentialType.PUBLIC_KEY, COSEAlgorithmIdentifier.ES256)
+                    .addPublicKeyCredParams(PublicKeyCredentialType.PUBLIC_KEY, COSEAlgorithmIdentifier.RS1)
+                    .and()
+                    .registrationTimeout(BigInteger.valueOf(10000))
+                    .authenticationTimeout(BigInteger.valueOf(20000));
+
             http.apply(webAuthnLogin());
 
             // Authorization
