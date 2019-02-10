@@ -18,6 +18,8 @@ package net.sharplab.springframework.security.fido.server.endpoint;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
+import com.fasterxml.jackson.databind.exc.InvalidFormatException;
+import com.webauthn4j.response.attestation.statement.COSEAlgorithmIdentifier;
 
 public enum Status {
 
@@ -31,7 +33,6 @@ public enum Status {
         this.value = value;
     }
 
-    @JsonCreator
     public static Status create(String value) {
         switch (value) {
             case "ok":
@@ -40,6 +41,16 @@ public enum Status {
                 return FAILED;
             default:
                 throw new IllegalArgumentException();
+        }
+    }
+
+    @JsonCreator
+    public static Status fromJson(String value) throws InvalidFormatException {
+        try{
+            return create(value);
+        }
+        catch (IllegalArgumentException e){
+            throw new InvalidFormatException(null, "value is out of range", value, Status.class);
         }
     }
 
