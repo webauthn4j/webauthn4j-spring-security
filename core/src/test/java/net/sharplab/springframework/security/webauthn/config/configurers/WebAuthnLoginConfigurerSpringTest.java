@@ -21,6 +21,7 @@ import com.webauthn4j.request.PublicKeyCredentialType;
 import com.webauthn4j.response.attestation.statement.COSEAlgorithmIdentifier;
 import com.webauthn4j.response.client.challenge.DefaultChallenge;
 import com.webauthn4j.test.TestUtil;
+import net.sharplab.springframework.security.webauthn.WebAuthnProcessingFilter;
 import net.sharplab.springframework.security.webauthn.challenge.ChallengeRepository;
 import net.sharplab.springframework.security.webauthn.options.OptionsProvider;
 import net.sharplab.springframework.security.webauthn.options.OptionsProviderImpl;
@@ -38,6 +39,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.web.FilterChainProxy;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
@@ -49,6 +51,7 @@ import java.util.Collections;
 
 import static net.sharplab.springframework.security.webauthn.config.configurers.WebAuthnConfigurer.webAuthn;
 import static net.sharplab.springframework.security.webauthn.config.configurers.WebAuthnLoginConfigurer.webAuthnLogin;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
@@ -64,12 +67,15 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class WebAuthnLoginConfigurerSpringTest {
 
     @Autowired
-    Filter springSecurityFilterChain;
+    FilterChainProxy springSecurityFilterChain;
 
     private MockMvc mvc;
 
     @MockBean
     private WebAuthnUserDetailsService userDetailsService;
+
+    @Autowired
+    private ServerPropertyProvider serverPropertyProvider;
 
     @Before
     public void setup() {
@@ -79,6 +85,12 @@ public class WebAuthnLoginConfigurerSpringTest {
         when(mockUserDetails.getUserHandle()).thenReturn(new byte[32]);
         doThrow(new UsernameNotFoundException(null)).when(userDetailsService).loadUserByUsername(null);
         when(userDetailsService.loadUserByUsername(anyString())).thenReturn(mockUserDetails);
+    }
+
+    @Test
+    public void configured_filter_test(){
+        WebAuthnProcessingFilter webAuthnProcessingFilter = (WebAuthnProcessingFilter) springSecurityFilterChain.getFilterChains().get(0).getFilters().stream().filter(item -> item instanceof WebAuthnProcessingFilter).findFirst().orElse(null);;
+        assertThat(webAuthnProcessingFilter.getServerPropertyProvider()).isEqualTo(serverPropertyProvider);
     }
 
 
