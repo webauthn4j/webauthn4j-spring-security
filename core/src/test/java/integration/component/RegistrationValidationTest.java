@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package integration.scenario;
+package integration.component;
 
 import com.webauthn4j.request.*;
 import com.webauthn4j.response.AuthenticatorAttestationResponse;
