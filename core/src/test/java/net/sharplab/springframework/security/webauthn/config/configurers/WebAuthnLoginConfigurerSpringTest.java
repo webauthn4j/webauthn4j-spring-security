@@ -17,8 +17,6 @@
 package net.sharplab.springframework.security.webauthn.config.configurers;
 
 
-import com.webauthn4j.authenticator.Authenticator;
-import com.webauthn4j.authenticator.AuthenticatorImpl;
 import com.webauthn4j.request.PublicKeyCredentialType;
 import com.webauthn4j.response.attestation.statement.COSEAlgorithmIdentifier;
 import com.webauthn4j.response.client.challenge.DefaultChallenge;
@@ -48,7 +46,6 @@ import javax.servlet.Filter;
 import java.math.BigInteger;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.List;
 
 import static net.sharplab.springframework.security.webauthn.config.configurers.WebAuthnConfigurer.webAuthn;
 import static net.sharplab.springframework.security.webauthn.config.configurers.WebAuthnLoginConfigurer.webAuthnLogin;
@@ -174,7 +171,16 @@ public class WebAuthnLoginConfigurerSpringTest {
                     .registrationTimeout(BigInteger.valueOf(10000))
                     .authenticationTimeout(BigInteger.valueOf(20000));
 
-            http.apply(webAuthnLogin());
+            http.apply(webAuthnLogin())
+                    .usernameParameter("username")
+                    .passwordParameter("password")
+                    .credentialIdParameter("credentialId")
+                    .clientDataJSONParameter("clientDataJSON")
+                    .authenticatorDataParameter("authenticatorData")
+                    .signatureParameter("signature")
+                    .clientExtensionsJSONParameter("clientExtensionsJSON")
+                    .successForwardUrl("/")
+                    .failureForwardUrl("/login");
 
             // Authorization
             http.authorizeRequests()

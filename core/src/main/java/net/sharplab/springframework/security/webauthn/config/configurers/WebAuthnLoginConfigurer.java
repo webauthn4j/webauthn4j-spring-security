@@ -80,7 +80,7 @@ public final class WebAuthnLoginConfigurer<H extends HttpSecurityBuilder<H>> ext
     private String usernameParameter = null;
     private String passwordParameter = null;
     private String credentialIdParameter = null;
-    private String clientDataParameter = null;
+    private String clientDataJSONParameter = null;
     private String authenticatorDataParameter = null;
     private String signatureParameter = null;
     private String clientExtensionsJSONParameter = null;
@@ -133,9 +133,9 @@ public final class WebAuthnLoginConfigurer<H extends HttpSecurityBuilder<H>> ext
             this.getAuthenticationFilter().setCredentialIdParameter(credentialIdParameter);
             this.optionsProvider.setCredentialIdParameter(credentialIdParameter);
         }
-        if (clientDataParameter != null) {
-            this.getAuthenticationFilter().setClientDataJSONParameter(clientDataParameter);
-            this.optionsProvider.setClientDataJSONParameter(clientDataParameter);
+        if (clientDataJSONParameter != null) {
+            this.getAuthenticationFilter().setClientDataJSONParameter(clientDataJSONParameter);
+            this.optionsProvider.setClientDataJSONParameter(clientDataJSONParameter);
         }
         if (authenticatorDataParameter != null) {
             this.getAuthenticationFilter().setAuthenticatorDataParameter(authenticatorDataParameter);
@@ -192,14 +192,14 @@ public final class WebAuthnLoginConfigurer<H extends HttpSecurityBuilder<H>> ext
 
     /**
      * The HTTP parameter to look for the clientData when performing authentication. Default
-     * is "clientData".
+     * is "clientDataJSON".
      *
-     * @param clientDataParameter the HTTP parameter to look for the clientData when
+     * @param clientDataJSONParameter the HTTP parameter to look for the clientDataJSON when
      *                            performing authentication
      * @return the {@link WebAuthnLoginConfigurer} for additional customization
      */
-    public WebAuthnLoginConfigurer<H> clientDataParameter(String clientDataParameter) {
-        this.clientDataParameter = clientDataParameter;
+    public WebAuthnLoginConfigurer<H> clientDataJSONParameter(String clientDataJSONParameter) {
+        this.clientDataJSONParameter = clientDataJSONParameter;
         return this;
     }
 

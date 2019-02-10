@@ -44,7 +44,7 @@ public class WebAuthnProcessingFilter extends UsernamePasswordAuthenticationFilt
     // ~ Static fields/initializers
     // =====================================================================================
     public static final String SPRING_SECURITY_FORM_CREDENTIAL_ID_KEY = "credentialId";
-    public static final String SPRING_SECURITY_FORM_CLIENTDATA_JSON_KEY = "clientDataJSON";
+    public static final String SPRING_SECURITY_FORM_CLIENT_DATA_JSON_KEY = "clientDataJSON";
     public static final String SPRING_SECURITY_FORM_AUTHENTICATOR_DATA_KEY = "authenticatorData";
     public static final String SPRING_SECURITY_FORM_SIGNATURE_KEY = "signature";
     public static final String SPRING_SECURITY_FORM_CLIENT_EXTENSIONS_JSON_KEY = "clientExtensionsJSON";
@@ -54,7 +54,7 @@ public class WebAuthnProcessingFilter extends UsernamePasswordAuthenticationFilt
     private List<GrantedAuthority> authorities;
 
     private String credentialIdParameter = SPRING_SECURITY_FORM_CREDENTIAL_ID_KEY;
-    private String clientDataJSONParameter = SPRING_SECURITY_FORM_CLIENTDATA_JSON_KEY;
+    private String clientDataJSONParameter = SPRING_SECURITY_FORM_CLIENT_DATA_JSON_KEY;
     private String authenticatorDataParameter = SPRING_SECURITY_FORM_AUTHENTICATOR_DATA_KEY;
     private String signatureParameter = SPRING_SECURITY_FORM_SIGNATURE_KEY;
     private String clientExtensionsJSONParameter = SPRING_SECURITY_FORM_CLIENT_EXTENSIONS_JSON_KEY;

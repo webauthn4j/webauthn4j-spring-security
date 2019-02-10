@@ -145,7 +145,7 @@ WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .usernameParameter("username")
                 .passwordParameter("password")
                 .credentialIdParameter("credentialId")
-                .clientDataParameter("clientDataJSON")
+                .clientDataJSONParameter("clientDataJSON")
                 .authenticatorDataParameter("authenticatorData")
                 .signatureParameter("signature")
                 .clientExtensionsJSONParameter("clientExtensionsJSON")

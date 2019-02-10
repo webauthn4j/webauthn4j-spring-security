@@ -93,8 +93,8 @@ public class OptionsProviderImplTest {
         assertThat(optionsProvider.getPasswordParameter()).isEqualTo("passwordParameter");
         optionsProvider.setCredentialIdParameter("credentialIdParameter");
         assertThat(optionsProvider.getCredentialIdParameter()).isEqualTo("credentialIdParameter");
-        optionsProvider.setClientDataJSONParameter("clientDataParameter");
-        assertThat(optionsProvider.getClientDataJSONParameter()).isEqualTo("clientDataParameter");
+        optionsProvider.setClientDataJSONParameter("clientDataJSONParameter");
+        assertThat(optionsProvider.getClientDataJSONParameter()).isEqualTo("clientDataJSONParameter");
         optionsProvider.setAuthenticatorDataParameter("authenticatorDataParameter");
         assertThat(optionsProvider.getAuthenticatorDataParameter()).isEqualTo("authenticatorDataParameter");
         optionsProvider.setSignatureParameter("signatureParameter");

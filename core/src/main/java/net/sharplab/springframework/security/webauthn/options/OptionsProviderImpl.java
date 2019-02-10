@@ -58,7 +58,7 @@ public class OptionsProviderImpl implements OptionsProvider {
     private String usernameParameter = SPRING_SECURITY_FORM_USERNAME_KEY;
     private String passwordParameter = SPRING_SECURITY_FORM_PASSWORD_KEY;
     private String credentialIdParameter = SPRING_SECURITY_FORM_CREDENTIAL_ID_KEY;
-    private String clientDataJSONParameter = SPRING_SECURITY_FORM_CLIENTDATA_JSON_KEY;
+    private String clientDataJSONParameter = SPRING_SECURITY_FORM_CLIENT_DATA_JSON_KEY;
     private String authenticatorDataParameter = SPRING_SECURITY_FORM_AUTHENTICATOR_DATA_KEY;
     private String signatureParameter = SPRING_SECURITY_FORM_SIGNATURE_KEY;
     private String clientExtensionsJSONParameter = SPRING_SECURITY_FORM_CLIENT_EXTENSIONS_JSON_KEY;

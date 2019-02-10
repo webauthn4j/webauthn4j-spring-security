@@ -20,7 +20,6 @@ import com.webauthn4j.registry.Registry;
 import com.webauthn4j.request.PublicKeyCredentialType;
 import com.webauthn4j.response.attestation.statement.COSEAlgorithmIdentifier;
 import com.webauthn4j.validator.WebAuthnAuthenticationContextValidator;
-import net.sharplab.springframework.security.webauthn.WebAuthnRegistrationRequestValidator;
 import net.sharplab.springframework.security.webauthn.authenticator.WebAuthnAuthenticatorService;
 import net.sharplab.springframework.security.webauthn.config.configurers.WebAuthnAuthenticationProviderConfigurer;
 import net.sharplab.springframework.security.webauthn.userdetails.WebAuthnUserDetailsService;
@@ -44,7 +43,6 @@ import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 
 import static net.sharplab.springframework.security.webauthn.config.configurers.WebAuthnConfigurer.webAuthn;
 import static net.sharplab.springframework.security.webauthn.config.configurers.WebAuthnLoginConfigurer.webAuthnLogin;
-import static net.sharplab.springframework.security.fido.server.config.configurer.FidoServerConfigurer.fidoServer;
 
 
 /**
@@ -123,7 +121,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .usernameParameter("username")
                 .passwordParameter("password")
                 .credentialIdParameter("credentialId")
-                .clientDataParameter("clientDataJSON")
+                .clientDataJSONParameter("clientDataJSON")
                 .authenticatorDataParameter("authenticatorData")
                 .signatureParameter("signature")
                 .clientExtensionsJSONParameter("clientExtensionsJSON")
