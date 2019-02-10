@@ -32,8 +32,6 @@ public class RestTemplateAdaptorHttpClient implements HttpClient {
 
     @Override
     public String fetch(String url) {
-//        String url = fidoMetadataServiceEndpoint + "?token=" + token;
-//        url = "https://fidoalliance.co.nz/mds/execute/0f19dfa625f7f56c626e528b79d75946fe92337355681ac47f25f4ccb55aa601"; //TODO
         return restTemplate.getForObject(url, String.class);
     }
 }
