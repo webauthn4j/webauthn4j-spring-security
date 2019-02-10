@@ -40,6 +40,7 @@ public class WebAuthnAuthenticationRequest implements Serializable {
     private final boolean userVerificationRequired;
     private final boolean userPresenceRequired;
 
+    @SuppressWarnings("squid:S00107")
     public WebAuthnAuthenticationRequest(byte[] credentialId,
                                          byte[] clientDataJSON,
                                          byte[] authenticatorData,

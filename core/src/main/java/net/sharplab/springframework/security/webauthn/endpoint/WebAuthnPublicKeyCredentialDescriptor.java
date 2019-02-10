@@ -20,9 +20,10 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.webauthn4j.request.PublicKeyCredentialType;
 
+import java.io.Serializable;
 import java.util.Objects;
 
-public class WebAuthnPublicKeyCredentialDescriptor {
+public class WebAuthnPublicKeyCredentialDescriptor implements Serializable {
 
     private PublicKeyCredentialType type;
     private String id;

@@ -39,6 +39,7 @@ public class OptionsResponse implements Response {
     private AuthenticationExtensionsClientInputs authenticationExtensions;
     private Parameters parameters;
 
+    @SuppressWarnings("squid:S00107")
     public OptionsResponse(
             PublicKeyCredentialRpEntity relyingParty,
             WebAuthnPublicKeyCredentialUserEntity user,
