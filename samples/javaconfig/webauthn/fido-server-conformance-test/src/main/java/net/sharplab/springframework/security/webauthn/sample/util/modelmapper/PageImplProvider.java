@@ -26,9 +26,9 @@ import java.util.Collections;
  */
 public class PageImplProvider implements Provider<PageImpl> {
 
+    @SuppressWarnings("unchecked")
     @Override
     public PageImpl get(ProvisionRequest<PageImpl> request) {
-        //noinspection unchecked
         return new PageImpl(Collections.emptyList());
     }
 }

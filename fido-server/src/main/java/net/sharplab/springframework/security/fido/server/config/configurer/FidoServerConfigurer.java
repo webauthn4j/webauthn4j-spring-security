@@ -94,14 +94,14 @@ public class FidoServerConfigurer<H extends HttpSecurityBuilder<H>> extends Abst
         return this;
     }
 
-    public class FidoServerAttestationOptionsEndpointConfig extends AbstractServerEndpointConfig {
+    public class FidoServerAttestationOptionsEndpointConfig extends AbstractServerEndpointConfig<FidoServerAttestationOptionsEndpointFilter> {
 
         FidoServerAttestationOptionsEndpointConfig() {
             super(FidoServerAttestationOptionsEndpointFilter.class);
         }
 
         @Override
-        protected ServerEndpointFilterBase createInstance() {
+        protected FidoServerAttestationOptionsEndpointFilter createInstance() {
             return new FidoServerAttestationOptionsEndpointFilter(registry, optionsProvider);
         }
     }
