@@ -17,7 +17,8 @@
 package net.sharplab.springframework.security.webauthn.request;
 
 import com.webauthn4j.converter.AuthenticatorDataConverter;
-import com.webauthn4j.registry.Registry;
+import com.webauthn4j.converter.util.CborConverter;
+import com.webauthn4j.converter.util.JsonConverter;
 import com.webauthn4j.response.client.ClientDataType;
 import com.webauthn4j.response.client.Origin;
 import com.webauthn4j.response.client.challenge.Challenge;
@@ -30,13 +31,13 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 public class WebAuthnAuthenticationRequestTest {
 
-    private Registry registry = new Registry();
+    private CborConverter cborConverter = new CborConverter();
 
     @Test
     public void equals_hashCode_test() {
         Challenge challenge = new DefaultChallenge();
         byte[] clientDataJSON = TestUtil.createClientDataJSON(ClientDataType.GET);
-        byte[] authenticatorData = new AuthenticatorDataConverter(registry).convert(TestUtil.createAuthenticatorData());
+        byte[] authenticatorData = new AuthenticatorDataConverter(cborConverter).convert(TestUtil.createAuthenticatorData());
         WebAuthnAuthenticationRequest requestA = new WebAuthnAuthenticationRequest(
                 new byte[]{0x01, 0x23},
                 clientDataJSON,

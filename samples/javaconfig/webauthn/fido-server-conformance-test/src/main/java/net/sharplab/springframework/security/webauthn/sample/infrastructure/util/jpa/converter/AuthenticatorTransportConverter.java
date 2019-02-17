@@ -14,24 +14,20 @@
  * limitations under the License.
  */
 
-package net.sharplab.springframework.security.webauthn.metadata;
+package net.sharplab.springframework.security.webauthn.sample.infrastructure.util.jpa.converter;
 
-import com.webauthn4j.metadata.HttpClient;
-import org.springframework.web.client.RestTemplate;
+import com.webauthn4j.request.AuthenticatorTransport;
 
-/**
- * Client for FIDO Metadata Service
- */
-public class RestTemplateAdaptorHttpClient implements HttpClient {
+import javax.persistence.AttributeConverter;
 
-    private RestTemplate restTemplate;
-
-    public RestTemplateAdaptorHttpClient(RestTemplate restTemplate) {
-        this.restTemplate = restTemplate;
+public class AuthenticatorTransportConverter implements AttributeConverter<AuthenticatorTransport, String> {
+    @Override
+    public String convertToDatabaseColumn(AuthenticatorTransport attribute) {
+        return attribute.getValue();
     }
 
     @Override
-    public String fetch(String url) {
-        return restTemplate.getForObject(url, String.class);
+    public AuthenticatorTransport convertToEntityAttribute(String dbData) {
+        return AuthenticatorTransport.create(dbData);
     }
 }

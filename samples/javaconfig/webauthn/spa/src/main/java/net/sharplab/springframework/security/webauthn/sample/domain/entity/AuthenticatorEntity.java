@@ -17,11 +17,14 @@
 package net.sharplab.springframework.security.webauthn.sample.domain.entity;
 
 import com.webauthn4j.authenticator.Authenticator;
+import com.webauthn4j.request.AuthenticatorTransport;
 import com.webauthn4j.response.attestation.authenticator.AttestedCredentialData;
 import com.webauthn4j.response.attestation.statement.AttestationStatement;
 import net.sharplab.springframework.security.webauthn.sample.infrastructure.util.jpa.converter.AttestationStatementConverter;
+import net.sharplab.springframework.security.webauthn.sample.infrastructure.util.jpa.converter.AuthenticatorTransportConverter;
 
 import javax.persistence.*;
+import java.util.Set;
 
 /**
  * Authenticator model
@@ -40,6 +43,12 @@ public class AuthenticatorEntity implements Authenticator {
     private UserEntity user;
 
     private long counter;
+
+    @ElementCollection(fetch = FetchType.EAGER)
+    @CollectionTable(name = "m_transport", joinColumns = @JoinColumn(name = "authenticator_id"))
+    @Column(name = "transport")
+    @Convert(converter = AuthenticatorTransportConverter.class)
+    private Set<AuthenticatorTransport> transports;
 
     @Embedded
     private AttestedCredentialData attestedCredentialData;
@@ -83,6 +92,15 @@ public class AuthenticatorEntity implements Authenticator {
 
     public void setCounter(long counter) {
         this.counter = counter;
+    }
+
+    @Override
+    public Set<AuthenticatorTransport> getTransports() {
+        return transports;
+    }
+
+    public void setTransports(Set<AuthenticatorTransport> transports){
+        this.transports = transports;
     }
 
     public AttestedCredentialData getAttestedCredentialData() {

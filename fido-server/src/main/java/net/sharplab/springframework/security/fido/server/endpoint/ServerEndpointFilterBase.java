@@ -16,7 +16,7 @@
 
 package net.sharplab.springframework.security.fido.server.endpoint;
 
-import com.webauthn4j.registry.Registry;
+import com.webauthn4j.converter.util.JsonConverter;
 import net.sharplab.springframework.security.webauthn.util.ExceptionUtil;
 import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.http.HttpMethod;
@@ -43,16 +43,16 @@ public abstract class ServerEndpointFilterBase extends GenericFilterBean {
      */
     private String filterProcessesUrl;
     protected MessageSourceAccessor messages = SpringSecurityMessageSource.getAccessor();
-    protected Registry registry;
+    protected JsonConverter jsonConverter;
     protected ServerEndpointFilterUtil serverEndpointFilterUtil;
 
 
     public ServerEndpointFilterBase(
             String filterProcessesUrl,
-            Registry registry) {
+            JsonConverter jsonConverter) {
         this.filterProcessesUrl = filterProcessesUrl;
-        this.registry = registry;
-        this.serverEndpointFilterUtil = new ServerEndpointFilterUtil(registry);
+        this.jsonConverter = jsonConverter;
+        this.serverEndpointFilterUtil = new ServerEndpointFilterUtil(this.jsonConverter);
         checkConfig();
     }
 
@@ -66,7 +66,7 @@ public abstract class ServerEndpointFilterBase extends GenericFilterBean {
 
     private void checkConfig() {
         Assert.notNull(filterProcessesUrl, "filterProcessesUrl must not be null");
-        Assert.notNull(registry, "registry must not be null");
+        Assert.notNull(jsonConverter, "jsonConverter must not be null");
     }
 
     @Override

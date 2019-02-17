@@ -16,7 +16,8 @@
 
 package net.sharplab.springframework.security.webauthn.endpoint;
 
-import com.webauthn4j.registry.Registry;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.webauthn4j.converter.util.JsonConverter;
 import net.sharplab.springframework.security.webauthn.options.AssertionOptions;
 import net.sharplab.springframework.security.webauthn.options.AttestationOptions;
 import net.sharplab.springframework.security.webauthn.options.OptionsProvider;
@@ -56,16 +57,16 @@ public class OptionsEndpointFilter extends GenericFilterBean {
      */
     protected String filterProcessesUrl = FILTER_URL;
     protected MessageSourceAccessor messages = SpringSecurityMessageSource.getAccessor();
-    protected Registry registry;
+    protected JsonConverter jsonConverter;
 
     private AuthenticationTrustResolver trustResolver;
     private MFATokenEvaluator mfaTokenEvaluator;
 
     private OptionsProvider optionsProvider;
 
-    public OptionsEndpointFilter(OptionsProvider optionsProvider, Registry registry) {
+    public OptionsEndpointFilter(OptionsProvider optionsProvider, JsonConverter jsonConverter) {
         this.optionsProvider = optionsProvider;
-        this.registry = registry;
+        this.jsonConverter = jsonConverter;
         this.trustResolver = new AuthenticationTrustResolverImpl();
         this.mfaTokenEvaluator = new MFATokenEvaluatorImpl();
         checkConfig();
@@ -78,7 +79,7 @@ public class OptionsEndpointFilter extends GenericFilterBean {
 
     private void checkConfig() {
         Assert.notNull(filterProcessesUrl, "filterProcessesUrl must not be null");
-        Assert.notNull(registry, "registry must not be null");
+        Assert.notNull(jsonConverter, "jsonConverter must not be null");
         Assert.notNull(trustResolver, "trustResolver must not be null");
         Assert.notNull(mfaTokenEvaluator, "mfaTokenEvaluator must not be null");
     }
@@ -150,7 +151,7 @@ public class OptionsEndpointFilter extends GenericFilterBean {
     }
 
     void writeResponse(HttpServletResponse httpServletResponse, Response response) throws IOException {
-        String responseText = registry.getJsonMapper().writeValueAsString(response);
+        String responseText = jsonConverter.writeValueAsString(response);
         httpServletResponse.setContentType("application/json");
         httpServletResponse.getWriter().print(responseText);
     }
@@ -165,7 +166,7 @@ public class OptionsEndpointFilter extends GenericFilterBean {
             errorResponse = new ErrorResponse("The server encountered an internal error");
             statusCode = HttpServletResponse.SC_INTERNAL_SERVER_ERROR;
         }
-        String errorResponseText = registry.getJsonMapper().writeValueAsString(errorResponse);
+        String errorResponseText = jsonConverter.writeValueAsString(errorResponse);
         httpServletResponse.setContentType("application/json");
         httpServletResponse.getWriter().print(errorResponseText);
         httpServletResponse.setStatus(statusCode);

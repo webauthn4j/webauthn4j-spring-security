@@ -25,7 +25,7 @@ CREATE TABLE m_authority (
   primary key(id)
 );
 
--- AuthenticatorViewModel table  --
+-- Authenticator table  --
 CREATE TABLE m_authenticator(
   id                     INTEGER       NOT NULL AUTO_INCREMENT,
   name                   VARCHAR(32)   NOT NULL,
@@ -38,6 +38,11 @@ CREATE TABLE m_authenticator(
   primary key(id)
 );
 
+-- Transport table  --
+CREATE TABLE m_transport (
+  authenticator_id  INTEGER        NOT NULL REFERENCES  m_authenticator(id),
+  transport         VARCHAR(32)    NOT NULL
+);
 
 -- ユーザー・グループリレーション  --
 CREATE TABLE r_user_group (

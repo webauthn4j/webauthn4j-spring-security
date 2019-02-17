@@ -16,7 +16,7 @@
 
 package net.sharplab.springframework.security.webauthn.anchor;
 
-import com.webauthn4j.anchor.CachingTrustAnchorProviderBase;
+import com.webauthn4j.anchor.CachingTrustAnchorsProviderBase;
 import com.webauthn4j.anchor.KeyStoreException;
 import com.webauthn4j.response.attestation.authenticator.AAGUID;
 import com.webauthn4j.util.AssertUtil;
@@ -33,7 +33,7 @@ import java.security.cert.TrustAnchor;
 import java.security.cert.X509Certificate;
 import java.util.*;
 
-public class KeyStoreResourceTrustAnchorProvider extends CachingTrustAnchorProviderBase implements InitializingBean {
+public class KeyStoreResourceTrustAnchorProvider extends CachingTrustAnchorsProviderBase implements InitializingBean {
 
     //~ Instance fields ================================================================================================
 

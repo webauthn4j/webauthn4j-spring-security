@@ -16,8 +16,9 @@
 
 package net.sharplab.springframework.security.webauthn.converter;
 
+import com.fasterxml.jackson.core.ObjectCodec;
 import com.webauthn4j.converter.AttestationObjectConverter;
-import com.webauthn4j.registry.Registry;
+import com.webauthn4j.converter.util.CborConverter;
 import com.webauthn4j.response.attestation.AttestationObject;
 import org.springframework.core.convert.converter.Converter;
 
@@ -32,8 +33,8 @@ public class Base64StringToAttestationObjectConverter implements Converter<Strin
 
     // ~ Constructor
     // ========================================================================================================
-    public Base64StringToAttestationObjectConverter(Registry registry) {
-        converter = new AttestationObjectConverter(registry);
+    public Base64StringToAttestationObjectConverter(CborConverter cborConverter) {
+        converter = new AttestationObjectConverter(cborConverter);
     }
 
     /**

@@ -16,7 +16,8 @@
 
 package net.sharplab.springframework.security.webauthn.config.configurers;
 
-import com.webauthn4j.registry.Registry;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.webauthn4j.converter.util.JsonConverter;
 import net.sharplab.springframework.security.webauthn.WebAuthnProcessingFilter;
 import net.sharplab.springframework.security.webauthn.challenge.ChallengeRepository;
 import net.sharplab.springframework.security.webauthn.endpoint.OptionsEndpointFilter;
@@ -75,7 +76,7 @@ public final class WebAuthnLoginConfigurer<H extends HttpSecurityBuilder<H>> ext
     //~ Instance fields
     // ================================================================================================
     private OptionsProvider optionsProvider = null;
-    private Registry registry = null;
+    private JsonConverter jsonConverter = null;
     private ServerPropertyProvider serverPropertyProvider = null;
     private String usernameParameter = null;
     private String passwordParameter = null;
@@ -103,10 +104,10 @@ public final class WebAuthnLoginConfigurer<H extends HttpSecurityBuilder<H>> ext
             optionsProvider = WebAuthnConfigurerUtil.getOptionsProvider(http);
         }
         http.setSharedObject(OptionsProvider.class, optionsProvider);
-        if (registry == null) {
-            registry = WebAuthnConfigurerUtil.getRegistry(http);
+        if (jsonConverter == null) {
+            jsonConverter = WebAuthnConfigurerUtil.getJsonConverter(http);
         }
-        http.setSharedObject(Registry.class, registry);
+        http.setSharedObject(JsonConverter.class, jsonConverter);
         if (serverPropertyProvider == null) {
             serverPropertyProvider = WebAuthnConfigurerUtil.getServerPropertyProvider(http);
         }
@@ -290,9 +291,9 @@ public final class WebAuthnLoginConfigurer<H extends HttpSecurityBuilder<H>> ext
         return this;
     }
 
-    public WebAuthnLoginConfigurer<H> registry(Registry registry) {
-        Assert.notNull(registry, "registry must not be null");
-        this.registry = registry;
+    public WebAuthnLoginConfigurer<H> registry(JsonConverter jsonConverter) {
+        Assert.notNull(jsonConverter, "jsonConverter must not be null");
+        this.jsonConverter = jsonConverter;
         return this;
     }
 
@@ -318,7 +319,7 @@ public final class WebAuthnLoginConfigurer<H extends HttpSecurityBuilder<H>> ext
             ApplicationContext applicationContext = http.getSharedObject(ApplicationContext.class);
             String[] beanNames = applicationContext.getBeanNamesForType(OptionsEndpointFilter.class);
             if (beanNames.length == 0) {
-                optionsEndpointFilter = new OptionsEndpointFilter(optionsProvider, registry);
+                optionsEndpointFilter = new OptionsEndpointFilter(optionsProvider, jsonConverter);
                 optionsEndpointFilter.setFilterProcessesUrl(processingUrl);
             } else {
                 optionsEndpointFilter = applicationContext.getBean(OptionsEndpointFilter.class);

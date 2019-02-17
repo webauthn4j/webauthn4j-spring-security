@@ -16,7 +16,6 @@
 
 package net.sharplab.springframework.security.webauthn.sample.app.config;
 
-import com.webauthn4j.registry.Registry;
 import com.webauthn4j.request.PublicKeyCredentialType;
 import com.webauthn4j.response.attestation.statement.COSEAlgorithmIdentifier;
 import com.webauthn4j.validator.WebAuthnAuthenticationContextValidator;
@@ -89,9 +88,6 @@ WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
     private WebAuthnRegistrationRequestValidator webAuthnRegistrationRequestValidator;
-
-    @Autowired
-    private Registry registry;
 
     @Autowired
     private UserManager userManager;

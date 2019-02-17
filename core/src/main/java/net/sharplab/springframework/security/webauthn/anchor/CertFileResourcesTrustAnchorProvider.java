@@ -16,7 +16,7 @@
 
 package net.sharplab.springframework.security.webauthn.anchor;
 
-import com.webauthn4j.anchor.CachingTrustAnchorProviderBase;
+import com.webauthn4j.anchor.CachingTrustAnchorsProviderBase;
 import com.webauthn4j.response.attestation.authenticator.AAGUID;
 import com.webauthn4j.util.AssertUtil;
 import com.webauthn4j.util.CertificateUtil;
@@ -30,7 +30,7 @@ import java.security.cert.X509Certificate;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class CertFileResourcesTrustAnchorProvider extends CachingTrustAnchorProviderBase implements InitializingBean {
+public class CertFileResourcesTrustAnchorProvider extends CachingTrustAnchorsProviderBase implements InitializingBean {
 
     private List<Resource> certificates;
 

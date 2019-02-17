@@ -16,7 +16,8 @@
 
 package net.sharplab.springframework.security.webauthn.sample.app.config;
 
-import com.webauthn4j.registry.Registry;
+import com.webauthn4j.converter.util.CborConverter;
+import com.webauthn4j.converter.util.JsonConverter;
 import net.sharplab.springframework.security.webauthn.converter.Base64StringToAttestationObjectConverter;
 import net.sharplab.springframework.security.webauthn.converter.Base64StringToCollectedClientDataConverter;
 import net.sharplab.springframework.security.webauthn.sample.app.formatter.AttestationObjectFormFormatter;
@@ -30,16 +31,14 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class ConverterConfig {
 
-    private Registry registry = new Registry();
-
     @Bean
-    public Base64StringToCollectedClientDataConverter base64StringToCollectedClientDataConverter(){
-        return new Base64StringToCollectedClientDataConverter(registry);
+    public Base64StringToCollectedClientDataConverter base64StringToCollectedClientDataConverter(JsonConverter jsonConverter){
+        return new Base64StringToCollectedClientDataConverter(jsonConverter);
     }
 
     @Bean
-    public Base64StringToAttestationObjectConverter base64StringToWebAuthnAttestationObjectConverter(){
-        return new Base64StringToAttestationObjectConverter(registry);
+    public Base64StringToAttestationObjectConverter base64StringToWebAuthnAttestationObjectConverter(CborConverter cborConverter){
+        return new Base64StringToAttestationObjectConverter(cborConverter);
     }
 
     @Bean

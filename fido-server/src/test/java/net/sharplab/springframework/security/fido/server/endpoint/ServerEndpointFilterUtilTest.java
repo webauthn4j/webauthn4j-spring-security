@@ -16,7 +16,8 @@
 
 package net.sharplab.springframework.security.fido.server.endpoint;
 
-import com.webauthn4j.registry.Registry;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.webauthn4j.converter.util.JsonConverter;
 import org.junit.Test;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.security.authentication.InsufficientAuthenticationException;
@@ -28,7 +29,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 public class ServerEndpointFilterUtilTest {
 
-    private ServerEndpointFilterUtil target = new ServerEndpointFilterUtil(new Registry());
+    private ServerEndpointFilterUtil target = new ServerEndpointFilterUtil(new JsonConverter());
 
     @Test
     public void writeErrorResponse_with_RuntimeException_test() throws IOException {

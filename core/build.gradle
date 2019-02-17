@@ -27,7 +27,7 @@ repositories {
 
 dependencies {
     compile("com.webauthn4j:webauthn4j-core:${webauthn4jVersion}")
-    compile("com.webauthn4j:webauthn4j-extras:${webauthn4jVersion}")
+    compile("com.webauthn4j:webauthn4j-metadata:${webauthn4jVersion}")
 
     // Custom Spring Security
     compile('org.springframework.security:spring-security-core:5.1.0.BUILD-SNAPSHOT')

@@ -16,7 +16,9 @@
 
 package net.sharplab.springframework.security.webauthn.sample.app.config;
 
-import com.webauthn4j.registry.Registry;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.webauthn4j.converter.util.CborConverter;
+import com.webauthn4j.converter.util.JsonConverter;
 import com.webauthn4j.validator.WebAuthnAuthenticationContextValidator;
 import com.webauthn4j.validator.WebAuthnRegistrationContextValidator;
 import net.sharplab.springframework.security.webauthn.WebAuthnRegistrationRequestValidator;
@@ -90,8 +92,18 @@ public class WebSecurityBeanConfig {
     }
 
     @Bean
-    public WebAuthnAuthenticationContextValidator webAuthnAuthenticationContextValidator(Registry registry){
-        return new WebAuthnAuthenticationContextValidator(registry);
+    public WebAuthnAuthenticationContextValidator webAuthnAuthenticationContextValidator(JsonConverter jsonConverter, CborConverter cborConverter){
+        return new WebAuthnAuthenticationContextValidator(jsonConverter, cborConverter);
+    }
+
+    @Bean
+    public JsonConverter jsonConverter(){
+        return new JsonConverter();
+    }
+
+    @Bean
+    public CborConverter cborConverter(JsonConverter jsonConverter){
+        return jsonConverter.getCborConverter();
     }
 
     @Bean
@@ -107,11 +119,6 @@ public class WebSecurityBeanConfig {
         daoAuthenticationProvider.setPasswordEncoder(passwordEncoder);
         daoAuthenticationProvider.setUserDetailsService(userDetailsService);
         return daoAuthenticationProvider;
-    }
-
-    @Bean
-    public Registry registry(){
-        return new Registry();
     }
 
     @Bean

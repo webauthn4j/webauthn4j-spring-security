@@ -22,7 +22,7 @@ CREATE TABLE m_authority (
   authority         VARCHAR(32)    NOT NULL
 );
 
--- AuthenticatorViewModel table  --
+-- Authenticator table  --
 CREATE TABLE m_authenticator(
   id                SERIAL         NOT NULL,
   name              VARCHAR(32)    NOT NULL,
@@ -32,6 +32,12 @@ CREATE TABLE m_authenticator(
   credential_id bytea NOT NULL,
   credential_public_key TEXT NOT NULL,
   attestation_statement  TEXT NOT NULL,
+);
+
+-- Transport table  --
+CREATE TABLE m_transport (
+  authenticator_id  INTEGER        NOT NULL REFERENCES  m_authenticator(id),
+  transport         VARCHAR(32)    NOT NULL
 );
 
 -- User-Group relation  --

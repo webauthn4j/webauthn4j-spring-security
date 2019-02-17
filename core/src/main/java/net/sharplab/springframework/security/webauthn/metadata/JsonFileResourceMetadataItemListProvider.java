@@ -16,11 +16,12 @@
 
 package net.sharplab.springframework.security.webauthn.metadata;
 
-import com.webauthn4j.extras.fido.metadata.MetadataItem;
-import com.webauthn4j.extras.fido.metadata.MetadataItemImpl;
-import com.webauthn4j.extras.fido.metadata.MetadataItemListProvider;
-import com.webauthn4j.extras.fido.metadata.MetadataStatement;
-import com.webauthn4j.registry.Registry;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.webauthn4j.converter.util.JsonConverter;
+import com.webauthn4j.metadata.MetadataItemsProvider;
+import com.webauthn4j.metadata.data.MetadataItem;
+import com.webauthn4j.metadata.data.MetadataItemImpl;
+import com.webauthn4j.metadata.data.statement.MetadataStatement;
 import com.webauthn4j.response.attestation.authenticator.AAGUID;
 import com.webauthn4j.util.AssertUtil;
 import org.springframework.beans.factory.InitializingBean;
@@ -29,18 +30,17 @@ import org.springframework.core.io.Resource;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UncheckedIOException;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
-public class JsonFileResourceMetadataItemListProvider implements MetadataItemListProvider<MetadataItem>, InitializingBean {
+public class JsonFileResourceMetadataItemListProvider implements MetadataItemsProvider<MetadataItem>, InitializingBean {
 
-    private Registry registry;
+    private JsonConverter jsonConverter;
     private List<Resource> resources;
-    private Map<AAGUID, List<MetadataItem>> cachedMetadataStatements;
+    private Map<AAGUID, Set<MetadataItem>> cachedMetadataItems;
 
-    public JsonFileResourceMetadataItemListProvider(Registry registry) {
-        this.registry = registry;
+    public JsonFileResourceMetadataItemListProvider(JsonConverter jsonConverter) {
+        this.jsonConverter = jsonConverter;
     }
 
     @Override
@@ -53,15 +53,18 @@ public class JsonFileResourceMetadataItemListProvider implements MetadataItemLis
     }
 
     @Override
-    public Map<AAGUID, List<MetadataItem>> provide() {
+    public Map<AAGUID, Set<MetadataItem>> provide() {
         checkConfig();
-        if(cachedMetadataStatements == null){
-            cachedMetadataStatements =
+        if(cachedMetadataItems == null){
+            cachedMetadataItems =
                     resources.stream()
                             .map(item -> new MetadataItemImpl(readJsonFile(item)))
-                            .collect(Collectors.groupingBy(item -> extractAAGUID(item.getMetadataStatement())));
+                            .distinct()
+                            .collect(Collectors.groupingBy(item -> extractAAGUID(item.getMetadataStatement())))
+                            .entrySet().stream()
+                            .collect(Collectors.toMap(Map.Entry::getKey, entry -> Collections.unmodifiableSet(new HashSet<>(entry.getValue()))));
         }
-        return cachedMetadataStatements;
+        return cachedMetadataItems;
     }
 
     public List<Resource> getResources() {
@@ -86,7 +89,7 @@ public class JsonFileResourceMetadataItemListProvider implements MetadataItemLis
 
     MetadataStatement readJsonFile(Resource resource) {
         try (InputStream inputStream = resource.getInputStream()) {
-            return registry.getJsonMapper().readValue(inputStream, MetadataStatement.class);
+            return jsonConverter.readValue(inputStream, MetadataStatement.class);
         } catch (IOException e) {
             throw new UncheckedIOException("Failed to load a metadata statement json file", e);
         }
