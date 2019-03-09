@@ -16,8 +16,9 @@
 
 package net.sharplab.springframework.security.webauthn.sample.infrastructure.util.jpa.converter;
 
-import com.webauthn4j.converter.util.JsonConverter;
+import com.webauthn4j.converter.util.CborConverter;
 import com.webauthn4j.response.attestation.statement.AttestationStatement;
+import com.webauthn4j.util.Base64UrlUtil;
 
 import javax.persistence.AttributeConverter;
 
@@ -26,15 +27,16 @@ import javax.persistence.AttributeConverter;
  */
 public class AttestationStatementConverter implements AttributeConverter<AttestationStatement, String> {
 
-    private JsonConverter jsonConverter = new JsonConverter(); //TODO
+    private CborConverter cborConverter = new CborConverter(); //TODO
 
     @Override
     public String convertToDatabaseColumn(AttestationStatement attribute) {
-        return jsonConverter.writeValueAsString(attribute);
+        return Base64UrlUtil.encodeToString(cborConverter.writeValueAsBytes(attribute));
     }
 
     @Override
     public AttestationStatement convertToEntityAttribute(String dbData) {
-        return jsonConverter.readValue(dbData, AttestationStatement.class);
+        byte[] data = Base64UrlUtil.decode(dbData);
+        return cborConverter.readValue(data, AttestationStatement.class);
     }
 }

@@ -18,6 +18,7 @@ package net.sharplab.springframework.security.webauthn.sample.app.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.jsontype.NamedType;
+import com.fasterxml.jackson.dataformat.cbor.CBORFactory;
 import com.webauthn4j.converter.util.CborConverter;
 import com.webauthn4j.converter.util.JsonConverter;
 import com.webauthn4j.metadata.*;
@@ -46,8 +47,10 @@ import net.sharplab.springframework.security.webauthn.sample.app.security.Exampl
 import net.sharplab.springframework.security.webauthn.server.ServerPropertyProvider;
 import net.sharplab.springframework.security.webauthn.server.ServerPropertyProviderImpl;
 import net.sharplab.springframework.security.webauthn.userdetails.WebAuthnUserDetailsService;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.core.io.support.ResourcePatternUtils;
@@ -202,9 +205,22 @@ public class WebSecurityBeanConfig {
         return daoAuthenticationProvider;
     }
 
+    @Primary
     @Bean
-    public JsonConverter jsonConverter() {
-        return new JsonConverter();
+    public ObjectMapper jsonMapper(){
+        ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.registerSubtypes(new NamedType(ExampleExtensionClientInput.class, ExampleExtensionClientInput.ID));
+        return objectMapper;
+    }
+
+    @Bean
+    public ObjectMapper cborMapper(){
+        return new ObjectMapper(new CBORFactory());
+    }
+
+    @Bean
+    public JsonConverter jsonConverter(@Qualifier("jsonMapper") ObjectMapper jsonMapper, @Qualifier("cborMapper") ObjectMapper cborMapper) {
+        return new JsonConverter(jsonMapper, cborMapper);
     }
 
     @Bean
