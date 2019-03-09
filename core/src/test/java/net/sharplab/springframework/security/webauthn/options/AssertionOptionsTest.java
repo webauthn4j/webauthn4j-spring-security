@@ -16,16 +16,10 @@
 
 package net.sharplab.springframework.security.webauthn.options;
 
-import com.webauthn4j.request.PublicKeyCredentialParameters;
-import com.webauthn4j.request.PublicKeyCredentialRpEntity;
-import com.webauthn4j.request.PublicKeyCredentialType;
 import com.webauthn4j.request.extension.client.AuthenticationExtensionsClientInputs;
-import com.webauthn4j.response.attestation.statement.COSEAlgorithmIdentifier;
 import com.webauthn4j.response.client.challenge.Challenge;
 import com.webauthn4j.response.client.challenge.DefaultChallenge;
-import com.webauthn4j.util.Base64UrlUtil;
 import net.sharplab.springframework.security.webauthn.endpoint.Parameters;
-import net.sharplab.springframework.security.webauthn.endpoint.WebAuthnPublicKeyCredentialUserEntity;
 import org.junit.Test;
 
 import java.math.BigInteger;

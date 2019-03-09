@@ -16,7 +16,6 @@
 
 package net.sharplab.springframework.security.webauthn.endpoint;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.webauthn4j.converter.util.JsonConverter;
 import net.sharplab.springframework.security.webauthn.options.AssertionOptions;
 import net.sharplab.springframework.security.webauthn.options.AttestationOptions;

@@ -20,10 +20,10 @@ import com.webauthn4j.authenticator.Authenticator;
 import com.webauthn4j.authenticator.AuthenticatorImpl;
 import com.webauthn4j.response.WebAuthnAuthenticationContext;
 import com.webauthn4j.validator.WebAuthnAuthenticationContextValidator;
-import com.webauthn4j.validator.exception.ValidationException;
 import net.sharplab.springframework.security.webauthn.authenticator.WebAuthnAuthenticator;
 import net.sharplab.springframework.security.webauthn.authenticator.WebAuthnAuthenticatorService;
-import net.sharplab.springframework.security.webauthn.exception.*;
+import net.sharplab.springframework.security.webauthn.exception.BadChallengeException;
+import net.sharplab.springframework.security.webauthn.exception.CredentialIdNotFoundException;
 import net.sharplab.springframework.security.webauthn.request.WebAuthnAuthenticationRequest;
 import net.sharplab.springframework.security.webauthn.userdetails.WebAuthnUserDetails;
 import net.sharplab.springframework.security.webauthn.userdetails.WebAuthnUserDetailsImpl;
@@ -38,8 +38,6 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetailsChecker;
 
 import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;

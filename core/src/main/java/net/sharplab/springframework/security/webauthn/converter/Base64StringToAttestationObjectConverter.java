@@ -16,7 +16,6 @@
 
 package net.sharplab.springframework.security.webauthn.converter;
 
-import com.fasterxml.jackson.core.ObjectCodec;
 import com.webauthn4j.converter.AttestationObjectConverter;
 import com.webauthn4j.converter.util.CborConverter;
 import com.webauthn4j.response.attestation.AttestationObject;

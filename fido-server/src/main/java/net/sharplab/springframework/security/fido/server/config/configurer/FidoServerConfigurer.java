@@ -16,7 +16,6 @@
 
 package net.sharplab.springframework.security.fido.server.config.configurer;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.webauthn4j.converter.util.JsonConverter;
 import net.sharplab.springframework.security.fido.server.endpoint.*;
 import net.sharplab.springframework.security.webauthn.WebAuthnRegistrationRequestValidator;

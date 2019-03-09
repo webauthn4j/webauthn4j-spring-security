@@ -17,7 +17,6 @@
 package net.sharplab.springframework.security.webauthn.config.configurers;
 
 
-import com.webauthn4j.authenticator.Authenticator;
 import com.webauthn4j.request.PublicKeyCredentialType;
 import com.webauthn4j.response.attestation.statement.COSEAlgorithmIdentifier;
 import com.webauthn4j.response.client.challenge.DefaultChallenge;

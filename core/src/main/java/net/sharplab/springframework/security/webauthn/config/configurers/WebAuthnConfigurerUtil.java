@@ -16,7 +16,6 @@
 
 package net.sharplab.springframework.security.webauthn.config.configurers;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.webauthn4j.converter.util.JsonConverter;
 import net.sharplab.springframework.security.webauthn.WebAuthnRegistrationRequestValidator;
 import net.sharplab.springframework.security.webauthn.challenge.ChallengeRepository;

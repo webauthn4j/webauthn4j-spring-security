@@ -16,7 +16,6 @@
 
 package net.sharplab.springframework.security.webauthn.metadata;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.webauthn4j.converter.util.JsonConverter;
 import com.webauthn4j.metadata.MetadataItemsProvider;
 import com.webauthn4j.metadata.data.MetadataItem;

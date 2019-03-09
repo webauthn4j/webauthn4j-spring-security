@@ -16,7 +16,6 @@
 
 package net.sharplab.springframework.security.fido.server.endpoint;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.webauthn4j.converter.util.JsonConverter;
 import org.junit.Test;
 import org.springframework.mock.web.MockHttpServletResponse;

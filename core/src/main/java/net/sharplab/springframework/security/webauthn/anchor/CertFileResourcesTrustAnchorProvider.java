@@ -27,7 +27,10 @@ import java.io.IOException;
 import java.io.UncheckedIOException;
 import java.security.cert.TrustAnchor;
 import java.security.cert.X509Certificate;
-import java.util.*;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 public class CertFileResourcesTrustAnchorProvider extends CachingTrustAnchorsProviderBase implements InitializingBean {

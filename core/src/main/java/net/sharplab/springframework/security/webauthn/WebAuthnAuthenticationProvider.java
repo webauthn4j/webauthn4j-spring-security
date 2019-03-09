@@ -20,7 +20,7 @@ import com.webauthn4j.authenticator.Authenticator;
 import com.webauthn4j.response.WebAuthnAuthenticationContext;
 import com.webauthn4j.validator.WebAuthnAuthenticationContextValidator;
 import net.sharplab.springframework.security.webauthn.authenticator.WebAuthnAuthenticatorService;
-import net.sharplab.springframework.security.webauthn.exception.*;
+import net.sharplab.springframework.security.webauthn.exception.CredentialIdNotFoundException;
 import net.sharplab.springframework.security.webauthn.request.WebAuthnAuthenticationRequest;
 import net.sharplab.springframework.security.webauthn.userdetails.WebAuthnUserDetails;
 import net.sharplab.springframework.security.webauthn.userdetails.WebAuthnUserDetailsService;

@@ -16,9 +16,7 @@
 
 package net.sharplab.springframework.security.webauthn.converter;
 
-import com.fasterxml.jackson.core.ObjectCodec;
 import com.webauthn4j.converter.CollectedClientDataConverter;
-import com.webauthn4j.converter.util.CborConverter;
 import com.webauthn4j.converter.util.JsonConverter;
 import com.webauthn4j.response.client.CollectedClientData;
 import org.springframework.core.convert.converter.Converter;

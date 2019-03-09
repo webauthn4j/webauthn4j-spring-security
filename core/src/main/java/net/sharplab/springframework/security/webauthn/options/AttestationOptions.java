@@ -24,7 +24,6 @@ import com.webauthn4j.request.extension.client.AuthenticationExtensionsClientInp
 import com.webauthn4j.response.client.challenge.Challenge;
 import net.sharplab.springframework.security.webauthn.endpoint.WebAuthnPublicKeyCredentialUserEntity;
 
-
 import java.io.Serializable;
 import java.math.BigInteger;
 import java.util.List;
