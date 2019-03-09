@@ -26,6 +26,7 @@ import net.sharplab.springframework.security.webauthn.util.ExceptionUtil;
 import org.springframework.util.Assert;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.Collections;
 import java.util.List;
 
 
@@ -83,6 +84,7 @@ public class WebAuthnRegistrationRequestValidator {
         return new WebAuthnRegistrationContext(
                 clientDataBytes,
                 attestationObjectBytes,
+                Collections.emptySet(), //TODO
                 clientExtensionsJSON,
                 serverProperty,
                 false,
