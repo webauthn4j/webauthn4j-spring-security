@@ -20,7 +20,7 @@ package net.sharplab.springframework.security.webauthn.config.configurers;
 import com.webauthn4j.request.PublicKeyCredentialType;
 import com.webauthn4j.response.attestation.statement.COSEAlgorithmIdentifier;
 import com.webauthn4j.response.client.challenge.DefaultChallenge;
-import com.webauthn4j.test.TestUtil;
+import com.webauthn4j.test.TestDataUtil;
 import net.sharplab.springframework.security.webauthn.WebAuthnProcessingFilter;
 import net.sharplab.springframework.security.webauthn.challenge.ChallengeRepository;
 import net.sharplab.springframework.security.webauthn.options.OptionsProvider;
@@ -80,7 +80,7 @@ public class WebAuthnLoginConfigurerSpringTest {
     @Before
     public void setup() {
         WebAuthnUserDetails mockUserDetails = mock(WebAuthnUserDetails.class);
-        Collection authenticators = Collections.singletonList(TestUtil.createAuthenticator());
+        Collection authenticators = Collections.singletonList(TestDataUtil.createAuthenticator());
         when(mockUserDetails.getAuthenticators()).thenReturn(authenticators);
         when(mockUserDetails.getUserHandle()).thenReturn(new byte[32]);
         doThrow(new UsernameNotFoundException(null)).when(userDetailsService).loadUserByUsername(null);

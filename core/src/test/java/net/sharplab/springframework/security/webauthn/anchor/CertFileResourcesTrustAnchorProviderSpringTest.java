@@ -17,7 +17,8 @@
 package net.sharplab.springframework.security.webauthn.anchor;
 
 import com.webauthn4j.response.attestation.authenticator.AAGUID;
-import com.webauthn4j.test.TestUtil;
+import com.webauthn4j.test.TestAttestationUtil;
+import com.webauthn4j.test.TestDataUtil;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,7 +44,7 @@ public class CertFileResourcesTrustAnchorProviderSpringTest {
 
         @Bean
         public CertFileResourcesTrustAnchorProvider certFileResourcesTrustAnchorProvider() throws CertificateEncodingException {
-            Resource x509Resource = new ByteArrayResource(TestUtil.load2tierTestRootCACertificate().getEncoded());
+            Resource x509Resource = new ByteArrayResource(TestAttestationUtil.load2tierTestAuthenticatorAttestationCertificate().getEncoded());
             return new CertFileResourcesTrustAnchorProvider(Collections.singletonList(x509Resource));
         }
     }

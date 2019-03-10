@@ -23,7 +23,7 @@ import com.webauthn4j.response.client.Origin;
 import com.webauthn4j.response.client.challenge.Challenge;
 import com.webauthn4j.response.client.challenge.DefaultChallenge;
 import com.webauthn4j.server.ServerProperty;
-import com.webauthn4j.test.TestUtil;
+import com.webauthn4j.test.TestDataUtil;
 import org.junit.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -35,8 +35,8 @@ public class WebAuthnAuthenticationRequestTest {
     @Test
     public void equals_hashCode_test() {
         Challenge challenge = new DefaultChallenge();
-        byte[] clientDataJSON = TestUtil.createClientDataJSON(ClientDataType.GET);
-        byte[] authenticatorData = new AuthenticatorDataConverter(cborConverter).convert(TestUtil.createAuthenticatorData());
+        byte[] clientDataJSON = TestDataUtil.createClientDataJSON(ClientDataType.GET);
+        byte[] authenticatorData = new AuthenticatorDataConverter(cborConverter).convert(TestDataUtil.createAuthenticatorData());
         WebAuthnAuthenticationRequest requestA = new WebAuthnAuthenticationRequest(
                 new byte[]{0x01, 0x23},
                 clientDataJSON,

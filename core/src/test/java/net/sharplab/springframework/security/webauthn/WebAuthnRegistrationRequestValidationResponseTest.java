@@ -16,11 +16,12 @@
 
 package net.sharplab.springframework.security.webauthn;
 
+
 import com.webauthn4j.response.attestation.AttestationObject;
 import com.webauthn4j.response.client.ClientDataType;
 import com.webauthn4j.response.client.CollectedClientData;
 import com.webauthn4j.response.extension.client.AuthenticationExtensionsClientOutputs;
-import com.webauthn4j.test.TestUtil;
+import com.webauthn4j.test.TestDataUtil;
 import org.junit.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -29,8 +30,8 @@ public class WebAuthnRegistrationRequestValidationResponseTest {
 
     @Test
     public void equals_hashCode_test() {
-        CollectedClientData clientData = TestUtil.createClientData(ClientDataType.CREATE);
-        AttestationObject attestationObject = TestUtil.createAttestationObjectWithFIDOU2FAttestationStatement();
+        CollectedClientData clientData = TestDataUtil.createClientData(ClientDataType.CREATE);
+        AttestationObject attestationObject = TestDataUtil.createAttestationObjectWithFIDOU2FAttestationStatement();
         AuthenticationExtensionsClientOutputs clientExtensions = new AuthenticationExtensionsClientOutputs();
         WebAuthnRegistrationRequestValidationResponse instanceA =
                 new WebAuthnRegistrationRequestValidationResponse(clientData, attestationObject, clientExtensions);
@@ -42,8 +43,8 @@ public class WebAuthnRegistrationRequestValidationResponseTest {
 
     @Test
     public void getter_test() {
-        CollectedClientData clientData = TestUtil.createClientData(ClientDataType.CREATE);
-        AttestationObject attestationObject = TestUtil.createAttestationObjectWithFIDOU2FAttestationStatement();
+        CollectedClientData clientData = TestDataUtil.createClientData(ClientDataType.CREATE);
+        AttestationObject attestationObject = TestDataUtil.createAttestationObjectWithFIDOU2FAttestationStatement();
         AuthenticationExtensionsClientOutputs clientExtensions = new AuthenticationExtensionsClientOutputs();
         WebAuthnRegistrationRequestValidationResponse instance =
                 new WebAuthnRegistrationRequestValidationResponse(clientData, attestationObject, clientExtensions);

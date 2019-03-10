@@ -20,7 +20,7 @@ import com.webauthn4j.converter.CollectedClientDataConverter;
 import com.webauthn4j.converter.util.JsonConverter;
 import com.webauthn4j.response.client.ClientDataType;
 import com.webauthn4j.response.client.CollectedClientData;
-import com.webauthn4j.test.TestUtil;
+import com.webauthn4j.test.TestDataUtil;
 import org.junit.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -31,7 +31,7 @@ public class Base64StringToCollectedClientDataConverterTest {
 
     @Test
     public void convert_test() {
-        CollectedClientData expected = TestUtil.createClientData(ClientDataType.GET);
+        CollectedClientData expected = TestDataUtil.createClientData(ClientDataType.GET);
         String source = new CollectedClientDataConverter(jsonConverter).convertToBase64UrlString(expected);
 
         CollectedClientData result = new Base64StringToCollectedClientDataConverter(jsonConverter).convert(source);
