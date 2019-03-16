@@ -17,6 +17,7 @@
 package net.sharplab.springframework.security.webauthn.config.configurers;
 
 import com.webauthn4j.converter.util.JsonConverter;
+import com.webauthn4j.metadata.converter.jackson.WebAuthnMetadataJSONModule;
 import net.sharplab.springframework.security.webauthn.WebAuthnRegistrationRequestValidator;
 import net.sharplab.springframework.security.webauthn.challenge.ChallengeRepository;
 import net.sharplab.springframework.security.webauthn.challenge.HttpSessionChallengeRepository;
@@ -64,6 +65,7 @@ public class WebAuthnConfigurerUtil {
         String[] beanNames = applicationContext.getBeanNamesForType(JsonConverter.class);
         if (beanNames.length == 0) {
             jsonConverter = new JsonConverter();
+            jsonConverter.getJsonMapper().registerModule(new WebAuthnMetadataJSONModule());
         } else {
             jsonConverter = applicationContext.getBean(JsonConverter.class);
         }

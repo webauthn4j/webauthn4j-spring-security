@@ -17,8 +17,8 @@
 package net.sharplab.springframework.security.webauthn.authenticator;
 
 import com.webauthn4j.authenticator.AuthenticatorImpl;
-import com.webauthn4j.response.attestation.authenticator.AttestedCredentialData;
-import com.webauthn4j.response.attestation.statement.AttestationStatement;
+import com.webauthn4j.data.attestation.authenticator.AttestedCredentialData;
+import com.webauthn4j.data.attestation.statement.AttestationStatement;
 
 import java.util.Objects;
 

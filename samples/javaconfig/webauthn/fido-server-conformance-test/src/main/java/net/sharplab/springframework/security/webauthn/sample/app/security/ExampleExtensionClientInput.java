@@ -16,8 +16,8 @@
 
 package net.sharplab.springframework.security.webauthn.sample.app.security;
 
-import com.webauthn4j.request.extension.AbstractExtensionInput;
-import com.webauthn4j.request.extension.client.AuthenticationExtensionClientInput;
+import com.webauthn4j.data.extension.AbstractExtensionInput;
+import com.webauthn4j.data.extension.client.AuthenticationExtensionClientInput;
 
 public class ExampleExtensionClientInput extends AbstractExtensionInput<String> implements AuthenticationExtensionClientInput<String> {
 

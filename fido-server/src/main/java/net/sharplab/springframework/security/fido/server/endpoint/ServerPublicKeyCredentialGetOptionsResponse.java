@@ -16,8 +16,8 @@
 
 package net.sharplab.springframework.security.fido.server.endpoint;
 
-import com.webauthn4j.request.UserVerificationRequirement;
-import com.webauthn4j.request.extension.client.AuthenticationExtensionsClientInputs;
+import com.webauthn4j.data.UserVerificationRequirement;
+import com.webauthn4j.data.extension.client.AuthenticationExtensionsClientInputs;
 
 import java.math.BigInteger;
 import java.util.List;

@@ -21,7 +21,7 @@ import com.webauthn4j.metadata.MetadataItemsProvider;
 import com.webauthn4j.metadata.data.MetadataItem;
 import com.webauthn4j.metadata.data.MetadataItemImpl;
 import com.webauthn4j.metadata.data.statement.MetadataStatement;
-import com.webauthn4j.response.attestation.authenticator.AAGUID;
+import com.webauthn4j.data.attestation.authenticator.AAGUID;
 import com.webauthn4j.util.AssertUtil;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.core.io.Resource;
@@ -77,7 +77,7 @@ public class JsonFileResourceMetadataItemListProvider implements MetadataItemsPr
     private AAGUID extractAAGUID(MetadataStatement metadataStatement){
         switch (metadataStatement.getProtocolFamily()){
             case "fido2":
-                return new AAGUID(metadataStatement.getAaguid());
+                return metadataStatement.getAaguid();
             case "u2f":
                 return AAGUID.ZERO;
             case "uaf":

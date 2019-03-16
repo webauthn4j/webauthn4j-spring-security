@@ -18,7 +18,7 @@ package net.sharplab.springframework.security.webauthn.endpoint;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.webauthn4j.request.PublicKeyCredentialType;
+import com.webauthn4j.data.PublicKeyCredentialType;
 
 import java.io.Serializable;
 import java.util.Objects;

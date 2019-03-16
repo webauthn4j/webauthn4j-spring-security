@@ -17,7 +17,7 @@
 package net.sharplab.springframework.security.webauthn.endpoint;
 
 
-import com.webauthn4j.request.PublicKeyCredentialType;
+import com.webauthn4j.data.PublicKeyCredentialType;
 import org.junit.Test;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;

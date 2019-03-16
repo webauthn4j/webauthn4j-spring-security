@@ -17,8 +17,8 @@
 package net.sharplab.springframework.security.fido.server.endpoint;
 
 import com.webauthn4j.converter.util.JsonConverter;
-import com.webauthn4j.response.client.challenge.Challenge;
-import com.webauthn4j.response.client.challenge.DefaultChallenge;
+import com.webauthn4j.data.client.challenge.Challenge;
+import com.webauthn4j.data.client.challenge.DefaultChallenge;
 import com.webauthn4j.util.Base64UrlUtil;
 import net.sharplab.springframework.security.webauthn.options.AttestationOptions;
 import net.sharplab.springframework.security.webauthn.options.OptionsProvider;

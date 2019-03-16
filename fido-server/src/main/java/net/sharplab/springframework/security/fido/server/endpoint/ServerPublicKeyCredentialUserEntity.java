@@ -16,7 +16,7 @@
 
 package net.sharplab.springframework.security.fido.server.endpoint;
 
-import com.webauthn4j.request.PublicKeyCredentialEntity;
+import com.webauthn4j.data.PublicKeyCredentialEntity;
 
 import java.util.Objects;
 

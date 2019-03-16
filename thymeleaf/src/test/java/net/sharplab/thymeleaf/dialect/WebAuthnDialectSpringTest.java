@@ -16,8 +16,8 @@
 
 package net.sharplab.thymeleaf.dialect;
 
-import com.webauthn4j.response.client.challenge.Challenge;
-import com.webauthn4j.response.client.challenge.DefaultChallenge;
+import com.webauthn4j.data.client.challenge.Challenge;
+import com.webauthn4j.data.client.challenge.DefaultChallenge;
 import net.sharplab.springframework.security.webauthn.challenge.ChallengeRepository;
 import org.junit.Test;
 import org.thymeleaf.testing.templateengine.context.web.SpringWebProcessingContextBuilder;

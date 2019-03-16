@@ -16,8 +16,8 @@
 
 package net.sharplab.springframework.security.fido.server.endpoint;
 
-import com.webauthn4j.request.AuthenticatorTransport;
-import com.webauthn4j.request.PublicKeyCredentialType;
+import com.webauthn4j.data.AuthenticatorTransport;
+import com.webauthn4j.data.PublicKeyCredentialType;
 
 import java.io.Serializable;
 import java.util.List;

@@ -18,8 +18,8 @@ package net.sharplab.springframework.security.webauthn.converter;
 
 import com.webauthn4j.converter.CollectedClientDataConverter;
 import com.webauthn4j.converter.util.JsonConverter;
-import com.webauthn4j.response.client.ClientDataType;
-import com.webauthn4j.response.client.CollectedClientData;
+import com.webauthn4j.data.client.ClientDataType;
+import com.webauthn4j.data.client.CollectedClientData;
 import com.webauthn4j.test.TestDataUtil;
 import org.junit.Test;
 

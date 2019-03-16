@@ -17,9 +17,9 @@
 package net.sharplab.springframework.security.webauthn.sample.domain.entity;
 
 import com.webauthn4j.authenticator.Authenticator;
-import com.webauthn4j.request.AuthenticatorTransport;
-import com.webauthn4j.response.attestation.authenticator.AttestedCredentialData;
-import com.webauthn4j.response.attestation.statement.AttestationStatement;
+import com.webauthn4j.data.AuthenticatorTransport;
+import com.webauthn4j.data.attestation.authenticator.AttestedCredentialData;
+import com.webauthn4j.data.attestation.statement.AttestationStatement;
 import net.sharplab.springframework.security.webauthn.sample.infrastructure.util.jpa.converter.AttestationStatementConverter;
 import net.sharplab.springframework.security.webauthn.sample.infrastructure.util.jpa.converter.AuthenticatorTransportConverter;
 

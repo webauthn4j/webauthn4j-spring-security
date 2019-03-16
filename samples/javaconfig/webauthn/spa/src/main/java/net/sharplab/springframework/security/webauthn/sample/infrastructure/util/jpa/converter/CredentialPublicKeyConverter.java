@@ -17,7 +17,7 @@
 package net.sharplab.springframework.security.webauthn.sample.infrastructure.util.jpa.converter;
 
 import com.webauthn4j.converter.util.CborConverter;
-import com.webauthn4j.response.attestation.authenticator.CredentialPublicKey;
+import com.webauthn4j.data.attestation.authenticator.CredentialPublicKey;
 import com.webauthn4j.util.Base64UrlUtil;
 
 import javax.persistence.AttributeConverter;

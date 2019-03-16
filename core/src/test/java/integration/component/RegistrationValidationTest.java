@@ -16,12 +16,12 @@
 
 package integration.component;
 
-import com.webauthn4j.request.*;
-import com.webauthn4j.response.AuthenticatorAttestationResponse;
-import com.webauthn4j.response.attestation.statement.COSEAlgorithmIdentifier;
-import com.webauthn4j.response.client.Origin;
-import com.webauthn4j.response.client.challenge.Challenge;
-import com.webauthn4j.response.client.challenge.DefaultChallenge;
+import com.webauthn4j.data.*;
+import com.webauthn4j.data.AuthenticatorAttestationResponse;
+import com.webauthn4j.data.attestation.statement.COSEAlgorithmIdentifier;
+import com.webauthn4j.data.client.Origin;
+import com.webauthn4j.data.client.challenge.Challenge;
+import com.webauthn4j.data.client.challenge.DefaultChallenge;
 import com.webauthn4j.server.ServerProperty;
 import com.webauthn4j.test.authenticator.webauthn.WebAuthnAuthenticatorAdaptor;
 import com.webauthn4j.test.client.ClientPlatform;

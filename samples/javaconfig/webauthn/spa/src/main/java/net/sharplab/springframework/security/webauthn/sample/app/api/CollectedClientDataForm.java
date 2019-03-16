@@ -17,7 +17,7 @@
 package net.sharplab.springframework.security.webauthn.sample.app.api;
 
 
-import com.webauthn4j.response.client.CollectedClientData;
+import com.webauthn4j.data.client.CollectedClientData;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;

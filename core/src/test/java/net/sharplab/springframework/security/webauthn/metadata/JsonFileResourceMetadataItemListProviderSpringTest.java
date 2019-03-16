@@ -17,6 +17,7 @@
 package net.sharplab.springframework.security.webauthn.metadata;
 
 import com.webauthn4j.converter.util.JsonConverter;
+import com.webauthn4j.metadata.converter.jackson.WebAuthnMetadataJSONModule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,7 +43,12 @@ public class JsonFileResourceMetadataItemListProviderSpringTest {
     @Configuration
     public static class Config{
 
-        private JsonConverter jsonConverter = new JsonConverter();
+        private JsonConverter jsonConverter;
+
+        public Config(){
+            jsonConverter = new JsonConverter();
+            jsonConverter.getJsonMapper().registerModule(new WebAuthnMetadataJSONModule());
+        }
 
         @Bean
         public JsonFileResourceMetadataItemListProvider jsonFileResourceMetadataItemListProvider(ResourceLoader resourceLoader) throws IOException {

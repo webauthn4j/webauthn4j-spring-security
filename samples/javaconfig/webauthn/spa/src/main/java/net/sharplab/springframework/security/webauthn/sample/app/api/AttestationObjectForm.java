@@ -17,7 +17,7 @@
 package net.sharplab.springframework.security.webauthn.sample.app.api;
 
 
-import com.webauthn4j.response.attestation.AttestationObject;
+import com.webauthn4j.data.attestation.AttestationObject;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;

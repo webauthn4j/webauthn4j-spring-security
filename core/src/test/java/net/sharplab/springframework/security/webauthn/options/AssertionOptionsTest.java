@@ -16,9 +16,9 @@
 
 package net.sharplab.springframework.security.webauthn.options;
 
-import com.webauthn4j.request.extension.client.AuthenticationExtensionsClientInputs;
-import com.webauthn4j.response.client.challenge.Challenge;
-import com.webauthn4j.response.client.challenge.DefaultChallenge;
+import com.webauthn4j.data.extension.client.AuthenticationExtensionsClientInputs;
+import com.webauthn4j.data.client.challenge.Challenge;
+import com.webauthn4j.data.client.challenge.DefaultChallenge;
 import net.sharplab.springframework.security.webauthn.endpoint.Parameters;
 import org.junit.Test;
 

@@ -18,7 +18,7 @@ package net.sharplab.springframework.security.webauthn.converter;
 
 import com.webauthn4j.converter.AttestationObjectConverter;
 import com.webauthn4j.converter.util.CborConverter;
-import com.webauthn4j.response.attestation.AttestationObject;
+import com.webauthn4j.data.attestation.AttestationObject;
 import com.webauthn4j.test.TestDataUtil;
 import org.junit.Test;
 

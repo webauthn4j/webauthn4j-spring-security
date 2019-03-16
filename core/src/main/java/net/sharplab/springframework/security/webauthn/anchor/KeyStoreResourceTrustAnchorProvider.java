@@ -18,7 +18,7 @@ package net.sharplab.springframework.security.webauthn.anchor;
 
 import com.webauthn4j.anchor.CachingTrustAnchorsProviderBase;
 import com.webauthn4j.anchor.KeyStoreException;
-import com.webauthn4j.response.attestation.authenticator.AAGUID;
+import com.webauthn4j.data.attestation.authenticator.AAGUID;
 import com.webauthn4j.util.AssertUtil;
 import com.webauthn4j.util.CertificateUtil;
 import org.springframework.beans.factory.InitializingBean;

@@ -16,10 +16,10 @@
 
 package net.sharplab.springframework.security.webauthn;
 
-import com.webauthn4j.response.WebAuthnRegistrationContext;
-import com.webauthn4j.response.attestation.AttestationObject;
-import com.webauthn4j.response.client.CollectedClientData;
-import com.webauthn4j.response.extension.client.AuthenticationExtensionsClientOutputs;
+import com.webauthn4j.data.WebAuthnRegistrationContext;
+import com.webauthn4j.data.attestation.AttestationObject;
+import com.webauthn4j.data.client.CollectedClientData;
+import com.webauthn4j.data.extension.client.AuthenticationExtensionsClientOutputs;
 import com.webauthn4j.server.ServerProperty;
 import com.webauthn4j.util.Base64UrlUtil;
 import com.webauthn4j.validator.WebAuthnRegistrationContextValidationResponse;

@@ -16,7 +16,7 @@
 
 package net.sharplab.springframework.security.webauthn.anchor;
 
-import com.webauthn4j.response.attestation.authenticator.AAGUID;
+import com.webauthn4j.data.attestation.authenticator.AAGUID;
 import org.junit.Test;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;

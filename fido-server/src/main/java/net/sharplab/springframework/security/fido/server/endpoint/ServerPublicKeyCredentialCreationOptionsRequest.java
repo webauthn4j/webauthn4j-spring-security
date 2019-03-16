@@ -16,8 +16,8 @@
 
 package net.sharplab.springframework.security.fido.server.endpoint;
 
-import com.webauthn4j.request.AttestationConveyancePreference;
-import com.webauthn4j.request.AuthenticatorSelectionCriteria;
+import com.webauthn4j.data.AttestationConveyancePreference;
+import com.webauthn4j.data.AuthenticatorSelectionCriteria;
 
 public class ServerPublicKeyCredentialCreationOptionsRequest implements ServerRequest {
 

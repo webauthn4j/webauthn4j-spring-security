@@ -17,7 +17,7 @@
 package net.sharplab.springframework.security.webauthn.util;
 
 
-import com.webauthn4j.response.client.Origin;
+import com.webauthn4j.data.client.Origin;
 
 import javax.servlet.http.HttpServletRequest;
 

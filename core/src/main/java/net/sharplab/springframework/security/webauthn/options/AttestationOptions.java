@@ -17,11 +17,11 @@
 package net.sharplab.springframework.security.webauthn.options;
 
 
-import com.webauthn4j.request.PublicKeyCredentialParameters;
-import com.webauthn4j.request.PublicKeyCredentialRpEntity;
-import com.webauthn4j.request.PublicKeyCredentialUserEntity;
-import com.webauthn4j.request.extension.client.AuthenticationExtensionsClientInputs;
-import com.webauthn4j.response.client.challenge.Challenge;
+import com.webauthn4j.data.PublicKeyCredentialParameters;
+import com.webauthn4j.data.PublicKeyCredentialRpEntity;
+import com.webauthn4j.data.PublicKeyCredentialUserEntity;
+import com.webauthn4j.data.extension.client.AuthenticationExtensionsClientInputs;
+import com.webauthn4j.data.client.challenge.Challenge;
 import net.sharplab.springframework.security.webauthn.endpoint.WebAuthnPublicKeyCredentialUserEntity;
 
 import java.io.Serializable;

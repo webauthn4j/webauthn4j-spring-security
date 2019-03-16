@@ -16,7 +16,7 @@
 
 package net.sharplab.springframework.security.webauthn.sample.infrastructure.util.jpa.converter;
 
-import com.webauthn4j.request.AuthenticatorTransport;
+import com.webauthn4j.data.AuthenticatorTransport;
 
 import javax.persistence.AttributeConverter;
 
