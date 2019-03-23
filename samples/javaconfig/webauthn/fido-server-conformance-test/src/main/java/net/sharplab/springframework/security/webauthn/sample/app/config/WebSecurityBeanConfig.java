@@ -17,10 +17,14 @@
 package net.sharplab.springframework.security.webauthn.sample.app.config;
 
 import com.fasterxml.jackson.databind.jsontype.NamedType;
+import com.webauthn4j.anchor.TrustAnchorsProvider;
+import com.webauthn4j.anchor.TrustAnchorsResolver;
+import com.webauthn4j.anchor.TrustAnchorsResolverImpl;
 import com.webauthn4j.converter.util.CborConverter;
 import com.webauthn4j.converter.util.JsonConverter;
 import com.webauthn4j.metadata.*;
 import com.webauthn4j.metadata.converter.jackson.WebAuthnMetadataJSONModule;
+import com.webauthn4j.metadata.data.FidoMdsMetadataItem;
 import com.webauthn4j.metadata.data.MetadataItem;
 import com.webauthn4j.util.Base64Util;
 import com.webauthn4j.util.CertificateUtil;
@@ -33,6 +37,7 @@ import com.webauthn4j.validator.attestation.statement.packed.PackedAttestationSt
 import com.webauthn4j.validator.attestation.statement.tpm.TPMAttestationStatementValidator;
 import com.webauthn4j.validator.attestation.statement.u2f.FIDOU2FAttestationStatementValidator;
 import com.webauthn4j.validator.attestation.trustworthiness.certpath.CertPathTrustworthinessValidator;
+import com.webauthn4j.validator.attestation.trustworthiness.certpath.TrustAnchorCertPathTrustworthinessValidator;
 import com.webauthn4j.validator.attestation.trustworthiness.ecdaa.DefaultECDAATrustworthinessValidator;
 import com.webauthn4j.validator.attestation.trustworthiness.self.DefaultSelfAttestationTrustworthinessValidator;
 import net.sharplab.springframework.security.webauthn.WebAuthnRegistrationRequestValidator;
@@ -135,10 +140,20 @@ public class WebSecurityBeanConfig {
     }
 
     @Bean
-    public CertPathTrustworthinessValidator certPathTrustworthinessValidator(MetadataItemsResolver<MetadataItem> metadataItemsResolver){
-        MetadataItemsCertPathTrustworthinessValidator<MetadataItem> metadataCertPathTrustworthinessValidator = new MetadataItemsCertPathTrustworthinessValidator<>(metadataItemsResolver);
-        metadataCertPathTrustworthinessValidator.setFullChainProhibited(true);
-        return metadataCertPathTrustworthinessValidator;
+    public CertPathTrustworthinessValidator certPathTrustworthinessValidator(TrustAnchorsResolver trustAnchorsResolver){
+        TrustAnchorCertPathTrustworthinessValidator trustAnchorCertPathTrustworthinessValidator = new TrustAnchorCertPathTrustworthinessValidator(trustAnchorsResolver);
+        trustAnchorCertPathTrustworthinessValidator.setFullChainProhibited(true);
+        return trustAnchorCertPathTrustworthinessValidator;
+    }
+
+    @Bean
+    public TrustAnchorsResolver trustAnchorsResolver(TrustAnchorsProvider trustAnchorsProvider){
+        return new TrustAnchorsResolverImpl(trustAnchorsProvider);
+    }
+
+    @Bean
+    public TrustAnchorsProvider trustAnchorsProvider(MetadataItemsProvider<MetadataItem> metadataItemsProvider){
+        return new FidoMdsTrustAnchorsProviderAdaptor(metadataItemsProvider);
     }
 
     @Bean
