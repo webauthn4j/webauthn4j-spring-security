@@ -48,12 +48,10 @@ class ServerEndpointFilterUtil {
         if (e instanceof InsufficientAuthenticationException) {
             errorResponse = new ErrorResponse("Anonymous access is prohibited");
             statusCode = HttpServletResponse.SC_FORBIDDEN;
-        }
-        else if(e instanceof AuthenticationException || e instanceof IllegalArgumentException){
+        } else if (e instanceof AuthenticationException || e instanceof IllegalArgumentException) {
             errorResponse = new ErrorResponse("Authentication failed");
             statusCode = HttpServletResponse.SC_FORBIDDEN;
-        }
-        else {
+        } else {
             errorResponse = new ErrorResponse("The server encountered an internal error");
             statusCode = HttpServletResponse.SC_INTERNAL_SERVER_ERROR;
         }

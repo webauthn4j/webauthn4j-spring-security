@@ -49,7 +49,8 @@ public class FidoServerAttestationResultEndpointFilter extends ServerEndpointFil
 
     private UsernameNotFoundHandler usernameNotFoundHandler = new DefaultUsernameNotFoundHandler();
     private TypeReference<ServerPublicKeyCredential<ServerAuthenticatorAttestationResponse>> credentialTypeRef
-                = new TypeReference<ServerPublicKeyCredential<ServerAuthenticatorAttestationResponse>>() {};
+            = new TypeReference<ServerPublicKeyCredential<ServerAuthenticatorAttestationResponse>>() {
+    };
 
     public FidoServerAttestationResultEndpointFilter(
             JsonConverter jsonConverter,
@@ -66,13 +67,13 @@ public class FidoServerAttestationResultEndpointFilter extends ServerEndpointFil
     }
 
     @Override
-    public void afterPropertiesSet(){
+    public void afterPropertiesSet() {
         super.afterPropertiesSet();
         checkConfig();
     }
 
     @SuppressWarnings("squid:S2177")
-    private void checkConfig(){
+    private void checkConfig() {
         Assert.notNull(webAuthnUserDetailsService, "webAuthnUserDetailsService must not be null");
         Assert.notNull(webAuthnRegistrationRequestValidator, "webAuthnRegistrationRequestValidator must not be null");
     }
@@ -82,8 +83,7 @@ public class FidoServerAttestationResultEndpointFilter extends ServerEndpointFil
         InputStream inputStream;
         try {
             inputStream = request.getInputStream();
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             throw new UncheckedIOException(e);
         }
         ServerPublicKeyCredential<ServerAuthenticatorAttestationResponse> credential =

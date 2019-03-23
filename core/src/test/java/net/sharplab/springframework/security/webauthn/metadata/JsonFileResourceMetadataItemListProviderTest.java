@@ -27,7 +27,7 @@ public class JsonFileResourceMetadataItemListProviderTest {
     private JsonFileResourceMetadataItemListProvider target = new JsonFileResourceMetadataItemListProvider(jsonConverter);
 
     @Test(expected = IllegalArgumentException.class)
-    public void resources_not_configured_test(){
+    public void resources_not_configured_test() {
         target.provide();
     }
 

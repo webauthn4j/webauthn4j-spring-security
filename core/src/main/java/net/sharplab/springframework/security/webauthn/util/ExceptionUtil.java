@@ -21,7 +21,8 @@ import org.springframework.security.authentication.AuthenticationServiceExceptio
 
 public class ExceptionUtil {
 
-    private ExceptionUtil(){}
+    private ExceptionUtil() {
+    }
 
     @SuppressWarnings("squid:S3776")
     public static RuntimeException wrapWithAuthenticationException(RuntimeException e) {
@@ -59,7 +60,7 @@ public class ExceptionUtil {
             return new UserNotVerifiedException("User not verified", e);
         } else if (e instanceof com.webauthn4j.validator.exception.ValidationException) {
             return new AuthenticationServiceException("WebAuthn validation error", e);
-        } else if(e instanceof com.webauthn4j.converter.exception.DataConversionException){
+        } else if (e instanceof com.webauthn4j.converter.exception.DataConversionException) {
             return new DataConversionException("Input data cannot be parsed", e);
         }
         return e;

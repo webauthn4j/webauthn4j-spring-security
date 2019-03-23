@@ -24,7 +24,6 @@ import com.webauthn4j.converter.util.CborConverter;
 import com.webauthn4j.converter.util.JsonConverter;
 import com.webauthn4j.metadata.*;
 import com.webauthn4j.metadata.converter.jackson.WebAuthnMetadataJSONModule;
-import com.webauthn4j.metadata.data.FidoMdsMetadataItem;
 import com.webauthn4j.metadata.data.MetadataItem;
 import com.webauthn4j.util.Base64Util;
 import com.webauthn4j.util.CertificateUtil;

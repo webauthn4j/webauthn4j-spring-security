@@ -24,7 +24,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class WebAuthnPublicKeyCredentialUserEntityTest {
 
     @Test
-    public void equals_hashCode_test(){
+    public void equals_hashCode_test() {
         WebAuthnPublicKeyCredentialUserEntity instanceA = new WebAuthnPublicKeyCredentialUserEntity("", "john");
         WebAuthnPublicKeyCredentialUserEntity instanceB = new WebAuthnPublicKeyCredentialUserEntity("", "john");
 

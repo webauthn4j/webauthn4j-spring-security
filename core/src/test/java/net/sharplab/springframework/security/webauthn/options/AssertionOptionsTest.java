@@ -16,9 +16,9 @@
 
 package net.sharplab.springframework.security.webauthn.options;
 
-import com.webauthn4j.data.extension.client.AuthenticationExtensionsClientInputs;
 import com.webauthn4j.data.client.challenge.Challenge;
 import com.webauthn4j.data.client.challenge.DefaultChallenge;
+import com.webauthn4j.data.extension.client.AuthenticationExtensionsClientInputs;
 import net.sharplab.springframework.security.webauthn.endpoint.Parameters;
 import org.junit.Test;
 
@@ -31,7 +31,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class AssertionOptionsTest {
 
     @Test
-    public void equals_hashCode_test(){
+    public void equals_hashCode_test() {
         Challenge challenge = new DefaultChallenge();
         BigInteger authenticationTimeout = BigInteger.valueOf(1000);
         String rpId = "localhost";
@@ -53,7 +53,7 @@ public class AssertionOptionsTest {
     }
 
     @Test
-    public void getter_test(){
+    public void getter_test() {
         Challenge challenge = new DefaultChallenge();
         BigInteger authenticationTimeout = BigInteger.valueOf(1000);
         String rpId = "localhost";

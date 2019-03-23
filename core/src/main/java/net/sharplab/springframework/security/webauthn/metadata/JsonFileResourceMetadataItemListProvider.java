@@ -17,11 +17,11 @@
 package net.sharplab.springframework.security.webauthn.metadata;
 
 import com.webauthn4j.converter.util.JsonConverter;
+import com.webauthn4j.data.attestation.authenticator.AAGUID;
 import com.webauthn4j.metadata.MetadataItemsProvider;
 import com.webauthn4j.metadata.data.MetadataItem;
 import com.webauthn4j.metadata.data.MetadataItemImpl;
 import com.webauthn4j.metadata.data.statement.MetadataStatement;
-import com.webauthn4j.data.attestation.authenticator.AAGUID;
 import com.webauthn4j.util.AssertUtil;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.core.io.Resource;
@@ -54,7 +54,7 @@ public class JsonFileResourceMetadataItemListProvider implements MetadataItemsPr
     @Override
     public Map<AAGUID, Set<MetadataItem>> provide() {
         checkConfig();
-        if(cachedMetadataItems == null){
+        if (cachedMetadataItems == null) {
             cachedMetadataItems =
                     resources.stream()
                             .map(item -> new MetadataItemImpl(readJsonFile(item)))
@@ -74,8 +74,8 @@ public class JsonFileResourceMetadataItemListProvider implements MetadataItemsPr
         this.resources = resources;
     }
 
-    private AAGUID extractAAGUID(MetadataStatement metadataStatement){
-        switch (metadataStatement.getProtocolFamily()){
+    private AAGUID extractAAGUID(MetadataStatement metadataStatement) {
+        switch (metadataStatement.getProtocolFamily()) {
             case "fido2":
                 return metadataStatement.getAaguid();
             case "u2f":

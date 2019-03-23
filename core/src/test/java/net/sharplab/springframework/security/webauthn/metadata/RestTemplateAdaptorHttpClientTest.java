@@ -26,7 +26,7 @@ import static org.mockito.Mockito.*;
 public class RestTemplateAdaptorHttpClientTest {
 
     @Test
-    public void fetch_test(){
+    public void fetch_test() {
         String url = "https://example.com/webauthn/options";
         RestTemplate restTemplate = mock(RestTemplate.class);
         when(restTemplate.getForObject(eq(url), eq(String.class))).thenReturn("response");

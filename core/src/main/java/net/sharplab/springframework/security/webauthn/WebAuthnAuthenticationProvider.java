@@ -136,7 +136,7 @@ public class WebAuthnAuthenticationProvider implements AuthenticationProvider {
         boolean userVerificationRequired = credentials.isUserVerificationRequired();
 
         Authentication currentAuthentication = SecurityContextHolder.getContext().getAuthentication();
-        if(currentAuthentication != null && currentAuthentication.isAuthenticated() && Objects.equals(currentAuthentication.getName(), user.getUsername())){
+        if (currentAuthentication != null && currentAuthentication.isAuthenticated() && Objects.equals(currentAuthentication.getName(), user.getUsername())) {
             userVerificationRequired = false;
         }
 

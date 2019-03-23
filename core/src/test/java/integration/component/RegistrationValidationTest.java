@@ -17,7 +17,6 @@
 package integration.component;
 
 import com.webauthn4j.data.*;
-import com.webauthn4j.data.AuthenticatorAttestationResponse;
 import com.webauthn4j.data.attestation.statement.COSEAlgorithmIdentifier;
 import com.webauthn4j.data.client.Origin;
 import com.webauthn4j.data.client.challenge.Challenge;

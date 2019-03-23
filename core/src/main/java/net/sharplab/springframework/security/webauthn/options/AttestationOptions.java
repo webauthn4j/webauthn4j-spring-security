@@ -20,8 +20,8 @@ package net.sharplab.springframework.security.webauthn.options;
 import com.webauthn4j.data.PublicKeyCredentialParameters;
 import com.webauthn4j.data.PublicKeyCredentialRpEntity;
 import com.webauthn4j.data.PublicKeyCredentialUserEntity;
-import com.webauthn4j.data.extension.client.AuthenticationExtensionsClientInputs;
 import com.webauthn4j.data.client.challenge.Challenge;
+import com.webauthn4j.data.extension.client.AuthenticationExtensionsClientInputs;
 import net.sharplab.springframework.security.webauthn.endpoint.WebAuthnPublicKeyCredentialUserEntity;
 
 import java.io.Serializable;
@@ -59,6 +59,7 @@ public class AttestationOptions implements Serializable {
 
     /**
      * Returns PublicKeyCredentialRpEntity
+     *
      * @return PublicKeyCredentialRpEntity
      */
     public PublicKeyCredentialRpEntity getRelyingParty() {
@@ -68,6 +69,7 @@ public class AttestationOptions implements Serializable {
     /**
      * If authenticated, returns {@link WebAuthnPublicKeyCredentialUserEntity}, which is a serialized form of {@link PublicKeyCredentialUserEntity}
      * Otherwise returns null
+     *
      * @return {@link WebAuthnPublicKeyCredentialUserEntity}
      */
     public WebAuthnPublicKeyCredentialUserEntity getUser() {
@@ -76,6 +78,7 @@ public class AttestationOptions implements Serializable {
 
     /**
      * Returns {@link Challenge}
+     *
      * @return {@link Challenge}
      */
     public Challenge getChallenge() {

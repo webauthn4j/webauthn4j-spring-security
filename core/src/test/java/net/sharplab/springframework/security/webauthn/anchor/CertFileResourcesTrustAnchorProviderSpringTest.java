@@ -18,7 +18,6 @@ package net.sharplab.springframework.security.webauthn.anchor;
 
 import com.webauthn4j.data.attestation.authenticator.AAGUID;
 import com.webauthn4j.test.TestAttestationUtil;
-import com.webauthn4j.test.TestDataUtil;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,24 +38,24 @@ public class CertFileResourcesTrustAnchorProviderSpringTest {
     @Autowired
     private CertFileResourcesTrustAnchorProvider target;
 
+    @Test
+    public void loadTrustAnchors_test() {
+        assertThat(target.loadTrustAnchors().get(AAGUID.NULL)).isNotNull();
+    }
+
+    @Test
+    public void getCertificates_test() {
+        assertThat(target.getCertificates()).isNotNull();
+    }
+
     @Configuration
-    public static class config{
+    public static class config {
 
         @Bean
         public CertFileResourcesTrustAnchorProvider certFileResourcesTrustAnchorProvider() throws CertificateEncodingException {
             Resource x509Resource = new ByteArrayResource(TestAttestationUtil.load2tierTestAuthenticatorAttestationCertificate().getEncoded());
             return new CertFileResourcesTrustAnchorProvider(Collections.singletonList(x509Resource));
         }
-    }
-
-    @Test
-    public void loadTrustAnchors_test(){
-        assertThat(target.loadTrustAnchors().get(AAGUID.NULL)).isNotNull();
-    }
-
-    @Test
-    public void getCertificates_test(){
-        assertThat(target.getCertificates()).isNotNull();
     }
 
 }

@@ -21,7 +21,8 @@ import net.sharplab.springframework.security.webauthn.exception.ConstraintViolat
 
 public class BeanAssertUtil {
 
-    private BeanAssertUtil(){}
+    private BeanAssertUtil() {
+    }
 
     public static void validate(ServerPublicKeyCredential serverPublicKeyCredential) {
 

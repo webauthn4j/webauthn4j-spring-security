@@ -23,13 +23,13 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class ErrorResponseTest {
 
     @Test
-    public void constructor_test(){
+    public void constructor_test() {
         ErrorResponse errorResponse = new ErrorResponse("message");
         assertThat(errorResponse.getErrorMessage()).isEqualTo("message");
     }
 
     @Test
-    public void equals_hashCode_test(){
+    public void equals_hashCode_test() {
         ErrorResponse instanceA = new ErrorResponse("message");
         ErrorResponse instanceB = new ErrorResponse("message");
 

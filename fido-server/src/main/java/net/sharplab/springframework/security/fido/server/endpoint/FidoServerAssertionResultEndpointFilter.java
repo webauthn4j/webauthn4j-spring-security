@@ -48,7 +48,8 @@ public class FidoServerAssertionResultEndpointFilter extends AbstractAuthenticat
     private ServerPropertyProvider serverPropertyProvider;
     private ServerPublicKeyCredentialValidator<ServerAuthenticatorAssertionResponse> serverPublicKeyCredentialValidator;
     private TypeReference<ServerPublicKeyCredential<ServerAuthenticatorAssertionResponse>> credentialTypeRef
-             = new TypeReference<ServerPublicKeyCredential<ServerAuthenticatorAssertionResponse>>() {};
+            = new TypeReference<ServerPublicKeyCredential<ServerAuthenticatorAssertionResponse>>() {
+    };
 
     public FidoServerAssertionResultEndpointFilter(
             JsonConverter jsonConverter,
@@ -74,13 +75,13 @@ public class FidoServerAssertionResultEndpointFilter extends AbstractAuthenticat
     }
 
     @Override
-    public void afterPropertiesSet(){
+    public void afterPropertiesSet() {
         super.afterPropertiesSet();
         checkConfig();
     }
 
     @SuppressWarnings("squid:S2177")
-    private void checkConfig(){
+    private void checkConfig() {
         Assert.notNull(serverPropertyProvider, "serverPropertyProvider must not be null");
     }
 
@@ -89,8 +90,7 @@ public class FidoServerAssertionResultEndpointFilter extends AbstractAuthenticat
         InputStream inputStream;
         try {
             inputStream = request.getInputStream();
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             throw new UncheckedIOException(e);
         }
         ServerPublicKeyCredential<ServerAuthenticatorAssertionResponse> credential =

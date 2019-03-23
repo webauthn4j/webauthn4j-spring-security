@@ -32,7 +32,7 @@ public class ServerPublicKeyCredential<T extends ServerAuthenticatorResponse> {
             String id, String rawId, PublicKeyCredentialType type, T response,
             String clientExtensionResults) {
         this.id = id;
-        this.rawId =rawId;
+        this.rawId = rawId;
         this.type = type;
         this.response = response;
         this.clientExtensionResults = clientExtensionResults;

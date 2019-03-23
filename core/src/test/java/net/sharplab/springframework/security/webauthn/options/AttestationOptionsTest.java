@@ -19,10 +19,10 @@ package net.sharplab.springframework.security.webauthn.options;
 import com.webauthn4j.data.PublicKeyCredentialParameters;
 import com.webauthn4j.data.PublicKeyCredentialRpEntity;
 import com.webauthn4j.data.PublicKeyCredentialType;
-import com.webauthn4j.data.extension.client.AuthenticationExtensionsClientInputs;
 import com.webauthn4j.data.attestation.statement.COSEAlgorithmIdentifier;
 import com.webauthn4j.data.client.challenge.Challenge;
 import com.webauthn4j.data.client.challenge.DefaultChallenge;
+import com.webauthn4j.data.extension.client.AuthenticationExtensionsClientInputs;
 import com.webauthn4j.util.Base64UrlUtil;
 import net.sharplab.springframework.security.webauthn.endpoint.WebAuthnPublicKeyCredentialUserEntity;
 import org.junit.Test;
@@ -36,7 +36,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class AttestationOptionsTest {
 
     @Test
-    public void equals_hashCode_test(){
+    public void equals_hashCode_test() {
         PublicKeyCredentialRpEntity rpEntity = new PublicKeyCredentialRpEntity("rpId", "rpName", "rpIcon");
         WebAuthnPublicKeyCredentialUserEntity userEntity = new WebAuthnPublicKeyCredentialUserEntity(Base64UrlUtil.encodeToString("userHandle".getBytes()), "username");
         Challenge challenge = new DefaultChallenge();

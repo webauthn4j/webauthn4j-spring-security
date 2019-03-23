@@ -56,13 +56,13 @@ public class FidoServerAttestationOptionsEndpointFilter extends ServerEndpointFi
     }
 
     @Override
-    public void afterPropertiesSet(){
+    public void afterPropertiesSet() {
         super.afterPropertiesSet();
         checkConfig();
     }
 
     @SuppressWarnings("squid:S2177")
-    private void checkConfig(){
+    private void checkConfig() {
         Assert.notNull(optionsProvider, "optionsProvider must not be null");
     }
 

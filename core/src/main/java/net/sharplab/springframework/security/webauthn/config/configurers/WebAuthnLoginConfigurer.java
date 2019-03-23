@@ -195,7 +195,7 @@ public final class WebAuthnLoginConfigurer<H extends HttpSecurityBuilder<H>> ext
      * is "clientDataJSON".
      *
      * @param clientDataJSONParameter the HTTP parameter to look for the clientDataJSON when
-     *                            performing authentication
+     *                                performing authentication
      * @return the {@link WebAuthnLoginConfigurer} for additional customization
      */
     public WebAuthnLoginConfigurer<H> clientDataJSONParameter(String clientDataJSONParameter) {

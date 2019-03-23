@@ -40,12 +40,22 @@ public class JsonFileResourceMetadataItemListProviderSpringTest {
     @Autowired
     private JsonFileResourceMetadataItemListProvider target;
 
+    @Test
+    public void provide_test() {
+        assertThat(target.provide()).hasSize(19);
+    }
+
+    @Test
+    public void getter_test() {
+        assertThat(target.getResources()).hasSize(19);
+    }
+
     @Configuration
-    public static class Config{
+    public static class Config {
 
         private JsonConverter jsonConverter;
 
-        public Config(){
+        public Config() {
             jsonConverter = new JsonConverter();
             jsonConverter.getJsonMapper().registerModule(new WebAuthnMetadataJSONModule());
         }
@@ -57,16 +67,6 @@ public class JsonFileResourceMetadataItemListProviderSpringTest {
             provider.setResources(Arrays.asList(resources));
             return provider;
         }
-    }
-
-    @Test
-    public void provide_test(){
-        assertThat(target.provide()).hasSize(19);
-    }
-
-    @Test
-    public void getter_test(){
-        assertThat(target.getResources()).hasSize(19);
     }
 
 }

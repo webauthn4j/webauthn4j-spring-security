@@ -38,13 +38,13 @@ public abstract class ServerEndpointFilterBase extends GenericFilterBean {
 
     //~ Instance fields
     // ================================================================================================
+    protected MessageSourceAccessor messages = SpringSecurityMessageSource.getAccessor();
+    protected JsonConverter jsonConverter;
+    protected ServerEndpointFilterUtil serverEndpointFilterUtil;
     /**
      * Url this filter should get activated on.
      */
     private String filterProcessesUrl;
-    protected MessageSourceAccessor messages = SpringSecurityMessageSource.getAccessor();
-    protected JsonConverter jsonConverter;
-    protected ServerEndpointFilterUtil serverEndpointFilterUtil;
 
 
     public ServerEndpointFilterBase(
@@ -84,15 +84,13 @@ public abstract class ServerEndpointFilterBase extends GenericFilterBean {
                 return;
             }
 
-            try{
+            try {
                 ServerResponse serverResponse = processRequest(httpServletRequest);
                 serverEndpointFilterUtil.writeResponse(httpServletResponse, serverResponse);
-            }
-            catch (RuntimeException e){
+            } catch (RuntimeException e) {
                 throw ExceptionUtil.wrapWithAuthenticationException(e);
             }
-        }
-        catch (RuntimeException e) {
+        } catch (RuntimeException e) {
             logger.debug("RuntimeException is thrown", e);
             serverEndpointFilterUtil.writeErrorResponse(fi.getResponse(), e);
         }

@@ -25,14 +25,14 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 public class WebAuthnPublicKeyCredentialDescriptorTest {
 
     @Test
-    public void constructor_test(){
+    public void constructor_test() {
         WebAuthnPublicKeyCredentialDescriptor descriptor = new WebAuthnPublicKeyCredentialDescriptor(PublicKeyCredentialType.PUBLIC_KEY, "");
         assertThat(descriptor.getType()).isEqualTo(PublicKeyCredentialType.PUBLIC_KEY);
         assertThat(descriptor.getId()).isEqualTo("");
     }
 
     @Test
-    public void equals_hashCode_test(){
+    public void equals_hashCode_test() {
         WebAuthnPublicKeyCredentialDescriptor instanceA = new WebAuthnPublicKeyCredentialDescriptor(PublicKeyCredentialType.PUBLIC_KEY, "");
         WebAuthnPublicKeyCredentialDescriptor instanceB = new WebAuthnPublicKeyCredentialDescriptor(PublicKeyCredentialType.PUBLIC_KEY, "");
         assertThat(instanceA).isEqualTo(instanceB);

@@ -17,8 +17,8 @@
 package net.sharplab.springframework.security.fido.server.endpoint;
 
 import com.webauthn4j.converter.util.JsonConverter;
-import com.webauthn4j.data.extension.client.AuthenticationExtensionsClientInputs;
 import com.webauthn4j.data.client.challenge.DefaultChallenge;
+import com.webauthn4j.data.extension.client.AuthenticationExtensionsClientInputs;
 import com.webauthn4j.util.Base64UrlUtil;
 import net.sharplab.springframework.security.webauthn.options.AssertionOptions;
 import net.sharplab.springframework.security.webauthn.options.OptionsProvider;
@@ -54,13 +54,13 @@ public class FidoServerAssertionOptionsEndpointFilter extends ServerEndpointFilt
     }
 
     @Override
-    public void afterPropertiesSet(){
+    public void afterPropertiesSet() {
         super.afterPropertiesSet();
         checkConfig();
     }
 
     @SuppressWarnings("squid:S2177")
-    private void checkConfig(){
+    private void checkConfig() {
         Assert.notNull(optionsProvider, "optionsProvider must not be null");
     }
 
@@ -79,10 +79,9 @@ public class FidoServerAssertionOptionsEndpointFilter extends ServerEndpointFilt
         AssertionOptions options = optionsProvider.getAssertionOptions(request, username, new DefaultChallenge());
         List<ServerPublicKeyCredentialDescriptor> credentials = options.getCredentials().stream().map(ServerPublicKeyCredentialDescriptor::new).collect(Collectors.toList());
         AuthenticationExtensionsClientInputs authenticationExtensionsClientInputs;
-        if(serverRequest.getExtensions() != null){
+        if (serverRequest.getExtensions() != null) {
             authenticationExtensionsClientInputs = serverRequest.getExtensions();
-        }
-        else {
+        } else {
             authenticationExtensionsClientInputs = options.getAuthenticationExtensions();
         }
 

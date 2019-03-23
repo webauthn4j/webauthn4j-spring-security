@@ -18,8 +18,8 @@ package net.sharplab.springframework.security.webauthn.endpoint;
 
 import com.webauthn4j.data.PublicKeyCredentialParameters;
 import com.webauthn4j.data.PublicKeyCredentialRpEntity;
-import com.webauthn4j.data.extension.client.AuthenticationExtensionsClientInputs;
 import com.webauthn4j.data.client.challenge.Challenge;
+import com.webauthn4j.data.extension.client.AuthenticationExtensionsClientInputs;
 
 import java.math.BigInteger;
 import java.util.List;
