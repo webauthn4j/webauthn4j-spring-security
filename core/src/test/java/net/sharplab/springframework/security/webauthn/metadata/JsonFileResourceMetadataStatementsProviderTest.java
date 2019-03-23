@@ -20,11 +20,11 @@ package net.sharplab.springframework.security.webauthn.metadata;
 import com.webauthn4j.converter.util.JsonConverter;
 import org.junit.Test;
 
-public class JsonFileResourceMetadataItemListProviderTest {
+public class JsonFileResourceMetadataStatementsProviderTest {
 
     private JsonConverter jsonConverter = new JsonConverter();
 
-    private JsonFileResourceMetadataItemListProvider target = new JsonFileResourceMetadataItemListProvider(jsonConverter);
+    private JsonFileResourceMetadataStatementsProvider target = new JsonFileResourceMetadataStatementsProvider(jsonConverter);
 
     @Test(expected = IllegalArgumentException.class)
     public void resources_not_configured_test() {

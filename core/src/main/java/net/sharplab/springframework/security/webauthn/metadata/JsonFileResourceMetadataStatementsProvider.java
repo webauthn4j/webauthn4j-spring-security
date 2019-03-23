@@ -19,6 +19,7 @@ package net.sharplab.springframework.security.webauthn.metadata;
 import com.webauthn4j.converter.util.JsonConverter;
 import com.webauthn4j.data.attestation.authenticator.AAGUID;
 import com.webauthn4j.metadata.MetadataItemsProvider;
+import com.webauthn4j.metadata.MetadataStatementsProvider;
 import com.webauthn4j.metadata.data.MetadataItem;
 import com.webauthn4j.metadata.data.MetadataItemImpl;
 import com.webauthn4j.metadata.data.statement.MetadataStatement;
@@ -32,13 +33,13 @@ import java.io.UncheckedIOException;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class JsonFileResourceMetadataItemListProvider implements MetadataItemsProvider<MetadataItem>, InitializingBean {
+public class JsonFileResourceMetadataStatementsProvider implements MetadataStatementsProvider, InitializingBean {
 
     private JsonConverter jsonConverter;
     private List<Resource> resources;
-    private Map<AAGUID, Set<MetadataItem>> cachedMetadataItems;
+    private Map<AAGUID, Set<MetadataStatement>> cachedMetadataItems;
 
-    public JsonFileResourceMetadataItemListProvider(JsonConverter jsonConverter) {
+    public JsonFileResourceMetadataStatementsProvider(JsonConverter jsonConverter) {
         this.jsonConverter = jsonConverter;
     }
 
@@ -52,16 +53,16 @@ public class JsonFileResourceMetadataItemListProvider implements MetadataItemsPr
     }
 
     @Override
-    public Map<AAGUID, Set<MetadataItem>> provide() {
+    public Map<AAGUID, Set<MetadataStatement>> provide() {
         checkConfig();
         if (cachedMetadataItems == null) {
             cachedMetadataItems =
                     resources.stream()
-                            .map(item -> new MetadataItemImpl(readJsonFile(item)))
+                            .map(this::readJsonFile)
                             .distinct()
-                            .collect(Collectors.groupingBy(item -> extractAAGUID(item.getMetadataStatement())))
+                            .collect(Collectors.groupingBy(this::extractAAGUID))
                             .entrySet().stream()
-                            .collect(Collectors.toMap(Map.Entry::getKey, entry -> Collections.unmodifiableSet(new HashSet<>(entry.getValue()))));
+                            .collect(Collectors.toMap(Map.Entry::getKey, entry -> new HashSet<>(entry.getValue())));
         }
         return cachedMetadataItems;
     }

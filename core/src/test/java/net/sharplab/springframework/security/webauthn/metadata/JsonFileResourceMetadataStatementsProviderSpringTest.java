@@ -34,11 +34,11 @@ import java.util.Arrays;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @RunWith(SpringRunner.class)
-public class JsonFileResourceMetadataItemListProviderSpringTest {
+public class JsonFileResourceMetadataStatementsProviderSpringTest {
 
 
     @Autowired
-    private JsonFileResourceMetadataItemListProvider target;
+    private JsonFileResourceMetadataStatementsProvider target;
 
     @Test
     public void provide_test() {
@@ -61,8 +61,8 @@ public class JsonFileResourceMetadataItemListProviderSpringTest {
         }
 
         @Bean
-        public JsonFileResourceMetadataItemListProvider jsonFileResourceMetadataItemListProvider(ResourceLoader resourceLoader) throws IOException {
-            JsonFileResourceMetadataItemListProvider provider = new JsonFileResourceMetadataItemListProvider(jsonConverter);
+        public JsonFileResourceMetadataStatementsProvider jsonFileResourceMetadataItemListProvider(ResourceLoader resourceLoader) throws IOException {
+            JsonFileResourceMetadataStatementsProvider provider = new JsonFileResourceMetadataStatementsProvider(jsonConverter);
             Resource[] resources = ResourcePatternUtils.getResourcePatternResolver(resourceLoader).getResources("classpath:metadataStatements/fido-conformance-tools/*.json");
             provider.setResources(Arrays.asList(resources));
             return provider;

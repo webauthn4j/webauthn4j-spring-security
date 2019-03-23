@@ -24,7 +24,6 @@ import com.webauthn4j.converter.util.CborConverter;
 import com.webauthn4j.converter.util.JsonConverter;
 import com.webauthn4j.metadata.*;
 import com.webauthn4j.metadata.converter.jackson.WebAuthnMetadataJSONModule;
-import com.webauthn4j.metadata.data.MetadataItem;
 import com.webauthn4j.util.Base64Util;
 import com.webauthn4j.util.CertificateUtil;
 import com.webauthn4j.validator.WebAuthnAuthenticationContextValidator;
@@ -42,7 +41,7 @@ import com.webauthn4j.validator.attestation.trustworthiness.self.DefaultSelfAtte
 import net.sharplab.springframework.security.webauthn.WebAuthnRegistrationRequestValidator;
 import net.sharplab.springframework.security.webauthn.challenge.ChallengeRepository;
 import net.sharplab.springframework.security.webauthn.challenge.HttpSessionChallengeRepository;
-import net.sharplab.springframework.security.webauthn.metadata.JsonFileResourceMetadataItemListProvider;
+import net.sharplab.springframework.security.webauthn.metadata.JsonFileResourceMetadataStatementsProvider;
 import net.sharplab.springframework.security.webauthn.metadata.RestTemplateAdaptorHttpClient;
 import net.sharplab.springframework.security.webauthn.options.OptionsProvider;
 import net.sharplab.springframework.security.webauthn.options.OptionsProviderImpl;
@@ -120,10 +119,9 @@ public class WebSecurityBeanConfig {
     }
 
     @Bean
-    public WebAuthnRegistrationContextValidator webAuthnRegistrationContextValidator(CertPathTrustworthinessValidator certPathTrustworthinessValidator) {
+    public WebAuthnRegistrationContextValidator webAuthnRegistrationContextValidator(CertPathTrustworthinessValidator certPathTrustworthinessValidator, FidoMdsMetadataValidator fidoMdsMetadataValidator) {
 
-
-        return new WebAuthnRegistrationContextValidator(
+        WebAuthnRegistrationContextValidator webAuthnRegistrationContextValidator = new WebAuthnRegistrationContextValidator(
                 Arrays.asList(
                         new PackedAttestationStatementValidator(),
                         new FIDOU2FAttestationStatementValidator(),
@@ -136,6 +134,13 @@ public class WebSecurityBeanConfig {
                 new DefaultECDAATrustworthinessValidator(),
                 new DefaultSelfAttestationTrustworthinessValidator()
         );
+        webAuthnRegistrationContextValidator.getCustomRegistrationValidators().add(fidoMdsMetadataValidator);
+        return webAuthnRegistrationContextValidator;
+    }
+
+    @Bean
+    public FidoMdsMetadataValidator fidoMdsMetadataValidator(MetadataItemsResolver fidoMdsMetadataItemsResolver){
+        return new FidoMdsMetadataValidator(fidoMdsMetadataItemsResolver);
     }
 
     @Bean
@@ -151,8 +156,8 @@ public class WebSecurityBeanConfig {
     }
 
     @Bean
-    public TrustAnchorsProvider trustAnchorsProvider(MetadataItemsProvider<MetadataItem> metadataItemsProvider){
-        return new FidoMdsTrustAnchorsProviderAdaptor(metadataItemsProvider);
+    public TrustAnchorsProvider trustAnchorsProvider(MetadataStatementsProvider metadataStatementsProvider){
+        return new MetadataStatementsTrustAnchorsProvider(metadataStatementsProvider);
     }
 
     @Bean
@@ -161,12 +166,18 @@ public class WebSecurityBeanConfig {
     }
 
     @Bean
-    public MetadataItemsResolver<MetadataItem> metadataItemsResolver(MetadataItemsProvider<MetadataItem> metadataItemsProvider){
-        return new MetadataItemsResolverImpl<>(metadataItemsProvider);
+    public MetadataItemsResolver fidoMdsMetadataItemsResolver(MetadataItemsProvider fidoMetadataItemsProvider){
+        return new MetadataItemsResolverImpl(fidoMetadataItemsProvider);
     }
 
     @Bean
-    public MetadataItemsProvider<MetadataItem> metadataItemListProvider(JsonConverter jsonConverter, HttpClient httpClient, ResourceLoader resourceLoader) throws IOException {
+    public MetadataItemsResolver metadataItemsResolver(MetadataItemsProvider metadataItemsProvider){
+        return new MetadataItemsResolverImpl(metadataItemsProvider);
+    }
+
+    @Bean
+    public MetadataItemsProvider fidoMetadataItemsProvider(JsonConverter jsonConverter, HttpClient httpClient){
+        X509Certificate conformanceTestCertificate = CertificateUtil.generateX509Certificate(Base64Util.decode("MIICYjCCAeigAwIBAgIPBIdvCXPXJiuD7VW0mgRQMAoGCCqGSM49BAMDMGcxCzAJBgNVBAYTAlVTMRYwFAYDVQQKDA1GSURPIEFsbGlhbmNlMScwJQYDVQQLDB5GQUtFIE1ldGFkYXRhIFRPQyBTaWduaW5nIEZBS0UxFzAVBgNVBAMMDkZBS0UgUm9vdCBGQUtFMB4XDTE3MDIwMTAwMDAwMFoXDTQ1MDEzMTIzNTk1OVowZzELMAkGA1UEBhMCVVMxFjAUBgNVBAoMDUZJRE8gQWxsaWFuY2UxJzAlBgNVBAsMHkZBS0UgTWV0YWRhdGEgVE9DIFNpZ25pbmcgRkFLRTEXMBUGA1UEAwwORkFLRSBSb290IEZBS0UwdjAQBgcqhkjOPQIBBgUrgQQAIgNiAARcVLd6r4fnNHzs5K2zfbg//4X9/oBqmsdRVtZ9iXhlgM9vFYaKviYtqmwkq0D3Lihg3qefeZgXXYi4dFgvzU7ZLBapSNM3CT8RDBe/MBJqsPwaRQbIsGmmItmt/ESNQD6jWjBYMAsGA1UdDwQEAwIBBjAPBgNVHRMBAf8EBTADAQH/MBsGA1UdDgQU3feayBzv4V/ToevbM18w9GoZmVkwGwYDVR0jBBTd95rIHO/hX9Oh69szXzD0ahmZWTAKBggqhkjOPQQDAwNoADBlAjAfT9m8LabIuGS6tXiJmRB91SjJ49dk+sPsn+AKx1/PS3wbHEGnGxDIIcQplYDFcXICMQDi33M/oUlb7RDAmapRBjJxKK+oh7hlSZv4djmZV3YV0JnF1Ed5E4I0f3C04eP0bjw="));
         String[] urls = new String[]{
                 "https://fidoalliance.co.nz/mds/execute/26f215541c4ec9b5f02dccbd5256adc636bfd8697b1e352497cd0992c2e6ed07",
                 "https://fidoalliance.co.nz/mds/execute/64fb580564284282ee31053135a9cf793b2c02cf0910bb061f2f5841e78d9c05",
@@ -174,21 +185,27 @@ public class WebSecurityBeanConfig {
                 "https://fidoalliance.co.nz/mds/execute/7d3d49bf21ec5fa823df78c584076f965400f461343e413b4090356ce3b25b03",
                 "https://fidoalliance.co.nz/mds/execute/8c0d39150e1c103dbbf489d8ccf6f9410b87a284e86a04ce26b58e9ff5c7aaa4"
         };
-        X509Certificate conformanceTestCertificate = CertificateUtil.generateX509Certificate(Base64Util.decode("MIICYjCCAeigAwIBAgIPBIdvCXPXJiuD7VW0mgRQMAoGCCqGSM49BAMDMGcxCzAJBgNVBAYTAlVTMRYwFAYDVQQKDA1GSURPIEFsbGlhbmNlMScwJQYDVQQLDB5GQUtFIE1ldGFkYXRhIFRPQyBTaWduaW5nIEZBS0UxFzAVBgNVBAMMDkZBS0UgUm9vdCBGQUtFMB4XDTE3MDIwMTAwMDAwMFoXDTQ1MDEzMTIzNTk1OVowZzELMAkGA1UEBhMCVVMxFjAUBgNVBAoMDUZJRE8gQWxsaWFuY2UxJzAlBgNVBAsMHkZBS0UgTWV0YWRhdGEgVE9DIFNpZ25pbmcgRkFLRTEXMBUGA1UEAwwORkFLRSBSb290IEZBS0UwdjAQBgcqhkjOPQIBBgUrgQQAIgNiAARcVLd6r4fnNHzs5K2zfbg//4X9/oBqmsdRVtZ9iXhlgM9vFYaKviYtqmwkq0D3Lihg3qefeZgXXYi4dFgvzU7ZLBapSNM3CT8RDBe/MBJqsPwaRQbIsGmmItmt/ESNQD6jWjBYMAsGA1UdDwQEAwIBBjAPBgNVHRMBAf8EBTADAQH/MBsGA1UdDgQU3feayBzv4V/ToevbM18w9GoZmVkwGwYDVR0jBBTd95rIHO/hX9Oh69szXzD0ahmZWTAKBggqhkjOPQQDAwNoADBlAjAfT9m8LabIuGS6tXiJmRB91SjJ49dk+sPsn+AKx1/PS3wbHEGnGxDIIcQplYDFcXICMQDi33M/oUlb7RDAmapRBjJxKK+oh7hlSZv4djmZV3YV0JnF1Ed5E4I0f3C04eP0bjw="));
-        List<MetadataItemsProvider<MetadataItem>> list = new ArrayList<>();
+        List<MetadataItemsProvider> list = new ArrayList<>();
+        Arrays.stream(urls).map(url -> {
+            FidoMdsMetadataItemsProvider metadataItemsProvider = new FidoMdsMetadataItemsProvider(jsonConverter, httpClient, conformanceTestCertificate);
+            metadataItemsProvider.setFidoMetadataServiceEndpoint(url);
+            return metadataItemsProvider;
+        }).forEach(list::add);
+        return new AggregatingMetadataItemsProvider(list);
+    }
 
-        JsonFileResourceMetadataItemListProvider provider = new JsonFileResourceMetadataItemListProvider(jsonConverter);
+    @Bean
+    public MetadataStatementsProvider metadataStatementsProvider(MetadataItemsProvider metadataItemsProvider, ResourceLoader resourceLoader, JsonConverter jsonConverter) throws IOException {
+
+        List<MetadataStatementsProvider> list = new ArrayList<>();
+        list.add(new MetadataItemsMetadataStatementsProvider(metadataItemsProvider));
+
+        JsonFileResourceMetadataStatementsProvider provider = new JsonFileResourceMetadataStatementsProvider(jsonConverter);
         Resource[] resources = ResourcePatternUtils.getResourcePatternResolver(resourceLoader).getResources("classpath:metadataStatements/fido-conformance-tools/*.json");
         provider.setResources(Arrays.asList(resources));
         list.add(provider);
 
-        Arrays.stream(urls).map(url -> {
-            FidoMdsMetadataItemsProvider metadataItemsProvider = new FidoMdsMetadataItemsProvider(jsonConverter, httpClient, conformanceTestCertificate);
-            metadataItemsProvider.setFidoMetadataServiceEndpoint(url);
-            return (MetadataItemsProvider)metadataItemsProvider;
-        }).forEach(list::add);
-
-        return new AggregatingMetadataItemsProvider<>(list);
+        return new AggregatingMetadataStatementsProvider(list);
     }
 
     @Bean
