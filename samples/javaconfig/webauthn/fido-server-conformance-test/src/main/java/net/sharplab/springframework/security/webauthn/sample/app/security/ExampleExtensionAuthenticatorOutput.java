@@ -16,20 +16,20 @@
 
 package net.sharplab.springframework.security.webauthn.sample.app.security;
 
-import com.webauthn4j.data.extension.AbstractExtensionInput;
-import com.webauthn4j.data.extension.client.AuthenticationExtensionClientInput;
+import com.webauthn4j.data.extension.AbstractExtensionOutput;
+import com.webauthn4j.data.extension.authenticator.AuthenticationExtensionAuthenticatorOutput;
 
 import java.io.Serializable;
 
-public class ExampleExtensionClientInput extends AbstractExtensionInput<Serializable> implements AuthenticationExtensionClientInput<Serializable> {
+public class ExampleExtensionAuthenticatorOutput extends AbstractExtensionOutput<Serializable> implements AuthenticationExtensionAuthenticatorOutput<Serializable> {
 
     public static final String ID = "example.extension";
 
-    public ExampleExtensionClientInput(String value) {
+    public ExampleExtensionAuthenticatorOutput(String value) {
         super(value);
     }
 
-    public ExampleExtensionClientInput(Boolean value) {
+    public ExampleExtensionAuthenticatorOutput(Boolean value) {
         super(value);
     }
 
@@ -37,5 +37,4 @@ public class ExampleExtensionClientInput extends AbstractExtensionInput<Serializ
     public String getIdentifier() {
         return ID;
     }
-
 }

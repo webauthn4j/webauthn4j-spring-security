@@ -27,7 +27,11 @@ import javax.persistence.AttributeConverter;
  */
 public class AttestationStatementConverter implements AttributeConverter<AttestationStatement, String> {
 
-    private CborConverter cborConverter = new CborConverter(); //TODO
+    private CborConverter cborConverter;
+
+    public AttestationStatementConverter(CborConverter cborConverter) {
+        this.cborConverter = cborConverter;
+    }
 
     @Override
     public String convertToDatabaseColumn(AttestationStatement attribute) {

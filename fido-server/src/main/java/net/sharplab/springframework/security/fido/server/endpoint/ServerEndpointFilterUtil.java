@@ -20,6 +20,8 @@ import com.webauthn4j.converter.util.CborConverter;
 import com.webauthn4j.converter.util.JsonConverter;
 import com.webauthn4j.data.client.challenge.Challenge;
 import com.webauthn4j.data.client.challenge.DefaultChallenge;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.security.authentication.InsufficientAuthenticationException;
 import org.springframework.security.core.AuthenticationException;
 
@@ -27,6 +29,8 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 class ServerEndpointFilterUtil {
+
+    protected final Log logger = LogFactory.getLog(getClass());
 
     private JsonConverter jsonConverter;
     private CborConverter cborConverter;

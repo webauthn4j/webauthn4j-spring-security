@@ -47,6 +47,7 @@ import net.sharplab.springframework.security.webauthn.metadata.JsonFileResourceM
 import net.sharplab.springframework.security.webauthn.metadata.RestTemplateAdaptorHttpClient;
 import net.sharplab.springframework.security.webauthn.options.OptionsProvider;
 import net.sharplab.springframework.security.webauthn.options.OptionsProviderImpl;
+import net.sharplab.springframework.security.webauthn.sample.app.security.ExampleExtensionAuthenticatorOutput;
 import net.sharplab.springframework.security.webauthn.sample.app.security.ExampleExtensionClientInput;
 import net.sharplab.springframework.security.webauthn.server.ServerPropertyProvider;
 import net.sharplab.springframework.security.webauthn.server.ServerPropertyProviderImpl;
@@ -121,7 +122,12 @@ public class WebSecurityBeanConfig {
     }
 
     @Bean
-    public WebAuthnRegistrationContextValidator webAuthnRegistrationContextValidator(CertPathTrustworthinessValidator certPathTrustworthinessValidator, FidoMdsMetadataValidator fidoMdsMetadataValidator) {
+    public WebAuthnRegistrationContextValidator webAuthnRegistrationContextValidator(
+            CertPathTrustworthinessValidator certPathTrustworthinessValidator,
+            FidoMdsMetadataValidator fidoMdsMetadataValidator,
+            JsonConverter jsonConverter,
+            CborConverter cborConverter
+    ) {
 
         WebAuthnRegistrationContextValidator webAuthnRegistrationContextValidator = new WebAuthnRegistrationContextValidator(
                 Arrays.asList(
@@ -134,7 +140,9 @@ public class WebSecurityBeanConfig {
                 ),
                 certPathTrustworthinessValidator,
                 new DefaultECDAATrustworthinessValidator(),
-                new DefaultSelfAttestationTrustworthinessValidator()
+                new DefaultSelfAttestationTrustworthinessValidator(),
+                jsonConverter,
+                cborConverter
         );
         webAuthnRegistrationContextValidator.getCustomRegistrationValidators().add(fidoMdsMetadataValidator);
         return webAuthnRegistrationContextValidator;
@@ -241,6 +249,7 @@ public class WebSecurityBeanConfig {
         jsonMapper.registerModule(new WebAuthnMetadataJSONModule());
         jsonMapper.registerSubtypes(new NamedType(ExampleExtensionClientInput.class, ExampleExtensionClientInput.ID));
         ObjectMapper cborMapper = new ObjectMapper(new CBORFactory());
+        cborMapper.registerSubtypes(new NamedType(ExampleExtensionAuthenticatorOutput.class, ExampleExtensionAuthenticatorOutput.ID));
         return new JsonConverter(jsonMapper, cborMapper);
     }
 

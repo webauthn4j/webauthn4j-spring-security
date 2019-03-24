@@ -16,7 +16,6 @@
 
 package net.sharplab.springframework.security.webauthn.sample.app.config;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.cbor.CBORFactory;
 import com.webauthn4j.converter.util.CborConverter;
@@ -90,8 +89,8 @@ public class WebSecurityBeanConfig {
     }
 
     @Bean
-    public WebAuthnRegistrationContextValidator webAuthnRegistrationContextValidator() {
-        return WebAuthnRegistrationContextValidator.createNonStrictRegistrationContextValidator();
+    public WebAuthnRegistrationContextValidator webAuthnRegistrationContextValidator(JsonConverter jsonConverter, CborConverter cborConverter) {
+        return WebAuthnRegistrationContextValidator.createNonStrictRegistrationContextValidator(jsonConverter, cborConverter);
     }
 
     @Bean

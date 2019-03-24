@@ -26,7 +26,11 @@ import javax.persistence.Converter;
 @Converter
 public class CredentialPublicKeyConverter implements AttributeConverter<CredentialPublicKey, String> {
 
-    private CborConverter cborConverter = new CborConverter(); //TODO
+    private CborConverter cborConverter;
+
+    public CredentialPublicKeyConverter(CborConverter cborConverter) {
+        this.cborConverter = cborConverter;
+    }
 
     @Override
     public String convertToDatabaseColumn(CredentialPublicKey attribute) {
