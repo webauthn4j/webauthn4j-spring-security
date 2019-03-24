@@ -18,6 +18,9 @@ package net.sharplab.springframework.security.fido.server.endpoint;
 
 import com.webauthn4j.data.AttestationConveyancePreference;
 import com.webauthn4j.data.AuthenticatorSelectionCriteria;
+import com.webauthn4j.data.extension.client.AuthenticationExtensionsClientInputs;
+
+import java.util.Objects;
 
 public class ServerPublicKeyCredentialCreationOptionsRequest implements ServerRequest {
 
@@ -25,17 +28,20 @@ public class ServerPublicKeyCredentialCreationOptionsRequest implements ServerRe
     private String displayName;
     private AuthenticatorSelectionCriteria authenticatorSelection;
     private AttestationConveyancePreference attestation;
+    private AuthenticationExtensionsClientInputs extensions;
 
     public ServerPublicKeyCredentialCreationOptionsRequest(
             String username,
             String displayName,
             AuthenticatorSelectionCriteria authenticatorSelection,
-            AttestationConveyancePreference attestation) {
+            AttestationConveyancePreference attestation,
+            AuthenticationExtensionsClientInputs extensions) {
 
         this.username = username;
         this.displayName = displayName;
         this.authenticatorSelection = authenticatorSelection;
         this.attestation = attestation;
+        this.extensions = extensions;
     }
 
     public ServerPublicKeyCredentialCreationOptionsRequest() {
@@ -55,5 +61,26 @@ public class ServerPublicKeyCredentialCreationOptionsRequest implements ServerRe
 
     public AttestationConveyancePreference getAttestation() {
         return attestation;
+    }
+
+    public AuthenticationExtensionsClientInputs getExtensions() {
+        return extensions;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        ServerPublicKeyCredentialCreationOptionsRequest that = (ServerPublicKeyCredentialCreationOptionsRequest) o;
+        return Objects.equals(username, that.username) &&
+                Objects.equals(displayName, that.displayName) &&
+                Objects.equals(authenticatorSelection, that.authenticatorSelection) &&
+                attestation == that.attestation &&
+                Objects.equals(extensions, that.extensions);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(username, displayName, authenticatorSelection, attestation, extensions);
     }
 }

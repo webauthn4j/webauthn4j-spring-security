@@ -19,6 +19,7 @@ package net.sharplab.springframework.security.fido.server.endpoint;
 import com.webauthn4j.converter.util.JsonConverter;
 import com.webauthn4j.data.client.challenge.Challenge;
 import com.webauthn4j.data.client.challenge.DefaultChallenge;
+import com.webauthn4j.data.extension.client.AuthenticationExtensionsClientInputs;
 import com.webauthn4j.util.Base64UrlUtil;
 import net.sharplab.springframework.security.webauthn.options.AttestationOptions;
 import net.sharplab.springframework.security.webauthn.options.OptionsProvider;
@@ -89,6 +90,13 @@ public class FidoServerAttestationOptionsEndpointFilter extends ServerEndpointFi
         ServerPublicKeyCredentialUserEntity user = new ServerPublicKeyCredentialUserEntity(userHandle, username, displayName, null);
         List<ServerPublicKeyCredentialDescriptor> credentials =
                 attestationOptions.getCredentials().stream().map(ServerPublicKeyCredentialDescriptor::new).collect(Collectors.toList());
+        AuthenticationExtensionsClientInputs authenticationExtensionsClientInputs;
+        if (serverRequest.getExtensions() != null) {
+            authenticationExtensionsClientInputs = serverRequest.getExtensions();
+        } else {
+            authenticationExtensionsClientInputs = attestationOptions.getRegistrationExtensions();
+        }
+
         return new ServerPublicKeyCredentialCreationOptionsResponse(
                 attestationOptions.getRelyingParty(),
                 user,
@@ -98,7 +106,7 @@ public class FidoServerAttestationOptionsEndpointFilter extends ServerEndpointFi
                 credentials,
                 serverRequest.getAuthenticatorSelection(),
                 serverRequest.getAttestation(),
-                attestationOptions.getRegistrationExtensions());
+                authenticationExtensionsClientInputs);
     }
 
 

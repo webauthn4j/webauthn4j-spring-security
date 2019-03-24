@@ -19,11 +19,11 @@ package net.sharplab.springframework.security.webauthn.sample.app.security;
 import com.webauthn4j.data.extension.AbstractExtensionInput;
 import com.webauthn4j.data.extension.client.AuthenticationExtensionClientInput;
 
-public class ExampleExtensionClientInput extends AbstractExtensionInput<String> implements AuthenticationExtensionClientInput<String> {
+public class ExampleExtensionClientInput extends AbstractExtensionInput<Boolean> implements AuthenticationExtensionClientInput<Boolean> {
 
     public static final String ID = "example.extension";
 
-    public ExampleExtensionClientInput(String value) {
+    public ExampleExtensionClientInput(Boolean value) {
         super(value);
     }
 

@@ -16,6 +16,8 @@
 
 package net.sharplab.springframework.security.webauthn.config.configurers;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.dataformat.cbor.CBORFactory;
 import com.webauthn4j.converter.util.JsonConverter;
 import com.webauthn4j.metadata.converter.jackson.WebAuthnMetadataJSONModule;
 import net.sharplab.springframework.security.webauthn.WebAuthnRegistrationRequestValidator;
@@ -64,8 +66,10 @@ public class WebAuthnConfigurerUtil {
         JsonConverter jsonConverter;
         String[] beanNames = applicationContext.getBeanNamesForType(JsonConverter.class);
         if (beanNames.length == 0) {
-            jsonConverter = new JsonConverter();
-            jsonConverter.getJsonMapper().registerModule(new WebAuthnMetadataJSONModule());
+            ObjectMapper jsonMapper = new ObjectMapper();
+            jsonMapper.registerModule(new WebAuthnMetadataJSONModule());
+            ObjectMapper cborMapper = new ObjectMapper(new CBORFactory());
+            jsonConverter = new JsonConverter(jsonMapper, cborMapper);
         } else {
             jsonConverter = applicationContext.getBean(JsonConverter.class);
         }

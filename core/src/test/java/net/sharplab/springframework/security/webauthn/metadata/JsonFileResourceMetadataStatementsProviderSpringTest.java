@@ -16,6 +16,8 @@
 
 package net.sharplab.springframework.security.webauthn.metadata;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.dataformat.cbor.CBORFactory;
 import com.webauthn4j.converter.util.JsonConverter;
 import com.webauthn4j.metadata.converter.jackson.WebAuthnMetadataJSONModule;
 import org.junit.Test;
@@ -56,8 +58,10 @@ public class JsonFileResourceMetadataStatementsProviderSpringTest {
         private JsonConverter jsonConverter;
 
         public Config() {
-            jsonConverter = new JsonConverter();
-            jsonConverter.getJsonMapper().registerModule(new WebAuthnMetadataJSONModule());
+            ObjectMapper jsonMapper = new ObjectMapper();
+            jsonMapper.registerModule(new WebAuthnMetadataJSONModule());
+            ObjectMapper cborMapper = new ObjectMapper(new CBORFactory());
+            jsonConverter = new JsonConverter(jsonMapper, cborMapper);
         }
 
         @Bean
