@@ -22,10 +22,15 @@ import com.webauthn4j.server.ServerProperty;
 import javax.servlet.http.HttpServletRequest;
 
 /**
- * Provides {@link ServerProperty} instance
+ * Provides {@link ServerProperty} instance associated with {@link HttpServletRequest}
  */
 public interface ServerPropertyProvider {
 
+    /**
+     * Provides {@link ServerProperty}
+     * @param request http servlet request
+     * @return the {@link ServerProperty}
+     */
     ServerProperty provide(HttpServletRequest request);
 
 }

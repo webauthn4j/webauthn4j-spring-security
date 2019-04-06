@@ -17,18 +17,26 @@
 package net.sharplab.springframework.security.webauthn.userdetails;
 
 import com.webauthn4j.authenticator.Authenticator;
-import net.sharplab.springframework.security.webauthn.authenticator.WebAuthnAuthenticator;
 import net.sharplab.springframework.security.webauthn.exception.CredentialIdNotFoundException;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
+/**
+ * An extended {@link UserDetailsService} for WebAuthn
+ */
 public interface WebAuthnUserDetailsService extends UserDetailsService {
 
+    /**
+     * Locates a user based on the username.
+     * @param username the username identifying the user whose data is required
+     * @return a fully populated {@link WebAuthnUserDetails} instance  (never <code>null</code>)
+     * @throws UsernameNotFoundException if the user could not be found
+     */
     @SuppressWarnings("squid:RedundantThrowsDeclarationCheck")
     WebAuthnUserDetails loadUserByUsername(String username) throws UsernameNotFoundException;
 
     /**
-     * Locates a user based on a credentialId.
+     * Locates a user based on the credentialId.
      *
      * @param credentialId credentialId
      * @return fully populated {@link WebAuthnUserDetails} instance (never <code>null</code>),
@@ -38,9 +46,24 @@ public interface WebAuthnUserDetailsService extends UserDetailsService {
     @SuppressWarnings("squid:RedundantThrowsDeclarationCheck")
     WebAuthnUserDetails loadUserByCredentialId(byte[] credentialId) throws CredentialIdNotFoundException;
 
+    /**
+     * Adds {@link Authenticator} to the user record
+     * @param username the username identifying the user
+     * @param authenticator the authenticator to be added
+     */
     void addAuthenticator(String username, Authenticator authenticator);
 
+    /**
+     * Removes {@link Authenticator} from the user record
+     * @param username the username identifying the user
+     * @param authenticator the authenticator to be removed
+     */
     void removeAuthenticator(String username, Authenticator authenticator);
 
+    /**
+     * Removes {@link Authenticator} from the user record
+     * @param username the username identifying the user
+     * @param credentialId the credentialId identifying the authenticator
+     */
     void removeAuthenticator(String username, byte[] credentialId);
 }

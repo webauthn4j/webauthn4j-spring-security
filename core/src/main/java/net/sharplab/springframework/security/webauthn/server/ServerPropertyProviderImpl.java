@@ -40,6 +40,9 @@ public class ServerPropertyProviderImpl implements ServerPropertyProvider {
         this.challengeRepository = challengeRepository;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public ServerProperty provide(HttpServletRequest request) {
 
         Origin origin = ServletUtil.getOrigin(request);

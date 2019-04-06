@@ -18,11 +18,12 @@ package net.sharplab.springframework.security.webauthn.userdetails;
 
 import com.webauthn4j.authenticator.Authenticator;
 import org.springframework.security.core.userdetails.MFAUserDetails;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
 
 /**
- * WebAuthnUserDetails
+ * An extended {@link UserDetails} interface for WebAuthn
  */
 public interface WebAuthnUserDetails extends MFAUserDetails {
 

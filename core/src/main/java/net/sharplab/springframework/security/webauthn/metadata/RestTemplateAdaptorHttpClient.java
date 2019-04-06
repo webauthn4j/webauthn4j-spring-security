@@ -20,7 +20,7 @@ import com.webauthn4j.metadata.HttpClient;
 import org.springframework.web.client.RestTemplate;
 
 /**
- * Client for FIDO Metadata Service
+ * An {@link HttpClient} implementation with Spring {@link RestTemplate}
  */
 public class RestTemplateAdaptorHttpClient implements HttpClient {
 
@@ -30,6 +30,9 @@ public class RestTemplateAdaptorHttpClient implements HttpClient {
         this.restTemplate = restTemplate;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String fetch(String url) {
         return restTemplate.getForObject(url, String.class);

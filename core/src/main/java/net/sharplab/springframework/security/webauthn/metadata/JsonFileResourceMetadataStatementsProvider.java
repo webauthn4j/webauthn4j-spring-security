@@ -18,10 +18,7 @@ package net.sharplab.springframework.security.webauthn.metadata;
 
 import com.webauthn4j.converter.util.JsonConverter;
 import com.webauthn4j.data.attestation.authenticator.AAGUID;
-import com.webauthn4j.metadata.MetadataItemsProvider;
 import com.webauthn4j.metadata.MetadataStatementsProvider;
-import com.webauthn4j.metadata.data.MetadataItem;
-import com.webauthn4j.metadata.data.MetadataItemImpl;
 import com.webauthn4j.metadata.data.statement.MetadataStatement;
 import com.webauthn4j.util.AssertUtil;
 import org.springframework.beans.factory.InitializingBean;
@@ -30,7 +27,10 @@ import org.springframework.core.io.Resource;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UncheckedIOException;
-import java.util.*;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 public class JsonFileResourceMetadataStatementsProvider implements MetadataStatementsProvider, InitializingBean {
