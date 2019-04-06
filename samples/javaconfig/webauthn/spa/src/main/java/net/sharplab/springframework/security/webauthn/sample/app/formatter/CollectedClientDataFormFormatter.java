@@ -17,7 +17,7 @@
 package net.sharplab.springframework.security.webauthn.sample.app.formatter;
 
 import com.webauthn4j.data.client.CollectedClientData;
-import net.sharplab.springframework.security.webauthn.converter.Base64StringToCollectedClientDataConverter;
+import net.sharplab.springframework.security.webauthn.converter.Base64UrlStringToCollectedClientDataConverter;
 import net.sharplab.springframework.security.webauthn.sample.app.api.CollectedClientDataForm;
 import org.springframework.format.Formatter;
 
@@ -29,15 +29,15 @@ import java.util.Locale;
  */
 public class CollectedClientDataFormFormatter implements Formatter<CollectedClientDataForm> {
 
-    private Base64StringToCollectedClientDataConverter base64StringToCollectedClientDataConverter;
+    private Base64UrlStringToCollectedClientDataConverter base64UrlStringToCollectedClientDataConverter;
 
-    public CollectedClientDataFormFormatter(Base64StringToCollectedClientDataConverter base64StringToCollectedClientDataConverter) {
-        this.base64StringToCollectedClientDataConverter = base64StringToCollectedClientDataConverter;
+    public CollectedClientDataFormFormatter(Base64UrlStringToCollectedClientDataConverter base64UrlStringToCollectedClientDataConverter) {
+        this.base64UrlStringToCollectedClientDataConverter = base64UrlStringToCollectedClientDataConverter;
     }
 
     @Override
     public CollectedClientDataForm parse(String text, Locale locale) throws ParseException {
-        CollectedClientData collectedClientData = base64StringToCollectedClientDataConverter.convert(text);
+        CollectedClientData collectedClientData = base64UrlStringToCollectedClientDataConverter.convert(text);
         CollectedClientDataForm collectedClientDataForm = new CollectedClientDataForm();
         collectedClientDataForm.setCollectedClientData(collectedClientData);
         collectedClientDataForm.setClientDataBase64(text);

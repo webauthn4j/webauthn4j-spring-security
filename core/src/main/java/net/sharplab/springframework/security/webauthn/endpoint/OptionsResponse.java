@@ -26,7 +26,7 @@ import java.util.List;
 
 public class OptionsResponse implements Response {
 
-    //~ Instance fields
+    // ~ Instance fields
     // ================================================================================================
     private PublicKeyCredentialRpEntity relyingParty;
     private WebAuthnPublicKeyCredentialUserEntity user;
@@ -64,6 +64,10 @@ public class OptionsResponse implements Response {
         this.authenticationExtensions = authenticationExtensions;
         this.parameters = parameters;
     }
+
+    // ~ Methods
+    // ========================================================================================================
+
 
     public PublicKeyCredentialRpEntity getRelyingParty() {
         return relyingParty;

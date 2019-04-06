@@ -25,7 +25,7 @@ import org.junit.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class Base64StringToCollectedClientDataConverterTest {
+public class Base64UrlStringToCollectedClientDataConverterTest {
 
     private JsonConverter jsonConverter = new JsonConverter();
 
@@ -34,7 +34,7 @@ public class Base64StringToCollectedClientDataConverterTest {
         CollectedClientData expected = TestDataUtil.createClientData(ClientDataType.GET);
         String source = new CollectedClientDataConverter(jsonConverter).convertToBase64UrlString(expected);
 
-        CollectedClientData result = new Base64StringToCollectedClientDataConverter(jsonConverter).convert(source);
+        CollectedClientData result = new Base64UrlStringToCollectedClientDataConverter(jsonConverter).convert(source);
 
         assertThat(result).isEqualTo(expected);
     }

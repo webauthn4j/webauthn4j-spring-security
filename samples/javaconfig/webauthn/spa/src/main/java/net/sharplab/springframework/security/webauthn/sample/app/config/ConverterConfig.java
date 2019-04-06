@@ -18,8 +18,8 @@ package net.sharplab.springframework.security.webauthn.sample.app.config;
 
 import com.webauthn4j.converter.util.CborConverter;
 import com.webauthn4j.converter.util.JsonConverter;
-import net.sharplab.springframework.security.webauthn.converter.Base64StringToAttestationObjectConverter;
-import net.sharplab.springframework.security.webauthn.converter.Base64StringToCollectedClientDataConverter;
+import net.sharplab.springframework.security.webauthn.converter.Base64UrlStringToAttestationObjectConverter;
+import net.sharplab.springframework.security.webauthn.converter.Base64UrlStringToCollectedClientDataConverter;
 import net.sharplab.springframework.security.webauthn.sample.app.formatter.AttestationObjectFormFormatter;
 import net.sharplab.springframework.security.webauthn.sample.app.formatter.CollectedClientDataFormFormatter;
 import org.springframework.context.annotation.Bean;
@@ -32,25 +32,25 @@ import org.springframework.context.annotation.Configuration;
 public class ConverterConfig {
 
     @Bean
-    public Base64StringToCollectedClientDataConverter base64StringToCollectedClientDataConverter(JsonConverter jsonConverter){
-        return new Base64StringToCollectedClientDataConverter(jsonConverter);
+    public Base64UrlStringToCollectedClientDataConverter base64StringToCollectedClientDataConverter(JsonConverter jsonConverter){
+        return new Base64UrlStringToCollectedClientDataConverter(jsonConverter);
     }
 
     @Bean
-    public Base64StringToAttestationObjectConverter base64StringToWebAuthnAttestationObjectConverter(CborConverter cborConverter){
-        return new Base64StringToAttestationObjectConverter(cborConverter);
+    public Base64UrlStringToAttestationObjectConverter base64StringToWebAuthnAttestationObjectConverter(CborConverter cborConverter){
+        return new Base64UrlStringToAttestationObjectConverter(cborConverter);
     }
 
     @Bean
     public CollectedClientDataFormFormatter collectedClientDataFromToBase64StringConverter(
-            Base64StringToCollectedClientDataConverter base64StringToCollectedClientDataConverter){
-        return new CollectedClientDataFormFormatter(base64StringToCollectedClientDataConverter);
+            Base64UrlStringToCollectedClientDataConverter base64UrlStringToCollectedClientDataConverter){
+        return new CollectedClientDataFormFormatter(base64UrlStringToCollectedClientDataConverter);
     }
 
     @Bean
     public AttestationObjectFormFormatter attestationObjectFormFormatter(
-            Base64StringToAttestationObjectConverter base64StringToAttestationObjectConverter) {
-        return new AttestationObjectFormFormatter(base64StringToAttestationObjectConverter);
+            Base64UrlStringToAttestationObjectConverter base64UrlStringToAttestationObjectConverter) {
+        return new AttestationObjectFormFormatter(base64UrlStringToAttestationObjectConverter);
     }
 
 }

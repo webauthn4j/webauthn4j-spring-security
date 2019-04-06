@@ -34,6 +34,9 @@ public class AssertionOptions implements Serializable {
     private AuthenticationExtensionsClientInputs authenticationExtensions;
     private Parameters parameters;
 
+    // ~ Constructors
+    // ===================================================================================================
+
     public AssertionOptions(
             Challenge challenge,
             BigInteger authenticationTimeout,
@@ -48,6 +51,9 @@ public class AssertionOptions implements Serializable {
         this.authenticationExtensions = authenticationExtensions;
         this.parameters = parameters;
     }
+
+    // ~ Methods
+    // ========================================================================================================
 
     public Challenge getChallenge() {
         return challenge;

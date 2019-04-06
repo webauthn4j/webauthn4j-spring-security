@@ -66,11 +66,17 @@ public class OptionsProviderImpl implements OptionsProvider {
     private WebAuthnUserDetailsService userDetailsService;
     private ChallengeRepository challengeRepository;
 
+    // ~ Constructors
+    // ===================================================================================================
+
     public OptionsProviderImpl(WebAuthnUserDetailsService userDetailsService, ChallengeRepository challengeRepository) {
         this.userDetailsService = userDetailsService;
         this.challengeRepository = challengeRepository;
     }
 
+
+    // ~ Methods
+    // ========================================================================================================
 
     /**
      * {@inheritDoc}

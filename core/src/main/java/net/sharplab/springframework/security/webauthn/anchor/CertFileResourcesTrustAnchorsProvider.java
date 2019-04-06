@@ -17,6 +17,7 @@
 package net.sharplab.springframework.security.webauthn.anchor;
 
 import com.webauthn4j.anchor.CachingTrustAnchorsProviderBase;
+import com.webauthn4j.anchor.TrustAnchorsProvider;
 import com.webauthn4j.data.attestation.authenticator.AAGUID;
 import com.webauthn4j.util.AssertUtil;
 import com.webauthn4j.util.CertificateUtil;
@@ -33,16 +34,28 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-public class CertFileResourcesTrustAnchorProvider extends CachingTrustAnchorsProviderBase implements InitializingBean {
+/**
+ * An implementation of {@link TrustAnchorsProvider} that loads {@link TrustAnchor}(s) from X.509 certificate file in Spring {@link Resource}
+ */
+public class CertFileResourcesTrustAnchorsProvider extends CachingTrustAnchorsProviderBase implements InitializingBean {
+
+    // ~ Instance fields
+    // ================================================================================================
 
     private List<Resource> certificates;
 
-    public CertFileResourcesTrustAnchorProvider() {
+    // ~ Constructor
+    // ========================================================================================================
+
+    public CertFileResourcesTrustAnchorsProvider() {
     }
 
-    public CertFileResourcesTrustAnchorProvider(List<Resource> certificates) {
+    public CertFileResourcesTrustAnchorsProvider(List<Resource> certificates) {
         this.certificates = certificates;
     }
+
+    // ~ Methods
+    // ========================================================================================================
 
     @Override
     public void afterPropertiesSet() {

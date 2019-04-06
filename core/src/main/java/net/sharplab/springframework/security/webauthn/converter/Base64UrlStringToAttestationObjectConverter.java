@@ -16,34 +16,36 @@
 
 package net.sharplab.springframework.security.webauthn.converter;
 
-import com.webauthn4j.converter.CollectedClientDataConverter;
-import com.webauthn4j.converter.util.JsonConverter;
-import com.webauthn4j.data.client.CollectedClientData;
+import com.webauthn4j.converter.AttestationObjectConverter;
+import com.webauthn4j.converter.util.CborConverter;
+import com.webauthn4j.data.attestation.AttestationObject;
 import org.springframework.core.convert.converter.Converter;
 
 /**
- * Spring converter which converts from Base64{@link String} to {@link CollectedClientData}
+ * Spring converter which converts from Base64Url {@link String} to {@link AttestationObject}
  */
-public class Base64StringToCollectedClientDataConverter implements Converter<String, CollectedClientData> {
+public class Base64UrlStringToAttestationObjectConverter implements Converter<String, AttestationObject> {
 
     //~ Instance fields
     // ================================================================================================
-    private CollectedClientDataConverter converter;
+    private AttestationObjectConverter converter;
 
     // ~ Constructor
     // ========================================================================================================
-    public Base64StringToCollectedClientDataConverter(JsonConverter jsonConverter) {
-        converter = new CollectedClientDataConverter(jsonConverter);
+
+    public Base64UrlStringToAttestationObjectConverter(CborConverter cborConverter) {
+        converter = new AttestationObjectConverter(cborConverter);
     }
 
     /**
-     * Convert Base64 {@link String} to {@link CollectedClientData}
+     * Convert Base64Url {@link String} to {@link AttestationObject}
      *
      * @param source base64String
-     * @return collectedClientData
+     * @return attestationObject
      */
     @Override
-    public CollectedClientData convert(String source) {
+    public AttestationObject convert(String source) {
         return converter.convert(source);
     }
+
 }

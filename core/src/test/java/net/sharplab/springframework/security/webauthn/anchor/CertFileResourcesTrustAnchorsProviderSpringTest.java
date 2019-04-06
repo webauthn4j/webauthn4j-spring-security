@@ -33,10 +33,10 @@ import java.util.Collections;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @RunWith(SpringRunner.class)
-public class CertFileResourcesTrustAnchorProviderSpringTest {
+public class CertFileResourcesTrustAnchorsProviderSpringTest {
 
     @Autowired
-    private CertFileResourcesTrustAnchorProvider target;
+    private CertFileResourcesTrustAnchorsProvider target;
 
     @Test
     public void loadTrustAnchors_test() {
@@ -52,9 +52,9 @@ public class CertFileResourcesTrustAnchorProviderSpringTest {
     public static class config {
 
         @Bean
-        public CertFileResourcesTrustAnchorProvider certFileResourcesTrustAnchorProvider() throws CertificateEncodingException {
+        public CertFileResourcesTrustAnchorsProvider certFileResourcesTrustAnchorProvider() throws CertificateEncodingException {
             Resource x509Resource = new ByteArrayResource(TestAttestationUtil.load2tierTestAuthenticatorAttestationCertificate().getEncoded());
-            return new CertFileResourcesTrustAnchorProvider(Collections.singletonList(x509Resource));
+            return new CertFileResourcesTrustAnchorsProvider(Collections.singletonList(x509Resource));
         }
     }
 

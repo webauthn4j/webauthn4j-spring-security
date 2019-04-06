@@ -19,13 +19,23 @@ package net.sharplab.springframework.security.webauthn.authenticator;
 import com.webauthn4j.authenticator.AuthenticatorImpl;
 import com.webauthn4j.data.attestation.authenticator.AttestedCredentialData;
 import com.webauthn4j.data.attestation.statement.AttestationStatement;
+import net.sharplab.springframework.security.webauthn.userdetails.WebAuthnUserDetailsService;
 
 import java.util.Objects;
 
+/**
+ * Models core authenticator information retrieved by a {@link WebAuthnUserDetailsService}
+ *
+ * @see WebAuthnUserDetailsService
+ */
 public class WebAuthnAuthenticator extends AuthenticatorImpl {
 
-    //~ Instance fields ================================================================================================
+    // ~ Instance fields
+    // ================================================================================================
     private String name;
+
+    // ~ Constructor
+    // ========================================================================================================
 
     /**
      * Constructor
@@ -36,6 +46,9 @@ public class WebAuthnAuthenticator extends AuthenticatorImpl {
         super(attestedCredentialData, attestationStatement, counter);
         this.setName(name);
     }
+
+    // ~ Methods
+    // ========================================================================================================
 
     public String getName() {
         return name;

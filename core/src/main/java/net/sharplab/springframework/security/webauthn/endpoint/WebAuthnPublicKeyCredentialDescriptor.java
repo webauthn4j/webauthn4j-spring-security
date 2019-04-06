@@ -25,6 +25,9 @@ import java.util.Objects;
 
 public class WebAuthnPublicKeyCredentialDescriptor implements Serializable {
 
+    // ~ Instance fields
+    // ================================================================================================
+
     @JsonProperty
     private PublicKeyCredentialType type;
     @JsonProperty

@@ -19,7 +19,7 @@ package net.sharplab.springframework.security.webauthn.sample.app.util.jackson.d
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
-import net.sharplab.springframework.security.webauthn.converter.Base64StringToCollectedClientDataConverter;
+import net.sharplab.springframework.security.webauthn.converter.Base64UrlStringToCollectedClientDataConverter;
 import net.sharplab.springframework.security.webauthn.sample.app.api.CollectedClientDataForm;
 import org.springframework.boot.jackson.JsonComponent;
 
@@ -31,11 +31,11 @@ import java.io.IOException;
 @JsonComponent
 public class CollectedClientDataDeserializer extends StdDeserializer<CollectedClientDataForm> {
 
-    private Base64StringToCollectedClientDataConverter base64StringToCollectedClientDataConverter;
+    private Base64UrlStringToCollectedClientDataConverter base64UrlStringToCollectedClientDataConverter;
 
-    public CollectedClientDataDeserializer(Base64StringToCollectedClientDataConverter base64StringToCollectedClientDataConverter) {
+    public CollectedClientDataDeserializer(Base64UrlStringToCollectedClientDataConverter base64UrlStringToCollectedClientDataConverter) {
         super(CollectedClientDataForm.class);
-        this.base64StringToCollectedClientDataConverter = base64StringToCollectedClientDataConverter;
+        this.base64UrlStringToCollectedClientDataConverter = base64UrlStringToCollectedClientDataConverter;
     }
 
     /**
@@ -45,7 +45,7 @@ public class CollectedClientDataDeserializer extends StdDeserializer<CollectedCl
     public CollectedClientDataForm deserialize(JsonParser p, DeserializationContext ctxt) throws IOException {
         String value = p.getValueAsString();
         CollectedClientDataForm result = new CollectedClientDataForm();
-        result.setCollectedClientData(base64StringToCollectedClientDataConverter.convert(value));
+        result.setCollectedClientData(base64UrlStringToCollectedClientDataConverter.convert(value));
         result.setClientDataBase64(value);
         return result;
     }

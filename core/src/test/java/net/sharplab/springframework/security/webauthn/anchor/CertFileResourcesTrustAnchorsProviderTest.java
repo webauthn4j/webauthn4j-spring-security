@@ -28,12 +28,12 @@ import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class CertFileResourcesTrustAnchorProviderTest {
+public class CertFileResourcesTrustAnchorsProviderTest {
 
 
     @Test
     public void loadTrustAnchors_with_pemFile_test() {
-        CertFileResourcesTrustAnchorProvider trustAnchorProvider = new CertFileResourcesTrustAnchorProvider();
+        CertFileResourcesTrustAnchorsProvider trustAnchorProvider = new CertFileResourcesTrustAnchorsProvider();
         Resource resource = new ClassPathResource("certs/3tier-test-root-CA.pem");
         trustAnchorProvider.setCertificates(Collections.singletonList(resource));
         Map<AAGUID, Set<TrustAnchor>> trustAnchors = trustAnchorProvider.loadTrustAnchors();
@@ -42,7 +42,7 @@ public class CertFileResourcesTrustAnchorProviderTest {
 
     @Test
     public void loadTrustAnchors_with_derFile_test() {
-        CertFileResourcesTrustAnchorProvider trustAnchorProvider = new CertFileResourcesTrustAnchorProvider();
+        CertFileResourcesTrustAnchorsProvider trustAnchorProvider = new CertFileResourcesTrustAnchorsProvider();
         Resource resource = new ClassPathResource("certs/3tier-test-root-CA.der");
         trustAnchorProvider.setCertificates(Collections.singletonList(resource));
         Map<AAGUID, Set<TrustAnchor>> trustAnchors = trustAnchorProvider.loadTrustAnchors();
@@ -51,7 +51,7 @@ public class CertFileResourcesTrustAnchorProviderTest {
 
     @Test(expected = IllegalArgumentException.class)
     public void afterPropertiesSet_test() {
-        CertFileResourcesTrustAnchorProvider trustAnchorProvider = new CertFileResourcesTrustAnchorProvider();
+        CertFileResourcesTrustAnchorsProvider trustAnchorProvider = new CertFileResourcesTrustAnchorsProvider();
         trustAnchorProvider.afterPropertiesSet();
     }
 }

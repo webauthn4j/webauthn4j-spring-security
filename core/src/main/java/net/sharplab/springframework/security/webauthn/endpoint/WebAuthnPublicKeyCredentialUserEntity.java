@@ -24,6 +24,9 @@ import java.util.Objects;
 
 public class WebAuthnPublicKeyCredentialUserEntity implements Serializable {
 
+    // ~ Instance fields
+    // ================================================================================================
+
     private String userHandle;
     private String username;
 

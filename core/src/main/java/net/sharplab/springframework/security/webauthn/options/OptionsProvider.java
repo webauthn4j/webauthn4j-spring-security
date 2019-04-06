@@ -89,6 +89,11 @@ public interface OptionsProvider {
      */
     String getRpIcon();
 
+    /**
+     * configures rpIcon
+     *
+     * @param rpIcon rpIcon
+     */
     void setRpIcon(String rpIcon);
 
     /**
@@ -105,12 +110,26 @@ public interface OptionsProvider {
      */
     void setPubKeyCredParams(List<PublicKeyCredentialParameters> pubKeyCredParams);
 
+    /**
+     * returns the registration timeout
+     * @return the registration timeout
+     */
     BigInteger getRegistrationTimeout();
 
+    /**
+     * configures the registration timeout
+     */
     void setRegistrationTimeout(BigInteger registrationTimeout);
 
+    /**
+     * returns the authentication timeout
+     * @return the authentication timeout
+     */
     BigInteger getAuthenticationTimeout();
 
+    /**
+     * configures the authentication timeout
+     */
     void setAuthenticationTimeout(BigInteger authenticationTimeout);
 
 

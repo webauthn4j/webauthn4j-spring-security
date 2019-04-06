@@ -31,12 +31,18 @@ import javax.servlet.http.HttpSession;
  */
 public class HttpSessionChallengeRepository implements ChallengeRepository {
 
+    // ~ Static fields/initializers
+    // =====================================================================================
+
     private static final String DEFAULT_CHALLENGE_ATTR_NAME = HttpSessionChallengeRepository.class
             .getName().concat(".CHALLENGE");
 
     //~ Instance fields
     // ================================================================================================
     private String sessionAttributeName = DEFAULT_CHALLENGE_ATTR_NAME;
+
+    // ~ Methods
+    // ========================================================================================================
 
     @Override
     public Challenge generateChallenge() {

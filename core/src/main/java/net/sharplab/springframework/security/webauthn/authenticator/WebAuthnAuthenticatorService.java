@@ -18,6 +18,9 @@ package net.sharplab.springframework.security.webauthn.authenticator;
 
 import net.sharplab.springframework.security.webauthn.exception.CredentialIdNotFoundException;
 
+/**
+ * Core interface for manipulating persisted authenticator
+ */
 public interface WebAuthnAuthenticatorService {
 
     /**

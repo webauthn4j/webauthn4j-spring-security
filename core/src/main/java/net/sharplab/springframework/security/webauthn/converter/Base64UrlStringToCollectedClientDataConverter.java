@@ -16,35 +16,35 @@
 
 package net.sharplab.springframework.security.webauthn.converter;
 
-import com.webauthn4j.converter.AttestationObjectConverter;
-import com.webauthn4j.converter.util.CborConverter;
-import com.webauthn4j.data.attestation.AttestationObject;
+import com.webauthn4j.converter.CollectedClientDataConverter;
+import com.webauthn4j.converter.util.JsonConverter;
+import com.webauthn4j.data.client.CollectedClientData;
 import org.springframework.core.convert.converter.Converter;
 
 /**
- * Spring converter which converts from Base64{@link String} to {@link AttestationObject}
+ * Spring converter which converts from Base64Url {@link String} to {@link CollectedClientData}
  */
-public class Base64StringToAttestationObjectConverter implements Converter<String, AttestationObject> {
+public class Base64UrlStringToCollectedClientDataConverter implements Converter<String, CollectedClientData> {
 
     //~ Instance fields
     // ================================================================================================
-    private AttestationObjectConverter converter;
+    private CollectedClientDataConverter converter;
 
     // ~ Constructor
     // ========================================================================================================
-    public Base64StringToAttestationObjectConverter(CborConverter cborConverter) {
-        converter = new AttestationObjectConverter(cborConverter);
+
+    public Base64UrlStringToCollectedClientDataConverter(JsonConverter jsonConverter) {
+        converter = new CollectedClientDataConverter(jsonConverter);
     }
 
     /**
-     * Convert Base64 {@link String} to {@link AttestationObject}
+     * Convert Base64Url {@link String} to {@link CollectedClientData}
      *
      * @param source base64String
-     * @return attestationObject
+     * @return collectedClientData
      */
     @Override
-    public AttestationObject convert(String source) {
+    public CollectedClientData convert(String source) {
         return converter.convert(source);
     }
-
 }

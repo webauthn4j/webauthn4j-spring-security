@@ -27,6 +27,12 @@ import org.springframework.security.config.annotation.authentication.ProviderMan
 import java.util.Collections;
 import java.util.List;
 
+/**
+ * Allows configuring a {@link WebAuthnAuthenticationProvider}
+ *
+ * @see WebAuthnConfigurer
+ * @see WebAuthnLoginConfigurer
+ */
 public class WebAuthnAuthenticationProviderConfigurer<
         B extends ProviderManagerBuilder<B>,
         U extends WebAuthnUserDetailsService,
@@ -52,6 +58,9 @@ public class WebAuthnAuthenticationProviderConfigurer<
         this.authenticatorService = authenticatorService;
         this.authenticationContextValidator = authenticationContextValidator;
     }
+
+    // ~ Methods
+    // ========================================================================================================
 
     @Override
     public void configure(B builder) {

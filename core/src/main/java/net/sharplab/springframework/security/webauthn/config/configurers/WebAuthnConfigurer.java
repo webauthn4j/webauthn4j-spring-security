@@ -29,6 +29,20 @@ import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * An {@link AbstractHttpConfigurer} that provides support for the
+ * <a target="_blank" href="https://www.w3.org/TR/webauthn/">Web Authentication</a>.
+ *
+ * <h2>Shared Objects Created</h2>
+ * <p>
+ * The following shared objects are populated
+ * <ul>
+ * <li>{@link OptionsProvider}</li>
+ * </ul>
+ *
+ * @see WebAuthnLoginConfigurer
+ * @see WebAuthnAuthenticationProviderConfigurer
+ */
 public class WebAuthnConfigurer<H extends HttpSecurityBuilder<H>> extends AbstractHttpConfigurer<WebAuthnConfigurer<H>, H> {
 
     private final WebAuthnConfigurer<H>.PublicKeyCredParamsConfig publicKeyCredParamsConfig = new WebAuthnConfigurer<H>.PublicKeyCredParamsConfig();
@@ -46,6 +60,10 @@ public class WebAuthnConfigurer<H extends HttpSecurityBuilder<H>> extends Abstra
     public static WebAuthnConfigurer<HttpSecurity> webAuthn() {
         return new WebAuthnConfigurer<>();
     }
+
+    // ~ Methods
+    // ========================================================================================================
+
 
     /**
      * {@inheritDoc}

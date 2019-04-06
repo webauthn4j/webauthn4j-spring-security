@@ -16,6 +16,7 @@
 
 package net.sharplab.springframework.security.webauthn.userdetails;
 
+import com.webauthn4j.authenticator.Authenticator;
 import net.sharplab.springframework.security.webauthn.authenticator.WebAuthnAuthenticator;
 import net.sharplab.springframework.security.webauthn.exception.CredentialIdNotFoundException;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -37,9 +38,9 @@ public interface WebAuthnUserDetailsService extends UserDetailsService {
     @SuppressWarnings("squid:RedundantThrowsDeclarationCheck")
     WebAuthnUserDetails loadUserByCredentialId(byte[] credentialId) throws CredentialIdNotFoundException;
 
-    void addAuthenticator(String username, WebAuthnAuthenticator authenticator);
+    void addAuthenticator(String username, Authenticator authenticator);
 
-    void removeAuthenticator(String username, WebAuthnAuthenticator authenticator);
+    void removeAuthenticator(String username, Authenticator authenticator);
 
     void removeAuthenticator(String username, byte[] credentialId);
 }

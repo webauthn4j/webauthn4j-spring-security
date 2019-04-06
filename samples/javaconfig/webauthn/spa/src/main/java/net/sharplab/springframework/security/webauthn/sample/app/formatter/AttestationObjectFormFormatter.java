@@ -17,7 +17,7 @@
 package net.sharplab.springframework.security.webauthn.sample.app.formatter;
 
 import com.webauthn4j.data.attestation.AttestationObject;
-import net.sharplab.springframework.security.webauthn.converter.Base64StringToAttestationObjectConverter;
+import net.sharplab.springframework.security.webauthn.converter.Base64UrlStringToAttestationObjectConverter;
 import net.sharplab.springframework.security.webauthn.sample.app.api.AttestationObjectForm;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.Formatter;
@@ -31,15 +31,15 @@ import java.util.Locale;
 public class AttestationObjectFormFormatter implements Formatter<AttestationObjectForm> {
 
     @Autowired
-    private Base64StringToAttestationObjectConverter base64StringToAttestationObjectConverter;
+    private Base64UrlStringToAttestationObjectConverter base64UrlStringToAttestationObjectConverter;
 
-    public AttestationObjectFormFormatter(Base64StringToAttestationObjectConverter base64StringToAttestationObjectConverter) {
-        this.base64StringToAttestationObjectConverter = base64StringToAttestationObjectConverter;
+    public AttestationObjectFormFormatter(Base64UrlStringToAttestationObjectConverter base64UrlStringToAttestationObjectConverter) {
+        this.base64UrlStringToAttestationObjectConverter = base64UrlStringToAttestationObjectConverter;
     }
 
     @Override
     public AttestationObjectForm parse(String text, Locale locale) throws ParseException {
-        AttestationObject attestationObject = base64StringToAttestationObjectConverter.convert(text);
+        AttestationObject attestationObject = base64UrlStringToAttestationObjectConverter.convert(text);
         AttestationObjectForm attestationObjectForm = new AttestationObjectForm();
         attestationObjectForm.setAttestationObject(attestationObject);
         attestationObjectForm.setAttestationObjectBase64(text);

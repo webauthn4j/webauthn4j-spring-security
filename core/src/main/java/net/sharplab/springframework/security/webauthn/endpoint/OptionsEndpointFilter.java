@@ -17,6 +17,8 @@
 package net.sharplab.springframework.security.webauthn.endpoint;
 
 import com.webauthn4j.converter.util.JsonConverter;
+import com.webauthn4j.data.PublicKeyCredentialRpEntity;
+import com.webauthn4j.data.client.challenge.Challenge;
 import net.sharplab.springframework.security.webauthn.options.AssertionOptions;
 import net.sharplab.springframework.security.webauthn.options.AttestationOptions;
 import net.sharplab.springframework.security.webauthn.options.OptionsProvider;
@@ -39,7 +41,14 @@ import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * A filter for providing WebAuthn option parameters to clients.
+ * Clients can retrieve {@link OptionsResponse}, which includes {@link Challenge}, {@link PublicKeyCredentialRpEntity} and etc.
+ */
 public class OptionsEndpointFilter extends GenericFilterBean {
+
+    // ~ Static fields/initializers
+    // =====================================================================================
 
     /**
      * Default name of path suffix which will validate this filter.
@@ -48,6 +57,7 @@ public class OptionsEndpointFilter extends GenericFilterBean {
 
     //~ Instance fields
     // ================================================================================================
+
     /**
      * Url this filter should get activated on.
      */
@@ -63,6 +73,9 @@ public class OptionsEndpointFilter extends GenericFilterBean {
 
     private OptionsProvider optionsProvider;
 
+    // ~ Constructors
+    // ===================================================================================================
+
     public OptionsEndpointFilter(OptionsProvider optionsProvider, JsonConverter jsonConverter) {
         this.optionsProvider = optionsProvider;
         this.jsonConverter = jsonConverter;
@@ -70,6 +83,9 @@ public class OptionsEndpointFilter extends GenericFilterBean {
         this.mfaTokenEvaluator = new MFATokenEvaluatorImpl();
         checkConfig();
     }
+
+    // ~ Methods
+    // ========================================================================================================
 
     @Override
     public void afterPropertiesSet() {

@@ -20,6 +20,9 @@ import java.util.Objects;
 
 public class ErrorResponse implements Response {
 
+    // ~ Instance fields
+    // ================================================================================================
+
     private String errorMessage;
 
     public ErrorResponse(String errorMessage) {

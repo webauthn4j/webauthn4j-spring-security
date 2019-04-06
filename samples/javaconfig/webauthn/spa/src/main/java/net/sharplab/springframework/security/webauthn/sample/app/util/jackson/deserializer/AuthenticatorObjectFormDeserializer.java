@@ -19,7 +19,7 @@ package net.sharplab.springframework.security.webauthn.sample.app.util.jackson.d
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
-import net.sharplab.springframework.security.webauthn.converter.Base64StringToAttestationObjectConverter;
+import net.sharplab.springframework.security.webauthn.converter.Base64UrlStringToAttestationObjectConverter;
 import net.sharplab.springframework.security.webauthn.sample.app.api.AttestationObjectForm;
 import org.springframework.boot.jackson.JsonComponent;
 
@@ -31,11 +31,11 @@ import java.io.IOException;
 @JsonComponent
 public class AuthenticatorObjectFormDeserializer extends StdDeserializer<AttestationObjectForm> {
 
-    private Base64StringToAttestationObjectConverter base64StringToAttestationObjectConverter;
+    private Base64UrlStringToAttestationObjectConverter base64UrlStringToAttestationObjectConverter;
 
-    public AuthenticatorObjectFormDeserializer(Base64StringToAttestationObjectConverter base64StringToAttestationObjectConverter) {
+    public AuthenticatorObjectFormDeserializer(Base64UrlStringToAttestationObjectConverter base64UrlStringToAttestationObjectConverter) {
         super(AttestationObjectForm.class);
-        this.base64StringToAttestationObjectConverter = base64StringToAttestationObjectConverter;
+        this.base64UrlStringToAttestationObjectConverter = base64UrlStringToAttestationObjectConverter;
     }
 
     /**
@@ -45,7 +45,7 @@ public class AuthenticatorObjectFormDeserializer extends StdDeserializer<Attesta
     public AttestationObjectForm deserialize(JsonParser p, DeserializationContext ctxt) throws IOException {
         String value = p.getValueAsString();
         AttestationObjectForm result = new AttestationObjectForm();
-        result.setAttestationObject(base64StringToAttestationObjectConverter.convert(value));
+        result.setAttestationObject(base64UrlStringToAttestationObjectConverter.convert(value));
         result.setAttestationObjectBase64(value);
         return result;
     }

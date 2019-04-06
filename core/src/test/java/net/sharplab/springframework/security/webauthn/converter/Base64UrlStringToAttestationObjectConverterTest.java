@@ -24,7 +24,7 @@ import org.junit.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class Base64StringToAttestationObjectConverterTest {
+public class Base64UrlStringToAttestationObjectConverterTest {
 
     private CborConverter cborConverter = new CborConverter();
 
@@ -32,7 +32,7 @@ public class Base64StringToAttestationObjectConverterTest {
     public void convert_test() {
         AttestationObject expected = TestDataUtil.createAttestationObjectWithFIDOU2FAttestationStatement();
         String source = new AttestationObjectConverter(cborConverter).convertToString(expected);
-        Base64StringToAttestationObjectConverter converter = new Base64StringToAttestationObjectConverter(cborConverter);
+        Base64UrlStringToAttestationObjectConverter converter = new Base64UrlStringToAttestationObjectConverter(cborConverter);
         AttestationObject result = converter.convert(source);
         assertThat(result).isEqualTo(expected);
     }
