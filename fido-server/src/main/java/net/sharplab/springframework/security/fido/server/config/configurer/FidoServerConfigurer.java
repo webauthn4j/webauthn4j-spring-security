@@ -32,6 +32,9 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.security.web.session.SessionManagementFilter;
 import org.springframework.util.Assert;
 
+import java.util.Collections;
+import java.util.List;
+
 public class FidoServerConfigurer<H extends HttpSecurityBuilder<H>> extends AbstractHttpConfigurer<FidoServerConfigurer<H>, H> {
 
 
@@ -111,6 +114,7 @@ public class FidoServerConfigurer<H extends HttpSecurityBuilder<H>> extends Abst
         private WebAuthnUserDetailsService webAuthnUserDetailsService;
         private WebAuthnRegistrationRequestValidator webAuthnRegistrationRequestValidator;
         private UsernameNotFoundHandler usernameNotFoundHandler;
+        private List<String> expectedRegistrationExtensionIds = Collections.emptyList();
 
         FidoServerAttestationResultEndpointConfig() {
             super(FidoServerAttestationResultEndpointFilter.class);
@@ -126,7 +130,16 @@ public class FidoServerConfigurer<H extends HttpSecurityBuilder<H>> extends Abst
             if (webAuthnRegistrationRequestValidator == null) {
                 webAuthnRegistrationRequestValidator = WebAuthnConfigurerUtil.getWebAuthnRegistrationRequestValidator(http);
             }
+            if(!expectedRegistrationExtensionIds.isEmpty()){
+                webAuthnRegistrationRequestValidator.setExpectedRegistrationExtensionIds(expectedRegistrationExtensionIds);
+            }
             http.setSharedObject(WebAuthnRegistrationRequestValidator.class, webAuthnRegistrationRequestValidator);
+        }
+
+        public FidoServerAttestationResultEndpointConfig expectedRegistrationExtensionIds(List<String> expectedRegistrationExtensionIds) {
+            Assert.notNull(expectedRegistrationExtensionIds, "expectedRegistrationExtensionIds must not be null");
+            this.expectedRegistrationExtensionIds = expectedRegistrationExtensionIds;
+            return this;
         }
 
         public FidoServerAttestationResultEndpointConfig webAuthnUserDetailsService(WebAuthnUserDetailsService webAuthnUserDetailsService) {

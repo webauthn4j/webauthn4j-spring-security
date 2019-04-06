@@ -42,7 +42,7 @@ with password and authenticator.
 
 image::images/login.png[login view]
 
-Please fill the username (email address) and password on the login view and click the login button.
+Please fill the userVerification (email address) and password on the login view and click the login button.
 
 image::images/authenticatorLogin.png[authenticator login view]
 
@@ -68,5 +68,5 @@ If you checked "Allow password authentication" at user registration, standard pa
 
 image::images/login.png[login view]
 
-Please fill the username (email address) and password on the login view and click the login button.
+Please fill the userVerification (email address) and password on the login view and click the login button.
 If the authentication succeeds, you will be automatically redirected to the dashboard.

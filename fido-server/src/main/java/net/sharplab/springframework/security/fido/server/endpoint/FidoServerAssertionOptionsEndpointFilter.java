@@ -17,6 +17,7 @@
 package net.sharplab.springframework.security.fido.server.endpoint;
 
 import com.webauthn4j.converter.util.JsonConverter;
+import com.webauthn4j.data.client.challenge.Challenge;
 import com.webauthn4j.data.client.challenge.DefaultChallenge;
 import com.webauthn4j.data.extension.client.AuthenticationExtensionsClientInputs;
 import com.webauthn4j.util.Base64UrlUtil;
@@ -76,7 +77,8 @@ public class FidoServerAssertionOptionsEndpointFilter extends ServerEndpointFilt
         ServerPublicKeyCredentialGetOptionsRequest serverRequest =
                 jsonConverter.readValue(inputStream, ServerPublicKeyCredentialGetOptionsRequest.class);
         String username = serverRequest.getUsername();
-        AssertionOptions options = optionsProvider.getAssertionOptions(request, username, new DefaultChallenge());
+        Challenge challenge = serverEndpointFilterUtil.encodeUserVerification(new DefaultChallenge(), serverRequest.getUserVerification());
+        AssertionOptions options = optionsProvider.getAssertionOptions(request, username, challenge);
         List<ServerPublicKeyCredentialDescriptor> credentials = options.getCredentials().stream().map(ServerPublicKeyCredentialDescriptor::new).collect(Collectors.toList());
         AuthenticationExtensionsClientInputs authenticationExtensionsClientInputs;
         if (serverRequest.getExtensions() != null) {

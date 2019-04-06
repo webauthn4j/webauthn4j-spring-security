@@ -43,9 +43,10 @@ import org.springframework.security.web.authentication.AuthenticationSuccessHand
 import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
 import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 
+import java.util.Collections;
+
 import static net.sharplab.springframework.security.fido.server.config.configurer.FidoServerConfigurer.fidoServer;
 import static net.sharplab.springframework.security.webauthn.config.configurers.WebAuthnConfigurer.webAuthn;
-import static net.sharplab.springframework.security.webauthn.config.configurers.WebAuthnLoginConfigurer.webAuthnLogin;
 
 
 /**
@@ -94,7 +95,8 @@ WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     public void configure(AuthenticationManagerBuilder builder) throws Exception {
-        builder.apply(new WebAuthnAuthenticationProviderConfigurer<>(userDetailsService, authenticatorService, webAuthnAuthenticationContextValidator));
+        builder.apply(new WebAuthnAuthenticationProviderConfigurer<>(userDetailsService, authenticatorService, webAuthnAuthenticationContextValidator))
+            .expectedAuthenticationExtensionIds(Collections.singletonList("example.extension"));
         builder.apply(new MultiFactorAuthenticationProviderConfigurer<>(daoAuthenticationProvider));
     }
 
@@ -127,6 +129,7 @@ WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .fidoServerAttestationOptionsEndpoint()
                 .and()
                 .fidoServerAttestationResultEndpointConfig()
+                .expectedRegistrationExtensionIds(Collections.singletonList("example.extension"))
                 .webAuthnUserDetailsService(userDetailsService)
                 .webAuthnRegistrationRequestValidator(webAuthnRegistrationRequestValidator)
                 .usernameNotFoundHandler(new SampleUsernameNotFoundHandler(userManager))
@@ -134,25 +137,6 @@ WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .fidoServerAssertionOptionsEndpointConfig()
                 .and()
                 .fidoServerAssertionResultEndpoint();
-
-        // WebAuthn Login
-        http.apply(webAuthnLogin())
-                .loginPage("/login")
-                .usernameParameter("username")
-                .passwordParameter("password")
-                .credentialIdParameter("credentialId")
-                .clientDataJSONParameter("clientDataJSON")
-                .authenticatorDataParameter("authenticatorData")
-                .signatureParameter("signature")
-                .clientExtensionsJSONParameter("clientExtensionsJSON")
-                .loginProcessingUrl("/login")
-                .successHandler(authenticationSuccessHandler)
-                .failureHandler(authenticationFailureHandler);
-
-        // Logout
-        http.logout()
-                .logoutUrl("/logout")
-                .logoutSuccessHandler(logoutSuccessHandler);
 
         // Authorization
         http.authorizeRequests()

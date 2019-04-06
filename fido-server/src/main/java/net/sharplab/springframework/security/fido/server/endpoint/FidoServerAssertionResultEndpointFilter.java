@@ -17,7 +17,10 @@
 package net.sharplab.springframework.security.fido.server.endpoint;
 
 import com.fasterxml.jackson.core.type.TypeReference;
+import com.webauthn4j.converter.CollectedClientDataConverter;
 import com.webauthn4j.converter.util.JsonConverter;
+import com.webauthn4j.data.UserVerificationRequirement;
+import com.webauthn4j.data.client.CollectedClientData;
 import com.webauthn4j.server.ServerProperty;
 import com.webauthn4j.util.Base64UrlUtil;
 import net.sharplab.springframework.security.fido.server.validator.ServerPublicKeyCredentialValidator;
@@ -50,6 +53,8 @@ public class FidoServerAssertionResultEndpointFilter extends AbstractAuthenticat
     private TypeReference<ServerPublicKeyCredential<ServerAuthenticatorAssertionResponse>> credentialTypeRef
             = new TypeReference<ServerPublicKeyCredential<ServerAuthenticatorAssertionResponse>>() {
     };
+    private CollectedClientDataConverter collectedClientDataConverter;
+    private ServerEndpointFilterUtil serverEndpointFilterUtil;
 
     public FidoServerAssertionResultEndpointFilter(
             JsonConverter jsonConverter,
@@ -63,6 +68,10 @@ public class FidoServerAssertionResultEndpointFilter extends AbstractAuthenticat
 
         this.setAuthenticationSuccessHandler(new FidoServerAssertionResultEndpointSuccessHandler(jsonConverter));
         this.setAuthenticationFailureHandler(new FidoServerAssertionResultEndpointFailureHandler(jsonConverter));
+
+        this.collectedClientDataConverter = new CollectedClientDataConverter(jsonConverter);
+        this.serverEndpointFilterUtil = new ServerEndpointFilterUtil(jsonConverter);
+
         checkConfig();
     }
 
@@ -101,6 +110,9 @@ public class FidoServerAssertionResultEndpointFilter extends AbstractAuthenticat
 
         ServerProperty serverProperty = serverPropertyProvider.provide(request);
 
+        CollectedClientData collectedClientData = collectedClientDataConverter.convert(assertionResponse.getClientDataJSON());
+        UserVerificationRequirement userVerificationRequirement = serverEndpointFilterUtil.decodeUserVerification(collectedClientData.getChallenge());
+
         WebAuthnAuthenticationRequest webAuthnAuthenticationRequest = new WebAuthnAuthenticationRequest(
                 Base64UrlUtil.decode(credential.getRawId()),
                 Base64UrlUtil.decode(assertionResponse.getClientDataJSON()),
@@ -108,7 +120,7 @@ public class FidoServerAssertionResultEndpointFilter extends AbstractAuthenticat
                 Base64UrlUtil.decode(assertionResponse.getSignature()),
                 credential.getClientExtensionResults(),
                 serverProperty,
-                false,
+                userVerificationRequirement == UserVerificationRequirement.REQUIRED,
                 false
         );
 

@@ -24,6 +24,9 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.SecurityConfigurerAdapter;
 import org.springframework.security.config.annotation.authentication.ProviderManagerBuilder;
 
+import java.util.Collections;
+import java.util.List;
+
 public class WebAuthnAuthenticationProviderConfigurer<
         B extends ProviderManagerBuilder<B>,
         U extends WebAuthnUserDetailsService,
@@ -36,6 +39,7 @@ public class WebAuthnAuthenticationProviderConfigurer<
     private U userDetailsService;
     private A authenticatorService;
     private WebAuthnAuthenticationContextValidator authenticationContextValidator;
+    private List<String> expectedAuthenticationExtensionIds = Collections.emptyList();
 
     /**
      * Constructor
@@ -53,8 +57,13 @@ public class WebAuthnAuthenticationProviderConfigurer<
     public void configure(B builder) {
         WebAuthnAuthenticationProvider authenticationProvider =
                 new WebAuthnAuthenticationProvider(userDetailsService, authenticatorService, authenticationContextValidator);
+        authenticationProvider.setExpectedAuthenticationExtensionIds(expectedAuthenticationExtensionIds);
         authenticationProvider = postProcess(authenticationProvider);
         builder.authenticationProvider(authenticationProvider);
+    }
+
+    public void expectedAuthenticationExtensionIds(List<String> expectedAuthenticationExtensionIds){
+        this.expectedAuthenticationExtensionIds = expectedAuthenticationExtensionIds;
     }
 
 }

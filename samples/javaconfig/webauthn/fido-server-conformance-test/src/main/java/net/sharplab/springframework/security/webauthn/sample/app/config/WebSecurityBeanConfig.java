@@ -80,17 +80,15 @@ import org.springframework.web.client.RestTemplate;
 
 import java.io.IOException;
 import java.security.cert.X509Certificate;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.LinkedHashMap;
-import java.util.List;
+import java.util.*;
 
 @Configuration
 public class WebSecurityBeanConfig {
 
     @Bean
     public WebAuthnRegistrationRequestValidator webAuthnRegistrationRequestValidator(WebAuthnRegistrationContextValidator registrationContextValidator, ServerPropertyProvider serverPropertyProvider) {
-        return new WebAuthnRegistrationRequestValidator(registrationContextValidator, serverPropertyProvider);
+        WebAuthnRegistrationRequestValidator webAuthnRegistrationRequestValidator = new WebAuthnRegistrationRequestValidator(registrationContextValidator, serverPropertyProvider);
+        return webAuthnRegistrationRequestValidator;
     }
 
     @Bean
@@ -189,11 +187,11 @@ public class WebSecurityBeanConfig {
     public MetadataItemsProvider fidoMetadataItemsProvider(JsonConverter jsonConverter, HttpClient httpClient){
         X509Certificate conformanceTestCertificate = CertificateUtil.generateX509Certificate(Base64Util.decode("MIICYjCCAeigAwIBAgIPBIdvCXPXJiuD7VW0mgRQMAoGCCqGSM49BAMDMGcxCzAJBgNVBAYTAlVTMRYwFAYDVQQKDA1GSURPIEFsbGlhbmNlMScwJQYDVQQLDB5GQUtFIE1ldGFkYXRhIFRPQyBTaWduaW5nIEZBS0UxFzAVBgNVBAMMDkZBS0UgUm9vdCBGQUtFMB4XDTE3MDIwMTAwMDAwMFoXDTQ1MDEzMTIzNTk1OVowZzELMAkGA1UEBhMCVVMxFjAUBgNVBAoMDUZJRE8gQWxsaWFuY2UxJzAlBgNVBAsMHkZBS0UgTWV0YWRhdGEgVE9DIFNpZ25pbmcgRkFLRTEXMBUGA1UEAwwORkFLRSBSb290IEZBS0UwdjAQBgcqhkjOPQIBBgUrgQQAIgNiAARcVLd6r4fnNHzs5K2zfbg//4X9/oBqmsdRVtZ9iXhlgM9vFYaKviYtqmwkq0D3Lihg3qefeZgXXYi4dFgvzU7ZLBapSNM3CT8RDBe/MBJqsPwaRQbIsGmmItmt/ESNQD6jWjBYMAsGA1UdDwQEAwIBBjAPBgNVHRMBAf8EBTADAQH/MBsGA1UdDgQU3feayBzv4V/ToevbM18w9GoZmVkwGwYDVR0jBBTd95rIHO/hX9Oh69szXzD0ahmZWTAKBggqhkjOPQQDAwNoADBlAjAfT9m8LabIuGS6tXiJmRB91SjJ49dk+sPsn+AKx1/PS3wbHEGnGxDIIcQplYDFcXICMQDi33M/oUlb7RDAmapRBjJxKK+oh7hlSZv4djmZV3YV0JnF1Ed5E4I0f3C04eP0bjw="));
         String[] urls = new String[]{
-                "https://fidoalliance.co.nz/mds/execute/26f215541c4ec9b5f02dccbd5256adc636bfd8697b1e352497cd0992c2e6ed07",
-                "https://fidoalliance.co.nz/mds/execute/64fb580564284282ee31053135a9cf793b2c02cf0910bb061f2f5841e78d9c05",
-                "https://fidoalliance.co.nz/mds/execute/7c8b9d3c35327f21f35473d292de050beae7c3b585c5e99de44855e3b0b64ece",
-                "https://fidoalliance.co.nz/mds/execute/7d3d49bf21ec5fa823df78c584076f965400f461343e413b4090356ce3b25b03",
-                "https://fidoalliance.co.nz/mds/execute/8c0d39150e1c103dbbf489d8ccf6f9410b87a284e86a04ce26b58e9ff5c7aaa4"
+                "https://fidoalliance.co.nz/mds/execute/45e4b78b2eeae3f0e11cfb3e457d467f15348058970d0e2cec376b4beca0de9a",
+                "https://fidoalliance.co.nz/mds/execute/4cfef9dac579c25133b6127100e15888c4a58520d589920c271555da15330423",
+                "https://fidoalliance.co.nz/mds/execute/6367772ae0fbe33cea2cc241cccc26ba103bc142711d3e22d1c58b54f2d0d7c7",
+                "https://fidoalliance.co.nz/mds/execute/b037f7d0cd90badb983fb36fd22a0258d16023f5bdafa7435ffa7fac6003cb60",
+                "https://fidoalliance.co.nz/mds/execute/fd8471ddacd4cf795c8b1ac5099340fd49df25d5b7359b6b8fd084db494664d5"
         };
         List<MetadataItemsProvider> list = new ArrayList<>();
         Arrays.stream(urls).map(url -> {

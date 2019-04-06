@@ -18,6 +18,7 @@ package net.sharplab.springframework.security.fido.server.endpoint;
 
 import com.webauthn4j.converter.util.CborConverter;
 import com.webauthn4j.converter.util.JsonConverter;
+import com.webauthn4j.data.UserVerificationRequirement;
 import com.webauthn4j.data.client.challenge.Challenge;
 import com.webauthn4j.data.client.challenge.DefaultChallenge;
 import org.apache.commons.logging.Log;
@@ -66,7 +67,7 @@ class ServerEndpointFilterUtil {
     }
 
     Challenge encodeUsername(Challenge challenge, String username) {
-        UsernameEncordedChallengeEnvelope envelope = new UsernameEncordedChallengeEnvelope();
+        UsernameEncodedChallengeEnvelope envelope = new UsernameEncodedChallengeEnvelope();
         envelope.setChallenge(challenge.getValue());
         envelope.setUsername(username);
         byte[] bytes = cborConverter.writeValueAsBytes(envelope);
@@ -75,14 +76,31 @@ class ServerEndpointFilterUtil {
 
     String decodeUsername(Challenge challenge) {
         try {
-            UsernameEncordedChallengeEnvelope envelope = cborConverter.readValue(challenge.getValue(), UsernameEncordedChallengeEnvelope.class);
+            UsernameEncodedChallengeEnvelope envelope = cborConverter.readValue(challenge.getValue(), UsernameEncodedChallengeEnvelope.class);
             return envelope.getUsername();
         } catch (RuntimeException e) {
             return null;
         }
     }
 
-    static class UsernameEncordedChallengeEnvelope {
+    Challenge encodeUserVerification(Challenge challenge, UserVerificationRequirement userVerification) {
+        UserVerificationEncodedChallengeEnvelope envelope = new UserVerificationEncodedChallengeEnvelope();
+        envelope.setChallenge(challenge.getValue());
+        envelope.setUserVerification(userVerification);
+        byte[] bytes = cborConverter.writeValueAsBytes(envelope);
+        return new DefaultChallenge(bytes);
+    }
+
+    UserVerificationRequirement decodeUserVerification(Challenge challenge) {
+        try {
+            UserVerificationEncodedChallengeEnvelope envelope = cborConverter.readValue(challenge.getValue(), UserVerificationEncodedChallengeEnvelope.class);
+            return envelope.getUserVerification();
+        } catch (RuntimeException e) {
+            return null;
+        }
+    }
+
+    static class UsernameEncodedChallengeEnvelope {
         private String username;
         private byte[] challenge;
 
@@ -92,6 +110,27 @@ class ServerEndpointFilterUtil {
 
         public void setUsername(String username) {
             this.username = username;
+        }
+
+        public byte[] getChallenge() {
+            return challenge;
+        }
+
+        public void setChallenge(byte[] challenge) {
+            this.challenge = challenge;
+        }
+    }
+
+    static class UserVerificationEncodedChallengeEnvelope {
+        private UserVerificationRequirement userVerification;
+        private byte[] challenge;
+
+        public UserVerificationRequirement getUserVerification() {
+            return userVerification;
+        }
+
+        public void setUserVerification(UserVerificationRequirement userVerification) {
+            this.userVerification = userVerification;
         }
 
         public byte[] getChallenge() {
