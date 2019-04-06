@@ -172,6 +172,10 @@ public class WebAuthnAuthenticationProvider implements AuthenticationProvider {
         return expectedAuthenticationExtensionIds;
     }
 
+    /**
+     * Sets expected authentication extensionId list
+     * @param expectedAuthenticationExtensionIds list of expected authentication extensionId
+     */
     public void setExpectedAuthenticationExtensionIds(List<String> expectedAuthenticationExtensionIds) {
         this.expectedAuthenticationExtensionIds = expectedAuthenticationExtensionIds;
     }

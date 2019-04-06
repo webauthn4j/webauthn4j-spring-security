@@ -279,33 +279,62 @@ public final class WebAuthnLoginConfigurer<H extends HttpSecurityBuilder<H>> ext
         return super.loginPage(loginPage);
     }
 
+    /**
+     * Create the {@link RequestMatcher} given a loginProcessingUrl
+     * @param loginProcessingUrl creates the {@link RequestMatcher} based upon the
+     * loginProcessingUrl
+     * @return the {@link RequestMatcher} to use based upon the loginProcessingUrl
+     */
     @Override
     protected RequestMatcher createLoginProcessingUrlMatcher(String loginProcessingUrl) {
         return new AntPathRequestMatcher(loginProcessingUrl, "POST");
     }
 
+    /**
+     * Specifies the {@link OptionsProvider} to be used.
+     * @param optionsProvider the {@link OptionsProvider}
+     * @return the {@link WebAuthnLoginConfigurer} for additional customization
+     */
     public WebAuthnLoginConfigurer<H> optionsProvider(OptionsProvider optionsProvider) {
         Assert.notNull(optionsProvider, "optionsProvider must not be null");
         this.optionsProvider = optionsProvider;
         return this;
     }
 
-    public WebAuthnLoginConfigurer<H> registry(JsonConverter jsonConverter) {
+    /**
+     * Specifies the {@link JsonConverter} to be used.
+     * @param jsonConverter the {@link JsonConverter}
+     * @return the {@link WebAuthnLoginConfigurer} for additional customization
+     */
+    public WebAuthnLoginConfigurer<H> jsonConverter(JsonConverter jsonConverter) {
         Assert.notNull(jsonConverter, "jsonConverter must not be null");
         this.jsonConverter = jsonConverter;
         return this;
     }
 
+    /**
+     * Specifies the {@link ServerPropertyProvider} to be used.
+     * @param serverPropertyProvider the {@link ServerPropertyProvider}
+     * @return the {@link WebAuthnLoginConfigurer} for additional customization
+     */
     public WebAuthnLoginConfigurer<H> serverPropertyProvider(ServerPropertyProvider serverPropertyProvider) {
         Assert.notNull(serverPropertyProvider, "serverPropertyProvider must not be null");
         this.serverPropertyProvider = serverPropertyProvider;
         return this;
     }
 
+    /**
+     * Returns the {@link OptionsEndpointConfig} for configuring the {@link OptionsEndpointFilter}
+     * @return the {@link OptionsEndpointConfig}
+     */
     public WebAuthnLoginConfigurer<H>.OptionsEndpointConfig optionsEndpoint() {
         return optionsEndpointConfig;
     }
 
+
+    /**
+     * Configuration options for the {@link OptionsEndpointFilter}
+     */
     public class OptionsEndpointConfig {
 
         private String processingUrl = OptionsEndpointFilter.FILTER_URL;
@@ -327,11 +356,21 @@ public final class WebAuthnLoginConfigurer<H extends HttpSecurityBuilder<H>> ext
             http.addFilterAfter(optionsEndpointFilter, SessionManagementFilter.class);
         }
 
+        /**
+         * Sets the URL for the options endpoint
+         * @param processingUrl the URL for the options endpoint
+         * @return the {@link OptionsEndpointConfig} for additional customization
+         */
         public WebAuthnLoginConfigurer<H>.OptionsEndpointConfig processingUrl(String processingUrl) {
             this.processingUrl = processingUrl;
             return this;
         }
 
+        /**
+         * Returns the {@link WebAuthnLoginConfigurer} for further configuration.
+         *
+         * @return the {@link WebAuthnLoginConfigurer}
+         */
         public WebAuthnLoginConfigurer<H> and() {
             return WebAuthnLoginConfigurer.this;
         }

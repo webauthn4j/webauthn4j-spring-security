@@ -31,7 +31,7 @@ import net.sharplab.springframework.security.webauthn.userdetails.WebAuthnUserDe
 import org.springframework.context.ApplicationContext;
 import org.springframework.security.config.annotation.web.HttpSecurityBuilder;
 
-public class WebAuthnConfigurerUtil {
+class WebAuthnConfigurerUtil {
 
     private WebAuthnConfigurerUtil() {
     }

@@ -62,6 +62,10 @@ public class WebAuthnAuthenticationProviderConfigurer<
         builder.authenticationProvider(authenticationProvider);
     }
 
+    /**
+     * The list of expected authentication extensionId
+     * @param expectedAuthenticationExtensionIds the list of expected authentication extensionId
+     */
     public void expectedAuthenticationExtensionIds(List<String> expectedAuthenticationExtensionIds){
         this.expectedAuthenticationExtensionIds = expectedAuthenticationExtensionIds;
     }

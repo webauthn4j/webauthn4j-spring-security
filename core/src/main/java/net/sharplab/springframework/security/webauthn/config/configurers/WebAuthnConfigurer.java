@@ -39,10 +39,17 @@ public class WebAuthnConfigurer<H extends HttpSecurityBuilder<H>> extends Abstra
     private BigInteger registrationTimeout;
     private BigInteger authenticationTimeout;
 
+    /**
+     * Returns a new instance
+     * @return the {@link WebAuthnConfigurer}
+     */
     public static WebAuthnConfigurer<HttpSecurity> webAuthn() {
         return new WebAuthnConfigurer<>();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void init(H http) throws Exception {
         super.init(http);
@@ -53,6 +60,9 @@ public class WebAuthnConfigurer<H extends HttpSecurityBuilder<H>> extends Abstra
         http.setSharedObject(OptionsProvider.class, optionsProvider);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void configure(H http) throws Exception {
         super.configure(http);
@@ -75,48 +85,92 @@ public class WebAuthnConfigurer<H extends HttpSecurityBuilder<H>> extends Abstra
         }
     }
 
+    /**
+     * The relying party id for credential scoping
+     * @param rpId the relying party id
+     * @return the {@link WebAuthnConfigurer} for additional customization
+     */
     public WebAuthnConfigurer<H> rpId(String rpId) {
         Assert.hasText(rpId, "rpId parameter must not be null or empty");
         this.rpId = rpId;
         return this;
     }
 
+    /**
+     * The relying party name
+     * @param rpName the relying party name
+     * @return the {@link WebAuthnConfigurer} for additional customization
+     */
     public WebAuthnConfigurer<H> rpName(String rpName) {
         Assert.hasText(rpName, "rpName parameter must not be null or empty");
         this.rpName = rpName;
         return this;
     }
 
+    /**
+     * The relying party icon
+     * @param rpIcon the relying party icon
+     * @return the {@link WebAuthnConfigurer} for additional customization
+     */
     public WebAuthnConfigurer<H> rpIcon(String rpIcon) {
         Assert.hasText(rpIcon, "rpIcon parameter must not be null or empty");
         this.rpIcon = rpIcon;
         return this;
     }
 
+    /**
+     * Returns the {@link PublicKeyCredParamsConfig} for configuring PublicKeyCredParams
+     * @return the {@link PublicKeyCredParamsConfig}
+     */
     public WebAuthnConfigurer<H>.PublicKeyCredParamsConfig publicKeyCredParams() {
         return this.publicKeyCredParamsConfig;
     }
 
+    /**
+     * The timeout for registration ceremony
+     * @param registrationTimeout the timeout for registration ceremony
+     * @return the {@link WebAuthnConfigurer} for additional customization
+     */
     public WebAuthnConfigurer<H> registrationTimeout(BigInteger registrationTimeout) {
         this.registrationTimeout = registrationTimeout;
         return this;
     }
 
+    /**
+     * The timeout for authentication ceremony
+     * @param authenticationTimeout the timeout for authentication ceremony
+     * @return the {@link WebAuthnConfigurer} for additional customization
+     */
     public WebAuthnConfigurer<H> authenticationTimeout(BigInteger authenticationTimeout) {
         this.authenticationTimeout = authenticationTimeout;
         return this;
     }
 
-
+    /**
+     * Configuration options for PublicKeyCredParams
+     */
     public class PublicKeyCredParamsConfig {
+
+        private PublicKeyCredParamsConfig(){}
 
         private List<PublicKeyCredentialParameters> publicKeyCredentialParameters = new ArrayList<>();
 
+        /**
+         * Add PublicKeyCredParam
+         * @param type the {@link PublicKeyCredentialType}
+         * @param alg the {@link COSEAlgorithmIdentifier}
+         * @return the {@link PublicKeyCredParamsConfig}
+         */
         public WebAuthnConfigurer.PublicKeyCredParamsConfig addPublicKeyCredParams(PublicKeyCredentialType type, COSEAlgorithmIdentifier alg) {
             publicKeyCredentialParameters.add(new PublicKeyCredentialParameters(type, alg));
             return this;
         }
 
+        /**
+         * Returns the {@link WebAuthnConfigurer} for further configuration.
+         *
+         * @return the {@link WebAuthnConfigurer}
+         */
         public WebAuthnConfigurer<H> and() {
             return WebAuthnConfigurer.this;
         }
