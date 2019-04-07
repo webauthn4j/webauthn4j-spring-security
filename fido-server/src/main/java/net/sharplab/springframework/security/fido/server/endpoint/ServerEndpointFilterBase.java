@@ -17,6 +17,7 @@
 package net.sharplab.springframework.security.fido.server.endpoint;
 
 import com.webauthn4j.converter.util.JsonConverter;
+import com.webauthn4j.util.exception.WebAuthnException;
 import net.sharplab.springframework.security.webauthn.util.ExceptionUtil;
 import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.http.HttpMethod;
@@ -87,7 +88,7 @@ public abstract class ServerEndpointFilterBase extends GenericFilterBean {
             try {
                 ServerResponse serverResponse = processRequest(httpServletRequest);
                 serverEndpointFilterUtil.writeResponse(httpServletResponse, serverResponse);
-            } catch (RuntimeException e) {
+            } catch (WebAuthnException e) {
                 throw ExceptionUtil.wrapWithAuthenticationException(e);
             }
         } catch (RuntimeException e) {

@@ -19,6 +19,7 @@ package net.sharplab.springframework.security.webauthn;
 import com.webauthn4j.data.WebAuthnRegistrationContext;
 import com.webauthn4j.server.ServerProperty;
 import com.webauthn4j.util.Base64UrlUtil;
+import com.webauthn4j.util.exception.WebAuthnException;
 import com.webauthn4j.validator.WebAuthnRegistrationContextValidationResponse;
 import com.webauthn4j.validator.WebAuthnRegistrationContextValidator;
 import net.sharplab.springframework.security.webauthn.server.ServerPropertyProvider;
@@ -73,7 +74,7 @@ public class WebAuthnRegistrationRequestValidator {
                     response.getCollectedClientData(),
                     response.getAttestationObject(),
                     response.getRegistrationExtensionsClientOutputs());
-        } catch (RuntimeException e) {
+        } catch (WebAuthnException e) {
             throw ExceptionUtil.wrapWithAuthenticationException(e);
         }
     }
