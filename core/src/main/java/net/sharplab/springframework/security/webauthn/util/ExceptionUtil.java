@@ -36,43 +36,61 @@ public class ExceptionUtil {
      */
     @SuppressWarnings("squid:S3776")
     public static RuntimeException wrapWithAuthenticationException(WebAuthnException e) {
-        if (e instanceof com.webauthn4j.validator.exception.BadAlgorithmException) {
-            return new BadAlgorithmException("Bad algorithm", e);
+        // ValidationExceptions
+        if (e instanceof com.webauthn4j.validator.exception.BadAaguidException) {
+            return new BadAaguidException(e.getMessage(), e);
+        } else if (e instanceof com.webauthn4j.validator.exception.BadAlgorithmException) {
+            return new BadAlgorithmException(e.getMessage(), e);
         } else if (e instanceof com.webauthn4j.validator.exception.BadAttestationStatementException) {
-            return new BadAttestationStatementException("Bad attestation statement", e);
+            if (e instanceof com.webauthn4j.validator.exception.KeyDescriptionValidationException) {
+                return new KeyDescriptionValidationException(e.getMessage(), e);
+            }
+            else {
+                return new BadAttestationStatementException(e.getMessage(), e);
+            }
         } else if (e instanceof com.webauthn4j.validator.exception.BadChallengeException) {
-            return new BadChallengeException("Bad challenge", e);
+            return new BadChallengeException(e.getMessage(), e);
         } else if (e instanceof com.webauthn4j.validator.exception.BadOriginException) {
-            return new BadOriginException("Bad origin", e);
+            return new BadOriginException(e.getMessage(), e);
         } else if (e instanceof com.webauthn4j.validator.exception.BadRpIdException) {
-            return new BadRpIdException("Bad rpId", e);
+            return new BadRpIdException(e.getMessage(), e);
         } else if (e instanceof com.webauthn4j.validator.exception.BadSignatureException) {
-            return new BadSignatureException("Bad signature", e);
+            return new BadSignatureException(e.getMessage(), e);
+        } else if (e instanceof com.webauthn4j.metadata.exception.BadStatusException) {
+            return new BadStatusException(e.getMessage(), e);
         } else if (e instanceof com.webauthn4j.validator.exception.CertificateException) {
-            return new CertificateException("Certificate error", e);
+            return new CertificateException(e.getMessage(), e);
         } else if (e instanceof com.webauthn4j.validator.exception.ConstraintViolationException) {
-            return new ConstraintViolationException("Constraint violation error", e);
+            return new ConstraintViolationException(e.getMessage(), e);
         } else if (e instanceof com.webauthn4j.validator.exception.MaliciousCounterValueException) {
-            return new MaliciousCounterValueException("Malicious counter value is detected. Cloned authenticators exist in parallel.", e);
+            return new MaliciousCounterValueException(e.getMessage(), e);
         } else if (e instanceof com.webauthn4j.validator.exception.MaliciousDataException) {
-            return new MaliciousDataException("Bad client data type", e);
+            return new MaliciousDataException(e.getMessage(), e);
         } else if (e instanceof com.webauthn4j.validator.exception.MissingChallengeException) {
-            return new MissingChallengeException("Missing challenge error", e);
+            return new MissingChallengeException(e.getMessage(), e);
+        } else if (e instanceof com.webauthn4j.validator.exception.PublicKeyMismatchException) {
+            return new PublicKeyMismatchException(e.getMessage(), e);
         } else if (e instanceof com.webauthn4j.validator.exception.SelfAttestationProhibitedException) {
-            return new SelfAttestationProhibitedException("Self attestation is specified while prohibited", e);
+            return new SelfAttestationProhibitedException(e.getMessage(), e);
         } else if (e instanceof com.webauthn4j.validator.exception.TokenBindingException) {
-            return new TokenBindingException("Token binding error", e);
+            return new TokenBindingException(e.getMessage(), e);
+        } else if (e instanceof com.webauthn4j.validator.exception.TrustAnchorNotFoundException) {
+            return new TrustAnchorNotFoundException(e.getMessage(), e);
         } else if (e instanceof com.webauthn4j.validator.exception.UnexpectedExtensionException) {
-            return new UnexpectedExtensionException("Unexpected extension is contained", e);
+            return new UnexpectedExtensionException(e.getMessage(), e);
         } else if (e instanceof com.webauthn4j.validator.exception.UserNotPresentException) {
-            return new UserNotPresentException("User not verified", e);
+            return new UserNotPresentException(e.getMessage(), e);
         } else if (e instanceof com.webauthn4j.validator.exception.UserNotVerifiedException) {
-            return new UserNotVerifiedException("User not verified", e);
+            return new UserNotVerifiedException(e.getMessage(), e);
         } else if (e instanceof com.webauthn4j.validator.exception.ValidationException) {
             return new AuthenticationServiceException("WebAuthn validation error", e);
-        } else if (e instanceof com.webauthn4j.converter.exception.DataConversionException) {
-            return new DataConversionException("Input data cannot be parsed", e);
         }
-        return e;
+        // DataConversionException
+        else if (e instanceof com.webauthn4j.converter.exception.DataConversionException) {
+            return new DataConversionException("WebAuthn data conversion error", e);
+        }
+        else{
+            return new AuthenticationServiceException(null, e);
+        }
     }
 }

@@ -16,16 +16,16 @@
 
 package net.sharplab.springframework.security.webauthn.exception;
 
-import org.junit.Test;
+/**
+ * Thrown if bad aaguid is specified
+ */
+public class BadAaguidException extends ValidationException {
 
-@SuppressWarnings("ThrowableNotThrown")
-public class UnsupportedAttestationFormatExceptionTest {
+    public BadAaguidException(String message, Throwable cause) {
+        super(message, cause);
+    }
 
-    private RuntimeException cause = new RuntimeException();
-
-    @Test
-    public void test() {
-        new UnsupportedAttestationFormatException("dummy", cause);
-        new UnsupportedAttestationFormatException("dummy");
+    public BadAaguidException(String message) {
+        super(message);
     }
 }

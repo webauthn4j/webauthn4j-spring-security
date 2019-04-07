@@ -16,16 +16,16 @@
 
 package net.sharplab.springframework.security.webauthn.exception;
 
-
 /**
- * Thrown if unsupported attestation format is specified
+ * Thrown if bad status is reported by FIDO Metadata service
  */
-public class UnsupportedAttestationFormatException extends ValidationException {
-    public UnsupportedAttestationFormatException(String message, Throwable cause) {
+public class BadStatusException extends ValidationException {
+
+    public BadStatusException(String message, Throwable cause) {
         super(message, cause);
     }
 
-    public UnsupportedAttestationFormatException(String message) {
+    public BadStatusException(String message) {
         super(message);
     }
 }

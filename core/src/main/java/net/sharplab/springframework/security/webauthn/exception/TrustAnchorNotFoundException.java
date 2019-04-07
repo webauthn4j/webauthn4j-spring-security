@@ -16,12 +16,16 @@
 
 package net.sharplab.springframework.security.webauthn.exception;
 
-public class ValidationException extends WebAuthnAuthenticationException {
-    public ValidationException(String message, Throwable cause) {
+/**
+ * Thrown if no trust anchor chained to the attestation certificate is found
+ */
+public class TrustAnchorNotFoundException extends ValidationException {
+
+    public TrustAnchorNotFoundException(String message, Throwable cause) {
         super(message, cause);
     }
 
-    public ValidationException(String message) {
+    public TrustAnchorNotFoundException(String message) {
         super(message);
     }
 }

@@ -16,12 +16,15 @@
 
 package net.sharplab.springframework.security.webauthn.exception;
 
-public class ValidationException extends WebAuthnAuthenticationException {
-    public ValidationException(String message, Throwable cause) {
+/**
+ * Thrown if the public key in the first certificate in x5c doesn't matches the credentialPublicKey in the attestedCredentialData
+ */
+public class PublicKeyMismatchException extends ValidationException {
+    public PublicKeyMismatchException(String message, Throwable cause) {
         super(message, cause);
     }
 
-    public ValidationException(String message) {
+    public PublicKeyMismatchException(String message) {
         super(message);
     }
 }

@@ -16,12 +16,16 @@
 
 package net.sharplab.springframework.security.webauthn.exception;
 
-public class ValidationException extends WebAuthnAuthenticationException {
-    public ValidationException(String message, Throwable cause) {
+/**
+ * Thrown if bad key description is specified
+ */
+public class KeyDescriptionValidationException extends ValidationException {
+
+    public KeyDescriptionValidationException(String message, Throwable cause) {
         super(message, cause);
     }
 
-    public ValidationException(String message) {
+    public KeyDescriptionValidationException(String message) {
         super(message);
     }
 }
