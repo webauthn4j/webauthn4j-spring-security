@@ -16,16 +16,26 @@
 
 package net.sharplab.springframework.security.webauthn.util;
 
+import com.webauthn4j.util.exception.WebAuthnException;
 import net.sharplab.springframework.security.webauthn.exception.*;
 import org.springframework.security.authentication.AuthenticationServiceException;
+import org.springframework.security.core.AuthenticationException;
 
+/**
+ * Internal utility to handle exceptions
+ */
 public class ExceptionUtil {
 
     private ExceptionUtil() {
     }
 
+    /**
+     * Wraps WebAuthnAuthentication to proper {@link RuntimeException} (mainly {@link AuthenticationException} subclass.
+     * @param e exception to be wrapped
+     * @return wrapping exception
+     */
     @SuppressWarnings("squid:S3776")
-    public static RuntimeException wrapWithAuthenticationException(RuntimeException e) {
+    public static RuntimeException wrapWithAuthenticationException(WebAuthnException e) {
         if (e instanceof com.webauthn4j.validator.exception.BadAlgorithmException) {
             return new BadAlgorithmException("Bad algorithm", e);
         } else if (e instanceof com.webauthn4j.validator.exception.BadAttestationStatementException) {

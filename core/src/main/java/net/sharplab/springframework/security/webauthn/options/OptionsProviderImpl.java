@@ -42,6 +42,9 @@ import java.util.List;
 
 import static net.sharplab.springframework.security.webauthn.WebAuthnProcessingFilter.*;
 
+/**
+ * An {@link OptionsProvider} implementation
+ */
 public class OptionsProviderImpl implements OptionsProvider {
 
     //~ Instance fields

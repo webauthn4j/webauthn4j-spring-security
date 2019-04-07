@@ -18,6 +18,7 @@ package net.sharplab.springframework.security.webauthn;
 
 import com.webauthn4j.authenticator.Authenticator;
 import com.webauthn4j.data.WebAuthnAuthenticationContext;
+import com.webauthn4j.util.exception.WebAuthnException;
 import com.webauthn4j.validator.WebAuthnAuthenticationContextValidator;
 import net.sharplab.springframework.security.webauthn.authenticator.WebAuthnAuthenticatorService;
 import net.sharplab.springframework.security.webauthn.exception.CredentialIdNotFoundException;
@@ -161,7 +162,7 @@ public class WebAuthnAuthenticationProvider implements AuthenticationProvider {
 
         try {
             authenticationContextValidator.validate(authenticationContext, authenticator);
-        } catch (RuntimeException e) {
+        } catch (WebAuthnException e) {
             throw ExceptionUtil.wrapWithAuthenticationException(e);
         }
 

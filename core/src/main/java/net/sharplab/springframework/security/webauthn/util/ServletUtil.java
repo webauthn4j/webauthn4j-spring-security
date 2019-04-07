@@ -19,14 +19,22 @@ package net.sharplab.springframework.security.webauthn.util;
 
 import com.webauthn4j.data.client.Origin;
 
-import javax.servlet.http.HttpServletRequest;
+import javax.servlet.ServletRequest;
 
+/**
+ * Internal utility to handle servlet
+ */
 public class ServletUtil {
 
     private ServletUtil() {
     }
 
-    public static Origin getOrigin(HttpServletRequest request) {
+    /**
+     * Returns {@link Origin} corresponding {@link ServletRequest} url
+     * @param request http servlet request
+     * @return the {@link Origin}
+     */
+    public static Origin getOrigin(ServletRequest request) {
         return new Origin(request.getScheme(), request.getServerName(), request.getServerPort());
     }
 }
