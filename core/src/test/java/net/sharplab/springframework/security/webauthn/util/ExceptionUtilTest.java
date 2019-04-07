@@ -16,6 +16,7 @@
 
 package net.sharplab.springframework.security.webauthn.util;
 
+import com.webauthn4j.util.exception.WebAuthnException;
 import net.sharplab.springframework.security.webauthn.exception.*;
 import org.junit.Test;
 import org.springframework.security.authentication.AuthenticationServiceException;
@@ -30,9 +31,11 @@ public class ExceptionUtilTest {
     @Test
     public void wrapWithAuthenticationException_test() {
 
-        Map<RuntimeException, Class> map = new HashMap<>();
+        Map<WebAuthnException, Class> map = new HashMap<>();
+        map.put(new com.webauthn4j.validator.exception.BadAaguidException("dummy"), BadAaguidException.class);
         map.put(new com.webauthn4j.validator.exception.BadAlgorithmException("dummy"), BadAlgorithmException.class);
         map.put(new com.webauthn4j.validator.exception.BadAttestationStatementException("dummy"), BadAttestationStatementException.class);
+        map.put(new com.webauthn4j.validator.exception.KeyDescriptionValidationException("dummy"), KeyDescriptionValidationException.class);
         map.put(new com.webauthn4j.validator.exception.BadChallengeException("dummy"), BadChallengeException.class);
         map.put(new com.webauthn4j.validator.exception.BadOriginException("dummy"), BadOriginException.class);
         map.put(new com.webauthn4j.validator.exception.BadRpIdException("dummy"), BadRpIdException.class);
@@ -42,15 +45,17 @@ public class ExceptionUtilTest {
         map.put(new com.webauthn4j.validator.exception.MaliciousCounterValueException("dummy"), MaliciousCounterValueException.class);
         map.put(new com.webauthn4j.validator.exception.MaliciousDataException("dummy"), MaliciousDataException.class);
         map.put(new com.webauthn4j.validator.exception.MissingChallengeException("dummy"), MissingChallengeException.class);
+        map.put(new com.webauthn4j.validator.exception.PublicKeyMismatchException("dummy"), PublicKeyMismatchException.class);
         map.put(new com.webauthn4j.validator.exception.SelfAttestationProhibitedException("dummy"), SelfAttestationProhibitedException.class);
         map.put(new com.webauthn4j.validator.exception.TokenBindingException("dummy"), TokenBindingException.class);
         map.put(new com.webauthn4j.validator.exception.UnexpectedExtensionException("dummy"), UnexpectedExtensionException.class);
         map.put(new com.webauthn4j.validator.exception.UserNotPresentException("dummy"), UserNotPresentException.class);
         map.put(new com.webauthn4j.validator.exception.UserNotVerifiedException("dummy"), UserNotVerifiedException.class);
-        map.put(new ExceptionUtilTest.UnknownValidationException("dummy"), AuthenticationServiceException.class);
-        map.put(new RuntimeException("dummy"), RuntimeException.class);
+        map.put(new ExceptionUtilTest.UnknownValidationException("dummy"), ValidationException.class);
+        map.put(new com.webauthn4j.converter.exception.DataConversionException("dummy"), DataConversionException.class);
+        map.put(new com.webauthn4j.util.exception.WebAuthnException("dummy"), AuthenticationServiceException.class);
 
-        for (Map.Entry<RuntimeException, Class> entry : map.entrySet()) {
+        for (Map.Entry<WebAuthnException, Class> entry : map.entrySet()) {
             assertThat(ExceptionUtil.wrapWithAuthenticationException(entry.getKey())).isInstanceOf(entry.getValue());
         }
     }
