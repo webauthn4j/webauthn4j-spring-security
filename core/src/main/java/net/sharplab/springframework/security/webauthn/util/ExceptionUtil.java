@@ -83,7 +83,7 @@ public class ExceptionUtil {
         } else if (e instanceof com.webauthn4j.validator.exception.UserNotVerifiedException) {
             return new UserNotVerifiedException(e.getMessage(), e);
         } else if (e instanceof com.webauthn4j.validator.exception.ValidationException) {
-            return new AuthenticationServiceException("WebAuthn validation error", e);
+            return new ValidationException("WebAuthn validation error", e);
         }
         // DataConversionException
         else if (e instanceof com.webauthn4j.converter.exception.DataConversionException) {
