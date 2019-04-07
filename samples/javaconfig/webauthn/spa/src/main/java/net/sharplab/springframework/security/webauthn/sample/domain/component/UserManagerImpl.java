@@ -16,6 +16,7 @@
 
 package net.sharplab.springframework.security.webauthn.sample.domain.component;
 
+import com.webauthn4j.authenticator.Authenticator;
 import com.webauthn4j.util.Base64UrlUtil;
 import net.sharplab.springframework.security.webauthn.authenticator.WebAuthnAuthenticator;
 import net.sharplab.springframework.security.webauthn.exception.CredentialIdNotFoundException;
@@ -161,7 +162,7 @@ public class UserManagerImpl implements UserManager, WebAuthnUserDetailsService 
 
 
     @Override
-    public void addAuthenticator(String username, WebAuthnAuthenticator authenticator) {
+    public void addAuthenticator(String username, Authenticator authenticator) {
         UserEntity userEntity = userEntityRepository.findOneByEmailAddress(username)
                 .orElseThrow(() -> new WebAuthnSampleEntityNotFoundException(ResultMessages.error().add(MessageCodes.Error.User.USER_NOT_FOUND)));
         AuthenticatorEntity authenticatorEntity = modelMapper.map(authenticator, AuthenticatorEntity.class);
@@ -170,7 +171,7 @@ public class UserManagerImpl implements UserManager, WebAuthnUserDetailsService 
     }
 
     @Override
-    public void removeAuthenticator(String username, WebAuthnAuthenticator authenticator)  {
+    public void removeAuthenticator(String username, Authenticator authenticator)  {
         UserEntity userEntity = userEntityRepository.findOneByEmailAddress(username)
                 .orElseThrow(() -> new WebAuthnSampleEntityNotFoundException(ResultMessages.error().add(MessageCodes.Error.User.USER_NOT_FOUND)));
         boolean found = userEntity.getAuthenticators().remove(authenticator);
