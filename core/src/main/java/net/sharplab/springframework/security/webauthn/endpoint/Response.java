@@ -18,6 +18,9 @@ package net.sharplab.springframework.security.webauthn.endpoint;
 
 import java.io.Serializable;
 
+/**
+ * Response for {@link OptionsEndpointFilter}
+ */
 public interface Response extends Serializable {
 
     String getErrorMessage();

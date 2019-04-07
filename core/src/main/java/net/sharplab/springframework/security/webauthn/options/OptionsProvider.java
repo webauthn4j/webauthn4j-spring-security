@@ -25,11 +25,14 @@ import javax.servlet.http.HttpServletRequest;
 import java.math.BigInteger;
 import java.util.List;
 
+/**
+ * Provides {@link AttestationOptions} and {@link AssertionOptions} for {@link HttpServletRequest}
+ */
 public interface OptionsProvider {
 
 
     /**
-     * provides AttestationOptions. If <code>username</code> is <code>null</code>, <code>user</code>, <code>credentials</code> are not populated.
+     * provides {@link AttestationOptions}. If <code>username</code> is <code>null</code>, <code>user</code>, <code>credentials</code> are not populated.
      *
      * @param request   request
      * @param username  username
@@ -39,7 +42,7 @@ public interface OptionsProvider {
     AttestationOptions getAttestationOptions(HttpServletRequest request, String username, Challenge challenge);
 
     /**
-     * provides AssertionOptions. If <code>username</code> is <code>null</code>, <code>credentials</code> are not populated.
+     * provides {@link AssertionOptions}. If <code>username</code> is <code>null</code>, <code>credentials</code> are not populated.
      *
      * @param request   request
      * @param username  username

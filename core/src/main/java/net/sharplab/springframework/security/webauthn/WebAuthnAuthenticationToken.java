@@ -18,14 +18,14 @@ package net.sharplab.springframework.security.webauthn;
 
 import net.sharplab.springframework.security.webauthn.request.WebAuthnAuthenticationRequest;
 import org.springframework.security.authentication.AbstractAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 
 import java.io.Serializable;
 import java.util.Collection;
 
 /**
- * An {@link org.springframework.security.core.Authentication} implementation that is
- * designed for Web Authentication specification.
+ * An {@link Authentication} implementation that is designed for Web Authentication specification.
  */
 public class WebAuthnAuthenticationToken extends AbstractAuthenticationToken {
 
@@ -33,6 +33,9 @@ public class WebAuthnAuthenticationToken extends AbstractAuthenticationToken {
     // ================================================================================================
     private Serializable principal;
     private WebAuthnAuthenticationRequest credentials;
+
+    // ~ Constructor
+    // ========================================================================================================
 
     /**
      * Constructor
@@ -47,6 +50,9 @@ public class WebAuthnAuthenticationToken extends AbstractAuthenticationToken {
         this.credentials = credentials;
         this.setAuthenticated(true);
     }
+
+    // ~ Methods
+    // ========================================================================================================
 
     /**
      * {@inheritDoc}

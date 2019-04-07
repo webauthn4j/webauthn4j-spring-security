@@ -37,7 +37,23 @@ import java.util.List;
 
 
 /**
- * WebAuthnProcessingFilter
+ * Processes a WebAuthn authentication form submission. For supporting username/password authentication for first step of
+ * two step authentication, if credentialId is not found in the HTTP request, this filter try to find username/password
+ * parameters.
+ * <p>
+ * Login forms must present WebAuthn parameters (credentialId, clientDataJSON, authenticatorData,signature and
+ * clientExtensionJSON) or Password authentication parameters (username and password).
+ * The default parameter names to use are contained in the static fields
+ * {@link #SPRING_SECURITY_FORM_CREDENTIAL_ID_KEY},
+ * {@link #SPRING_SECURITY_FORM_CLIENT_DATA_JSON_KEY},
+ * {@link #SPRING_SECURITY_FORM_AUTHENTICATOR_DATA_KEY},
+ * {@link #SPRING_SECURITY_FORM_SIGNATURE_KEY}, and
+ * {@link #SPRING_SECURITY_FORM_CLIENT_EXTENSIONS_JSON_KEY}.
+ * The parameter names can also be changed by setting the corresponding properties.
+ * <p>
+ * This filter by default responds to the URL {@code /login}.
+ *
+ * @see WebAuthnAuthenticationProvider
  */
 public class WebAuthnProcessingFilter extends UsernamePasswordAuthenticationFilter {
 
@@ -64,6 +80,9 @@ public class WebAuthnProcessingFilter extends UsernamePasswordAuthenticationFilt
 
     private boolean postOnly = true;
 
+    // ~ Constructors
+    // ===================================================================================================
+
     /**
      * Constructor
      */
@@ -85,6 +104,9 @@ public class WebAuthnProcessingFilter extends UsernamePasswordAuthenticationFilt
         this.authorities = authorities;
         this.serverPropertyProvider = serverPropertyProvider;
     }
+
+    // ~ Methods
+    // ========================================================================================================
 
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) {

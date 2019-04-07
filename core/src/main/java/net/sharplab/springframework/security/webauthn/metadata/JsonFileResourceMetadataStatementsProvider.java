@@ -33,15 +33,27 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+/**
+ * A {@link MetadataStatementsProvider} implementation that loads {@link MetadataStatement}(s) from JSON files in Spring {@link Resource}s
+ */
 public class JsonFileResourceMetadataStatementsProvider implements MetadataStatementsProvider, InitializingBean {
+
+    // ~ Instance fields
+    // ================================================================================================
 
     private JsonConverter jsonConverter;
     private List<Resource> resources;
     private Map<AAGUID, Set<MetadataStatement>> cachedMetadataItems;
 
+    // ~ Constructors
+    // ===================================================================================================
+
     public JsonFileResourceMetadataStatementsProvider(JsonConverter jsonConverter) {
         this.jsonConverter = jsonConverter;
     }
+
+    // ~ Methods
+    // ========================================================================================================
 
     @Override
     public void afterPropertiesSet() {

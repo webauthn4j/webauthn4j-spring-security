@@ -66,6 +66,11 @@ public class CertFileResourcesTrustAnchorsProvider extends CachingTrustAnchorsPr
         AssertUtil.notNull(certificates, "certificates must not be null");
     }
 
+    /**
+     * Retrieves {@link TrustAnchor}s from {@link Resource}s.
+     *
+     * @return null key {@link TrustAnchor} {@link Set} value {@link Map}
+     */
     @Override
     protected Map<AAGUID, Set<TrustAnchor>> loadTrustAnchors() {
         Set<TrustAnchor> trustAnchors = certificates.stream().map(this::loadTrustAnchor).collect(Collectors.toSet());

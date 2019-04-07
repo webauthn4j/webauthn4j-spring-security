@@ -43,14 +43,15 @@ import java.util.List;
 import java.util.Objects;
 
 /**
- * WebAuthnAuthenticationProvider
+ * An {@link AuthenticationProvider} implementation for processing {@link WebAuthnAssertionAuthenticationToken}
  */
 public class WebAuthnAuthenticationProvider implements AuthenticationProvider {
 
-    protected final Log logger = LogFactory.getLog(getClass());
-
     //~ Instance fields
     // ================================================================================================
+
+    protected final Log logger = LogFactory.getLog(getClass());
+
     protected MessageSourceAccessor messages = SpringSecurityWebAuthnMessageSource.getAccessor();
     private WebAuthnUserDetailsService userDetailsService;
     private WebAuthnAuthenticatorService authenticatorService;
@@ -63,6 +64,9 @@ public class WebAuthnAuthenticationProvider implements AuthenticationProvider {
 
     private List<String> expectedAuthenticationExtensionIds = Collections.emptyList();
 
+    // ~ Constructor
+    // ========================================================================================================
+
     public WebAuthnAuthenticationProvider(
             WebAuthnUserDetailsService userDetailsService,
             WebAuthnAuthenticatorService authenticatorService,
@@ -71,6 +75,9 @@ public class WebAuthnAuthenticationProvider implements AuthenticationProvider {
         this.authenticatorService = authenticatorService;
         this.authenticationContextValidator = authenticationContextValidator;
     }
+
+    // ~ Methods
+    // ========================================================================================================
 
     /**
      * {@inheritDoc}

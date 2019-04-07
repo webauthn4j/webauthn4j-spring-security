@@ -32,12 +32,15 @@ import java.util.List;
 
 public class WebAuthnRegistrationRequestValidator {
 
-    //~ Instance fields
+    // ~ Instance fields
     // ================================================================================================
     private WebAuthnRegistrationContextValidator registrationContextValidator;
     private ServerPropertyProvider serverPropertyProvider;
 
     private List<String> expectedRegistrationExtensionIds;
+
+    // ~ Constructors
+    // ===================================================================================================
 
     /**
      * Constructor
@@ -49,6 +52,9 @@ public class WebAuthnRegistrationRequestValidator {
         this.registrationContextValidator = registrationContextValidator;
         this.serverPropertyProvider = serverPropertyProvider;
     }
+
+    // ~ Methods
+    // ========================================================================================================
 
     public WebAuthnRegistrationRequestValidationResponse validate(HttpServletRequest httpServletRequest,
                                                                   String clientDataBase64url,

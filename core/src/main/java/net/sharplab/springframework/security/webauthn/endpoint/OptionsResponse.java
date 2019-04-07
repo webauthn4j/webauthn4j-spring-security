@@ -24,6 +24,9 @@ import com.webauthn4j.data.extension.client.AuthenticationExtensionsClientInputs
 import java.math.BigInteger;
 import java.util.List;
 
+/**
+ * Success response of {@link OptionsEndpointFilter}
+ */
 public class OptionsResponse implements Response {
 
     // ~ Instance fields
@@ -38,6 +41,9 @@ public class OptionsResponse implements Response {
     private AuthenticationExtensionsClientInputs registrationExtensions;
     private AuthenticationExtensionsClientInputs authenticationExtensions;
     private Parameters parameters;
+
+    // ~ Constructors
+    // ===================================================================================================
 
     @SuppressWarnings("squid:S00107")
     public OptionsResponse(

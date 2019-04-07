@@ -25,7 +25,13 @@ import java.math.BigInteger;
 import java.util.List;
 import java.util.Objects;
 
+/**
+ * Options for WebAuthn assertion generation
+ */
 public class AssertionOptions implements Serializable {
+
+    // ~ Instance fields
+    // ================================================================================================
 
     private Challenge challenge;
     private BigInteger authenticationTimeout;

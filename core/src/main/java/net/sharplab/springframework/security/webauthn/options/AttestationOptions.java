@@ -29,8 +29,14 @@ import java.math.BigInteger;
 import java.util.List;
 import java.util.Objects;
 
+/**
+ * Options for WebAuthn attestation generation
+ */
 @SuppressWarnings("common-java:DuplicatedBlocks")
 public class AttestationOptions implements Serializable {
+
+    // ~ Instance fields
+    // ================================================================================================
 
     private PublicKeyCredentialRpEntity relyingParty;
     private WebAuthnPublicKeyCredentialUserEntity user;
@@ -39,6 +45,9 @@ public class AttestationOptions implements Serializable {
     private BigInteger registrationTimeout;
     private List<String> credentials;
     private AuthenticationExtensionsClientInputs registrationExtensions;
+
+    // ~ Constructors
+    // ===================================================================================================
 
     public AttestationOptions(
             PublicKeyCredentialRpEntity relyingParty,

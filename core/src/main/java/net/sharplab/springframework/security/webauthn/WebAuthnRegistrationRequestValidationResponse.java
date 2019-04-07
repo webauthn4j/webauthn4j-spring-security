@@ -24,15 +24,24 @@ import java.util.Objects;
 
 public class WebAuthnRegistrationRequestValidationResponse {
 
+    // ~ Instance fields
+    // ================================================================================================
+
     private CollectedClientData collectedClientData;
     private AttestationObject attestationObject;
     private AuthenticationExtensionsClientOutputs registrationExtensionsClientOutputs;
+
+    // ~ Constructors
+    // ===================================================================================================
 
     public WebAuthnRegistrationRequestValidationResponse(CollectedClientData collectedClientData, AttestationObject attestationObject, AuthenticationExtensionsClientOutputs registrationExtensionsClientOutputs) {
         this.collectedClientData = collectedClientData;
         this.attestationObject = attestationObject;
         this.registrationExtensionsClientOutputs = registrationExtensionsClientOutputs;
     }
+
+    // ~ Methods
+    // ========================================================================================================
 
     public CollectedClientData getCollectedClientData() {
         return collectedClientData;

@@ -61,9 +61,6 @@ public class OptionsEndpointFilter extends GenericFilterBean {
     /**
      * Url this filter should get activated on.
      */
-    /**
-     * Url this filter should get activated on.
-     */
     protected String filterProcessesUrl = FILTER_URL;
     protected MessageSourceAccessor messages = SpringSecurityMessageSource.getAccessor();
     protected JsonConverter jsonConverter;

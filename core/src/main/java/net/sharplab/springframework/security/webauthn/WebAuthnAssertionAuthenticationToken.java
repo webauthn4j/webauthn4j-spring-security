@@ -18,10 +18,12 @@ package net.sharplab.springframework.security.webauthn;
 
 import net.sharplab.springframework.security.webauthn.request.WebAuthnAuthenticationRequest;
 import org.springframework.security.authentication.AbstractAuthenticationToken;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 
 /**
- * An {@link Authentication} implementation for representing WebAuthn assertion
+ * An {@link Authentication} implementation for representing WebAuthn assertion like
+ * {@link UsernamePasswordAuthenticationToken} for password authentication
  */
 public class WebAuthnAssertionAuthenticationToken extends AbstractAuthenticationToken {
 
@@ -29,6 +31,9 @@ public class WebAuthnAssertionAuthenticationToken extends AbstractAuthentication
     // ================================================================================================
     private WebAuthnAuthenticationRequest credentials;
 
+
+    // ~ Constructor
+    // ========================================================================================================
 
     /**
      * This constructor can be safely used by any code that wishes to create a
@@ -42,6 +47,9 @@ public class WebAuthnAssertionAuthenticationToken extends AbstractAuthentication
         this.credentials = credentials;
         setAuthenticated(false);
     }
+
+    // ~ Methods
+    // ========================================================================================================
 
     /**
      * Always null

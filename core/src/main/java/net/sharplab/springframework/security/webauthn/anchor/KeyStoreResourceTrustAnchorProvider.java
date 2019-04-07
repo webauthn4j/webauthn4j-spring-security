@@ -58,9 +58,9 @@ public class KeyStoreResourceTrustAnchorProvider extends CachingTrustAnchorsProv
     }
 
     /**
-     * retrieve {@link TrustAnchor} {@link Set} backed by Java KeyStore resource.
+     * Retrieves {@link TrustAnchor}s from Java KeyStore resource.
      *
-     * @return {@link TrustAnchor} {@link Set}
+     * @return null key {@link TrustAnchor} {@link Set} value {@link Map}
      */
     @Override
     protected Map<AAGUID, Set<TrustAnchor>> loadTrustAnchors() {

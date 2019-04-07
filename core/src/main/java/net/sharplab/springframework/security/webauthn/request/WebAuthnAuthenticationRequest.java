@@ -24,7 +24,7 @@ import java.util.Objects;
 
 
 /**
- * WebAuthnAuthenticationRequest
+ * Internal data transfer object to represent WebAuthn authentication request
  */
 public class WebAuthnAuthenticationRequest implements Serializable {
 

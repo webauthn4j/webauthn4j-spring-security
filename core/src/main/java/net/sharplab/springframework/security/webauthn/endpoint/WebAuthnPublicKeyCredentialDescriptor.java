@@ -18,11 +18,15 @@ package net.sharplab.springframework.security.webauthn.endpoint;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.webauthn4j.data.PublicKeyCredentialDescriptor;
 import com.webauthn4j.data.PublicKeyCredentialType;
 
 import java.io.Serializable;
 import java.util.Objects;
 
+/**
+ * JSON serialization friendly variant of {@link PublicKeyCredentialDescriptor}
+ */
 public class WebAuthnPublicKeyCredentialDescriptor implements Serializable {
 
     // ~ Instance fields
@@ -32,6 +36,9 @@ public class WebAuthnPublicKeyCredentialDescriptor implements Serializable {
     private PublicKeyCredentialType type;
     @JsonProperty
     private String id;
+
+    // ~ Constructor
+    // ========================================================================================================
 
     @JsonCreator
     public WebAuthnPublicKeyCredentialDescriptor(
@@ -46,6 +53,10 @@ public class WebAuthnPublicKeyCredentialDescriptor implements Serializable {
         this.type = PublicKeyCredentialType.PUBLIC_KEY;
         this.id = id;
     }
+
+
+    // ~ Methods
+    // ========================================================================================================
 
     public PublicKeyCredentialType getType() {
         return type;

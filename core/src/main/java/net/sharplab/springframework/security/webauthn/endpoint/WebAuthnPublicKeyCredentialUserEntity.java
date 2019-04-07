@@ -18,10 +18,14 @@ package net.sharplab.springframework.security.webauthn.endpoint;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.webauthn4j.data.PublicKeyCredentialUserEntity;
 
 import java.io.Serializable;
 import java.util.Objects;
 
+/**
+ * JSON serialization friendly variant of {@link PublicKeyCredentialUserEntity}
+ */
 public class WebAuthnPublicKeyCredentialUserEntity implements Serializable {
 
     // ~ Instance fields
@@ -30,6 +34,9 @@ public class WebAuthnPublicKeyCredentialUserEntity implements Serializable {
     private String userHandle;
     private String username;
 
+    // ~ Constructor
+    // ========================================================================================================
+
     @JsonCreator
     public WebAuthnPublicKeyCredentialUserEntity(
             @JsonProperty("userHandle") String userHandle,
@@ -37,6 +44,9 @@ public class WebAuthnPublicKeyCredentialUserEntity implements Serializable {
         this.userHandle = userHandle;
         this.username = username;
     }
+
+    // ~ Methods
+    // ========================================================================================================
 
     public String getUserHandle() {
         return userHandle;

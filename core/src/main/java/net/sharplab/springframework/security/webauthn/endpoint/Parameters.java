@@ -19,6 +19,9 @@ package net.sharplab.springframework.security.webauthn.endpoint;
 import java.io.Serializable;
 import java.util.Objects;
 
+/**
+ * HTTP request parameter names
+ */
 public class Parameters implements Serializable {
 
     // ~ Instance fields
@@ -31,6 +34,9 @@ public class Parameters implements Serializable {
     private String authenticatorData;
     private String signature;
     private String clientExtensionsJSON;
+
+    // ~ Constructor
+    // ========================================================================================================
 
     public Parameters(String username, String password, String credentialId, String clientDataJSON, String authenticatorData, String signature, String clientExtensionsJSON) {
         this.username = username;

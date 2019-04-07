@@ -18,6 +18,9 @@ package net.sharplab.springframework.security.webauthn.endpoint;
 
 import java.util.Objects;
 
+/**
+ * Error response of {@link OptionsEndpointFilter}
+ */
 public class ErrorResponse implements Response {
 
     // ~ Instance fields
@@ -25,9 +28,15 @@ public class ErrorResponse implements Response {
 
     private String errorMessage;
 
+    // ~ Constructor
+    // ========================================================================================================
+
     public ErrorResponse(String errorMessage) {
         this.errorMessage = errorMessage;
     }
+
+    // ~ Methods
+    // ========================================================================================================
 
     @Override
     public String getErrorMessage() {

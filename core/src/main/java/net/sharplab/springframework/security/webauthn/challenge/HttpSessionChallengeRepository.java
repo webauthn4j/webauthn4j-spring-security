@@ -25,8 +25,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 /**
- * ChallengeRequestDataValueProcessor
- * <p>
+ * A {@link ChallengeRepository} implementation that stores data to HTTP session
+ *
  * Class design is based on {@link HttpSessionCsrfTokenRepository}
  */
 public class HttpSessionChallengeRepository implements ChallengeRepository {
