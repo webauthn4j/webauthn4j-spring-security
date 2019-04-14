@@ -22,7 +22,6 @@ import com.webauthn4j.util.CollectionUtil;
 import net.sharplab.springframework.security.webauthn.endpoint.Parameters;
 
 import java.io.Serializable;
-import java.math.BigInteger;
 import java.util.List;
 import java.util.Objects;
 
@@ -35,7 +34,7 @@ public class AssertionOptions implements Serializable {
     // ================================================================================================
 
     private Challenge challenge;
-    private BigInteger authenticationTimeout;
+    private Long authenticationTimeout;
     private String rpId;
     private List<String> credentials;
     private AuthenticationExtensionsClientInputs authenticationExtensions;
@@ -46,7 +45,7 @@ public class AssertionOptions implements Serializable {
 
     public AssertionOptions(
             Challenge challenge,
-            BigInteger authenticationTimeout,
+            Long authenticationTimeout,
             String rpId,
             List<String> credentials,
             AuthenticationExtensionsClientInputs authenticationExtensions,
@@ -66,7 +65,7 @@ public class AssertionOptions implements Serializable {
         return challenge;
     }
 
-    public BigInteger getAuthenticationTimeout() {
+    public Long getAuthenticationTimeout() {
         return authenticationTimeout;
     }
 

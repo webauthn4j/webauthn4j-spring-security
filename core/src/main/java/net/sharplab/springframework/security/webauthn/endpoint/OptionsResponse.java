@@ -22,7 +22,6 @@ import com.webauthn4j.data.client.challenge.Challenge;
 import com.webauthn4j.data.extension.client.AuthenticationExtensionsClientInputs;
 import com.webauthn4j.util.CollectionUtil;
 
-import java.math.BigInteger;
 import java.util.List;
 
 /**
@@ -36,8 +35,8 @@ public class OptionsResponse implements Response {
     private WebAuthnPublicKeyCredentialUserEntity user;
     private Challenge challenge;
     private List<PublicKeyCredentialParameters> pubKeyCredParams;
-    private BigInteger registrationTimeout;
-    private BigInteger authenticationTimeout;
+    private Long registrationTimeout;
+    private Long authenticationTimeout;
     private List<WebAuthnPublicKeyCredentialDescriptor> credentials;
     private AuthenticationExtensionsClientInputs registrationExtensions;
     private AuthenticationExtensionsClientInputs authenticationExtensions;
@@ -52,8 +51,8 @@ public class OptionsResponse implements Response {
             WebAuthnPublicKeyCredentialUserEntity user,
             Challenge challenge,
             List<PublicKeyCredentialParameters> pubKeyCredParams,
-            BigInteger registrationTimeout,
-            BigInteger authenticationTimeout,
+            Long registrationTimeout,
+            Long authenticationTimeout,
             List<WebAuthnPublicKeyCredentialDescriptor> credentials,
             AuthenticationExtensionsClientInputs registrationExtensions,
             AuthenticationExtensionsClientInputs authenticationExtensions,
@@ -92,11 +91,11 @@ public class OptionsResponse implements Response {
         return pubKeyCredParams;
     }
 
-    public BigInteger getRegistrationTimeout() {
+    public Long getRegistrationTimeout() {
         return registrationTimeout;
     }
 
-    public BigInteger getAuthenticationTimeout() {
+    public Long getAuthenticationTimeout() {
         return authenticationTimeout;
     }
 

@@ -26,7 +26,6 @@ import com.webauthn4j.util.CollectionUtil;
 import net.sharplab.springframework.security.webauthn.endpoint.WebAuthnPublicKeyCredentialUserEntity;
 
 import java.io.Serializable;
-import java.math.BigInteger;
 import java.util.List;
 import java.util.Objects;
 
@@ -43,7 +42,7 @@ public class AttestationOptions implements Serializable {
     private WebAuthnPublicKeyCredentialUserEntity user;
     private Challenge challenge;
     private List<PublicKeyCredentialParameters> pubKeyCredParams;
-    private BigInteger registrationTimeout;
+    private Long registrationTimeout;
     private List<String> credentials;
     private AuthenticationExtensionsClientInputs registrationExtensions;
 
@@ -55,7 +54,7 @@ public class AttestationOptions implements Serializable {
             WebAuthnPublicKeyCredentialUserEntity user,
             Challenge challenge,
             List<PublicKeyCredentialParameters> pubKeyCredParams,
-            BigInteger registrationTimeout,
+            Long registrationTimeout,
             List<String> credentials,
             AuthenticationExtensionsClientInputs registrationExtensions) {
         this.relyingParty = relyingParty;
@@ -99,7 +98,7 @@ public class AttestationOptions implements Serializable {
         return pubKeyCredParams;
     }
 
-    public BigInteger getRegistrationTimeout() {
+    public Long getRegistrationTimeout() {
         return registrationTimeout;
     }
 

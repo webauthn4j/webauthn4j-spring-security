@@ -33,7 +33,7 @@ public class AssertionOptionsTest {
     @Test
     public void equals_hashCode_test() {
         Challenge challenge = new DefaultChallenge();
-        BigInteger authenticationTimeout = BigInteger.valueOf(1000);
+        Long authenticationTimeout = 1000L;
         String rpId = "localhost";
         List<String> credentialIds = Collections.singletonList("credentialId");
         AuthenticationExtensionsClientInputs authenticationExtensionsClientInputs = new AuthenticationExtensionsClientInputs();
@@ -55,7 +55,7 @@ public class AssertionOptionsTest {
     @Test
     public void getter_test() {
         Challenge challenge = new DefaultChallenge();
-        BigInteger authenticationTimeout = BigInteger.valueOf(1000);
+        Long authenticationTimeout = 1000L;
         String rpId = "localhost";
         List<String> credentialIds = Collections.singletonList("credentialId");
         AuthenticationExtensionsClientInputs authenticationExtensionsClientInputs = new AuthenticationExtensionsClientInputs();

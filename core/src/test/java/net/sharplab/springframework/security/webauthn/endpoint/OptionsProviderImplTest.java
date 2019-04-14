@@ -84,8 +84,8 @@ public class OptionsProviderImplTest {
         List<PublicKeyCredentialParameters> publicKeyCredParams = Lists.emptyList();
         optionsProvider.setPubKeyCredParams(publicKeyCredParams);
         assertThat(optionsProvider.getPubKeyCredParams()).isEqualTo(publicKeyCredParams);
-        optionsProvider.setRegistrationTimeout(BigInteger.valueOf(10000));
-        assertThat(optionsProvider.getRegistrationTimeout()).isEqualTo(BigInteger.valueOf(10000));
+        optionsProvider.setRegistrationTimeout(10000L);
+        assertThat(optionsProvider.getRegistrationTimeout()).isEqualTo(10000L);
 
         optionsProvider.setUsernameParameter("usernameParameter");
         assertThat(optionsProvider.getUsernameParameter()).isEqualTo("usernameParameter");

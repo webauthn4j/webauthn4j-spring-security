@@ -22,7 +22,6 @@ import com.webauthn4j.data.extension.client.AuthenticationExtensionsClientInputs
 import net.sharplab.springframework.security.webauthn.endpoint.OptionsResponse;
 
 import javax.servlet.http.HttpServletRequest;
-import java.math.BigInteger;
 import java.util.List;
 
 /**
@@ -117,23 +116,23 @@ public interface OptionsProvider {
      * returns the registration timeout
      * @return the registration timeout
      */
-    BigInteger getRegistrationTimeout();
+    Long getRegistrationTimeout();
 
     /**
      * configures the registration timeout
      */
-    void setRegistrationTimeout(BigInteger registrationTimeout);
+    void setRegistrationTimeout(Long registrationTimeout);
 
     /**
      * returns the authentication timeout
      * @return the authentication timeout
      */
-    BigInteger getAuthenticationTimeout();
+    Long getAuthenticationTimeout();
 
     /**
      * configures the authentication timeout
      */
-    void setAuthenticationTimeout(BigInteger authenticationTimeout);
+    void setAuthenticationTimeout(Long authenticationTimeout);
 
 
     AuthenticationExtensionsClientInputs getRegistrationExtensions();

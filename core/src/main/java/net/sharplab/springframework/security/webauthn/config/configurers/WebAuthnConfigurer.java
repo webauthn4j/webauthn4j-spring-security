@@ -25,7 +25,6 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.util.Assert;
 
-import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -50,8 +49,8 @@ public class WebAuthnConfigurer<H extends HttpSecurityBuilder<H>> extends Abstra
     private String rpId = null;
     private String rpName = null;
     private String rpIcon = null;
-    private BigInteger registrationTimeout;
-    private BigInteger authenticationTimeout;
+    private Long registrationTimeout;
+    private Long authenticationTimeout;
 
     /**
      * Returns a new instance
@@ -149,7 +148,7 @@ public class WebAuthnConfigurer<H extends HttpSecurityBuilder<H>> extends Abstra
      * @param registrationTimeout the timeout for registration ceremony
      * @return the {@link WebAuthnConfigurer} for additional customization
      */
-    public WebAuthnConfigurer<H> registrationTimeout(BigInteger registrationTimeout) {
+    public WebAuthnConfigurer<H> registrationTimeout(Long registrationTimeout) {
         this.registrationTimeout = registrationTimeout;
         return this;
     }
@@ -159,7 +158,7 @@ public class WebAuthnConfigurer<H extends HttpSecurityBuilder<H>> extends Abstra
      * @param authenticationTimeout the timeout for authentication ceremony
      * @return the {@link WebAuthnConfigurer} for additional customization
      */
-    public WebAuthnConfigurer<H> authenticationTimeout(BigInteger authenticationTimeout) {
+    public WebAuthnConfigurer<H> authenticationTimeout(Long authenticationTimeout) {
         this.authenticationTimeout = authenticationTimeout;
         return this;
     }

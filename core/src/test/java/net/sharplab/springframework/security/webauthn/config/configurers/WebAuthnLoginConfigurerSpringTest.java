@@ -181,8 +181,8 @@ public class WebAuthnLoginConfigurerSpringTest {
                     .addPublicKeyCredParams(PublicKeyCredentialType.PUBLIC_KEY, COSEAlgorithmIdentifier.ES256)
                     .addPublicKeyCredParams(PublicKeyCredentialType.PUBLIC_KEY, COSEAlgorithmIdentifier.RS1)
                     .and()
-                    .registrationTimeout(BigInteger.valueOf(10000))
-                    .authenticationTimeout(BigInteger.valueOf(20000));
+                    .registrationTimeout(10000L)
+                    .authenticationTimeout(20000L);
 
             http.apply(webAuthnLogin())
                     .usernameParameter("username")

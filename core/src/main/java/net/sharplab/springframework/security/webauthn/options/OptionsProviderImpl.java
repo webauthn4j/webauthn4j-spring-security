@@ -23,7 +23,6 @@ import com.webauthn4j.data.client.Origin;
 import com.webauthn4j.data.client.challenge.Challenge;
 import com.webauthn4j.data.extension.client.AuthenticationExtensionsClientInputs;
 import com.webauthn4j.util.Base64UrlUtil;
-import com.webauthn4j.util.UnsignedNumberUtil;
 import net.sharplab.springframework.security.webauthn.challenge.ChallengeRepository;
 import net.sharplab.springframework.security.webauthn.endpoint.Parameters;
 import net.sharplab.springframework.security.webauthn.endpoint.WebAuthnPublicKeyCredentialUserEntity;
@@ -34,7 +33,6 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.util.Assert;
 
 import javax.servlet.http.HttpServletRequest;
-import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -53,8 +51,8 @@ public class OptionsProviderImpl implements OptionsProvider {
     private String rpName = null;
     private String rpIcon = null;
     private List<PublicKeyCredentialParameters> pubKeyCredParams = new ArrayList<>();
-    private BigInteger registrationTimeout = null;
-    private BigInteger authenticationTimeout = null;
+    private Long registrationTimeout = null;
+    private Long authenticationTimeout = null;
     private AuthenticationExtensionsClientInputs registrationExtensions = new AuthenticationExtensionsClientInputs();
     private AuthenticationExtensionsClientInputs authenticationExtensions = new AuthenticationExtensionsClientInputs();
 
@@ -197,23 +195,23 @@ public class OptionsProviderImpl implements OptionsProvider {
         this.pubKeyCredParams = pubKeyCredParams;
     }
 
-    public BigInteger getRegistrationTimeout() {
+    public Long getRegistrationTimeout() {
         return registrationTimeout;
     }
 
-    public void setRegistrationTimeout(BigInteger registrationTimeout) {
+    public void setRegistrationTimeout(Long registrationTimeout) {
         Assert.notNull(registrationTimeout, "registrationTimeout must not be null.");
-        Assert.isTrue(UnsignedNumberUtil.isWithinUnsignedLong(registrationTimeout), "registrationTimeout must be within unsigned long.");
+        Assert.isTrue(registrationTimeout >= 0, "registrationTimeout must be within unsigned long.");
         this.registrationTimeout = registrationTimeout;
     }
 
-    public BigInteger getAuthenticationTimeout() {
+    public Long getAuthenticationTimeout() {
         return authenticationTimeout;
     }
 
-    public void setAuthenticationTimeout(BigInteger authenticationTimeout) {
+    public void setAuthenticationTimeout(Long authenticationTimeout) {
         Assert.notNull(authenticationTimeout, "authenticationTimeout must not be null.");
-        Assert.isTrue(UnsignedNumberUtil.isWithinUnsignedLong(registrationTimeout), "registrationTimeout must be within unsigned long.");
+        Assert.isTrue(registrationTimeout >= 0, "registrationTimeout must be within unsigned long.");
         this.authenticationTimeout = authenticationTimeout;
     }
 

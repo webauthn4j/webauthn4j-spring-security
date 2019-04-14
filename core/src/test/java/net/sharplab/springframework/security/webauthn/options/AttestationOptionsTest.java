@@ -27,7 +27,6 @@ import com.webauthn4j.util.Base64UrlUtil;
 import net.sharplab.springframework.security.webauthn.endpoint.WebAuthnPublicKeyCredentialUserEntity;
 import org.junit.Test;
 
-import java.math.BigInteger;
 import java.util.Collections;
 import java.util.List;
 
@@ -41,7 +40,7 @@ public class AttestationOptionsTest {
         WebAuthnPublicKeyCredentialUserEntity userEntity = new WebAuthnPublicKeyCredentialUserEntity(Base64UrlUtil.encodeToString("userHandle".getBytes()), "username");
         Challenge challenge = new DefaultChallenge();
         List<PublicKeyCredentialParameters> pubKeyCredParams = Collections.singletonList(new PublicKeyCredentialParameters(PublicKeyCredentialType.PUBLIC_KEY, COSEAlgorithmIdentifier.ES256));
-        BigInteger registrationTimeout = BigInteger.valueOf(1000);
+        Long registrationTimeout = 1000L;
         List<String> credentialIds = Collections.singletonList("credentialId");
         AuthenticationExtensionsClientInputs authenticationExtensionsClientInputs = new AuthenticationExtensionsClientInputs();
         AttestationOptions instanceA = new AttestationOptions(rpEntity, userEntity, challenge, pubKeyCredParams, registrationTimeout, credentialIds, authenticationExtensionsClientInputs);
