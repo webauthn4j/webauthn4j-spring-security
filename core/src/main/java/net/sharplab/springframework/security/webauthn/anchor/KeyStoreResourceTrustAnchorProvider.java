@@ -45,6 +45,17 @@ public class KeyStoreResourceTrustAnchorProvider extends CachingTrustAnchorsProv
     private Resource keyStore;
     private String password;
 
+    // ~ Constructor
+    // ========================================================================================================
+
+    public KeyStoreResourceTrustAnchorProvider() {
+    }
+
+    public KeyStoreResourceTrustAnchorProvider(Resource keyStore) {
+        this.keyStore = keyStore;
+    }
+
+
     // ~ Methods
     // ========================================================================================================
 
