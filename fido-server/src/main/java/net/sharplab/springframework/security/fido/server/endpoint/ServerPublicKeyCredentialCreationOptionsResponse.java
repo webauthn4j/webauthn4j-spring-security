@@ -31,7 +31,7 @@ public class ServerPublicKeyCredentialCreationOptionsResponse extends ServerResp
     private ServerPublicKeyCredentialUserEntity user;
     private String challenge;
     private List<PublicKeyCredentialParameters> pubKeyCredParams;
-    private BigInteger timeout;
+    private Long timeout;
     private List<ServerPublicKeyCredentialDescriptor> excludeCredentials;
     private AuthenticatorSelectionCriteria authenticatorSelection;
     private AttestationConveyancePreference attestation;
@@ -43,7 +43,7 @@ public class ServerPublicKeyCredentialCreationOptionsResponse extends ServerResp
             ServerPublicKeyCredentialUserEntity user,
             String challenge,
             List<PublicKeyCredentialParameters> pubKeyCredParams,
-            BigInteger timeout,
+            Long timeout,
             List<ServerPublicKeyCredentialDescriptor> excludeCredentials,
             AuthenticatorSelectionCriteria authenticatorSelection,
             AttestationConveyancePreference attestation,
@@ -80,7 +80,7 @@ public class ServerPublicKeyCredentialCreationOptionsResponse extends ServerResp
         return pubKeyCredParams;
     }
 
-    public BigInteger getTimeout() {
+    public Long getTimeout() {
         return timeout;
     }
 

@@ -25,7 +25,7 @@ import java.util.Objects;
 
 public class ServerPublicKeyCredentialGetOptionsResponse extends ServerResponseBase {
     private String challenge;
-    private BigInteger timeout;
+    private Long timeout;
     private String rpId;
     private List<ServerPublicKeyCredentialDescriptor> allowCredentials;
     private UserVerificationRequirement userVerification;
@@ -33,7 +33,7 @@ public class ServerPublicKeyCredentialGetOptionsResponse extends ServerResponseB
 
     public ServerPublicKeyCredentialGetOptionsResponse(
             String challenge,
-            BigInteger timeout,
+            Long timeout,
             String rpId,
             List<ServerPublicKeyCredentialDescriptor> allowCredentials,
             UserVerificationRequirement userVerification,
@@ -60,7 +60,7 @@ public class ServerPublicKeyCredentialGetOptionsResponse extends ServerResponseB
         return challenge;
     }
 
-    public BigInteger getTimeout() {
+    public Long getTimeout() {
         return timeout;
     }
 
