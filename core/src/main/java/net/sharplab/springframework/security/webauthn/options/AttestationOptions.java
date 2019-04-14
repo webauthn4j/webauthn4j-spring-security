@@ -22,6 +22,7 @@ import com.webauthn4j.data.PublicKeyCredentialRpEntity;
 import com.webauthn4j.data.PublicKeyCredentialUserEntity;
 import com.webauthn4j.data.client.challenge.Challenge;
 import com.webauthn4j.data.extension.client.AuthenticationExtensionsClientInputs;
+import com.webauthn4j.util.CollectionUtil;
 import net.sharplab.springframework.security.webauthn.endpoint.WebAuthnPublicKeyCredentialUserEntity;
 
 import java.io.Serializable;
@@ -60,9 +61,9 @@ public class AttestationOptions implements Serializable {
         this.relyingParty = relyingParty;
         this.user = user;
         this.challenge = challenge;
-        this.pubKeyCredParams = pubKeyCredParams;
+        this.pubKeyCredParams = CollectionUtil.unmodifiableList(pubKeyCredParams);
         this.registrationTimeout = registrationTimeout;
-        this.credentials = credentials;
+        this.credentials = CollectionUtil.unmodifiableList(credentials);
         this.registrationExtensions = registrationExtensions;
     }
 

@@ -17,6 +17,7 @@
 package net.sharplab.springframework.security.webauthn.request;
 
 import com.webauthn4j.server.ServerProperty;
+import com.webauthn4j.util.ArrayUtil;
 
 import java.io.Serializable;
 import java.util.Arrays;
@@ -81,19 +82,19 @@ public class WebAuthnAuthenticationRequest implements Serializable {
     }
 
     public byte[] getCredentialId() {
-        return credentialId;
+        return ArrayUtil.clone(credentialId);
     }
 
     public byte[] getClientDataJSON() {
-        return clientDataJSON;
+        return ArrayUtil.clone(clientDataJSON);
     }
 
     public byte[] getAuthenticatorData() {
-        return authenticatorData;
+        return ArrayUtil.clone(authenticatorData);
     }
 
     public byte[] getSignature() {
-        return signature;
+        return ArrayUtil.clone(signature);
     }
 
     public String getClientExtensionsJSON() {

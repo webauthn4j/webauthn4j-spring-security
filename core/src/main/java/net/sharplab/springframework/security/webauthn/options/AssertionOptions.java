@@ -18,6 +18,7 @@ package net.sharplab.springframework.security.webauthn.options;
 
 import com.webauthn4j.data.client.challenge.Challenge;
 import com.webauthn4j.data.extension.client.AuthenticationExtensionsClientInputs;
+import com.webauthn4j.util.CollectionUtil;
 import net.sharplab.springframework.security.webauthn.endpoint.Parameters;
 
 import java.io.Serializable;
@@ -53,7 +54,7 @@ public class AssertionOptions implements Serializable {
         this.challenge = challenge;
         this.authenticationTimeout = authenticationTimeout;
         this.rpId = rpId;
-        this.credentials = credentials;
+        this.credentials = CollectionUtil.unmodifiableList(credentials);
         this.authenticationExtensions = authenticationExtensions;
         this.parameters = parameters;
     }

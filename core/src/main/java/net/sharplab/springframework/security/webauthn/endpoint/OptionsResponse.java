@@ -20,6 +20,7 @@ import com.webauthn4j.data.PublicKeyCredentialParameters;
 import com.webauthn4j.data.PublicKeyCredentialRpEntity;
 import com.webauthn4j.data.client.challenge.Challenge;
 import com.webauthn4j.data.extension.client.AuthenticationExtensionsClientInputs;
+import com.webauthn4j.util.CollectionUtil;
 
 import java.math.BigInteger;
 import java.util.List;
@@ -62,10 +63,10 @@ public class OptionsResponse implements Response {
         this.relyingParty = relyingParty;
         this.user = user;
         this.challenge = challenge;
-        this.pubKeyCredParams = pubKeyCredParams;
+        this.pubKeyCredParams = CollectionUtil.unmodifiableList(pubKeyCredParams);
         this.registrationTimeout = registrationTimeout;
         this.authenticationTimeout = authenticationTimeout;
-        this.credentials = credentials;
+        this.credentials = CollectionUtil.unmodifiableList(credentials);
         this.registrationExtensions = registrationExtensions;
         this.authenticationExtensions = authenticationExtensions;
         this.parameters = parameters;

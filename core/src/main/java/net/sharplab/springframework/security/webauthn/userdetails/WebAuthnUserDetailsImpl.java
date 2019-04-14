@@ -17,6 +17,7 @@
 package net.sharplab.springframework.security.webauthn.userdetails;
 
 import com.webauthn4j.authenticator.Authenticator;
+import com.webauthn4j.util.ArrayUtil;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 
@@ -59,7 +60,7 @@ public class WebAuthnUserDetailsImpl extends User implements WebAuthnUserDetails
 
     @Override
     public byte[] getUserHandle() {
-        return userHandle;
+        return ArrayUtil.clone(userHandle);
     }
 
     @Override
