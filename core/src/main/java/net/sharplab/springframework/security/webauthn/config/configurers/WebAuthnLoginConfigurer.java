@@ -166,6 +166,7 @@ public final class WebAuthnLoginConfigurer<H extends HttpSecurityBuilder<H>> ext
      * @return the {@link FormLoginConfigurer} for additional customization
      */
     public WebAuthnLoginConfigurer<H> usernameParameter(String usernameParameter) {
+        Assert.hasText(usernameParameter, "usernameParameter must not be null or empty");
         this.usernameParameter = usernameParameter;
         return this;
     }
@@ -179,6 +180,7 @@ public final class WebAuthnLoginConfigurer<H extends HttpSecurityBuilder<H>> ext
      * @return the {@link WebAuthnLoginConfigurer} for additional customization
      */
     public WebAuthnLoginConfigurer<H> passwordParameter(String passwordParameter) {
+        Assert.hasText(usernameParameter, "passwordParameter must not be null or empty");
         this.passwordParameter = passwordParameter;
         return this;
     }
@@ -192,6 +194,7 @@ public final class WebAuthnLoginConfigurer<H extends HttpSecurityBuilder<H>> ext
      * @return the {@link WebAuthnLoginConfigurer} for additional customization
      */
     public WebAuthnLoginConfigurer<H> credentialIdParameter(String credentialIdParameter) {
+        Assert.hasText(usernameParameter, "credentialIdParameter must not be null or empty");
         this.credentialIdParameter = credentialIdParameter;
         return this;
     }
@@ -205,6 +208,7 @@ public final class WebAuthnLoginConfigurer<H extends HttpSecurityBuilder<H>> ext
      * @return the {@link WebAuthnLoginConfigurer} for additional customization
      */
     public WebAuthnLoginConfigurer<H> clientDataJSONParameter(String clientDataJSONParameter) {
+        Assert.hasText(usernameParameter, "clientDataJSONParameter must not be null or empty");
         this.clientDataJSONParameter = clientDataJSONParameter;
         return this;
     }
@@ -218,6 +222,7 @@ public final class WebAuthnLoginConfigurer<H extends HttpSecurityBuilder<H>> ext
      * @return the {@link WebAuthnLoginConfigurer} for additional customization
      */
     public WebAuthnLoginConfigurer<H> authenticatorDataParameter(String authenticatorDataParameter) {
+        Assert.hasText(usernameParameter, "authenticatorDataParameter must not be null or empty");
         this.authenticatorDataParameter = authenticatorDataParameter;
         return this;
     }
@@ -231,6 +236,7 @@ public final class WebAuthnLoginConfigurer<H extends HttpSecurityBuilder<H>> ext
      * @return the {@link WebAuthnLoginConfigurer} for additional customization
      */
     public WebAuthnLoginConfigurer<H> signatureParameter(String signatureParameter) {
+        Assert.hasText(usernameParameter, "signatureParameter must not be null or empty");
         this.signatureParameter = signatureParameter;
         return this;
     }
@@ -244,6 +250,7 @@ public final class WebAuthnLoginConfigurer<H extends HttpSecurityBuilder<H>> ext
      * @return the {@link WebAuthnLoginConfigurer} for additional customization
      */
     public WebAuthnLoginConfigurer<H> clientExtensionsJSONParameter(String clientExtensionsJSONParameter) {
+        Assert.hasText(clientExtensionsJSONParameter, "clientExtensionsJSONParameter must not be null or empty");
         this.clientExtensionsJSONParameter = clientExtensionsJSONParameter;
         return this;
     }

@@ -180,6 +180,9 @@ public class WebAuthnConfigurer<H extends HttpSecurityBuilder<H>> extends Abstra
          * @return the {@link PublicKeyCredParamsConfig}
          */
         public WebAuthnConfigurer.PublicKeyCredParamsConfig addPublicKeyCredParams(PublicKeyCredentialType type, COSEAlgorithmIdentifier alg) {
+            Assert.notNull(type, "type must not be null");
+            Assert.notNull(alg, "alg must not be null");
+
             publicKeyCredentialParameters.add(new PublicKeyCredentialParameters(type, alg));
             return this;
         }

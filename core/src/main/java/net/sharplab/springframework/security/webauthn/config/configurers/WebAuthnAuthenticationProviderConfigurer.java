@@ -23,6 +23,7 @@ import net.sharplab.springframework.security.webauthn.userdetails.WebAuthnUserDe
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.SecurityConfigurerAdapter;
 import org.springframework.security.config.annotation.authentication.ProviderManagerBuilder;
+import org.springframework.util.Assert;
 
 import java.util.Collections;
 import java.util.List;
@@ -54,6 +55,11 @@ public class WebAuthnAuthenticationProviderConfigurer<
      * @param authenticatorService {@link WebAuthnAuthenticatorService}
      */
     public WebAuthnAuthenticationProviderConfigurer(U userDetailsService, A authenticatorService, V authenticationContextValidator) {
+
+        Assert.notNull(userDetailsService, "userDetailsService must not be null");
+        Assert.notNull(authenticatorService, "authenticatorService must not be null");
+        Assert.notNull(authenticationContextValidator, "authenticationContextValidator must not be null");
+
         this.userDetailsService = userDetailsService;
         this.authenticatorService = authenticatorService;
         this.authenticationContextValidator = authenticationContextValidator;
