@@ -73,6 +73,10 @@ public class OptionsProviderImpl implements OptionsProvider {
     // ===================================================================================================
 
     public OptionsProviderImpl(WebAuthnUserDetailsService userDetailsService, ChallengeRepository challengeRepository) {
+
+        Assert.notNull(userDetailsService, "userDetailsService must not be null");
+        Assert.notNull(challengeRepository, "challengeRepository must not be null");
+
         this.userDetailsService = userDetailsService;
         this.challengeRepository = challengeRepository;
     }

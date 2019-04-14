@@ -22,6 +22,7 @@ import com.webauthn4j.server.ServerProperty;
 import net.sharplab.springframework.security.webauthn.challenge.ChallengeRepository;
 import net.sharplab.springframework.security.webauthn.options.OptionsProvider;
 import net.sharplab.springframework.security.webauthn.util.ServletUtil;
+import org.springframework.util.Assert;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -36,6 +37,10 @@ public class ServerPropertyProviderImpl implements ServerPropertyProvider {
     private ChallengeRepository challengeRepository;
 
     public ServerPropertyProviderImpl(OptionsProvider optionsProvider, ChallengeRepository challengeRepository) {
+
+        Assert.notNull(optionsProvider, "optionsProvider must not be null");
+        Assert.notNull(challengeRepository, "challengeRepository must not be null");
+
         this.optionsProvider = optionsProvider;
         this.challengeRepository = challengeRepository;
     }

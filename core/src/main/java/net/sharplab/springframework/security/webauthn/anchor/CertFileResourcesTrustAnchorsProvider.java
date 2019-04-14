@@ -73,6 +73,7 @@ public class CertFileResourcesTrustAnchorsProvider extends CachingTrustAnchorsPr
      */
     @Override
     protected Map<AAGUID, Set<TrustAnchor>> loadTrustAnchors() {
+        checkConfig();
         Set<TrustAnchor> trustAnchors = certificates.stream().map(this::loadTrustAnchor).collect(Collectors.toSet());
         return Collections.singletonMap(AAGUID.NULL, trustAnchors);
     }
@@ -86,7 +87,6 @@ public class CertFileResourcesTrustAnchorsProvider extends CachingTrustAnchorsPr
     }
 
     private TrustAnchor loadTrustAnchor(Resource certificate) {
-        checkConfig();
         try {
             X509Certificate x509Certificate = CertificateUtil.generateX509Certificate(certificate.getInputStream());
             return new TrustAnchor(x509Certificate, null);

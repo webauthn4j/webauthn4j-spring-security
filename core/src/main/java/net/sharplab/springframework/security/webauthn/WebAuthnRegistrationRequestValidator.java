@@ -50,6 +50,10 @@ public class WebAuthnRegistrationRequestValidator {
      * @param serverPropertyProvider       provider for {@link ServerProperty}
      */
     public WebAuthnRegistrationRequestValidator(WebAuthnRegistrationContextValidator registrationContextValidator, ServerPropertyProvider serverPropertyProvider) {
+
+        Assert.notNull(registrationContextValidator, "registrationContextValidator must not be null");
+        Assert.notNull(serverPropertyProvider, "serverPropertyProvider must not be null");
+
         this.registrationContextValidator = registrationContextValidator;
         this.serverPropertyProvider = serverPropertyProvider;
     }

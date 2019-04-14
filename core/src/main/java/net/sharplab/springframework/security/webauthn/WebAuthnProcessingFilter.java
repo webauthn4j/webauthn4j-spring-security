@@ -99,8 +99,8 @@ public class WebAuthnProcessingFilter extends UsernamePasswordAuthenticationFilt
      */
     public WebAuthnProcessingFilter(List<GrantedAuthority> authorities, ServerPropertyProvider serverPropertyProvider) {
         super();
-        Assert.notNull(authorities, "authorities must be set");
-        Assert.notNull(serverPropertyProvider, "serverPropertyProvider must be set");
+        Assert.notNull(authorities, "authorities must not be null");
+        Assert.notNull(serverPropertyProvider, "serverPropertyProvider must not be null");
         this.authorities = authorities;
         this.serverPropertyProvider = serverPropertyProvider;
     }

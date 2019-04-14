@@ -94,6 +94,7 @@ public class OptionsEndpointFilter extends GenericFilterBean {
         Assert.notNull(jsonConverter, "jsonConverter must not be null");
         Assert.notNull(trustResolver, "trustResolver must not be null");
         Assert.notNull(mfaTokenEvaluator, "mfaTokenEvaluator must not be null");
+        Assert.notNull(optionsProvider, "optionsProvider must not be null");
     }
 
     @Override

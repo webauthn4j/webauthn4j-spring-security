@@ -36,6 +36,7 @@ import org.springframework.security.core.authority.mapping.NullAuthoritiesMapper
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsChecker;
+import org.springframework.util.Assert;
 
 import java.io.Serializable;
 import java.util.Arrays;
@@ -72,6 +73,11 @@ public class WebAuthnAuthenticationProvider implements AuthenticationProvider {
             WebAuthnUserDetailsService userDetailsService,
             WebAuthnAuthenticatorService authenticatorService,
             WebAuthnAuthenticationContextValidator authenticationContextValidator) {
+
+        Assert.notNull(userDetailsService, "userDetailsService must not be null");
+        Assert.notNull(authenticatorService, "authenticatorService must not be null");
+        Assert.notNull(authenticationContextValidator, "authenticationContextValidator must not be null");
+
         this.userDetailsService = userDetailsService;
         this.authenticatorService = authenticatorService;
         this.authenticationContextValidator = authenticationContextValidator;

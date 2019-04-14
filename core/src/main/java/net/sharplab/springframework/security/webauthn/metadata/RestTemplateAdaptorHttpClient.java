@@ -17,6 +17,7 @@
 package net.sharplab.springframework.security.webauthn.metadata;
 
 import com.webauthn4j.metadata.HttpClient;
+import org.springframework.util.Assert;
 import org.springframework.web.client.RestTemplate;
 
 /**
@@ -27,6 +28,7 @@ public class RestTemplateAdaptorHttpClient implements HttpClient {
     private RestTemplate restTemplate;
 
     public RestTemplateAdaptorHttpClient(RestTemplate restTemplate) {
+        Assert.notNull(restTemplate, "restTemplate must not be null");
         this.restTemplate = restTemplate;
     }
 

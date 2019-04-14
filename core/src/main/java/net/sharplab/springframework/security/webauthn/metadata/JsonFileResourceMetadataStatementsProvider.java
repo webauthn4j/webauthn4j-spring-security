@@ -23,6 +23,7 @@ import com.webauthn4j.metadata.data.statement.MetadataStatement;
 import com.webauthn4j.util.AssertUtil;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.core.io.Resource;
+import org.springframework.util.Assert;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -49,6 +50,7 @@ public class JsonFileResourceMetadataStatementsProvider implements MetadataState
     // ===================================================================================================
 
     public JsonFileResourceMetadataStatementsProvider(JsonConverter jsonConverter) {
+        Assert.notNull(jsonConverter, "jsonConverter must not be null");
         this.jsonConverter = jsonConverter;
     }
 
