@@ -17,6 +17,7 @@
 package net.sharplab.springframework.security.webauthn.endpoint;
 
 import com.webauthn4j.converter.util.JsonConverter;
+import net.sharplab.springframework.security.webauthn.options.OptionsProvider;
 import org.junit.Test;
 import org.springframework.security.authentication.AuthenticationTrustResolver;
 import org.springframework.security.authentication.AuthenticationTrustResolverImpl;
@@ -24,6 +25,7 @@ import org.springframework.security.authentication.MFATokenEvaluator;
 import org.springframework.security.authentication.MFATokenEvaluatorImpl;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.mock;
 
 public class OptionsEndpointFilterTest {
 
@@ -31,7 +33,7 @@ public class OptionsEndpointFilterTest {
 
     @Test
     public void getter_setter_test() {
-        OptionsEndpointFilter optionsEndpointFilter = new OptionsEndpointFilter(null, jsonConverter);
+        OptionsEndpointFilter optionsEndpointFilter = new OptionsEndpointFilter(mock(OptionsProvider.class), jsonConverter);
         MFATokenEvaluator mfaTokenEvaluator = new MFATokenEvaluatorImpl();
         AuthenticationTrustResolver trustResolver = new AuthenticationTrustResolverImpl();
         optionsEndpointFilter.setMFATokenEvaluator(mfaTokenEvaluator);
