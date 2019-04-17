@@ -4,6 +4,8 @@ jdk:
   - openjdk8
   - oraclejdk8
   - oraclejdk9
+  - oraclejdk11
+  - oraclejdk12
 
 dist: trusty # to use chrome
 
