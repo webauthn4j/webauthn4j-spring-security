@@ -31,7 +31,7 @@ public class Base64UrlStringToAttestationObjectConverterTest {
     @Test
     public void convert_test() {
         AttestationObject expected = TestDataUtil.createAttestationObjectWithFIDOU2FAttestationStatement();
-        String source = new AttestationObjectConverter(cborConverter).convertToString(expected);
+        String source = new AttestationObjectConverter(cborConverter).convertToBase64urlString(expected);
         Base64UrlStringToAttestationObjectConverter converter = new Base64UrlStringToAttestationObjectConverter(cborConverter);
         AttestationObject result = converter.convert(source);
         assertThat(result).isEqualTo(expected);
