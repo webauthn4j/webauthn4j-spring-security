@@ -42,7 +42,7 @@ dependencies {
     compile project(':spring-security-webauthn-core')
     compile project(':spring-security-webauthn-fido-server')
     compile project(':spring-security-webauthn-thymeleaf')
-    compile project(':spring-security-webauthn-samples/javaconfig/webauthn/lib/spa-angular-client')
+    compile project(':samples:javaconfig:webauthn:lib:spa-angular-client')
 
     // Spring Framework
     compile('org.springframework.boot:spring-boot-starter-data-jpa')
