@@ -27,6 +27,7 @@ import java.util.Map;
 import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatCode;
 
 public class KeyStoreResourceTrustAnchorProviderTest {
 
@@ -64,18 +65,20 @@ public class KeyStoreResourceTrustAnchorProviderTest {
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void afterPropertiesSet_test() {
+    public void afterPropertiesSet_with_invalid_config_test() {
         target = new KeyStoreResourceTrustAnchorProvider();
         target.afterPropertiesSet();
     }
 
     @Test
-    public void afterPropertiesSet_with_invalid_config_test() {
+    public void afterPropertiesSet_test() {
         target = new KeyStoreResourceTrustAnchorProvider();
         Resource resource = new ClassPathResource("net/sharplab/springframework/security/webauthn/anchor/KeyStoreResourceTrustAnchorProviderImplTest/test.jks");
         target.setKeyStore(resource);
         target.setPassword("password");
 
-        target.afterPropertiesSet();
+        assertThatCode(()->{
+            target.afterPropertiesSet();
+        }).doesNotThrowAnyException();
     }
 }

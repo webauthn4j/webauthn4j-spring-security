@@ -29,6 +29,7 @@ public class WebAuthnAssertionAuthenticationTokenTest {
         WebAuthnAuthenticationRequest request = mock(WebAuthnAuthenticationRequest.class);
         WebAuthnAssertionAuthenticationToken token = new WebAuthnAssertionAuthenticationToken(request);
         token.setAuthenticated(true);
+        assertThat(token.isAuthenticated()).isTrue();
     }
 
     @Test
@@ -36,6 +37,7 @@ public class WebAuthnAssertionAuthenticationTokenTest {
         WebAuthnAuthenticationRequest request = mock(WebAuthnAuthenticationRequest.class);
         WebAuthnAssertionAuthenticationToken token = new WebAuthnAssertionAuthenticationToken(request);
         token.setAuthenticated(false);
+        assertThat(token.isAuthenticated()).isFalse();
     }
 
     @Test
