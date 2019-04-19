@@ -19,6 +19,8 @@ package net.sharplab.springframework.security.webauthn.exception;
 
 import org.junit.Test;
 
+import static org.assertj.core.api.Assertions.assertThatCode;
+
 @SuppressWarnings("ThrowableNotThrown")
 public class BadCredentialIdExceptionTest {
 
@@ -26,8 +28,10 @@ public class BadCredentialIdExceptionTest {
 
     @Test
     public void test() {
-        new BadCredentialIdException("dummy", cause);
-        new BadCredentialIdException("dummy");
+        assertThatCode(()->{
+            new BadCredentialIdException("dummy", cause);
+            new BadCredentialIdException("dummy");
+        }).doesNotThrowAnyException();
     }
 
 }

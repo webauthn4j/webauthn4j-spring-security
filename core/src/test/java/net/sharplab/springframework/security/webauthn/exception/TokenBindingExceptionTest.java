@@ -18,6 +18,8 @@ package net.sharplab.springframework.security.webauthn.exception;
 
 import org.junit.Test;
 
+import static org.assertj.core.api.Assertions.assertThatCode;
+
 @SuppressWarnings("ThrowableNotThrown")
 public class TokenBindingExceptionTest {
 
@@ -25,7 +27,10 @@ public class TokenBindingExceptionTest {
 
     @Test
     public void test() {
-        new TokenBindingException("dummy", cause);
-        new TokenBindingException("dummy");
+
+        assertThatCode(()->{
+            new TokenBindingException("dummy", cause);
+            new TokenBindingException("dummy");
+        }).doesNotThrowAnyException();
     }
 }

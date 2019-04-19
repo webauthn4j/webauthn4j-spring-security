@@ -18,6 +18,8 @@ package net.sharplab.springframework.security.webauthn.exception;
 
 import org.junit.Test;
 
+import static org.assertj.core.api.Assertions.assertThatCode;
+
 @SuppressWarnings("ThrowableNotThrown")
 public class UserNotVerifiedExceptionTest {
 
@@ -25,7 +27,10 @@ public class UserNotVerifiedExceptionTest {
 
     @Test
     public void test() {
-        new UserNotVerifiedException("dummy", cause);
-        new UserNotVerifiedException("dummy");
+
+        assertThatCode(()->{
+            new UserNotVerifiedException("dummy", cause);
+            new UserNotVerifiedException("dummy");
+        }).doesNotThrowAnyException();
     }
 }

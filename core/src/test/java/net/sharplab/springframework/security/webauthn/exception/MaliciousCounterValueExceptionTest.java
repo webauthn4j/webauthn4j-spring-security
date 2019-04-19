@@ -18,6 +18,8 @@ package net.sharplab.springframework.security.webauthn.exception;
 
 import org.junit.Test;
 
+import static org.assertj.core.api.Assertions.assertThatCode;
+
 @SuppressWarnings("ThrowableNotThrown")
 public class MaliciousCounterValueExceptionTest {
 
@@ -25,7 +27,10 @@ public class MaliciousCounterValueExceptionTest {
 
     @Test
     public void test() {
-        new MaliciousCounterValueException("dummy", cause);
-        new MaliciousCounterValueException("dummy");
+
+        assertThatCode(()->{
+            new MaliciousCounterValueException("dummy", cause);
+            new MaliciousCounterValueException("dummy");
+        }).doesNotThrowAnyException();
     }
 }

@@ -18,12 +18,18 @@ package net.sharplab.springframework.security.webauthn.exception;
 
 import org.junit.Test;
 
+import static org.assertj.core.api.Assertions.assertThatCode;
+
+@SuppressWarnings("ThrowableNotThrown")
 public class CredentialIdNotFoundExceptionTest {
     private RuntimeException cause = new RuntimeException();
 
     @Test
     public void test() {
-        new CredentialIdNotFoundException("dummy", cause);
-        new CredentialIdNotFoundException("dummy");
+
+        assertThatCode(()->{
+            new CredentialIdNotFoundException("dummy", cause);
+            new CredentialIdNotFoundException("dummy");
+        }).doesNotThrowAnyException();
     }
 }

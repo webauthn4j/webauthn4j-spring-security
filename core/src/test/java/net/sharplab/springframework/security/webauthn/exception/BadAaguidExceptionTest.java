@@ -18,13 +18,19 @@ package net.sharplab.springframework.security.webauthn.exception;
 
 import org.junit.Test;
 
+import static org.assertj.core.api.Assertions.assertThatCode;
+
+@SuppressWarnings("ThrowableNotThrown")
 public class BadAaguidExceptionTest {
 
     private RuntimeException cause = new RuntimeException();
 
     @Test
     public void test() {
-        new BadAaguidException("dummy", cause);
-        new BadAaguidException("dummy");
+        assertThatCode(()->{
+            new BadAaguidException("dummy", cause);
+            new BadAaguidException("dummy");
+        }).doesNotThrowAnyException();
+
     }
 }

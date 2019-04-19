@@ -18,6 +18,8 @@ package net.sharplab.springframework.security.webauthn.exception;
 
 import org.junit.Test;
 
+import static org.assertj.core.api.Assertions.assertThatCode;
+
 @SuppressWarnings("ThrowableNotThrown")
 public class PublicKeyMismatchExceptionTest {
 
@@ -25,7 +27,9 @@ public class PublicKeyMismatchExceptionTest {
 
     @Test
     public void test() {
-        new PublicKeyMismatchException("dummy", cause);
-        new PublicKeyMismatchException("dummy");
+        assertThatCode(()->{
+            new PublicKeyMismatchException("dummy", cause);
+            new PublicKeyMismatchException("dummy");
+        }).doesNotThrowAnyException();
     }
 }

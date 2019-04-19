@@ -18,6 +18,8 @@ package net.sharplab.springframework.security.webauthn.exception;
 
 import org.junit.Test;
 
+import static org.assertj.core.api.Assertions.assertThatCode;
+
 @SuppressWarnings("ThrowableNotThrown")
 public class BadAttestationStatementExceptionTest {
 
@@ -25,7 +27,9 @@ public class BadAttestationStatementExceptionTest {
 
     @Test
     public void test() {
-        new BadAttestationStatementException("dummy", cause);
-        new BadAttestationStatementException("dummy");
+        assertThatCode(()->{
+            new BadAttestationStatementException("dummy", cause);
+            new BadAttestationStatementException("dummy");
+        }).doesNotThrowAnyException();
     }
 }

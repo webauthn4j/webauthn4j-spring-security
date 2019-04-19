@@ -18,13 +18,19 @@ package net.sharplab.springframework.security.webauthn.exception;
 
 import org.junit.Test;
 
+import static org.assertj.core.api.Assertions.assertThatCode;
+
+@SuppressWarnings("ThrowableNotThrown")
 public class KeyDescriptionValidationExceptionTest {
 
         private RuntimeException cause = new RuntimeException();
 
         @Test
         public void test() {
-            new KeyDescriptionValidationException("dummy", cause);
-            new KeyDescriptionValidationException("dummy");
+
+            assertThatCode(()->{
+                new KeyDescriptionValidationException("dummy", cause);
+                new KeyDescriptionValidationException("dummy");
+            }).doesNotThrowAnyException();
         }
     }

@@ -18,6 +18,8 @@ package net.sharplab.springframework.security.webauthn.exception;
 
 import org.junit.Test;
 
+import static org.assertj.core.api.Assertions.assertThatCode;
+
 @SuppressWarnings("ThrowableNotThrown")
 public class MissingChallengeExceptionTest {
 
@@ -25,7 +27,10 @@ public class MissingChallengeExceptionTest {
 
     @Test
     public void test() {
-        new MissingChallengeException("dummy", cause);
-        new MissingChallengeException("dummy");
+
+        assertThatCode(()->{
+            new MissingChallengeException("dummy", cause);
+            new MissingChallengeException("dummy");
+        }).doesNotThrowAnyException();
     }
 }

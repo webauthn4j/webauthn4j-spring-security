@@ -18,6 +18,8 @@ package net.sharplab.springframework.security.webauthn.exception;
 
 import org.junit.Test;
 
+import static org.assertj.core.api.Assertions.assertThatCode;
+
 @SuppressWarnings("ThrowableNotThrown")
 public class SelfAttestationProhibitedExceptionTest {
 
@@ -25,7 +27,9 @@ public class SelfAttestationProhibitedExceptionTest {
 
     @Test
     public void test() {
-        new SelfAttestationProhibitedException("dummy", cause);
-        new SelfAttestationProhibitedException("dummy");
+        assertThatCode(()->{
+            new SelfAttestationProhibitedException("dummy", cause);
+            new SelfAttestationProhibitedException("dummy");
+        }).doesNotThrowAnyException();
     }
 }

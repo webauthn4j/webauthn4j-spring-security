@@ -19,6 +19,8 @@ package net.sharplab.springframework.security.webauthn.exception;
 
 import org.junit.Test;
 
+import static org.assertj.core.api.Assertions.assertThatCode;
+
 @SuppressWarnings("ThrowableNotThrown")
 public class DataConversionExceptionTest {
 
@@ -26,8 +28,11 @@ public class DataConversionExceptionTest {
 
     @Test
     public void test() {
-        new DataConversionException("dummy", cause);
-        new DataConversionException("dummy");
+
+        assertThatCode(()->{
+            new DataConversionException("dummy", cause);
+            new DataConversionException("dummy");
+        }).doesNotThrowAnyException();
     }
 
 }

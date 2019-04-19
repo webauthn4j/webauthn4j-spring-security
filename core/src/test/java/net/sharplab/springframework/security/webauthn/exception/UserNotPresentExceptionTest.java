@@ -18,6 +18,8 @@ package net.sharplab.springframework.security.webauthn.exception;
 
 import org.junit.Test;
 
+import static org.assertj.core.api.Assertions.assertThatCode;
+
 @SuppressWarnings("ThrowableNotThrown")
 public class UserNotPresentExceptionTest {
 
@@ -25,7 +27,10 @@ public class UserNotPresentExceptionTest {
 
     @Test
     public void test() {
-        new UserNotPresentException("dummy", cause);
-        new UserNotPresentException("dummy");
+
+        assertThatCode(()->{
+            new UserNotPresentException("dummy", cause);
+            new UserNotPresentException("dummy");
+        }).doesNotThrowAnyException();
     }
 }

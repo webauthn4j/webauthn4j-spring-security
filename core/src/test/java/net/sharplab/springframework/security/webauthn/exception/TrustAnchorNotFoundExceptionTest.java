@@ -18,6 +18,8 @@ package net.sharplab.springframework.security.webauthn.exception;
 
 import org.junit.Test;
 
+import static org.assertj.core.api.Assertions.assertThatCode;
+
 @SuppressWarnings("ThrowableNotThrown")
 public class TrustAnchorNotFoundExceptionTest {
 
@@ -25,7 +27,10 @@ public class TrustAnchorNotFoundExceptionTest {
 
     @Test
     public void test() {
-        new TrustAnchorNotFoundException("dummy", cause);
-        new TrustAnchorNotFoundException("dummy");
+
+        assertThatCode(()->{
+            new TrustAnchorNotFoundException("dummy", cause);
+            new TrustAnchorNotFoundException("dummy");
+        }).doesNotThrowAnyException();
     }
 }
