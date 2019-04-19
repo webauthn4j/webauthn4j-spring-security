@@ -228,7 +228,7 @@ public class WebAuthnAuthenticationProvider implements AuthenticationProvider {
 
     /**
      * Sets the policy will be used to verify the status of the loaded
-     * <tt>UserDetails</tt> <em>before</em> validation of the credentials takes place.
+     * <code>UserDetails</code> <em>before</em> validation of the credentials takes place.
      *
      * @param preAuthenticationChecks strategy to be invoked prior to authentication.
      */

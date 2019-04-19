@@ -53,6 +53,7 @@ public class WebAuthnAuthenticationProviderConfigurer<
      *
      * @param userDetailsService   {@link WebAuthnUserDetailsService}
      * @param authenticatorService {@link WebAuthnAuthenticatorService}
+     * @param authenticationContextValidator {@link WebAuthnAuthenticationContextValidator}
      */
     public WebAuthnAuthenticationProviderConfigurer(U userDetailsService, A authenticatorService, V authenticationContextValidator) {
 

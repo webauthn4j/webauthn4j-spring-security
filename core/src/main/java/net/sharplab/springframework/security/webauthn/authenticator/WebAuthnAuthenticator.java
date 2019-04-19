@@ -39,8 +39,10 @@ public class WebAuthnAuthenticator extends AuthenticatorImpl {
 
     /**
      * Constructor
-     *
      * @param name authenticator's friendly name
+     * @param attestedCredentialData attested credential data
+     * @param attestationStatement attestation statement
+     * @param counter counter
      */
     public WebAuthnAuthenticator(String name, AttestedCredentialData attestedCredentialData, AttestationStatement attestationStatement, long counter) {
         super(attestedCredentialData, attestationStatement, counter);
