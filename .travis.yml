@@ -2,8 +2,11 @@ language: java
 
 jdk:
   - openjdk8
+  - openjdk11
+  - openjdk12
   - oraclejdk8
   - oraclejdk9
+  - oraclejdk11
 
 dist: trusty # to use chrome
 
