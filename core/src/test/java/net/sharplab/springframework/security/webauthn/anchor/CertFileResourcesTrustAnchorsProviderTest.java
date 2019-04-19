@@ -21,12 +21,16 @@ import org.junit.Test;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 
+import java.io.IOException;
+import java.io.UncheckedIOException;
 import java.security.cert.TrustAnchor;
 import java.util.Collections;
 import java.util.Map;
 import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 public class CertFileResourcesTrustAnchorsProviderTest {
 
@@ -53,5 +57,13 @@ public class CertFileResourcesTrustAnchorsProviderTest {
     public void afterPropertiesSet_test() {
         CertFileResourcesTrustAnchorsProvider trustAnchorProvider = new CertFileResourcesTrustAnchorsProvider();
         trustAnchorProvider.afterPropertiesSet();
+    }
+
+    @Test(expected = UncheckedIOException.class)
+    public void loadTrustAnchor_test() throws IOException {
+        CertFileResourcesTrustAnchorsProvider trustAnchorProvider = new CertFileResourcesTrustAnchorsProvider();
+        Resource resource = mock(Resource.class);
+        when(resource.getInputStream()).thenThrow(IOException.class);
+        trustAnchorProvider.loadTrustAnchor(resource);
     }
 }

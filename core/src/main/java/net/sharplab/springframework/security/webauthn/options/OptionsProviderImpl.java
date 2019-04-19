@@ -163,7 +163,6 @@ public class OptionsProviderImpl implements OptionsProvider {
     }
 
     public void setRpId(String rpId) {
-        Assert.hasText(rpId, "rpId parameter must not be empty or null");
         this.rpId = rpId;
     }
 

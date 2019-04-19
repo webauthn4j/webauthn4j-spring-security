@@ -33,6 +33,16 @@ public class KeyStoreResourceTrustAnchorProviderTest {
     private KeyStoreResourceTrustAnchorProvider target;
 
     @Test
+    public void constructor_test(){
+        Resource resource = new ClassPathResource("net/sharplab/springframework/security/webauthn/anchor/KeyStoreResourceTrustAnchorProviderImplTest/test.jks");
+        KeyStoreResourceTrustAnchorProvider target = new KeyStoreResourceTrustAnchorProvider(resource);
+        target.setPassword("password");
+
+        Map<AAGUID, Set<TrustAnchor>> trustAnchors = target.provide();
+        assertThat(trustAnchors).isNotEmpty();
+    }
+
+    @Test
     public void provide_test() {
         target = new KeyStoreResourceTrustAnchorProvider();
         Resource resource = new ClassPathResource("net/sharplab/springframework/security/webauthn/anchor/KeyStoreResourceTrustAnchorProviderImplTest/test.jks");
@@ -55,7 +65,17 @@ public class KeyStoreResourceTrustAnchorProviderTest {
 
     @Test(expected = IllegalArgumentException.class)
     public void afterPropertiesSet_test() {
-        KeyStoreResourceTrustAnchorProvider trustAnchorProvider = new KeyStoreResourceTrustAnchorProvider();
-        trustAnchorProvider.afterPropertiesSet();
+        target = new KeyStoreResourceTrustAnchorProvider();
+        target.afterPropertiesSet();
+    }
+
+    @Test
+    public void afterPropertiesSet_with_invalid_config_test() {
+        target = new KeyStoreResourceTrustAnchorProvider();
+        Resource resource = new ClassPathResource("net/sharplab/springframework/security/webauthn/anchor/KeyStoreResourceTrustAnchorProviderImplTest/test.jks");
+        target.setKeyStore(resource);
+        target.setPassword("password");
+
+        target.afterPropertiesSet();
     }
 }

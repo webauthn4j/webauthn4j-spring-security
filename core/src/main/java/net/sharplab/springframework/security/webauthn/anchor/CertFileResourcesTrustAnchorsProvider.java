@@ -86,7 +86,7 @@ public class CertFileResourcesTrustAnchorsProvider extends CachingTrustAnchorsPr
         this.certificates = certificates;
     }
 
-    private TrustAnchor loadTrustAnchor(Resource certificate) {
+    TrustAnchor loadTrustAnchor(Resource certificate) {
         try {
             X509Certificate x509Certificate = CertificateUtil.generateX509Certificate(certificate.getInputStream());
             return new TrustAnchor(x509Certificate, null);

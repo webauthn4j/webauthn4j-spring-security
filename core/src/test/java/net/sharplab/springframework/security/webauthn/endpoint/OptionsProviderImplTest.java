@@ -31,6 +31,7 @@ import org.assertj.core.util.Lists;
 import org.junit.Test;
 import org.springframework.mock.web.MockHttpServletRequest;
 
+import javax.servlet.http.HttpServletRequest;
 import java.math.BigInteger;
 import java.util.Collections;
 import java.util.List;
@@ -68,6 +69,20 @@ public class OptionsProviderImplTest {
         assertThat(attestationOptions.getRelyingParty().getName()).isEqualTo("rpName");
         assertThat(attestationOptions.getChallenge()).isEqualTo(challenge);
         assertThat(attestationOptions.getCredentials()).containsExactly(Base64UrlUtil.encodeToString(credentialId));
+
+    }
+
+    @Test
+    public void getEffectiveRpId(){
+        WebAuthnUserDetailsService userDetailsService = mock(WebAuthnUserDetailsService.class);
+        ChallengeRepository challengeRepository = mock(ChallengeRepository.class);
+        OptionsProviderImpl optionsProvider = new OptionsProviderImpl(userDetailsService, challengeRepository);
+        optionsProvider.setRpId(null);
+        MockHttpServletRequest httpServletRequest = new MockHttpServletRequest();
+        httpServletRequest.setScheme("https");
+        httpServletRequest.setServerName("example.com");
+        httpServletRequest.setServerPort(8080);
+        assertThat(optionsProvider.getEffectiveRpId(httpServletRequest)).isEqualTo("example.com");
 
     }
 
