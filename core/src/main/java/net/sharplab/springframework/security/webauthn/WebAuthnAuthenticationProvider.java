@@ -147,12 +147,7 @@ public class WebAuthnAuthenticationProvider implements AuthenticationProvider {
 
         WebAuthnAuthenticationRequest credentials = authenticationToken.getCredentials();
 
-        boolean userVerificationRequired = credentials.isUserVerificationRequired();
-
-        Authentication currentAuthentication = SecurityContextHolder.getContext().getAuthentication();
-        if (currentAuthentication != null && currentAuthentication.isAuthenticated() && Objects.equals(currentAuthentication.getName(), user.getUsername())) {
-            userVerificationRequired = false;
-        }
+        boolean userVerificationRequired = isUserVerificationRequired(user, credentials);
 
         WebAuthnAuthenticationContext authenticationContext = new WebAuthnAuthenticationContext(
                 credentials.getCredentialId(),
@@ -265,6 +260,19 @@ public class WebAuthnAuthenticationProvider implements AuthenticationProvider {
                     "UserDetailsService returned null, which is an interface contract violation");
         }
         return user;
+    }
+
+    boolean isUserVerificationRequired(WebAuthnUserDetails user, WebAuthnAuthenticationRequest credentials) {
+
+        Authentication currentAuthentication = SecurityContextHolder.getContext().getAuthentication();
+
+        // If current authentication is authenticated and username matches, return false
+        if (currentAuthentication != null && currentAuthentication.isAuthenticated() && Objects.equals(currentAuthentication.getName(), user.getUsername())) {
+            return false;
+        }
+        else {
+            return credentials.isUserVerificationRequired();
+        }
     }
 
     private class DefaultPreAuthenticationChecks implements UserDetailsChecker {

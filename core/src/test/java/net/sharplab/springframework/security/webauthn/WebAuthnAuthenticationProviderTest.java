@@ -35,6 +35,8 @@ import org.springframework.security.authentication.*;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetailsChecker;
 
 import java.util.Collections;
@@ -346,5 +348,19 @@ public class WebAuthnAuthenticationProviderTest {
         authenticationProvider.getPreAuthenticationChecks().check(userDetails);
     }
 
+    @Test
+    public void isUserVerificationRequired_test(){
+        WebAuthnUserDetails webAuthnUserDetails = mock(WebAuthnUserDetails.class);
+        when(webAuthnUserDetails.getUsername()).thenReturn("john.doe");
+        WebAuthnAuthenticationRequest credentials = mock(WebAuthnAuthenticationRequest.class);
+        when(credentials.isUserVerificationRequired()).thenReturn(true);
+        SecurityContext securityContext = mock(SecurityContext.class);
+        Authentication authentication = mock(Authentication.class);
+        when(authentication.isAuthenticated()).thenReturn(true);
+        when(authentication.getName()).thenReturn("john.doe");
+        when(securityContext.getAuthentication()).thenReturn(authentication);
+        SecurityContextHolder.setContext(securityContext);
+        assertThat(authenticationProvider.isUserVerificationRequired(webAuthnUserDetails, credentials)).isFalse();
+    }
 
 }

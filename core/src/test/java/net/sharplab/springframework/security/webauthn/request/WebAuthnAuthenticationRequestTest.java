@@ -33,6 +33,37 @@ public class WebAuthnAuthenticationRequestTest {
     private CborConverter cborConverter = new CborConverter();
 
     @Test
+    public void getter_test(){
+        Challenge challenge = new DefaultChallenge();
+        byte[] clientDataJSON = TestDataUtil.createClientDataJSON(ClientDataType.GET);
+        byte[] authenticatorData = new AuthenticatorDataConverter(cborConverter).convert(TestDataUtil.createAuthenticatorData());
+        ServerProperty serverProperty = new ServerProperty(
+                new Origin("https://example.com"),
+                "example.com",
+                challenge,
+                new byte[]{0x43, 0x21}
+        );
+        WebAuthnAuthenticationRequest request = new WebAuthnAuthenticationRequest(
+                new byte[]{0x01, 0x23},
+                clientDataJSON,
+                authenticatorData,
+                new byte[]{0x45, 0x56},
+                "",
+                serverProperty,
+                true,
+                true
+        );
+        assertThat(request.getCredentialId()).isEqualTo(new byte[]{0x01, 0x23});
+        assertThat(request.getClientDataJSON()).isEqualTo(clientDataJSON);
+        assertThat(request.getAuthenticatorData()).isEqualTo(authenticatorData);
+        assertThat(request.getSignature()).isEqualTo(new byte[]{0x45, 0x56});
+        assertThat(request.getClientExtensionsJSON()).isEqualTo("");
+        assertThat(request.getServerProperty()).isEqualTo(serverProperty);
+        assertThat(request.isUserVerificationRequired()).isEqualTo(true);
+        assertThat(request.isUserPresenceRequired()).isEqualTo(true);
+    }
+
+    @Test
     public void equals_hashCode_test() {
         Challenge challenge = new DefaultChallenge();
         byte[] clientDataJSON = TestDataUtil.createClientDataJSON(ClientDataType.GET);

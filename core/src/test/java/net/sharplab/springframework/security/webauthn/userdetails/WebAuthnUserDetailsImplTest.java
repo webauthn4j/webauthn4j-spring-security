@@ -34,13 +34,14 @@ public class WebAuthnUserDetailsImplTest {
         GrantedAuthority grantedAuthority = new SimpleGrantedAuthority("ROLE_ADMIN");
         Authenticator authenticator = new AuthenticatorImpl(null, null, 0);
         WebAuthnUserDetailsImpl userDetails = new WebAuthnUserDetailsImpl(
-                new byte[0],
+                new byte[32],
                 "dummy",
                 "dummy",
                 Collections.singletonList(authenticator),
                 Collections.singletonList(grantedAuthority));
 
         userDetails.setSingleFactorAuthenticationAllowed(true);
+        assertThat(userDetails.getUserHandle()).isEqualTo(new byte[32]);
         assertThat(userDetails.isSingleFactorAuthenticationAllowed()).isTrue();
         assertThat(userDetails.getAuthenticators()).isEqualTo(Collections.singletonList(authenticator));
     }
