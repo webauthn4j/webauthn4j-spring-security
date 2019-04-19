@@ -24,6 +24,7 @@ import com.webauthn4j.server.ServerProperty;
 import com.webauthn4j.util.Base64UrlUtil;
 import com.webauthn4j.validator.WebAuthnRegistrationContextValidationResponse;
 import com.webauthn4j.validator.WebAuthnRegistrationContextValidator;
+import net.sharplab.springframework.security.webauthn.exception.BadAttestationStatementException;
 import net.sharplab.springframework.security.webauthn.server.ServerPropertyProvider;
 import org.junit.Rule;
 import org.junit.Test;
@@ -100,4 +101,22 @@ public class WebAuthnRegistrationRequestValidatorTest {
 
     }
 
+    @Test(expected = BadAttestationStatementException.class)
+    public void validate_caught_exception_test() {
+        WebAuthnRegistrationRequestValidator target = new WebAuthnRegistrationRequestValidator(
+                registrationContextValidator, serverPropertyProvider
+        );
+        when(registrationContextValidator.validate(any())).thenThrow(new com.webauthn4j.validator.exception.BadAttestationStatementException("dummy"));
+
+        MockHttpServletRequest mockHttpServletRequest = new MockHttpServletRequest();
+        mockHttpServletRequest.setScheme("https");
+        mockHttpServletRequest.setServerName("example.com");
+        mockHttpServletRequest.setServerPort(443);
+        String clientDataBase64 = "clientDataBase64";
+        String attestationObjectBase64 = "attestationObjectBase64";
+        String clientExtensionsJSON = "clientExtensionsJSON";
+
+        target.validate(mockHttpServletRequest, clientDataBase64, attestationObjectBase64, clientExtensionsJSON);
+
+    }
 }

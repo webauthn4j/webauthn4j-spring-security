@@ -71,9 +71,9 @@ public class WebAuthnRegistrationRequestValidator {
         Assert.hasText(attestationObjectBase64url, "attestationObjectBase64url must have text");
 
         WebAuthnRegistrationContext registrationContext = createRegistrationContext(httpServletRequest, clientDataBase64url, attestationObjectBase64url, clientExtensionsJSON);
-        WebAuthnRegistrationContextValidationResponse response = registrationContextValidator.validate(registrationContext);
 
         try {
+            WebAuthnRegistrationContextValidationResponse response = registrationContextValidator.validate(registrationContext);
             return new WebAuthnRegistrationRequestValidationResponse(
                     response.getCollectedClientData(),
                     response.getAttestationObject(),
