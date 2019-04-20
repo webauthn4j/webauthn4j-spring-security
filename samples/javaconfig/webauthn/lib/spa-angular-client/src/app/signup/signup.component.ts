@@ -158,9 +158,6 @@ export class SignupComponent implements OnInit {
   }
 
   checkResidentKeyRequirement(): Promise<boolean>{
-    if(this.authService.isFirefox()){
-      return Promise.resolve(false);
-    }
     return this.modalService.open(ResidentKeyRequirementDialogComponent, { centered: true }).result;
   }
 

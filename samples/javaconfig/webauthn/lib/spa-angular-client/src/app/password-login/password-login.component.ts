@@ -20,6 +20,7 @@ import {AuthService} from "../auth/auth.service";
 import {WebAuthnService} from "../webauthn/web-authn.service";
 import {Router} from "@angular/router";
 import {Alert} from "../alert/alert";
+import * as Bowser from "bowser";
 
 @Component({
   selector: 'app-password-login',
@@ -27,6 +28,8 @@ import {Alert} from "../alert/alert";
   styleUrls: ['./password-login.component.css']
 })
 export class PasswordLoginComponent implements OnInit {
+
+  private bowser = Bowser.getParser(window.navigator.userAgent);
 
   alerts: Alert[] = [];
 
@@ -72,18 +75,6 @@ export class PasswordLoginComponent implements OnInit {
 
   loginWithPublicKeyCredential() {
 
-    // As of 2018-11-25, Firefox doesn't support password-less login, but it ignores userVerification option.
-    if(this.authService.isFirefox()){
-      let message = "Firefox doesn't support device login (password-less login). Firefox only supports two-step login."
-        + " For two-step login, you need to press 'Login' button instead of 'Device Login' button.";
-      let alert: Alert = {
-        type: "danger",
-        message: message
-      };
-      this.alerts = [alert];
-      return;
-    }
-
     this.authService.loginWithPublicKeyCredential({
       userVerification: "required"
     }).subscribe((data: string) =>{
@@ -115,6 +106,46 @@ export class PasswordLoginComponent implements OnInit {
 
   isWebAuthnAvailable(): boolean{
     return WebAuthnService.isWebAuthnAvailable();
+  }
+
+  isChromeForWindows(): boolean{
+    return this.bowser.satisfies({windows: { chrome: '>0' } })
+  }
+
+  isChromeForMac(): boolean{
+    return this.bowser.satisfies({macos: { chrome: '>0' } })
+  }
+
+  isChromeForAndroid(): boolean{
+    return this.bowser.satisfies({android: { chrome: '>0' } })
+  }
+
+  isChromeForIOS(): boolean{
+    return this.bowser.satisfies({ios: { chrome: '>0' } })
+  }
+
+  isFirefoxForWindows(): boolean{
+    return this.bowser.satisfies({windows: { firefox: '>0' } })
+  }
+
+  isFirefoxForMac(): boolean{
+    return this.bowser.satisfies({macos: { firefox: '>0' } })
+  }
+
+  isFirefoxForAndroid(): boolean{
+    return this.bowser.satisfies({android: { firefox: '>0' } })
+  }
+
+  isFirefoxForIOS(): boolean{
+    return this.bowser.satisfies({ios: { firefox: '>0' } })
+  }
+
+  isSafariForMac(): boolean{
+    return this.bowser.satisfies({macos: { safari: '>0' } })
+  }
+
+  isSafariForIOS(): boolean{
+    return this.bowser.satisfies({ios: { safari: '>0' } })
   }
 
 }

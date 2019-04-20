@@ -25,12 +25,15 @@ import {WebAuthn4NgCredentialRequestOptions} from "./web-authn-4-ng-credential-r
 import {ServerOptions} from "./server-options";
 import {Observable} from "rxjs/internal/Observable";
 import {OptionsResponse} from "./options-response";
+import * as Bowser from "bowser";
 import {map} from "rxjs/operators";
 
 @Injectable({
   providedIn: 'root'
 })
 export class WebAuthnService {
+
+  private static bowser = Bowser.getParser(window.navigator.userAgent);
 
   private _optionsUrl: string = "/webauthn/options";
 
@@ -165,5 +168,10 @@ export class WebAuthnService {
   static isWebAuthnAvailable(): boolean{
     let untypedWindow: any = window;
     return navigator.credentials && untypedWindow.PublicKeyCredential;
+  }
+
+  static isResidentKeyLoginAvailable(): boolean{
+    return WebAuthnService.isWebAuthnAvailable() &&
+      this.bowser.satisfies({windows: { chrome: '>118.01.1322' } });
   }
 }

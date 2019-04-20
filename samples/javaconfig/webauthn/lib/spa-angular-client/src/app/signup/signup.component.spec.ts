@@ -22,7 +22,6 @@ import {FormsModule} from "@angular/forms";
 import {ProfileService} from "../profile/profile.service";
 import {RouterTestingModule} from "@angular/router/testing";
 import {AuthService} from "../auth/auth.service";
-import {of} from "rxjs/internal/observable/of";
 
 describe('SignupComponent', () => {
   let component: SignupComponent;
@@ -48,9 +47,7 @@ describe('SignupComponent', () => {
           {
             provide: AuthService,
             useFactory: ()=>{
-              let authServiceMock = new AuthService(null, null);
-              spyOn(authServiceMock, "isFirefox").and.returnValue(of(false));
-              return authServiceMock;
+              return new AuthService(null, null);
             }
           }
         ]
