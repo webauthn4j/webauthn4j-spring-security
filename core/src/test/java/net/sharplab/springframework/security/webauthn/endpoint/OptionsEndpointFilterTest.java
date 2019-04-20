@@ -35,6 +35,7 @@ import java.util.Collections;
 
 import static net.sharplab.springframework.security.webauthn.endpoint.OptionsEndpointFilter.FILTER_URL;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
@@ -56,7 +57,7 @@ public class OptionsEndpointFilterTest {
     @Test
     public void afterPropertiesSet_test() {
         OptionsEndpointFilter optionsEndpointFilter = new OptionsEndpointFilter(mock(OptionsProvider.class), jsonConverter);
-        optionsEndpointFilter.afterPropertiesSet();
+        assertThatCode(optionsEndpointFilter::afterPropertiesSet).doesNotThrowAnyException();
     }
 
     @Test
