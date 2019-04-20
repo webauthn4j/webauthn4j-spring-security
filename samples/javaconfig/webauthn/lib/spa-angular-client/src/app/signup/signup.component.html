@@ -44,15 +44,15 @@
       </div>
     </div>
     <div class="form-group">
-      <label for="userVerification">E-mail</label>
-      <input type="text" id="userVerification" name="userVerification" [(ngModel)]="user.emailAddress" #userVerification="ngModel"
-             class="form-control" [class.is-invalid]="userVerification.invalid && userVerification.touched"
+      <label for="username">E-mail</label>
+      <input type="text" id="username" name="username" [(ngModel)]="user.emailAddress" #username="ngModel"
+             class="form-control" [class.is-invalid]="username.invalid && username.touched"
              placeholder="E-mail" required email />
-      <div *ngIf="userVerification.invalid && userVerification.touched" class="invalid-feedback">
-        <div *ngIf="userVerification.errors?.required">
+      <div *ngIf="username.invalid && username.touched" class="invalid-feedback">
+        <div *ngIf="username.errors?.required">
           E-mail is required.
         </div>
-        <div *ngIf="userVerification.errors?.email">
+        <div *ngIf="username.errors?.email">
           Not valid e-mail address.
         </div>
       </div>
@@ -75,7 +75,7 @@
             <label class="col-8">Authenticators</label>
             <div class="button-group col-4 text-right">
               <div class="tooltip-wrapper">
-                <button type="button" class="btn btn-light btn-sm" (click)="addAuthenticator()" [disabled]="!isWebAuthnAvailable() || userVerification.invalid">
+                <button type="button" class="btn btn-light btn-sm" (click)="addAuthenticator()" [disabled]="!isWebAuthnAvailable() || username.invalid">
                   <i class="fas fa-plus-square"></i>
                 </button>
               </div>

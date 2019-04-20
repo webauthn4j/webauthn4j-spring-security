@@ -37,7 +37,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         // WebAuthn Login
         http.apply(webAuthnLogin())
                 .loginPage("/login")
-                .usernameParameter("userVerification")
+                .usernameParameter("username")
                 .passwordParameter("rawPassword");
     }
 }
