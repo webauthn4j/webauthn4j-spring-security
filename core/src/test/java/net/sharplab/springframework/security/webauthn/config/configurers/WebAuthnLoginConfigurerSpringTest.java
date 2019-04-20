@@ -17,12 +17,14 @@
 package net.sharplab.springframework.security.webauthn.config.configurers;
 
 
+import com.webauthn4j.converter.util.JsonConverter;
 import com.webauthn4j.data.PublicKeyCredentialType;
 import com.webauthn4j.data.attestation.statement.COSEAlgorithmIdentifier;
 import com.webauthn4j.data.client.challenge.DefaultChallenge;
 import com.webauthn4j.test.TestDataUtil;
 import net.sharplab.springframework.security.webauthn.WebAuthnProcessingFilter;
 import net.sharplab.springframework.security.webauthn.challenge.ChallengeRepository;
+import net.sharplab.springframework.security.webauthn.endpoint.OptionsEndpointFilter;
 import net.sharplab.springframework.security.webauthn.options.OptionsProvider;
 import net.sharplab.springframework.security.webauthn.options.OptionsProviderImpl;
 import net.sharplab.springframework.security.webauthn.server.ServerPropertyProvider;
@@ -35,6 +37,7 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
@@ -44,7 +47,6 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
-import java.math.BigInteger;
 import java.util.Collection;
 import java.util.Collections;
 
@@ -150,24 +152,14 @@ public class WebAuthnLoginConfigurerSpringTest {
     @EnableWebSecurity
     static class Config extends WebSecurityConfigurerAdapter {
 
-        @Bean
-        public ChallengeRepository challengeRepository() {
-            ChallengeRepository challengeRepository = mock(ChallengeRepository.class);
-            when(challengeRepository.loadOrGenerateChallenge(any())).thenReturn(new DefaultChallenge("aFglXMZdQTKD4krvNzJBzA"));
-            return challengeRepository;
-        }
+        @Autowired
+        private JsonConverter jsonConverter;
 
-        @Bean
-        public OptionsProvider optionsProvider(WebAuthnUserDetailsService webAuthnUserDetailsService, ChallengeRepository challengeRepository) {
-            OptionsProvider optionsProvider = new OptionsProviderImpl(webAuthnUserDetailsService, challengeRepository);
-            optionsProvider.setRpId("example.com");
-            return optionsProvider;
-        }
+        @Autowired
+        private OptionsProvider optionsProvider;
 
-        @Bean
-        public ServerPropertyProvider serverPropertyProvider(OptionsProvider optionsProvider, ChallengeRepository challengeRepository) {
-            return new ServerPropertyProviderImpl(optionsProvider, challengeRepository);
-        }
+        @Autowired
+        private ServerPropertyProvider serverPropertyProvider;
 
         @Override
         protected void configure(HttpSecurity http) throws Exception {
@@ -193,12 +185,53 @@ public class WebAuthnLoginConfigurerSpringTest {
                     .signatureParameter("signature")
                     .clientExtensionsJSONParameter("clientExtensionsJSON")
                     .successForwardUrl("/")
-                    .failureForwardUrl("/login");
+                    .failureForwardUrl("/login")
+                    .loginPage("/login")
+                    .optionsEndpoint()
+                        .processingUrl("/webauthn/options")
+                        .and()
+                    .jsonConverter(jsonConverter)
+                    .optionsProvider(optionsProvider)
+                    .serverPropertyProvider(serverPropertyProvider);
 
             // Authorization
             http.authorizeRequests()
                     .antMatchers("/login").permitAll()
                     .anyRequest().authenticated();
+        }
+
+        @Configuration
+        static class BeanConfig {
+
+            @Bean
+            public JsonConverter jsonConverter(){
+                return new JsonConverter();
+            }
+
+            @Bean
+            public ChallengeRepository challengeRepository() {
+                ChallengeRepository challengeRepository = mock(ChallengeRepository.class);
+                when(challengeRepository.loadOrGenerateChallenge(any())).thenReturn(new DefaultChallenge("aFglXMZdQTKD4krvNzJBzA"));
+                return challengeRepository;
+            }
+
+            @Bean
+            public OptionsProvider optionsProvider(WebAuthnUserDetailsService webAuthnUserDetailsService, ChallengeRepository challengeRepository) {
+                OptionsProvider optionsProvider = new OptionsProviderImpl(webAuthnUserDetailsService, challengeRepository);
+                optionsProvider.setRpId("example.com");
+                return optionsProvider;
+            }
+
+            @Bean
+            public OptionsEndpointFilter optionsEndpointFilter(OptionsProvider optionsProvider, JsonConverter jsonConverter){
+                return new OptionsEndpointFilter(optionsProvider, jsonConverter);
+            }
+
+            @Bean
+            public ServerPropertyProvider serverPropertyProvider(OptionsProvider optionsProvider, ChallengeRepository challengeRepository) {
+                return new ServerPropertyProviderImpl(optionsProvider, challengeRepository);
+            }
+
         }
 
     }
