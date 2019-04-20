@@ -18,6 +18,7 @@ package net.sharplab.springframework.security.fido.server.endpoint;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.webauthn4j.converter.AttestationObjectConverter;
+import com.webauthn4j.converter.AuthenticatorTransportConverter;
 import com.webauthn4j.converter.CollectedClientDataConverter;
 import com.webauthn4j.converter.util.JsonConverter;
 import com.webauthn4j.data.attestation.AttestationObject;
@@ -33,6 +34,8 @@ import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UncheckedIOException;
+import java.util.Collections;
+import java.util.Set;
 
 public class FidoServerAttestationResultEndpointFilter extends ServerEndpointFilterBase {
 
@@ -92,10 +95,12 @@ public class FidoServerAttestationResultEndpointFilter extends ServerEndpointFil
         ServerAuthenticatorAttestationResponse response = credential.getResponse();
         CollectedClientData collectedClientData = collectedClientDataConverter.convert(response.getClientDataJSON());
         AttestationObject attestationObject = attestationObjectConverter.convert(response.getAttestationObject());
+        Set<String> transports = Collections.emptySet();
         webAuthnRegistrationRequestValidator.validate(
                 request,
                 response.getClientDataJSON(),
                 response.getAttestationObject(),
+                transports,
                 credential.getClientExtensionResults());
 
         WebAuthnAuthenticator webAuthnAuthenticator =

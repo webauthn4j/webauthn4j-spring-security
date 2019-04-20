@@ -29,6 +29,7 @@ import org.springframework.util.Assert;
 import javax.servlet.http.HttpServletRequest;
 import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 
 
 public class WebAuthnRegistrationRequestValidator {
@@ -64,13 +65,18 @@ public class WebAuthnRegistrationRequestValidator {
     public WebAuthnRegistrationRequestValidationResponse validate(HttpServletRequest httpServletRequest,
                                                                   String clientDataBase64url,
                                                                   String attestationObjectBase64url,
+                                                                  Set<String> transports,
                                                                   String clientExtensionsJSON
     ) {
         Assert.notNull(httpServletRequest, "httpServletRequest must not be null");
         Assert.hasText(clientDataBase64url, "clientDataBase64url must have text");
         Assert.hasText(attestationObjectBase64url, "attestationObjectBase64url must have text");
+        if(transports != null){
+            transports.forEach(transport -> Assert.hasText(transport, "each transport must have text"));
+        }
 
-        WebAuthnRegistrationContext registrationContext = createRegistrationContext(httpServletRequest, clientDataBase64url, attestationObjectBase64url, clientExtensionsJSON);
+        WebAuthnRegistrationContext registrationContext =
+                createRegistrationContext(httpServletRequest, clientDataBase64url, attestationObjectBase64url, transports, clientExtensionsJSON);
 
         try {
             WebAuthnRegistrationContextValidationResponse response = registrationContextValidator.validate(registrationContext);
@@ -86,6 +92,7 @@ public class WebAuthnRegistrationRequestValidator {
     WebAuthnRegistrationContext createRegistrationContext(HttpServletRequest request,
                                                           String clientDataBase64,
                                                           String attestationObjectBase64,
+                                                          Set<String> transports,
                                                           String clientExtensionsJSON) {
 
         byte[] clientDataBytes = Base64UrlUtil.decode(clientDataBase64);
@@ -95,7 +102,7 @@ public class WebAuthnRegistrationRequestValidator {
         return new WebAuthnRegistrationContext(
                 clientDataBytes,
                 attestationObjectBytes,
-                Collections.emptySet(), //TODO
+                transports,
                 clientExtensionsJSON,
                 serverProperty,
                 false,

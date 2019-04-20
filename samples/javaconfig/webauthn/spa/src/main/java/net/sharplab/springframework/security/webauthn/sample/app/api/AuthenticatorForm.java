@@ -19,6 +19,7 @@ package net.sharplab.springframework.security.webauthn.sample.app.api;
 import net.sharplab.springframework.security.webauthn.sample.app.api.validator.AuthenticatorFormValidator;
 
 import javax.validation.constraints.NotEmpty;
+import java.util.Set;
 
 public class AuthenticatorForm {
 
@@ -41,6 +42,8 @@ public class AuthenticatorForm {
      *     correlation validation is implemented in {@link AuthenticatorFormValidator}
      */
     private AttestationObjectForm attestationObject;
+
+    private Set<String> transports;
 
     /**
      *     correlation validation is implemented in {@link AuthenticatorFormValidator}
@@ -85,6 +88,14 @@ public class AuthenticatorForm {
 
     public void setAttestationObject(AttestationObjectForm attestationObject) {
         this.attestationObject = attestationObject;
+    }
+
+    public Set<String> getTransports() {
+        return transports;
+    }
+
+    public void setTransports(Set<String> transports) {
+        this.transports = transports;
     }
 
     public String getClientExtensionsJSON() {

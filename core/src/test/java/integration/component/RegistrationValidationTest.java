@@ -33,6 +33,7 @@ import org.junit.Test;
 import org.springframework.mock.web.MockHttpServletRequest;
 
 import java.util.Collections;
+import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
@@ -88,10 +89,11 @@ public class RegistrationValidationTest {
 
         String clientDataBase64 = Base64UrlUtil.encodeToString(registrationRequest.getClientDataJSON());
         String attestationObjectBase64 = Base64UrlUtil.encodeToString(registrationRequest.getAttestationObject());
+        Set<String> transports = Collections.emptySet();
         String clientExtensionsJSON = null;
 
         WebAuthnRegistrationRequestValidationResponse response
-                = target.validate(mockHttpServletRequest, clientDataBase64, attestationObjectBase64, clientExtensionsJSON);
+                = target.validate(mockHttpServletRequest, clientDataBase64, attestationObjectBase64, transports, clientExtensionsJSON);
 
         assertThat(response.getAttestationObject()).isNotNull();
         assertThat(response.getCollectedClientData()).isNotNull();

@@ -54,6 +54,7 @@ public class AuthenticatorFormValidator {
                         request,
                         form.getClientData().getClientDataBase64(),
                         form.getAttestationObject().getAttestationObjectBase64(),
+                        form.getTransports(),
                         form.getClientExtensionsJSON());
             }
             catch (ValidationException exception){
