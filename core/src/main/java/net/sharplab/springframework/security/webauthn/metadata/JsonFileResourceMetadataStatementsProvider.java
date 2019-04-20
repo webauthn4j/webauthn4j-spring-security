@@ -89,7 +89,7 @@ public class JsonFileResourceMetadataStatementsProvider implements MetadataState
         this.resources = resources;
     }
 
-    private AAGUID extractAAGUID(MetadataStatement metadataStatement) {
+    AAGUID extractAAGUID(MetadataStatement metadataStatement) {
         switch (metadataStatement.getProtocolFamily()) {
             case "fido2":
                 return metadataStatement.getAaguid();

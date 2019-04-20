@@ -18,7 +18,19 @@ package net.sharplab.springframework.security.webauthn.metadata;
 
 
 import com.webauthn4j.converter.util.JsonConverter;
+import com.webauthn4j.data.attestation.authenticator.AAGUID;
+import com.webauthn4j.metadata.data.statement.MetadataStatement;
+import net.sharplab.springframework.security.webauthn.anchor.CertFileResourcesTrustAnchorsProvider;
 import org.junit.Test;
+import org.springframework.core.io.Resource;
+
+import java.io.IOException;
+import java.io.UncheckedIOException;
+import java.util.UUID;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 public class JsonFileResourceMetadataStatementsProviderTest {
 
@@ -29,6 +41,37 @@ public class JsonFileResourceMetadataStatementsProviderTest {
     @Test(expected = IllegalArgumentException.class)
     public void resources_not_configured_test() {
         target.provide();
+    }
+
+    @Test
+    public void extractAAGUID_with_fido2_test(){
+        AAGUID aaguid = new AAGUID(UUID.randomUUID());
+        MetadataStatement metadataStatement = mock(MetadataStatement.class);
+        when(metadataStatement.getProtocolFamily()).thenReturn("fido2");
+        when(metadataStatement.getAaguid()).thenReturn(aaguid);
+        assertThat(target.extractAAGUID(metadataStatement)).isEqualTo(aaguid);
+    }
+
+    @Test
+    public void extractAAGUID_with_u2f_test(){
+        MetadataStatement metadataStatement = mock(MetadataStatement.class);
+        when(metadataStatement.getProtocolFamily()).thenReturn("u2f");
+        assertThat(target.extractAAGUID(metadataStatement)).isEqualTo(AAGUID.ZERO);
+    }
+
+    @Test
+    public void extractAAGUID_with_uaf_test(){
+        MetadataStatement metadataStatement = mock(MetadataStatement.class);
+        when(metadataStatement.getProtocolFamily()).thenReturn("uaf");
+        assertThat(target.extractAAGUID(metadataStatement)).isEqualTo(AAGUID.NULL);
+    }
+
+
+    @Test(expected = UncheckedIOException.class)
+    public void readJsonFile_test() throws IOException {
+        Resource resource = mock(Resource.class);
+        when(resource.getInputStream()).thenThrow(IOException.class);
+        target.readJsonFile(resource);
     }
 
 }

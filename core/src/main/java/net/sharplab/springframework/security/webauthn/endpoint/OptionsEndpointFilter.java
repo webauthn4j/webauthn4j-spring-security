@@ -110,7 +110,7 @@ public class OptionsEndpointFilter extends GenericFilterBean {
             OptionsResponse optionsResponse = processRequest(fi.getRequest());
             writeResponse(fi.getResponse(), optionsResponse);
         } catch (RuntimeException e) {
-            logger.debug("RuntimeException is thrown", e);
+            logger.debug(e);
             writeErrorResponse(fi.getResponse(), e);
         }
 
@@ -187,7 +187,7 @@ public class OptionsEndpointFilter extends GenericFilterBean {
 
     String getLoginUsername() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (trustResolver.isAnonymous(authentication) && !mfaTokenEvaluator.isMultiFactorAuthentication(authentication)) {
+        if (authentication == null || (trustResolver.isAnonymous(authentication) && !mfaTokenEvaluator.isMultiFactorAuthentication(authentication))) {
             return null;
         } else {
             return authentication.getName();
