@@ -45,7 +45,7 @@ public class WebAuthnAuthenticationProviderConfigurer<
     // ================================================================================================
     private U userDetailsService;
     private A authenticatorService;
-    private WebAuthnAuthenticationContextValidator authenticationContextValidator;
+    private V authenticationContextValidator;
     private List<String> expectedAuthenticationExtensionIds = Collections.emptyList();
 
     /**
