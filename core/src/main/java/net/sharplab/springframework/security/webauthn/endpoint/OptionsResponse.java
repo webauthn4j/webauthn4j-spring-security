@@ -76,43 +76,43 @@ public class OptionsResponse implements Response {
 
 
     public PublicKeyCredentialRpEntity getRelyingParty() {
-        return relyingParty;
+        return this.relyingParty;
     }
 
     public WebAuthnPublicKeyCredentialUserEntity getUser() {
-        return user;
+        return this.user;
     }
 
     public Challenge getChallenge() {
-        return challenge;
+        return this.challenge;
     }
 
     public List<PublicKeyCredentialParameters> getPubKeyCredParams() {
-        return pubKeyCredParams;
+        return this.pubKeyCredParams;
     }
 
     public Long getRegistrationTimeout() {
-        return registrationTimeout;
+        return this.registrationTimeout;
     }
 
     public Long getAuthenticationTimeout() {
-        return authenticationTimeout;
+        return this.authenticationTimeout;
     }
 
     public List<WebAuthnPublicKeyCredentialDescriptor> getCredentials() {
-        return credentials;
+        return this.credentials;
     }
 
     public AuthenticationExtensionsClientInputs getRegistrationExtensions() {
-        return registrationExtensions;
+        return this.registrationExtensions;
     }
 
     public AuthenticationExtensionsClientInputs getAuthenticationExtensions() {
-        return authenticationExtensions;
+        return this.authenticationExtensions;
     }
 
     public Parameters getParameters() {
-        return parameters;
+        return this.parameters;
     }
 
     @Override
