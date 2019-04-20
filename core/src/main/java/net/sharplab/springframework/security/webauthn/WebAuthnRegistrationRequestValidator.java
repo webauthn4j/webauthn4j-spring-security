@@ -27,7 +27,6 @@ import net.sharplab.springframework.security.webauthn.util.ExceptionUtil;
 import org.springframework.util.Assert;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
