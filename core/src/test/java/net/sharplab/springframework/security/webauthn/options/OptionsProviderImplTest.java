@@ -14,12 +14,15 @@
  * limitations under the License.
  */
 
-package net.sharplab.springframework.security.webauthn.endpoint;
+package net.sharplab.springframework.security.webauthn.options;
 
 import com.webauthn4j.authenticator.Authenticator;
 import com.webauthn4j.data.PublicKeyCredentialParameters;
 import com.webauthn4j.data.client.challenge.Challenge;
 import com.webauthn4j.data.client.challenge.DefaultChallenge;
+import com.webauthn4j.data.extension.client.AuthenticationExtensionsClientInputs;
+import com.webauthn4j.data.extension.client.RegistrationExtensionClientInput;
+import com.webauthn4j.data.extension.client.SupportedExtensionsExtensionClientInput;
 import com.webauthn4j.util.Base64UrlUtil;
 import net.sharplab.springframework.security.webauthn.challenge.ChallengeRepository;
 import net.sharplab.springframework.security.webauthn.options.AttestationOptions;
@@ -63,10 +66,71 @@ public class OptionsProviderImplTest {
         OptionsProvider optionsProvider = new OptionsProviderImpl(userDetailsService, challengeRepository);
         optionsProvider.setRpId("example.com");
         optionsProvider.setRpName("rpName");
+        optionsProvider.setRpIcon("data://dummy");
 
         AttestationOptions attestationOptions = optionsProvider.getAttestationOptions(mockRequest, "dummy", null);
         assertThat(attestationOptions.getRelyingParty().getId()).isEqualTo("example.com");
         assertThat(attestationOptions.getRelyingParty().getName()).isEqualTo("rpName");
+        assertThat(attestationOptions.getRelyingParty().getIcon()).isEqualTo("data://dummy");
+        assertThat(attestationOptions.getChallenge()).isEqualTo(challenge);
+        assertThat(attestationOptions.getCredentials()).containsExactly(Base64UrlUtil.encodeToString(credentialId));
+
+    }
+
+    @Test
+    public void getAttestationOptions_with_challenge_test() {
+        Challenge challenge = new DefaultChallenge();
+        byte[] credentialId = new byte[]{0x01, 0x23, 0x45};
+        WebAuthnUserDetailsService userDetailsService = mock(WebAuthnUserDetailsService.class);
+        WebAuthnUserDetails userDetails = mock(WebAuthnUserDetails.class);
+        Authenticator authenticator = mock(Authenticator.class, RETURNS_DEEP_STUBS);
+        List<Authenticator> authenticators = Collections.singletonList(authenticator);
+        ChallengeRepository challengeRepository = mock(ChallengeRepository.class);
+
+        MockHttpServletRequest mockRequest = new MockHttpServletRequest();
+
+        when(userDetailsService.loadUserByUsername(any())).thenReturn(userDetails);
+        doReturn(new byte[0]).when(userDetails).getUserHandle();
+        doReturn(authenticators).when(userDetails).getAuthenticators();
+        when(authenticator.getAttestedCredentialData().getCredentialId()).thenReturn(credentialId);
+
+        OptionsProvider optionsProvider = new OptionsProviderImpl(userDetailsService, challengeRepository);
+        optionsProvider.setRpId("example.com");
+        optionsProvider.setRpName("rpName");
+        optionsProvider.setRpIcon("data://dummy");
+
+        AttestationOptions attestationOptions = optionsProvider.getAttestationOptions(mockRequest, "dummy", challenge);
+        assertThat(attestationOptions.getRelyingParty().getId()).isEqualTo("example.com");
+        assertThat(attestationOptions.getRelyingParty().getName()).isEqualTo("rpName");
+        assertThat(attestationOptions.getRelyingParty().getIcon()).isEqualTo("data://dummy");
+        assertThat(attestationOptions.getChallenge()).isEqualTo(challenge);
+        assertThat(attestationOptions.getCredentials()).containsExactly(Base64UrlUtil.encodeToString(credentialId));
+
+    }
+
+    @Test
+    public void getAssertionOptions_with_challenge_test() {
+        Challenge challenge = new DefaultChallenge();
+        byte[] credentialId = new byte[]{0x01, 0x23, 0x45};
+        WebAuthnUserDetailsService userDetailsService = mock(WebAuthnUserDetailsService.class);
+        WebAuthnUserDetails userDetails = mock(WebAuthnUserDetails.class);
+        Authenticator authenticator = mock(Authenticator.class, RETURNS_DEEP_STUBS);
+        List<Authenticator> authenticators = Collections.singletonList(authenticator);
+        ChallengeRepository challengeRepository = mock(ChallengeRepository.class);
+
+        MockHttpServletRequest mockRequest = new MockHttpServletRequest();
+
+        when(userDetailsService.loadUserByUsername(any())).thenReturn(userDetails);
+        doReturn(new byte[0]).when(userDetails).getUserHandle();
+        doReturn(authenticators).when(userDetails).getAuthenticators();
+        when(authenticator.getAttestedCredentialData().getCredentialId()).thenReturn(credentialId);
+
+        OptionsProvider optionsProvider = new OptionsProviderImpl(userDetailsService, challengeRepository);
+        optionsProvider.setRpId("example.com");
+        optionsProvider.setRpName("rpName");
+
+        AssertionOptions attestationOptions = optionsProvider.getAssertionOptions(mockRequest, "dummy", challenge);
+        assertThat(attestationOptions.getRpId()).isEqualTo("example.com");
         assertThat(attestationOptions.getChallenge()).isEqualTo(challenge);
         assertThat(attestationOptions.getCredentials()).containsExactly(Base64UrlUtil.encodeToString(credentialId));
 
@@ -96,11 +160,19 @@ public class OptionsProviderImplTest {
         assertThat(optionsProvider.getRpId()).isEqualTo("example.com");
         optionsProvider.setRpName("example");
         assertThat(optionsProvider.getRpName()).isEqualTo("example");
+        optionsProvider.setRpIcon("data://dummy");
+        assertThat(optionsProvider.getRpIcon()).isEqualTo("data://dummy");
         List<PublicKeyCredentialParameters> publicKeyCredParams = Lists.emptyList();
         optionsProvider.setPubKeyCredParams(publicKeyCredParams);
         assertThat(optionsProvider.getPubKeyCredParams()).isEqualTo(publicKeyCredParams);
         optionsProvider.setRegistrationTimeout(10000L);
         assertThat(optionsProvider.getRegistrationTimeout()).isEqualTo(10000L);
+        optionsProvider.setAuthenticationTimeout(20000L);
+        assertThat(optionsProvider.getAuthenticationTimeout()).isEqualTo(20000L);
+        optionsProvider.setRegistrationExtensions(new AuthenticationExtensionsClientInputs<>());
+        assertThat(optionsProvider.getRegistrationExtensions()).isEqualTo(new AuthenticationExtensionsClientInputs<>());
+        optionsProvider.setAuthenticationExtensions(new AuthenticationExtensionsClientInputs<>());
+        assertThat(optionsProvider.getAuthenticationExtensions()).isEqualTo(new AuthenticationExtensionsClientInputs<>());
 
         optionsProvider.setUsernameParameter("usernameParameter");
         assertThat(optionsProvider.getUsernameParameter()).isEqualTo("usernameParameter");

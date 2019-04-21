@@ -16,6 +16,7 @@
 
 package net.sharplab.springframework.security.webauthn;
 
+import com.webauthn4j.data.extension.client.FIDOAppIDExtensionClientInput;
 import com.webauthn4j.server.ServerProperty;
 import com.webauthn4j.util.Base64UrlUtil;
 import net.sharplab.springframework.security.webauthn.request.WebAuthnAuthenticationRequest;
@@ -34,7 +35,10 @@ import org.springframework.security.authentication.AuthenticationServiceExceptio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.AuthorityUtils;
 
+import java.util.Collections;
+
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.mockito.Mockito.*;
 
 /**
@@ -192,6 +196,7 @@ public class WebAuthnProcessingFilterTest {
         target.setAuthenticatorDataParameter(authenticatorDataParameter);
         target.setSignatureParameter(signatureParameter);
         target.setClientExtensionsJSONParameter(clientExtensionsJSONParameter);
+        target.setExpectedAuthenticationExtensionIds(Collections.singletonList(FIDOAppIDExtensionClientInput.ID));
 
         mockHttpServletRequest.setMethod("POST");
         mockHttpServletRequest.setServerName("example.com");
@@ -215,6 +220,7 @@ public class WebAuthnProcessingFilterTest {
         assertThat(target.getAuthenticatorDataParameter()).isEqualTo(authenticatorDataParameter);
         assertThat(target.getSignatureParameter()).isEqualTo(signatureParameter);
         assertThat(target.getClientExtensionsJSONParameter()).isEqualTo(clientExtensionsJSONParameter);
+        assertThat(target.getExpectedAuthenticationExtensionIds()).isEqualTo(Collections.singletonList(FIDOAppIDExtensionClientInput.ID));
         assertThat(target.getServerPropertyProvider()).isEqualTo(serverPropertyProvider);
 
 
