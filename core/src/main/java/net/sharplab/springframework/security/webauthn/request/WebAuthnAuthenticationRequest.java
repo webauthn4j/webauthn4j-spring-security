@@ -21,7 +21,6 @@ import com.webauthn4j.util.ArrayUtil;
 
 import java.io.Serializable;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
@@ -66,6 +65,7 @@ public class WebAuthnAuthenticationRequest implements Serializable {
         this.expectedAuthenticationExtensionIds = expectedAuthenticationExtensionIds;
     }
 
+    @SuppressWarnings("squid:S00107")
     public WebAuthnAuthenticationRequest(byte[] credentialId,
                                          byte[] clientDataJSON,
                                          byte[] authenticatorData,

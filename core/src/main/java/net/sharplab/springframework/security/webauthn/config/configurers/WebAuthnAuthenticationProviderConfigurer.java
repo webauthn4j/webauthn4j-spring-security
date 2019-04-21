@@ -25,9 +25,6 @@ import org.springframework.security.config.annotation.SecurityConfigurerAdapter;
 import org.springframework.security.config.annotation.authentication.ProviderManagerBuilder;
 import org.springframework.util.Assert;
 
-import java.util.Collections;
-import java.util.List;
-
 /**
  * Allows configuring a {@link WebAuthnAuthenticationProvider}
  *
