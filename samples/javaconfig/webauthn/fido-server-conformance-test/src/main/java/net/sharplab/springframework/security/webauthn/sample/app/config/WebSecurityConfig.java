@@ -18,10 +18,12 @@ package net.sharplab.springframework.security.webauthn.sample.app.config;
 
 import com.webauthn4j.data.PublicKeyCredentialType;
 import com.webauthn4j.data.attestation.statement.COSEAlgorithmIdentifier;
+import com.webauthn4j.data.extension.client.RegistrationExtensionClientInput;
 import com.webauthn4j.validator.WebAuthnAuthenticationContextValidator;
 import net.sharplab.springframework.security.webauthn.WebAuthnRegistrationRequestValidator;
 import net.sharplab.springframework.security.webauthn.authenticator.WebAuthnAuthenticatorService;
 import net.sharplab.springframework.security.webauthn.config.configurers.WebAuthnAuthenticationProviderConfigurer;
+import net.sharplab.springframework.security.webauthn.sample.app.security.ExampleExtensionClientInput;
 import net.sharplab.springframework.security.webauthn.sample.app.security.SampleUsernameNotFoundHandler;
 import net.sharplab.springframework.security.webauthn.sample.domain.component.UserManager;
 import net.sharplab.springframework.security.webauthn.userdetails.WebAuthnUserDetailsService;
@@ -95,8 +97,7 @@ WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     public void configure(AuthenticationManagerBuilder builder) throws Exception {
-        builder.apply(new WebAuthnAuthenticationProviderConfigurer<>(userDetailsService, authenticatorService, webAuthnAuthenticationContextValidator))
-            .expectedAuthenticationExtensionIds(Collections.singletonList("example.extension"));
+        builder.apply(new WebAuthnAuthenticationProviderConfigurer<>(userDetailsService, authenticatorService, webAuthnAuthenticationContextValidator));
         builder.apply(new MultiFactorAuthenticationProviderConfigurer<>(daoAuthenticationProvider));
     }
 
@@ -122,7 +123,10 @@ WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .rpName("Spring Security WebAuthn Sample")
                 .publicKeyCredParams()
                 .addPublicKeyCredParams(PublicKeyCredentialType.PUBLIC_KEY, COSEAlgorithmIdentifier.RS256)  // Windows Hello
-                .addPublicKeyCredParams(PublicKeyCredentialType.PUBLIC_KEY, COSEAlgorithmIdentifier.ES256); // FIDO U2F Key, etc
+                .addPublicKeyCredParams(PublicKeyCredentialType.PUBLIC_KEY, COSEAlgorithmIdentifier.ES256)  // FIDO U2F Key, etc
+                .and()
+            .authenticationExtensions()
+                .addExtension(new ExampleExtensionClientInput("test"));
 
         // FIDO Server Endpoints
         http.apply(fidoServer())

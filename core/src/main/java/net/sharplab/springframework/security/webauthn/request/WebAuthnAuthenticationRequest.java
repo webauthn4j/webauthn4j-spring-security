@@ -21,6 +21,8 @@ import com.webauthn4j.util.ArrayUtil;
 
 import java.io.Serializable;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 import java.util.Objects;
 
 
@@ -40,6 +42,7 @@ public class WebAuthnAuthenticationRequest implements Serializable {
     private final ServerProperty serverProperty;
     private final boolean userVerificationRequired;
     private final boolean userPresenceRequired;
+    private List<String> expectedAuthenticationExtensionIds;
 
     @SuppressWarnings("squid:S00107")
     public WebAuthnAuthenticationRequest(byte[] credentialId,
@@ -49,7 +52,8 @@ public class WebAuthnAuthenticationRequest implements Serializable {
                                          String clientExtensionsJSON,
                                          ServerProperty serverProperty,
                                          boolean userVerificationRequired,
-                                         boolean userPresenceRequired) {
+                                         boolean userPresenceRequired,
+                                         List<String> expectedAuthenticationExtensionIds) {
 
         this.credentialId = credentialId;
         this.clientDataJSON = clientDataJSON;
@@ -59,6 +63,7 @@ public class WebAuthnAuthenticationRequest implements Serializable {
         this.serverProperty = serverProperty;
         this.userVerificationRequired = userVerificationRequired;
         this.userPresenceRequired = userPresenceRequired;
+        this.expectedAuthenticationExtensionIds = expectedAuthenticationExtensionIds;
     }
 
     public WebAuthnAuthenticationRequest(byte[] credentialId,
@@ -67,7 +72,8 @@ public class WebAuthnAuthenticationRequest implements Serializable {
                                          byte[] signature,
                                          String clientExtensionsJSON,
                                          ServerProperty serverProperty,
-                                         boolean userVerificationRequired) {
+                                         boolean userVerificationRequired,
+                                         List<String> expectedAuthenticationExtensionIds) {
 
         this(
                 credentialId,
@@ -77,7 +83,8 @@ public class WebAuthnAuthenticationRequest implements Serializable {
                 clientExtensionsJSON,
                 serverProperty,
                 userVerificationRequired,
-                true
+                true,
+                expectedAuthenticationExtensionIds
         );
     }
 
@@ -113,25 +120,29 @@ public class WebAuthnAuthenticationRequest implements Serializable {
         return userPresenceRequired;
     }
 
+    public List<String> getExpectedAuthenticationExtensionIds() {
+        return expectedAuthenticationExtensionIds;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        WebAuthnAuthenticationRequest request = (WebAuthnAuthenticationRequest) o;
-        return userVerificationRequired == request.userVerificationRequired &&
-                userPresenceRequired == request.userPresenceRequired &&
-                Arrays.equals(credentialId, request.credentialId) &&
-                Arrays.equals(clientDataJSON, request.clientDataJSON) &&
-                Arrays.equals(authenticatorData, request.authenticatorData) &&
-                Arrays.equals(signature, request.signature) &&
-                Objects.equals(clientExtensionsJSON, request.clientExtensionsJSON) &&
-                Objects.equals(serverProperty, request.serverProperty);
+        WebAuthnAuthenticationRequest that = (WebAuthnAuthenticationRequest) o;
+        return userVerificationRequired == that.userVerificationRequired &&
+                userPresenceRequired == that.userPresenceRequired &&
+                Arrays.equals(credentialId, that.credentialId) &&
+                Arrays.equals(clientDataJSON, that.clientDataJSON) &&
+                Arrays.equals(authenticatorData, that.authenticatorData) &&
+                Arrays.equals(signature, that.signature) &&
+                Objects.equals(clientExtensionsJSON, that.clientExtensionsJSON) &&
+                Objects.equals(serverProperty, that.serverProperty) &&
+                Objects.equals(expectedAuthenticationExtensionIds, that.expectedAuthenticationExtensionIds);
     }
 
     @Override
     public int hashCode() {
-
-        int result = Objects.hash(clientExtensionsJSON, serverProperty, userVerificationRequired, userPresenceRequired);
+        int result = Objects.hash(clientExtensionsJSON, serverProperty, userVerificationRequired, userPresenceRequired, expectedAuthenticationExtensionIds);
         result = 31 * result + Arrays.hashCode(credentialId);
         result = 31 * result + Arrays.hashCode(clientDataJSON);
         result = 31 * result + Arrays.hashCode(authenticatorData);

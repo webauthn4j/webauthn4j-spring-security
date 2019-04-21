@@ -101,8 +101,7 @@ public class WebAuthnAuthenticationProviderConfigurerSpringTest {
 
         @Override
         public void configure(AuthenticationManagerBuilder builder) throws Exception {
-            builder.apply(new WebAuthnAuthenticationProviderConfigurer<>(userDetailsService, authenticatorService, new WebAuthnAuthenticationContextValidator()))
-            .expectedAuthenticationExtensionIds(Collections.emptyList());
+            builder.apply(new WebAuthnAuthenticationProviderConfigurer<>(userDetailsService, authenticatorService, new WebAuthnAuthenticationContextValidator()));
         }
 
     }

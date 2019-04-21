@@ -26,6 +26,8 @@ import com.webauthn4j.server.ServerProperty;
 import com.webauthn4j.test.TestDataUtil;
 import org.junit.Test;
 
+import java.util.Collections;
+
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class WebAuthnAuthenticationRequestTest {
@@ -51,7 +53,8 @@ public class WebAuthnAuthenticationRequestTest {
                 "",
                 serverProperty,
                 true,
-                true
+                true,
+                Collections.singletonList("uvi")
         );
         assertThat(request.getCredentialId()).isEqualTo(new byte[]{0x01, 0x23});
         assertThat(request.getClientDataJSON()).isEqualTo(clientDataJSON);
@@ -61,6 +64,7 @@ public class WebAuthnAuthenticationRequestTest {
         assertThat(request.getServerProperty()).isEqualTo(serverProperty);
         assertThat(request.isUserVerificationRequired()).isEqualTo(true);
         assertThat(request.isUserPresenceRequired()).isEqualTo(true);
+        assertThat(request.getExpectedAuthenticationExtensionIds()).isEqualTo(Collections.singletonList("uvi"));
     }
 
     @Test
@@ -80,7 +84,8 @@ public class WebAuthnAuthenticationRequestTest {
                         challenge,
                         new byte[]{0x43, 0x21}
                 ),
-                true
+                true,
+                Collections.singletonList("uvi")
         );
         WebAuthnAuthenticationRequest requestB = new WebAuthnAuthenticationRequest(
                 new byte[]{0x01, 0x23},
@@ -94,7 +99,8 @@ public class WebAuthnAuthenticationRequestTest {
                         challenge,
                         new byte[]{0x43, 0x21}
                 ),
-                true
+                true,
+                Collections.singletonList("uvi")
         );
 
         assertThat(requestA).isEqualTo(requestB);

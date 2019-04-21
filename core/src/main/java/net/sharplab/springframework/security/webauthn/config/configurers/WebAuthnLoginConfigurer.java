@@ -36,6 +36,8 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.security.web.util.matcher.RequestMatcher;
 import org.springframework.util.Assert;
 
+import java.util.*;
+
 /**
  * Adds WebAuthn authentication. All attributes have reasonable defaults making all
  * parameters are optional. If no {@link #loginPage(String)} is specified, a default login
@@ -74,12 +76,16 @@ import org.springframework.util.Assert;
 public final class WebAuthnLoginConfigurer<H extends HttpSecurityBuilder<H>> extends
         AbstractAuthenticationFilterConfigurer<H, WebAuthnLoginConfigurer<H>, WebAuthnProcessingFilter> {
 
-    private final WebAuthnLoginConfigurer<H>.OptionsEndpointConfig optionsEndpointConfig = new WebAuthnLoginConfigurer<H>.OptionsEndpointConfig();
     //~ Instance fields
     // ================================================================================================
     private OptionsProvider optionsProvider = null;
     private JsonConverter jsonConverter = null;
     private ServerPropertyProvider serverPropertyProvider = null;
+
+    private final WebAuthnLoginConfigurer<H>.OptionsEndpointConfig optionsEndpointConfig = new WebAuthnLoginConfigurer<H>.OptionsEndpointConfig();
+    private final WebAuthnLoginConfigurer<H>.ExpectedAuthenticationExtensionIdsConfig
+            expectedAuthenticationExtensionIdsConfig = new WebAuthnLoginConfigurer<H>.ExpectedAuthenticationExtensionIdsConfig();
+
     private String usernameParameter = null;
     private String passwordParameter = null;
     private String credentialIdParameter = null;
@@ -87,6 +93,7 @@ public final class WebAuthnLoginConfigurer<H extends HttpSecurityBuilder<H>> ext
     private String authenticatorDataParameter = null;
     private String signatureParameter = null;
     private String clientExtensionsJSONParameter = null;
+
 
     public WebAuthnLoginConfigurer() {
         super(new WebAuthnProcessingFilter(), null);
@@ -120,10 +127,15 @@ public final class WebAuthnLoginConfigurer<H extends HttpSecurityBuilder<H>> ext
 
         this.getAuthenticationFilter().setServerPropertyProvider(serverPropertyProvider);
 
+        this.optionsEndpointConfig.configure(http);
+        if (expectedAuthenticationExtensionIdsConfig.expectedAuthenticationExtensionIds.isEmpty()) {
+            this.getAuthenticationFilter().setExpectedAuthenticationExtensionIds(new ArrayList<>(optionsProvider.getAuthenticationExtensions().keySet()));
+        } else {
+            this.getAuthenticationFilter().setExpectedAuthenticationExtensionIds(expectedAuthenticationExtensionIdsConfig.expectedAuthenticationExtensionIds);
+        }
 
         configureParameters();
 
-        this.optionsEndpointConfig.configure(http);
     }
 
     private void configureParameters() {
@@ -155,6 +167,56 @@ public final class WebAuthnLoginConfigurer<H extends HttpSecurityBuilder<H>> ext
             this.getAuthenticationFilter().setClientExtensionsJSONParameter(clientExtensionsJSONParameter);
             this.optionsProvider.setClientExtensionsJSONParameter(clientExtensionsJSONParameter);
         }
+    }
+
+    /**
+     * Specifies the {@link OptionsProvider} to be used.
+     * @param optionsProvider the {@link OptionsProvider}
+     * @return the {@link WebAuthnLoginConfigurer} for additional customization
+     */
+    public WebAuthnLoginConfigurer<H> optionsProvider(OptionsProvider optionsProvider) {
+        Assert.notNull(optionsProvider, "optionsProvider must not be null");
+        this.optionsProvider = optionsProvider;
+        return this;
+    }
+
+    /**
+     * Specifies the {@link JsonConverter} to be used.
+     * @param jsonConverter the {@link JsonConverter}
+     * @return the {@link WebAuthnLoginConfigurer} for additional customization
+     */
+    public WebAuthnLoginConfigurer<H> jsonConverter(JsonConverter jsonConverter) {
+        Assert.notNull(jsonConverter, "jsonConverter must not be null");
+        this.jsonConverter = jsonConverter;
+        return this;
+    }
+
+    /**
+     * Specifies the {@link ServerPropertyProvider} to be used.
+     * @param serverPropertyProvider the {@link ServerPropertyProvider}
+     * @return the {@link WebAuthnLoginConfigurer} for additional customization
+     */
+    public WebAuthnLoginConfigurer<H> serverPropertyProvider(ServerPropertyProvider serverPropertyProvider) {
+        Assert.notNull(serverPropertyProvider, "serverPropertyProvider must not be null");
+        this.serverPropertyProvider = serverPropertyProvider;
+        return this;
+    }
+
+
+    /**
+     * Returns the {@link OptionsEndpointConfig} for configuring the {@link OptionsEndpointFilter}
+     * @return the {@link OptionsEndpointConfig}
+     */
+    public WebAuthnLoginConfigurer<H>.OptionsEndpointConfig optionsEndpoint() {
+        return optionsEndpointConfig;
+    }
+
+    /**
+     * Returns the {@link ExpectedAuthenticationExtensionIdsConfig} for configuring the expectedAuthenticationExtensionId(s)
+     * @return the {@link ExpectedAuthenticationExtensionIdsConfig}
+     */
+    public WebAuthnLoginConfigurer<H>.ExpectedAuthenticationExtensionIdsConfig expectedAuthenticationExtensionIds(){
+        return this.expectedAuthenticationExtensionIdsConfig;
     }
 
     /**
@@ -255,6 +317,7 @@ public final class WebAuthnLoginConfigurer<H extends HttpSecurityBuilder<H>> ext
         return this;
     }
 
+
     /**
      * Forward Authentication Success Handler
      *
@@ -304,48 +367,6 @@ public final class WebAuthnLoginConfigurer<H extends HttpSecurityBuilder<H>> ext
     }
 
     /**
-     * Specifies the {@link OptionsProvider} to be used.
-     * @param optionsProvider the {@link OptionsProvider}
-     * @return the {@link WebAuthnLoginConfigurer} for additional customization
-     */
-    public WebAuthnLoginConfigurer<H> optionsProvider(OptionsProvider optionsProvider) {
-        Assert.notNull(optionsProvider, "optionsProvider must not be null");
-        this.optionsProvider = optionsProvider;
-        return this;
-    }
-
-    /**
-     * Specifies the {@link JsonConverter} to be used.
-     * @param jsonConverter the {@link JsonConverter}
-     * @return the {@link WebAuthnLoginConfigurer} for additional customization
-     */
-    public WebAuthnLoginConfigurer<H> jsonConverter(JsonConverter jsonConverter) {
-        Assert.notNull(jsonConverter, "jsonConverter must not be null");
-        this.jsonConverter = jsonConverter;
-        return this;
-    }
-
-    /**
-     * Specifies the {@link ServerPropertyProvider} to be used.
-     * @param serverPropertyProvider the {@link ServerPropertyProvider}
-     * @return the {@link WebAuthnLoginConfigurer} for additional customization
-     */
-    public WebAuthnLoginConfigurer<H> serverPropertyProvider(ServerPropertyProvider serverPropertyProvider) {
-        Assert.notNull(serverPropertyProvider, "serverPropertyProvider must not be null");
-        this.serverPropertyProvider = serverPropertyProvider;
-        return this;
-    }
-
-    /**
-     * Returns the {@link OptionsEndpointConfig} for configuring the {@link OptionsEndpointFilter}
-     * @return the {@link OptionsEndpointConfig}
-     */
-    public WebAuthnLoginConfigurer<H>.OptionsEndpointConfig optionsEndpoint() {
-        return optionsEndpointConfig;
-    }
-
-
-    /**
      * Configuration options for the {@link OptionsEndpointFilter}
      */
     public class OptionsEndpointConfig {
@@ -391,4 +412,33 @@ public final class WebAuthnLoginConfigurer<H extends HttpSecurityBuilder<H>> ext
     }
 
 
+    /**
+     * Configuration options for expectedAuthenticationExtensionIds
+     */
+    public class ExpectedAuthenticationExtensionIdsConfig {
+
+        private ExpectedAuthenticationExtensionIdsConfig(){}
+
+        private List<String> expectedAuthenticationExtensionIds = new ArrayList<>();
+
+        /**
+         * Add AuthenticationExtensionClientInput
+         * @param expectedAuthenticationExtensionId the expected authentication extension id
+         * @return the {@link WebAuthnLoginConfigurer.ExpectedAuthenticationExtensionIdsConfig}
+         */
+        public ExpectedAuthenticationExtensionIdsConfig add(String expectedAuthenticationExtensionId){
+            Assert.notNull(expectedAuthenticationExtensionId, "expectedAuthenticationExtensionId must not be null");
+            expectedAuthenticationExtensionIds.add(expectedAuthenticationExtensionId);
+            return this;
+        }
+
+        /**
+         * Returns the {@link WebAuthnConfigurer} for further configuration.
+         *
+         * @return the {@link WebAuthnConfigurer}
+         */
+        public WebAuthnLoginConfigurer<H> and() {
+            return WebAuthnLoginConfigurer.this;
+        }
+    }
 }

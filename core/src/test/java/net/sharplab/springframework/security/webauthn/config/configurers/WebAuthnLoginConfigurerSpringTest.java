@@ -21,6 +21,8 @@ import com.webauthn4j.converter.util.JsonConverter;
 import com.webauthn4j.data.PublicKeyCredentialType;
 import com.webauthn4j.data.attestation.statement.COSEAlgorithmIdentifier;
 import com.webauthn4j.data.client.challenge.DefaultChallenge;
+import com.webauthn4j.data.extension.client.FIDOAppIDExtensionClientInput;
+import com.webauthn4j.data.extension.client.SupportedExtensionsExtensionClientInput;
 import com.webauthn4j.test.TestDataUtil;
 import net.sharplab.springframework.security.webauthn.WebAuthnProcessingFilter;
 import net.sharplab.springframework.security.webauthn.challenge.ChallengeRepository;
@@ -174,7 +176,13 @@ public class WebAuthnLoginConfigurerSpringTest {
                     .addPublicKeyCredParams(PublicKeyCredentialType.PUBLIC_KEY, COSEAlgorithmIdentifier.RS1)
                     .and()
                     .registrationTimeout(10000L)
-                    .authenticationTimeout(20000L);
+                    .authenticationTimeout(20000L)
+                    .registrationExtensions()
+                        .addExtension(new SupportedExtensionsExtensionClientInput(true))
+                        .and()
+                    .authenticationExtensions()
+                        .addExtension(new FIDOAppIDExtensionClientInput(""))
+                        .and();
 
             http.apply(webAuthnLogin())
                     .usernameParameter("username")

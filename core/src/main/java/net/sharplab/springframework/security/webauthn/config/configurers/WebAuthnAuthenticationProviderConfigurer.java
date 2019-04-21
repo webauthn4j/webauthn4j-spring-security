@@ -46,7 +46,6 @@ public class WebAuthnAuthenticationProviderConfigurer<
     private U userDetailsService;
     private A authenticatorService;
     private V authenticationContextValidator;
-    private List<String> expectedAuthenticationExtensionIds = Collections.emptyList();
 
     /**
      * Constructor
@@ -73,17 +72,8 @@ public class WebAuthnAuthenticationProviderConfigurer<
     public void configure(B builder) {
         WebAuthnAuthenticationProvider authenticationProvider =
                 new WebAuthnAuthenticationProvider(userDetailsService, authenticatorService, authenticationContextValidator);
-        authenticationProvider.setExpectedAuthenticationExtensionIds(expectedAuthenticationExtensionIds);
         authenticationProvider = postProcess(authenticationProvider);
         builder.authenticationProvider(authenticationProvider);
-    }
-
-    /**
-     * The list of expected authentication extensionId
-     * @param expectedAuthenticationExtensionIds the list of expected authentication extensionId
-     */
-    public void expectedAuthenticationExtensionIds(List<String> expectedAuthenticationExtensionIds){
-        this.expectedAuthenticationExtensionIds = expectedAuthenticationExtensionIds;
     }
 
 }

@@ -19,7 +19,9 @@ package net.sharplab.springframework.security.fido.server.config.configurer;
 import com.webauthn4j.converter.util.JsonConverter;
 import net.sharplab.springframework.security.fido.server.endpoint.*;
 import net.sharplab.springframework.security.webauthn.WebAuthnRegistrationRequestValidator;
+import net.sharplab.springframework.security.webauthn.config.configurers.WebAuthnConfigurer;
 import net.sharplab.springframework.security.webauthn.config.configurers.WebAuthnConfigurerUtil;
+import net.sharplab.springframework.security.webauthn.config.configurers.WebAuthnLoginConfigurer;
 import net.sharplab.springframework.security.webauthn.options.OptionsProvider;
 import net.sharplab.springframework.security.webauthn.server.ServerPropertyProvider;
 import net.sharplab.springframework.security.webauthn.userdetails.WebAuthnUserDetailsService;
@@ -32,6 +34,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.security.web.session.SessionManagementFilter;
 import org.springframework.util.Assert;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -185,6 +188,9 @@ public class FidoServerConfigurer<H extends HttpSecurityBuilder<H>> extends Abst
         private String filterProcessingUrl = null;
         private AuthenticationManager authenticationManager;
         private ServerPropertyProvider serverPropertyProvider = null;
+        private final FidoServerAssertionResultEndpointConfig.ExpectedAuthenticationExtensionIdsConfig
+                expectedAuthenticationExtensionIdsConfig = new FidoServerAssertionResultEndpointConfig.ExpectedAuthenticationExtensionIdsConfig();
+
 
         FidoServerAssertionResultEndpointConfig() {
         }
@@ -213,7 +219,15 @@ public class FidoServerConfigurer<H extends HttpSecurityBuilder<H>> extends Abst
             } else {
                 serverEndpointFilter = applicationContext.getBean(FidoServerAssertionResultEndpointFilter.class);
             }
+
             serverEndpointFilter.setAuthenticationManager(authenticationManager);
+
+            if (expectedAuthenticationExtensionIdsConfig.expectedAuthenticationExtensionIds.isEmpty()) {
+                serverEndpointFilter.setExpectedAuthenticationExtensionIds(new ArrayList<>(optionsProvider.getAuthenticationExtensions().keySet()));
+            } else {
+                serverEndpointFilter.setExpectedAuthenticationExtensionIds(expectedAuthenticationExtensionIdsConfig.expectedAuthenticationExtensionIds);
+            }
+
             http.setSharedObject(FidoServerAssertionResultEndpointFilter.class, serverEndpointFilter);
             http.addFilterAfter(serverEndpointFilter, UsernamePasswordAuthenticationFilter.class);
         }
@@ -231,6 +245,36 @@ public class FidoServerConfigurer<H extends HttpSecurityBuilder<H>> extends Abst
 
         public FidoServerConfigurer<H> and() {
             return FidoServerConfigurer.this;
+        }
+
+        /**
+         * Configuration options for expectedAuthenticationExtensionIds
+         */
+        public class ExpectedAuthenticationExtensionIdsConfig {
+
+            private ExpectedAuthenticationExtensionIdsConfig(){}
+
+            private List<String> expectedAuthenticationExtensionIds = new ArrayList<>();
+
+            /**
+             * Add AuthenticationExtensionClientInput
+             * @param expectedAuthenticationExtensionId the expected authentication extension id
+             * @return the {@link FidoServerAssertionResultEndpointConfig.ExpectedAuthenticationExtensionIdsConfig}
+             */
+            public FidoServerAssertionResultEndpointConfig.ExpectedAuthenticationExtensionIdsConfig add(String expectedAuthenticationExtensionId){
+                Assert.notNull(expectedAuthenticationExtensionId, "expectedAuthenticationExtensionId must not be null");
+                expectedAuthenticationExtensionIds.add(expectedAuthenticationExtensionId);
+                return this;
+            }
+
+            /**
+             * Returns the {@link FidoServerAssertionResultEndpointConfig} for further configuration.
+             *
+             * @return the {@link FidoServerAssertionResultEndpointConfig}
+             */
+            public FidoServerAssertionResultEndpointConfig and() {
+                return FidoServerAssertionResultEndpointConfig.this;
+            }
         }
 
     }

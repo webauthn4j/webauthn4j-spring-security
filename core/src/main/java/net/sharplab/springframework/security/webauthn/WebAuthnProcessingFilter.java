@@ -33,6 +33,7 @@ import org.springframework.util.StringUtils;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.Collections;
 import java.util.List;
 
 
@@ -77,6 +78,7 @@ public class WebAuthnProcessingFilter extends UsernamePasswordAuthenticationFilt
 
     private ServerPropertyProvider serverPropertyProvider;
 
+    private List<String> expectedAuthenticationExtensionIds = Collections.emptyList();
 
     private boolean postOnly = true;
 
@@ -142,7 +144,8 @@ public class WebAuthnProcessingFilter extends UsernamePasswordAuthenticationFilt
                     signatureBytes,
                     clientExtensionsJSON,
                     serverProperty,
-                    true
+                    true,
+                    expectedAuthenticationExtensionIds
             );
             authRequest = new WebAuthnAssertionAuthenticationToken(webAuthnAuthenticationRequest);
         }
@@ -209,6 +212,18 @@ public class WebAuthnProcessingFilter extends UsernamePasswordAuthenticationFilt
         this.clientExtensionsJSONParameter = clientExtensionsJSONParameter;
     }
 
+    public List<String> getExpectedAuthenticationExtensionIds() {
+        return expectedAuthenticationExtensionIds;
+    }
+
+    /**
+     * Sets expected authentication extensionId list
+     * @param expectedAuthenticationExtensionIds list of expected authentication extensionId
+     */
+    public void setExpectedAuthenticationExtensionIds(List<String> expectedAuthenticationExtensionIds) {
+        this.expectedAuthenticationExtensionIds = expectedAuthenticationExtensionIds;
+    }
+
     public ServerPropertyProvider getServerPropertyProvider() {
         return serverPropertyProvider;
     }
@@ -216,6 +231,7 @@ public class WebAuthnProcessingFilter extends UsernamePasswordAuthenticationFilt
     public void setServerPropertyProvider(ServerPropertyProvider serverPropertyProvider) {
         this.serverPropertyProvider = serverPropertyProvider;
     }
+
 
 
     private String obtainClientDataJSON(HttpServletRequest request) {

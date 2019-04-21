@@ -40,8 +40,6 @@ import org.springframework.util.Assert;
 
 import java.io.Serializable;
 import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
 import java.util.Objects;
 
 /**
@@ -63,8 +61,6 @@ public class WebAuthnAuthenticationProvider implements AuthenticationProvider {
     private UserDetailsChecker preAuthenticationChecks = new DefaultPreAuthenticationChecks();
     private UserDetailsChecker postAuthenticationChecks = new DefaultPostAuthenticationChecks();
     private GrantedAuthoritiesMapper authoritiesMapper = new NullAuthoritiesMapper();
-
-    private List<String> expectedAuthenticationExtensionIds = Collections.emptyList();
 
     // ~ Constructor
     // ========================================================================================================
@@ -158,7 +154,7 @@ public class WebAuthnAuthenticationProvider implements AuthenticationProvider {
                 credentials.getServerProperty(),
                 userVerificationRequired,
                 credentials.isUserPresenceRequired(),
-                expectedAuthenticationExtensionIds
+                credentials.getExpectedAuthenticationExtensionIds()
         );
 
         try {
@@ -175,18 +171,6 @@ public class WebAuthnAuthenticationProvider implements AuthenticationProvider {
 
     public void setForcePrincipalAsString(boolean forcePrincipalAsString) {
         this.forcePrincipalAsString = forcePrincipalAsString;
-    }
-
-    public List<String> getExpectedAuthenticationExtensionIds() {
-        return expectedAuthenticationExtensionIds;
-    }
-
-    /**
-     * Sets expected authentication extensionId list
-     * @param expectedAuthenticationExtensionIds list of expected authentication extensionId
-     */
-    public void setExpectedAuthenticationExtensionIds(List<String> expectedAuthenticationExtensionIds) {
-        this.expectedAuthenticationExtensionIds = expectedAuthenticationExtensionIds;
     }
 
     public boolean isHideCredentialIdNotFoundExceptions() {

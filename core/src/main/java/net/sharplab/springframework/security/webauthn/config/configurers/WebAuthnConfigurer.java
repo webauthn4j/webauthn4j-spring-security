@@ -206,7 +206,7 @@ public class WebAuthnConfigurer<H extends HttpSecurityBuilder<H>> extends Abstra
          * @param alg the {@link COSEAlgorithmIdentifier}
          * @return the {@link PublicKeyCredParamsConfig}
          */
-        public WebAuthnConfigurer.PublicKeyCredParamsConfig addPublicKeyCredParams(PublicKeyCredentialType type, COSEAlgorithmIdentifier alg) {
+        public PublicKeyCredParamsConfig addPublicKeyCredParams(PublicKeyCredentialType type, COSEAlgorithmIdentifier alg) {
             Assert.notNull(type, "type must not be null");
             Assert.notNull(alg, "alg must not be null");
 
@@ -239,7 +239,7 @@ public class WebAuthnConfigurer<H extends HttpSecurityBuilder<H>> extends Abstra
          * @param extensionClientInput the T
          * @return the {@link ExtensionsClientInputsConfig}
          */
-        public ExtensionsClientInputsConfig addExtension(T extensionClientInput){
+        public ExtensionsClientInputsConfig<T> addExtension(T extensionClientInput){
             Assert.notNull(extensionClientInput, "extensionClientInput must not be null");
             extensionsClientInputs.put(extensionClientInput.getIdentifier(), extensionClientInput);
             return this;

@@ -39,6 +39,8 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UncheckedIOException;
+import java.util.Collections;
+import java.util.List;
 
 public class FidoServerAssertionResultEndpointFilter extends AbstractAuthenticationProcessingFilter {
 
@@ -55,6 +57,8 @@ public class FidoServerAssertionResultEndpointFilter extends AbstractAuthenticat
     };
     private CollectedClientDataConverter collectedClientDataConverter;
     private ServerEndpointFilterUtil serverEndpointFilterUtil;
+
+    private List<String> expectedAuthenticationExtensionIds = Collections.emptyList();
 
     public FidoServerAssertionResultEndpointFilter(
             JsonConverter jsonConverter,
@@ -121,7 +125,8 @@ public class FidoServerAssertionResultEndpointFilter extends AbstractAuthenticat
                 credential.getClientExtensionResults(),
                 serverProperty,
                 userVerificationRequirement == UserVerificationRequirement.REQUIRED,
-                false
+                false,
+                expectedAuthenticationExtensionIds
         );
 
         WebAuthnAssertionAuthenticationToken authRequest = new WebAuthnAssertionAuthenticationToken(webAuthnAuthenticationRequest);
@@ -133,4 +138,16 @@ public class FidoServerAssertionResultEndpointFilter extends AbstractAuthenticat
         authRequest.setDetails(this.authenticationDetailsSource.buildDetails(request));
     }
 
+
+    public List<String> getExpectedAuthenticationExtensionIds() {
+        return expectedAuthenticationExtensionIds;
+    }
+
+    /**
+     * Sets expected authentication extensionId list
+     * @param expectedAuthenticationExtensionIds list of expected authentication extensionId
+     */
+    public void setExpectedAuthenticationExtensionIds(List<String> expectedAuthenticationExtensionIds) {
+        this.expectedAuthenticationExtensionIds = expectedAuthenticationExtensionIds;
+    }
 }

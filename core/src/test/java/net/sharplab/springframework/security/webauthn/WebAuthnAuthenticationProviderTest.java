@@ -62,7 +62,6 @@ public class WebAuthnAuthenticationProviderTest {
     @Before
     public void setup() {
         authenticationProvider = new WebAuthnAuthenticationProvider(userDetailsService, authenticatorService, authenticationContextValidator);
-        authenticationProvider.setExpectedAuthenticationExtensionIds(Collections.singletonList("appId"));
     }
 
     /**
@@ -112,7 +111,7 @@ public class WebAuthnAuthenticationProviderTest {
         verify(authenticationContextValidator).validate(captor.capture(), any());
         WebAuthnAuthenticationContext authenticationContext = captor.getValue();
 
-        assertThat(authenticationContext.getExpectedExtensionIds()).isEqualTo(authenticationProvider.getExpectedAuthenticationExtensionIds());
+        assertThat(authenticationContext.getExpectedExtensionIds()).isEqualTo(credential.getExpectedAuthenticationExtensionIds());
 
         assertThat(authenticatedToken.getPrincipal()).isInstanceOf(WebAuthnUserDetailsImpl.class);
         assertThat(authenticatedToken.getCredentials()).isEqualTo(credential);
@@ -259,8 +258,6 @@ public class WebAuthnAuthenticationProviderTest {
         authenticationProvider.setPostAuthenticationChecks(postAuthenticationChecker);
         assertThat(authenticationProvider.getPostAuthenticationChecks()).isEqualTo(postAuthenticationChecker);
 
-        authenticationProvider.setExpectedAuthenticationExtensionIds(Collections.singletonList("uvi"));
-        assertThat(authenticationProvider.getExpectedAuthenticationExtensionIds()).isEqualTo(Collections.singletonList("uvi"));
     }
 
     @Test
