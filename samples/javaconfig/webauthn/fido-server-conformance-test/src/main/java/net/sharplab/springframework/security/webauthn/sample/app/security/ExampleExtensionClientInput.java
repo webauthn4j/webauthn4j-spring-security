@@ -18,10 +18,12 @@ package net.sharplab.springframework.security.webauthn.sample.app.security;
 
 import com.webauthn4j.data.extension.AbstractExtensionInput;
 import com.webauthn4j.data.extension.client.AuthenticationExtensionClientInput;
+import com.webauthn4j.data.extension.client.RegistrationExtensionClientInput;
 
 import java.io.Serializable;
 
-public class ExampleExtensionClientInput extends AbstractExtensionInput<Serializable> implements AuthenticationExtensionClientInput<Serializable> {
+public class ExampleExtensionClientInput extends AbstractExtensionInput<Serializable>
+        implements RegistrationExtensionClientInput<Serializable>, AuthenticationExtensionClientInput<Serializable> {
 
     public static final String ID = "example.extension";
 

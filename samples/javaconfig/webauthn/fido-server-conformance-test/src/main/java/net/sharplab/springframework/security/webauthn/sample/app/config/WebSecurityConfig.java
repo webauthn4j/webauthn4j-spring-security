@@ -18,7 +18,6 @@ package net.sharplab.springframework.security.webauthn.sample.app.config;
 
 import com.webauthn4j.data.PublicKeyCredentialType;
 import com.webauthn4j.data.attestation.statement.COSEAlgorithmIdentifier;
-import com.webauthn4j.data.extension.client.RegistrationExtensionClientInput;
 import com.webauthn4j.validator.WebAuthnAuthenticationContextValidator;
 import net.sharplab.springframework.security.webauthn.WebAuthnRegistrationRequestValidator;
 import net.sharplab.springframework.security.webauthn.authenticator.WebAuthnAuthenticatorService;
@@ -125,15 +124,18 @@ WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .addPublicKeyCredParams(PublicKeyCredentialType.PUBLIC_KEY, COSEAlgorithmIdentifier.RS256)  // Windows Hello
                 .addPublicKeyCredParams(PublicKeyCredentialType.PUBLIC_KEY, COSEAlgorithmIdentifier.ES256)  // FIDO U2F Key, etc
                 .and()
+            .registrationExtensions()
+                .addExtension(new ExampleExtensionClientInput("test"))
+                .and()
             .authenticationExtensions()
-                .addExtension(new ExampleExtensionClientInput("test"));
+                .addExtension(new ExampleExtensionClientInput("test"))
+                .and();
 
         // FIDO Server Endpoints
         http.apply(fidoServer())
                 .fidoServerAttestationOptionsEndpoint()
                 .and()
                 .fidoServerAttestationResultEndpointConfig()
-                .expectedRegistrationExtensionIds(Collections.singletonList("example.extension"))
                 .webAuthnUserDetailsService(userDetailsService)
                 .webAuthnRegistrationRequestValidator(webAuthnRegistrationRequestValidator)
                 .usernameNotFoundHandler(new SampleUsernameNotFoundHandler(userManager))
