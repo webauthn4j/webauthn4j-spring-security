@@ -18,6 +18,7 @@ package net.sharplab.springframework.security.webauthn.sample.app.config;
 
 import com.webauthn4j.data.PublicKeyCredentialType;
 import com.webauthn4j.data.attestation.statement.COSEAlgorithmIdentifier;
+import com.webauthn4j.data.extension.client.SupportedExtensionsExtensionClientInput;
 import com.webauthn4j.validator.WebAuthnAuthenticationContextValidator;
 import net.sharplab.springframework.security.webauthn.authenticator.WebAuthnAuthenticatorService;
 import net.sharplab.springframework.security.webauthn.config.configurers.WebAuthnAuthenticationProviderConfigurer;
@@ -109,7 +110,12 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .rpName("Spring Security WebAuthn Sample")
                 .publicKeyCredParams()
                     .addPublicKeyCredParams(PublicKeyCredentialType.PUBLIC_KEY, COSEAlgorithmIdentifier.RS256)  // Windows Hello
-                    .addPublicKeyCredParams(PublicKeyCredentialType.PUBLIC_KEY, COSEAlgorithmIdentifier.ES256); // FIDO U2F Key, etc
+                    .addPublicKeyCredParams(PublicKeyCredentialType.PUBLIC_KEY, COSEAlgorithmIdentifier.ES256) // FIDO U2F Key, etc
+                    .and()
+                .registrationExtensions()
+                    .addExtension(new SupportedExtensionsExtensionClientInput(true))
+                    .and();
+
 
         // WebAuthn Login
         http.apply(webAuthnLogin())

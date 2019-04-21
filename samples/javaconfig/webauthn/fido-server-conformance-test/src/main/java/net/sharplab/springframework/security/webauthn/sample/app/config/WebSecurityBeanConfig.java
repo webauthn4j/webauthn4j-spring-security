@@ -108,10 +108,7 @@ public class WebSecurityBeanConfig {
 
     @Bean
     public OptionsProvider optionsProvider(WebAuthnUserDetailsService webAuthnUserDetailsService, ChallengeRepository challengeRepository) {
-        OptionsProvider optionsProvider = new OptionsProviderImpl(webAuthnUserDetailsService, challengeRepository);
-        optionsProvider.setRegistrationExtensions(null);
-        optionsProvider.setAuthenticationExtensions(null);
-        return optionsProvider;
+        return new OptionsProviderImpl(webAuthnUserDetailsService, challengeRepository);
     }
 
     @Bean

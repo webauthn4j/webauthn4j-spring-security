@@ -21,7 +21,9 @@ import com.webauthn4j.data.PublicKeyCredentialParameters;
 import com.webauthn4j.data.PublicKeyCredentialRpEntity;
 import com.webauthn4j.data.client.Origin;
 import com.webauthn4j.data.client.challenge.Challenge;
+import com.webauthn4j.data.extension.client.AuthenticationExtensionClientInput;
 import com.webauthn4j.data.extension.client.AuthenticationExtensionsClientInputs;
+import com.webauthn4j.data.extension.client.RegistrationExtensionClientInput;
 import com.webauthn4j.util.Base64UrlUtil;
 import net.sharplab.springframework.security.webauthn.challenge.ChallengeRepository;
 import net.sharplab.springframework.security.webauthn.endpoint.Parameters;
@@ -53,8 +55,8 @@ public class OptionsProviderImpl implements OptionsProvider {
     private List<PublicKeyCredentialParameters> pubKeyCredParams = new ArrayList<>();
     private Long registrationTimeout = null;
     private Long authenticationTimeout = null;
-    private AuthenticationExtensionsClientInputs registrationExtensions = new AuthenticationExtensionsClientInputs();
-    private AuthenticationExtensionsClientInputs authenticationExtensions = new AuthenticationExtensionsClientInputs();
+    private AuthenticationExtensionsClientInputs<RegistrationExtensionClientInput> registrationExtensions = new AuthenticationExtensionsClientInputs<>();
+    private AuthenticationExtensionsClientInputs<AuthenticationExtensionClientInput> authenticationExtensions = new AuthenticationExtensionsClientInputs<>();
 
     private String usernameParameter = SPRING_SECURITY_FORM_USERNAME_KEY;
     private String passwordParameter = SPRING_SECURITY_FORM_PASSWORD_KEY;
@@ -214,19 +216,19 @@ public class OptionsProviderImpl implements OptionsProvider {
         this.authenticationTimeout = authenticationTimeout;
     }
 
-    public AuthenticationExtensionsClientInputs getRegistrationExtensions() {
+    public AuthenticationExtensionsClientInputs<RegistrationExtensionClientInput> getRegistrationExtensions() {
         return registrationExtensions;
     }
 
-    public void setRegistrationExtensions(AuthenticationExtensionsClientInputs registrationExtensions) {
+    public void setRegistrationExtensions(AuthenticationExtensionsClientInputs<RegistrationExtensionClientInput> registrationExtensions) {
         this.registrationExtensions = registrationExtensions;
     }
 
-    public AuthenticationExtensionsClientInputs getAuthenticationExtensions() {
+    public AuthenticationExtensionsClientInputs<AuthenticationExtensionClientInput> getAuthenticationExtensions() {
         return authenticationExtensions;
     }
 
-    public void setAuthenticationExtensions(AuthenticationExtensionsClientInputs authenticationExtensions) {
+    public void setAuthenticationExtensions(AuthenticationExtensionsClientInputs<AuthenticationExtensionClientInput> authenticationExtensions) {
         this.authenticationExtensions = authenticationExtensions;
     }
 

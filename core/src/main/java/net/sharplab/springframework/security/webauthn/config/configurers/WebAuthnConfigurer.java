@@ -19,6 +19,10 @@ package net.sharplab.springframework.security.webauthn.config.configurers;
 import com.webauthn4j.data.PublicKeyCredentialParameters;
 import com.webauthn4j.data.PublicKeyCredentialType;
 import com.webauthn4j.data.attestation.statement.COSEAlgorithmIdentifier;
+import com.webauthn4j.data.extension.client.AuthenticationExtensionClientInput;
+import com.webauthn4j.data.extension.client.AuthenticationExtensionsClientInputs;
+import com.webauthn4j.data.extension.client.ExtensionClientInput;
+import com.webauthn4j.data.extension.client.RegistrationExtensionClientInput;
 import net.sharplab.springframework.security.webauthn.options.OptionsProvider;
 import org.springframework.security.config.annotation.web.HttpSecurityBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -26,7 +30,9 @@ import org.springframework.security.config.annotation.web.configurers.AbstractHt
 import org.springframework.util.Assert;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * An {@link AbstractHttpConfigurer} that provides support for the
@@ -51,6 +57,10 @@ public class WebAuthnConfigurer<H extends HttpSecurityBuilder<H>> extends Abstra
     private String rpIcon = null;
     private Long registrationTimeout;
     private Long authenticationTimeout;
+    private final ExtensionsClientInputsConfig<RegistrationExtensionClientInput> registrationExtensions
+            = new ExtensionsClientInputsConfig<>();
+    private final ExtensionsClientInputsConfig<AuthenticationExtensionClientInput> authenticationExtensions
+            = new ExtensionsClientInputsConfig<>();
 
     /**
      * Returns a new instance
@@ -100,6 +110,8 @@ public class WebAuthnConfigurer<H extends HttpSecurityBuilder<H>> extends Abstra
         if (authenticationTimeout != null) {
             optionsProvider.setAuthenticationTimeout(authenticationTimeout);
         }
+        optionsProvider.setRegistrationExtensions(new AuthenticationExtensionsClientInputs<>(registrationExtensions.extensionsClientInputs));
+        optionsProvider.setAuthenticationExtensions(new AuthenticationExtensionsClientInputs<>(authenticationExtensions.extensionsClientInputs));
     }
 
     /**
@@ -164,6 +176,22 @@ public class WebAuthnConfigurer<H extends HttpSecurityBuilder<H>> extends Abstra
     }
 
     /**
+     * Returns the {@link ExtensionsClientInputsConfig} for configuring registration extensions
+     * @return the {@link ExtensionsClientInputsConfig}
+     */
+    public WebAuthnConfigurer<H>.ExtensionsClientInputsConfig<RegistrationExtensionClientInput> registrationExtensions(){
+        return this.registrationExtensions;
+    }
+
+    /**
+     * Returns the {@link ExtensionsClientInputsConfig} for configuring authentication extensions
+     * @return the {@link ExtensionsClientInputsConfig}
+     */
+    public WebAuthnConfigurer<H>.ExtensionsClientInputsConfig<AuthenticationExtensionClientInput> authenticationExtensions(){
+        return this.authenticationExtensions;
+    }
+
+    /**
      * Configuration options for PublicKeyCredParams
      */
     public class PublicKeyCredParamsConfig {
@@ -195,5 +223,35 @@ public class WebAuthnConfigurer<H extends HttpSecurityBuilder<H>> extends Abstra
             return WebAuthnConfigurer.this;
         }
 
+    }
+
+    /**
+     * Configuration options for AuthenticationExtensionsClientInputs
+     */
+    public class ExtensionsClientInputsConfig<T extends ExtensionClientInput> {
+
+        private ExtensionsClientInputsConfig(){}
+
+        private Map<String, T> extensionsClientInputs = new HashMap<>();
+
+        /**
+         * Add AuthenticationExtensionClientInput
+         * @param extensionClientInput the T
+         * @return the {@link ExtensionsClientInputsConfig}
+         */
+        public ExtensionsClientInputsConfig addExtension(T extensionClientInput){
+            Assert.notNull(extensionClientInput, "extensionClientInput must not be null");
+            extensionsClientInputs.put(extensionClientInput.getIdentifier(), extensionClientInput);
+            return this;
+        }
+
+        /**
+         * Returns the {@link WebAuthnConfigurer} for further configuration.
+         *
+         * @return the {@link WebAuthnConfigurer}
+         */
+        public WebAuthnConfigurer<H> and() {
+            return WebAuthnConfigurer.this;
+        }
     }
 }

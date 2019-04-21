@@ -27,7 +27,7 @@ public class WebAuthnSampleBusinessException extends org.terasoluna.gfw.common.e
     /**
      * Constructor for specify a message.
      * <p>
-     * generate a {@link ResultMessages} instance of error type and add a message.
+     * generate a {@link ResultMessages} instance of error type and addExtension a message.
      * </p>
      *
      * @param message result message

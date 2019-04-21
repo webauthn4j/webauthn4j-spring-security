@@ -200,7 +200,7 @@ public class AppSpecificMapper {
                 .mapToInt(AuthenticatorForm::getId).sorted().toArray();
         for(AuthenticatorForm authenticatorForm: authenticatorForms){
             Integer id = authenticatorForm.getId();
-            // add new authenticator
+            // addExtension new authenticator
             if(id == null){
                 authenticatorEntities.add(mapForCreate(authenticatorForm));
             }
