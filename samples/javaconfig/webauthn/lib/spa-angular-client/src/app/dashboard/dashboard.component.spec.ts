@@ -38,7 +38,15 @@ describe('DashboardComponent', () => {
             provide: ProfileService,
             useFactory: ()=>{
               let profileServiceMock = new ProfileService(null, null);
-              spyOn(profileServiceMock, "load").and.returnValue(of(null)); //TODO: return appropriate value
+              spyOn(profileServiceMock, "load").and.returnValue(of({
+                userHandle: "userHandle",
+                firstName: "firstName",
+                lastName: "lastName",
+                emailAddress: "dummy@example.com",
+                password: "password",
+                authenticators:  [],
+                singleFactorAuthenticationAllowed: true
+              }));
               return profileServiceMock;
             }
           }

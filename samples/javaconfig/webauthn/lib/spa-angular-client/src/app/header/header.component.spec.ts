@@ -20,7 +20,7 @@ import {HeaderComponent} from './header.component';
 import {AuthService} from "../auth/auth.service";
 import {of} from "rxjs/internal/observable/of";
 import {RouterTestingModule} from "@angular/router/testing";
-import {scheduled} from "rxjs";
+import {ProfileService} from "../profile/profile.service";
 
 describe('HeaderComponent', () => {
   let component: HeaderComponent;
