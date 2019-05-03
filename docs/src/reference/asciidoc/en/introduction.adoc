@@ -12,7 +12,7 @@ but it has been transferred to W3C.
 
 === Spring Security WebAuthn
 
-Spring Security WebAuthn is a Spring Security registrationExtensions module to provide Web Authentication specification support for your Spring web application.
+Spring Security WebAuthn is a Spring Security extension module to provide Web Authentication specification support for your Spring web application.
 
 === Requirements
 
