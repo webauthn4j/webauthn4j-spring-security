@@ -16,6 +16,9 @@ script:
   # the following command line builds the project, runs the tests with coverage and then execute the SonarCloud analysis
   - ./gradlew sonarqube bootJar test javadoc asciidoc -Dsonar.organization=sharplab -Dsonar.host.url=https://sonarcloud.io -Dsonar.login=$SONAR_TOKEN
 
+after_failure:
+  - cat /home/travis/.npm/_logs/*.log
+
 deploy:
   provider: pages
   skip-cleanup: true
