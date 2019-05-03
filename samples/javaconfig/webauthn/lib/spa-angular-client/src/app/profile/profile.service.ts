@@ -102,15 +102,15 @@ export class ProfileService implements OnInit {
   }
 
   load(): Observable<ProfileViewModel> {
-    return this.http.get<ProfileForm>(this.profileUrl).pipe(map((userForm: UserForm) => {
+    return this.http.get<ProfileForm>(this.profileUrl).pipe(map((profileForm: ProfileForm) => {
       return {
-        userHandle: userForm.userHandle,
-        firstName: userForm.firstName,
-        lastName: userForm.lastName,
-        emailAddress: userForm.emailAddress,
-        password: userForm.password,
-        authenticators:  userForm.authenticators.map(authenticator => this.mapToAuthenticatorViewModel(authenticator)),
-        singleFactorAuthenticationAllowed: userForm.singleFactorAuthenticationAllowed
+        userHandle: profileForm.userHandle,
+        firstName: profileForm.firstName,
+        lastName: profileForm.lastName,
+        emailAddress: profileForm.emailAddress,
+        password: profileForm.password,
+        authenticators:  profileForm.authenticators.map(authenticator => this.mapToAuthenticatorViewModel(authenticator)),
+        singleFactorAuthenticationAllowed: profileForm.singleFactorAuthenticationAllowed
       };
     }));
   }
