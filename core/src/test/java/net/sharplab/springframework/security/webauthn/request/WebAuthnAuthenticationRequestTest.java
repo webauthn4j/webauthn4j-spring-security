@@ -35,7 +35,7 @@ public class WebAuthnAuthenticationRequestTest {
     private CborConverter cborConverter = new CborConverter();
 
     @Test
-    public void getter_test(){
+    public void getter_test() {
         Challenge challenge = new DefaultChallenge();
         byte[] clientDataJSON = TestDataUtil.createClientDataJSON(ClientDataType.GET);
         byte[] authenticatorData = new AuthenticatorDataConverter(cborConverter).convert(TestDataUtil.createAuthenticatorData());

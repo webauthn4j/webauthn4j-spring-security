@@ -69,6 +69,7 @@ public interface OptionsProvider {
 
     /**
      * configures rpId
+     *
      * @param rpId rpId
      */
     void setRpId(String rpId);
@@ -117,24 +118,28 @@ public interface OptionsProvider {
 
     /**
      * returns the registration timeout
+     *
      * @return the registration timeout
      */
     Long getRegistrationTimeout();
 
     /**
      * configures the registration timeout
+     *
      * @param registrationTimeout registration timeout
      */
     void setRegistrationTimeout(Long registrationTimeout);
 
     /**
      * returns the authentication timeout
+     *
      * @return the authentication timeout
      */
     Long getAuthenticationTimeout();
 
     /**
      * configures the authentication timeout
+     *
      * @param authenticationTimeout authentication timeout
      */
     void setAuthenticationTimeout(Long authenticationTimeout);

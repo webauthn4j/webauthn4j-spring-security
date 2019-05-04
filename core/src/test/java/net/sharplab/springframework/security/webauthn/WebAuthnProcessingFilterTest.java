@@ -38,7 +38,6 @@ import org.springframework.security.core.authority.AuthorityUtils;
 import java.util.Collections;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.mockito.Mockito.*;
 
 /**

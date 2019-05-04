@@ -20,7 +20,6 @@ package net.sharplab.springframework.security.webauthn.metadata;
 import com.webauthn4j.converter.util.JsonConverter;
 import com.webauthn4j.data.attestation.authenticator.AAGUID;
 import com.webauthn4j.metadata.data.statement.MetadataStatement;
-import net.sharplab.springframework.security.webauthn.anchor.CertFileResourcesTrustAnchorsProvider;
 import org.junit.Test;
 import org.springframework.core.io.Resource;
 
@@ -44,7 +43,7 @@ public class JsonFileResourceMetadataStatementsProviderTest {
     }
 
     @Test
-    public void extractAAGUID_with_fido2_test(){
+    public void extractAAGUID_with_fido2_test() {
         AAGUID aaguid = new AAGUID(UUID.randomUUID());
         MetadataStatement metadataStatement = mock(MetadataStatement.class);
         when(metadataStatement.getProtocolFamily()).thenReturn("fido2");
@@ -53,14 +52,14 @@ public class JsonFileResourceMetadataStatementsProviderTest {
     }
 
     @Test
-    public void extractAAGUID_with_u2f_test(){
+    public void extractAAGUID_with_u2f_test() {
         MetadataStatement metadataStatement = mock(MetadataStatement.class);
         when(metadataStatement.getProtocolFamily()).thenReturn("u2f");
         assertThat(target.extractAAGUID(metadataStatement)).isEqualTo(AAGUID.ZERO);
     }
 
     @Test
-    public void extractAAGUID_with_uaf_test(){
+    public void extractAAGUID_with_uaf_test() {
         MetadataStatement metadataStatement = mock(MetadataStatement.class);
         when(metadataStatement.getProtocolFamily()).thenReturn("uaf");
         assertThat(target.extractAAGUID(metadataStatement)).isEqualTo(AAGUID.NULL);

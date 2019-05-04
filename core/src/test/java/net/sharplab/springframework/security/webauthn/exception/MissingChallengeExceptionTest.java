@@ -28,7 +28,7 @@ public class MissingChallengeExceptionTest {
     @Test
     public void test() {
 
-        assertThatCode(()->{
+        assertThatCode(() -> {
             new MissingChallengeException("dummy", cause);
             new MissingChallengeException("dummy");
         }).doesNotThrowAnyException();

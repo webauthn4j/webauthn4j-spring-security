@@ -18,8 +18,6 @@ package net.sharplab.springframework.security.webauthn.config.configurers;
 
 
 import com.webauthn4j.converter.util.JsonConverter;
-import com.webauthn4j.data.PublicKeyCredentialType;
-import com.webauthn4j.data.attestation.statement.COSEAlgorithmIdentifier;
 import com.webauthn4j.data.client.challenge.DefaultChallenge;
 import com.webauthn4j.test.TestDataUtil;
 import net.sharplab.springframework.security.webauthn.WebAuthnProcessingFilter;
@@ -108,7 +106,7 @@ public class WebAuthnLoginConfigurerSetterSpringTest {
         static class BeanConfig {
 
             @Bean
-            public JsonConverter jsonConverter(){
+            public JsonConverter jsonConverter() {
                 return new JsonConverter();
             }
 

@@ -29,7 +29,7 @@ public class DataConversionExceptionTest {
     @Test
     public void test() {
 
-        assertThatCode(()->{
+        assertThatCode(() -> {
             new DataConversionException("dummy", cause);
             new DataConversionException("dummy");
         }).doesNotThrowAnyException();

@@ -28,7 +28,7 @@ public class ConstraintViolationExceptionTest {
     @Test
     public void test() {
 
-        assertThatCode(()->{
+        assertThatCode(() -> {
             new ConstraintViolationException("dummy", cause);
             new ConstraintViolationException("dummy");
         }).doesNotThrowAnyException();

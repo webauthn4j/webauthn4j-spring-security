@@ -28,7 +28,7 @@ public class BadCredentialIdExceptionTest {
 
     @Test
     public void test() {
-        assertThatCode(()->{
+        assertThatCode(() -> {
             new BadCredentialIdException("dummy", cause);
             new BadCredentialIdException("dummy");
         }).doesNotThrowAnyException();

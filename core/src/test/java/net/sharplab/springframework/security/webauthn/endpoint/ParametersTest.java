@@ -23,7 +23,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class ParametersTest {
 
     @Test
-    public void equals_hashCode_test(){
+    public void equals_hashCode_test() {
         Parameters instanceA = new Parameters("username", "password",
                 "credentialId", "clientDataJSON", "authenticatorData",
                 "signature", "clientDataJSON");

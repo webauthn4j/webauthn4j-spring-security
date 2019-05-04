@@ -27,7 +27,7 @@ public class BadAlgorithmExceptionTest {
 
     @Test
     public void test() {
-        assertThatCode(()->{
+        assertThatCode(() -> {
             new BadAlgorithmException("dummy", cause);
             new BadAlgorithmException("dummy");
         }).doesNotThrowAnyException();

@@ -27,7 +27,7 @@ public class PublicKeyMismatchExceptionTest {
 
     @Test
     public void test() {
-        assertThatCode(()->{
+        assertThatCode(() -> {
             new PublicKeyMismatchException("dummy", cause);
             new PublicKeyMismatchException("dummy");
         }).doesNotThrowAnyException();

@@ -28,6 +28,7 @@ public interface ServerPropertyProvider {
 
     /**
      * Provides {@link ServerProperty}
+     *
      * @param request http servlet request
      * @return the {@link ServerProperty}
      */

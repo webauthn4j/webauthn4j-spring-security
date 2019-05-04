@@ -51,19 +51,20 @@ import java.util.Map;
 public class WebAuthnConfigurer<H extends HttpSecurityBuilder<H>> extends AbstractHttpConfigurer<WebAuthnConfigurer<H>, H> {
 
     private final WebAuthnConfigurer<H>.PublicKeyCredParamsConfig publicKeyCredParamsConfig = new WebAuthnConfigurer<H>.PublicKeyCredParamsConfig();
+    private final ExtensionsClientInputsConfig<RegistrationExtensionClientInput> registrationExtensions
+            = new ExtensionsClientInputsConfig<>();
+    private final ExtensionsClientInputsConfig<AuthenticationExtensionClientInput> authenticationExtensions
+            = new ExtensionsClientInputsConfig<>();
     private OptionsProvider optionsProvider;
     private String rpId = null;
     private String rpName = null;
     private String rpIcon = null;
     private Long registrationTimeout;
     private Long authenticationTimeout;
-    private final ExtensionsClientInputsConfig<RegistrationExtensionClientInput> registrationExtensions
-            = new ExtensionsClientInputsConfig<>();
-    private final ExtensionsClientInputsConfig<AuthenticationExtensionClientInput> authenticationExtensions
-            = new ExtensionsClientInputsConfig<>();
 
     /**
      * Returns a new instance
+     *
      * @return the {@link WebAuthnConfigurer}
      */
     public static WebAuthnConfigurer<HttpSecurity> webAuthn() {
@@ -116,6 +117,7 @@ public class WebAuthnConfigurer<H extends HttpSecurityBuilder<H>> extends Abstra
 
     /**
      * The relying party id for credential scoping
+     *
      * @param rpId the relying party id
      * @return the {@link WebAuthnConfigurer} for additional customization
      */
@@ -127,6 +129,7 @@ public class WebAuthnConfigurer<H extends HttpSecurityBuilder<H>> extends Abstra
 
     /**
      * The relying party name
+     *
      * @param rpName the relying party name
      * @return the {@link WebAuthnConfigurer} for additional customization
      */
@@ -138,6 +141,7 @@ public class WebAuthnConfigurer<H extends HttpSecurityBuilder<H>> extends Abstra
 
     /**
      * The relying party icon
+     *
      * @param rpIcon the relying party icon
      * @return the {@link WebAuthnConfigurer} for additional customization
      */
@@ -149,6 +153,7 @@ public class WebAuthnConfigurer<H extends HttpSecurityBuilder<H>> extends Abstra
 
     /**
      * Returns the {@link PublicKeyCredParamsConfig} for configuring PublicKeyCredParams
+     *
      * @return the {@link PublicKeyCredParamsConfig}
      */
     public WebAuthnConfigurer<H>.PublicKeyCredParamsConfig publicKeyCredParams() {
@@ -157,6 +162,7 @@ public class WebAuthnConfigurer<H extends HttpSecurityBuilder<H>> extends Abstra
 
     /**
      * The timeout for registration ceremony
+     *
      * @param registrationTimeout the timeout for registration ceremony
      * @return the {@link WebAuthnConfigurer} for additional customization
      */
@@ -167,6 +173,7 @@ public class WebAuthnConfigurer<H extends HttpSecurityBuilder<H>> extends Abstra
 
     /**
      * The timeout for authentication ceremony
+     *
      * @param authenticationTimeout the timeout for authentication ceremony
      * @return the {@link WebAuthnConfigurer} for additional customization
      */
@@ -177,17 +184,19 @@ public class WebAuthnConfigurer<H extends HttpSecurityBuilder<H>> extends Abstra
 
     /**
      * Returns the {@link ExtensionsClientInputsConfig} for configuring registration extensions
+     *
      * @return the {@link ExtensionsClientInputsConfig}
      */
-    public WebAuthnConfigurer<H>.ExtensionsClientInputsConfig<RegistrationExtensionClientInput> registrationExtensions(){
+    public WebAuthnConfigurer<H>.ExtensionsClientInputsConfig<RegistrationExtensionClientInput> registrationExtensions() {
         return this.registrationExtensions;
     }
 
     /**
      * Returns the {@link ExtensionsClientInputsConfig} for configuring authentication extensions
+     *
      * @return the {@link ExtensionsClientInputsConfig}
      */
-    public WebAuthnConfigurer<H>.ExtensionsClientInputsConfig<AuthenticationExtensionClientInput> authenticationExtensions(){
+    public WebAuthnConfigurer<H>.ExtensionsClientInputsConfig<AuthenticationExtensionClientInput> authenticationExtensions() {
         return this.authenticationExtensions;
     }
 
@@ -196,14 +205,16 @@ public class WebAuthnConfigurer<H extends HttpSecurityBuilder<H>> extends Abstra
      */
     public class PublicKeyCredParamsConfig {
 
-        private PublicKeyCredParamsConfig(){}
-
         private List<PublicKeyCredentialParameters> publicKeyCredentialParameters = new ArrayList<>();
+
+        private PublicKeyCredParamsConfig() {
+        }
 
         /**
          * Add PublicKeyCredParam
+         *
          * @param type the {@link PublicKeyCredentialType}
-         * @param alg the {@link COSEAlgorithmIdentifier}
+         * @param alg  the {@link COSEAlgorithmIdentifier}
          * @return the {@link PublicKeyCredParamsConfig}
          */
         public PublicKeyCredParamsConfig addPublicKeyCredParams(PublicKeyCredentialType type, COSEAlgorithmIdentifier alg) {
@@ -230,16 +241,18 @@ public class WebAuthnConfigurer<H extends HttpSecurityBuilder<H>> extends Abstra
      */
     public class ExtensionsClientInputsConfig<T extends ExtensionClientInput> {
 
-        private ExtensionsClientInputsConfig(){}
-
         private Map<String, T> extensionsClientInputs = new HashMap<>();
+
+        private ExtensionsClientInputsConfig() {
+        }
 
         /**
          * Add AuthenticationExtensionClientInput
+         *
          * @param extensionClientInput the T
          * @return the {@link ExtensionsClientInputsConfig}
          */
-        public ExtensionsClientInputsConfig<T> addExtension(T extensionClientInput){
+        public ExtensionsClientInputsConfig<T> addExtension(T extensionClientInput) {
             Assert.notNull(extensionClientInput, "extensionClientInput must not be null");
             extensionsClientInputs.put(extensionClientInput.getIdentifier(), extensionClientInput);
             return this;

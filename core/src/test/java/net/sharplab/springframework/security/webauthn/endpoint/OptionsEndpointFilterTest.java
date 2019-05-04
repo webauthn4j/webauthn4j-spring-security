@@ -17,7 +17,6 @@
 package net.sharplab.springframework.security.webauthn.endpoint;
 
 import com.webauthn4j.converter.util.JsonConverter;
-import net.sharplab.springframework.security.webauthn.exception.WebAuthnAuthenticationException;
 import net.sharplab.springframework.security.webauthn.options.AssertionOptions;
 import net.sharplab.springframework.security.webauthn.options.AttestationOptions;
 import net.sharplab.springframework.security.webauthn.options.OptionsProvider;
@@ -27,7 +26,6 @@ import org.springframework.mock.web.MockFilterChain;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.security.authentication.*;
-import org.springframework.security.core.AuthenticationException;
 
 import javax.servlet.ServletException;
 import java.io.IOException;

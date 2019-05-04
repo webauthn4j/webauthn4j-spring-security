@@ -28,7 +28,7 @@ public class UnexpectedExtensionExceptionTest {
     @Test
     public void test() {
 
-        assertThatCode(()->{
+        assertThatCode(() -> {
             new UnexpectedExtensionException("dummy", cause);
             new UnexpectedExtensionException("dummy");
         }).doesNotThrowAnyException();

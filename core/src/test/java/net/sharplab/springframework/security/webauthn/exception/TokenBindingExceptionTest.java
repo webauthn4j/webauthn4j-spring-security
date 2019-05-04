@@ -28,7 +28,7 @@ public class TokenBindingExceptionTest {
     @Test
     public void test() {
 
-        assertThatCode(()->{
+        assertThatCode(() -> {
             new TokenBindingException("dummy", cause);
             new TokenBindingException("dummy");
         }).doesNotThrowAnyException();

@@ -23,14 +23,14 @@ import static org.assertj.core.api.Assertions.assertThatCode;
 @SuppressWarnings("ThrowableNotThrown")
 public class KeyDescriptionValidationExceptionTest {
 
-        private RuntimeException cause = new RuntimeException();
+    private RuntimeException cause = new RuntimeException();
 
-        @Test
-        public void test() {
+    @Test
+    public void test() {
 
-            assertThatCode(()->{
-                new KeyDescriptionValidationException("dummy", cause);
-                new KeyDescriptionValidationException("dummy");
-            }).doesNotThrowAnyException();
-        }
+        assertThatCode(() -> {
+            new KeyDescriptionValidationException("dummy", cause);
+            new KeyDescriptionValidationException("dummy");
+        }).doesNotThrowAnyException();
     }
+}

@@ -27,7 +27,7 @@ public class SelfAttestationProhibitedExceptionTest {
 
     @Test
     public void test() {
-        assertThatCode(()->{
+        assertThatCode(() -> {
             new SelfAttestationProhibitedException("dummy", cause);
             new SelfAttestationProhibitedException("dummy");
         }).doesNotThrowAnyException();

@@ -27,7 +27,7 @@ public class BadSignatureExceptionTest {
 
     @Test
     public void test() {
-        assertThatCode(()->{
+        assertThatCode(() -> {
             new BadSignatureException("dummy", cause);
             new BadSignatureException("dummy");
         }).doesNotThrowAnyException();

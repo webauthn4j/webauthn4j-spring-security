@@ -28,7 +28,7 @@ public class BadStatusExceptionTest {
     @Test
     public void test() {
 
-        assertThatCode(()->{
+        assertThatCode(() -> {
             new BadStatusException("dummy", cause);
             new BadStatusException("dummy");
         }).doesNotThrowAnyException();

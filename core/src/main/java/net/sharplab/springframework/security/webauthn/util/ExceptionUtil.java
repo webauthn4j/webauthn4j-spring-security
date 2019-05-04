@@ -31,6 +31,7 @@ public class ExceptionUtil {
 
     /**
      * Wraps WebAuthnAuthentication to proper {@link RuntimeException} (mainly {@link AuthenticationException} subclass.
+     *
      * @param e exception to be wrapped
      * @return wrapping exception
      */
@@ -44,8 +45,7 @@ public class ExceptionUtil {
         } else if (e instanceof com.webauthn4j.validator.exception.BadAttestationStatementException) {
             if (e instanceof com.webauthn4j.validator.exception.KeyDescriptionValidationException) {
                 return new KeyDescriptionValidationException(e.getMessage(), e);
-            }
-            else {
+            } else {
                 return new BadAttestationStatementException(e.getMessage(), e);
             }
         } else if (e instanceof com.webauthn4j.validator.exception.BadChallengeException) {
@@ -88,8 +88,7 @@ public class ExceptionUtil {
         // DataConversionException
         else if (e instanceof com.webauthn4j.converter.exception.DataConversionException) {
             return new DataConversionException("WebAuthn data conversion error", e);
-        }
-        else{
+        } else {
             return new AuthenticationServiceException(null, e);
         }
     }

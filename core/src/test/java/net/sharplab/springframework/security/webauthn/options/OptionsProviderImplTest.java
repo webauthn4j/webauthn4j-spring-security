@@ -21,21 +21,14 @@ import com.webauthn4j.data.PublicKeyCredentialParameters;
 import com.webauthn4j.data.client.challenge.Challenge;
 import com.webauthn4j.data.client.challenge.DefaultChallenge;
 import com.webauthn4j.data.extension.client.AuthenticationExtensionsClientInputs;
-import com.webauthn4j.data.extension.client.RegistrationExtensionClientInput;
-import com.webauthn4j.data.extension.client.SupportedExtensionsExtensionClientInput;
 import com.webauthn4j.util.Base64UrlUtil;
 import net.sharplab.springframework.security.webauthn.challenge.ChallengeRepository;
-import net.sharplab.springframework.security.webauthn.options.AttestationOptions;
-import net.sharplab.springframework.security.webauthn.options.OptionsProvider;
-import net.sharplab.springframework.security.webauthn.options.OptionsProviderImpl;
 import net.sharplab.springframework.security.webauthn.userdetails.WebAuthnUserDetails;
 import net.sharplab.springframework.security.webauthn.userdetails.WebAuthnUserDetailsService;
 import org.assertj.core.util.Lists;
 import org.junit.Test;
 import org.springframework.mock.web.MockHttpServletRequest;
 
-import javax.servlet.http.HttpServletRequest;
-import java.math.BigInteger;
 import java.util.Collections;
 import java.util.List;
 
@@ -137,7 +130,7 @@ public class OptionsProviderImplTest {
     }
 
     @Test
-    public void getEffectiveRpId(){
+    public void getEffectiveRpId() {
         WebAuthnUserDetailsService userDetailsService = mock(WebAuthnUserDetailsService.class);
         ChallengeRepository challengeRepository = mock(ChallengeRepository.class);
         OptionsProviderImpl optionsProvider = new OptionsProviderImpl(userDetailsService, challengeRepository);

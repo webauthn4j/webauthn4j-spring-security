@@ -112,12 +112,12 @@ public class FidoServerConfigurer<H extends HttpSecurityBuilder<H>> extends Abst
 
     public class FidoServerAttestationResultEndpointConfig extends AbstractServerEndpointConfig<FidoServerAttestationResultEndpointFilter> {
 
+        private final ExpectedRegistrationExtensionIdsConfig
+                expectedRegistrationExtensionIdsConfig = new ExpectedRegistrationExtensionIdsConfig();
         private WebAuthnUserDetailsService webAuthnUserDetailsService;
         private WebAuthnRegistrationRequestValidator webAuthnRegistrationRequestValidator;
         private UsernameNotFoundHandler usernameNotFoundHandler;
         private List<String> expectedRegistrationExtensionIds = Collections.emptyList();
-        private final ExpectedRegistrationExtensionIdsConfig
-                expectedRegistrationExtensionIdsConfig = new ExpectedRegistrationExtensionIdsConfig();
 
         FidoServerAttestationResultEndpointConfig() {
             super(FidoServerAttestationResultEndpointFilter.class);
@@ -133,7 +133,7 @@ public class FidoServerConfigurer<H extends HttpSecurityBuilder<H>> extends Abst
             if (webAuthnRegistrationRequestValidator == null) {
                 webAuthnRegistrationRequestValidator = WebAuthnConfigurerUtil.getWebAuthnRegistrationRequestValidator(http);
             }
-            if(!expectedRegistrationExtensionIds.isEmpty()){
+            if (!expectedRegistrationExtensionIds.isEmpty()) {
                 webAuthnRegistrationRequestValidator.setExpectedRegistrationExtensionIds(expectedRegistrationExtensionIds);
             }
 
@@ -170,7 +170,7 @@ public class FidoServerConfigurer<H extends HttpSecurityBuilder<H>> extends Abst
             return this;
         }
 
-        public ExpectedRegistrationExtensionIdsConfig expectedAuthenticationExtensionIds(){
+        public ExpectedRegistrationExtensionIdsConfig expectedAuthenticationExtensionIds() {
             return expectedRegistrationExtensionIdsConfig;
         }
 
@@ -186,16 +186,18 @@ public class FidoServerConfigurer<H extends HttpSecurityBuilder<H>> extends Abst
          */
         public class ExpectedRegistrationExtensionIdsConfig {
 
-            private ExpectedRegistrationExtensionIdsConfig(){}
-
             private List<String> expectedAuthenticationExtensionIds = new ArrayList<>();
+
+            private ExpectedRegistrationExtensionIdsConfig() {
+            }
 
             /**
              * Add AuthenticationExtensionClientInput
+             *
              * @param expectedRegistrationExtensionId the expected registration extension id
              * @return the {@link ExpectedRegistrationExtensionIdsConfig}
              */
-            public ExpectedRegistrationExtensionIdsConfig add(String expectedRegistrationExtensionId){
+            public ExpectedRegistrationExtensionIdsConfig add(String expectedRegistrationExtensionId) {
                 Assert.notNull(expectedRegistrationExtensionId, "expectedRegistrationExtensionId must not be null");
                 expectedAuthenticationExtensionIds.add(expectedRegistrationExtensionId);
                 return this;
@@ -226,11 +228,11 @@ public class FidoServerConfigurer<H extends HttpSecurityBuilder<H>> extends Abst
 
     private class FidoServerAssertionResultEndpointConfig {
 
+        private final FidoServerAssertionResultEndpointConfig.ExpectedAuthenticationExtensionIdsConfig
+                expectedAuthenticationExtensionIdsConfig = new FidoServerAssertionResultEndpointConfig.ExpectedAuthenticationExtensionIdsConfig();
         private String filterProcessingUrl = null;
         private AuthenticationManager authenticationManager;
         private ServerPropertyProvider serverPropertyProvider = null;
-        private final FidoServerAssertionResultEndpointConfig.ExpectedAuthenticationExtensionIdsConfig
-                expectedAuthenticationExtensionIdsConfig = new FidoServerAssertionResultEndpointConfig.ExpectedAuthenticationExtensionIdsConfig();
 
 
         FidoServerAssertionResultEndpointConfig() {
@@ -284,7 +286,7 @@ public class FidoServerConfigurer<H extends HttpSecurityBuilder<H>> extends Abst
             return this;
         }
 
-        public FidoServerAssertionResultEndpointConfig.ExpectedAuthenticationExtensionIdsConfig expectedAuthenticationExtensionIds(){
+        public FidoServerAssertionResultEndpointConfig.ExpectedAuthenticationExtensionIdsConfig expectedAuthenticationExtensionIds() {
             return expectedAuthenticationExtensionIdsConfig;
         }
 
@@ -297,16 +299,18 @@ public class FidoServerConfigurer<H extends HttpSecurityBuilder<H>> extends Abst
          */
         public class ExpectedAuthenticationExtensionIdsConfig {
 
-            private ExpectedAuthenticationExtensionIdsConfig(){}
-
             private List<String> expectedAuthenticationExtensionIds = new ArrayList<>();
+
+            private ExpectedAuthenticationExtensionIdsConfig() {
+            }
 
             /**
              * Add AuthenticationExtensionClientInput
+             *
              * @param expectedAuthenticationExtensionId the expected authentication extension id
              * @return the {@link FidoServerAssertionResultEndpointConfig.ExpectedAuthenticationExtensionIdsConfig}
              */
-            public ExpectedAuthenticationExtensionIdsConfig add(String expectedAuthenticationExtensionId){
+            public ExpectedAuthenticationExtensionIdsConfig add(String expectedAuthenticationExtensionId) {
                 Assert.notNull(expectedAuthenticationExtensionId, "expectedAuthenticationExtensionId must not be null");
                 expectedAuthenticationExtensionIds.add(expectedAuthenticationExtensionId);
                 return this;

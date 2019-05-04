@@ -145,6 +145,7 @@ public class FidoServerAssertionResultEndpointFilter extends AbstractAuthenticat
 
     /**
      * Sets expected authentication extensionId list
+     *
      * @param expectedAuthenticationExtensionIds list of expected authentication extensionId
      */
     public void setExpectedAuthenticationExtensionIds(List<String> expectedAuthenticationExtensionIds) {

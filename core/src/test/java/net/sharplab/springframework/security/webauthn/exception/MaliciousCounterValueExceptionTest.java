@@ -28,7 +28,7 @@ public class MaliciousCounterValueExceptionTest {
     @Test
     public void test() {
 
-        assertThatCode(()->{
+        assertThatCode(() -> {
             new MaliciousCounterValueException("dummy", cause);
             new MaliciousCounterValueException("dummy");
         }).doesNotThrowAnyException();

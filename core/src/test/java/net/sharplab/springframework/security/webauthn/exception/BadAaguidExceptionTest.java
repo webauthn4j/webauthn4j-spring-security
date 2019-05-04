@@ -27,7 +27,7 @@ public class BadAaguidExceptionTest {
 
     @Test
     public void test() {
-        assertThatCode(()->{
+        assertThatCode(() -> {
             new BadAaguidException("dummy", cause);
             new BadAaguidException("dummy");
         }).doesNotThrowAnyException();

@@ -28,7 +28,7 @@ public class MaliciousDataExceptionTest {
     @Test
     public void test() {
 
-        assertThatCode(()->{
+        assertThatCode(() -> {
             new MaliciousDataException("dummy", cause);
             new MaliciousDataException("dummy");
         }).doesNotThrowAnyException();

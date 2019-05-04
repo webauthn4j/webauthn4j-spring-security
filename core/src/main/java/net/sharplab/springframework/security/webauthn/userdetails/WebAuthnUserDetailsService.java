@@ -28,6 +28,7 @@ public interface WebAuthnUserDetailsService extends UserDetailsService {
 
     /**
      * Locates a user based on the username.
+     *
      * @param username the username identifying the user whose data is required
      * @return a fully populated {@link WebAuthnUserDetails} instance  (never <code>null</code>)
      * @throws UsernameNotFoundException if the user could not be found
@@ -48,21 +49,24 @@ public interface WebAuthnUserDetailsService extends UserDetailsService {
 
     /**
      * Adds {@link Authenticator} to the user record
-     * @param username the username identifying the user
+     *
+     * @param username      the username identifying the user
      * @param authenticator the authenticator to be added
      */
     void addAuthenticator(String username, Authenticator authenticator);
 
     /**
      * Removes {@link Authenticator} from the user record
-     * @param username the username identifying the user
+     *
+     * @param username      the username identifying the user
      * @param authenticator the authenticator to be removed
      */
     void removeAuthenticator(String username, Authenticator authenticator);
 
     /**
      * Removes {@link Authenticator} from the user record
-     * @param username the username identifying the user
+     *
+     * @param username     the username identifying the user
      * @param credentialId the credentialId identifying the authenticator
      */
     void removeAuthenticator(String username, byte[] credentialId);

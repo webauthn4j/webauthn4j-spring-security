@@ -28,7 +28,7 @@ public class TrustAnchorNotFoundExceptionTest {
     @Test
     public void test() {
 
-        assertThatCode(()->{
+        assertThatCode(() -> {
             new TrustAnchorNotFoundException("dummy", cause);
             new TrustAnchorNotFoundException("dummy");
         }).doesNotThrowAnyException();

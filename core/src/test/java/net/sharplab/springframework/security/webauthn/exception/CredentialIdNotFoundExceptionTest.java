@@ -27,7 +27,7 @@ public class CredentialIdNotFoundExceptionTest {
     @Test
     public void test() {
 
-        assertThatCode(()->{
+        assertThatCode(() -> {
             new CredentialIdNotFoundException("dummy", cause);
             new CredentialIdNotFoundException("dummy");
         }).doesNotThrowAnyException();

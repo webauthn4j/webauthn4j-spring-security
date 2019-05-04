@@ -253,8 +253,7 @@ public class WebAuthnAuthenticationProvider implements AuthenticationProvider {
         // If current authentication is authenticated and username matches, return false
         if (currentAuthentication != null && currentAuthentication.isAuthenticated() && Objects.equals(currentAuthentication.getName(), user.getUsername())) {
             return false;
-        }
-        else {
+        } else {
             return credentials.isUserVerificationRequired();
         }
     }

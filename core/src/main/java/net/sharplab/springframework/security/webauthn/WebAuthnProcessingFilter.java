@@ -218,6 +218,7 @@ public class WebAuthnProcessingFilter extends UsernamePasswordAuthenticationFilt
 
     /**
      * Sets expected authentication extensionId list
+     *
      * @param expectedAuthenticationExtensionIds list of expected authentication extensionId
      */
     public void setExpectedAuthenticationExtensionIds(List<String> expectedAuthenticationExtensionIds) {
@@ -231,7 +232,6 @@ public class WebAuthnProcessingFilter extends UsernamePasswordAuthenticationFilt
     public void setServerPropertyProvider(ServerPropertyProvider serverPropertyProvider) {
         this.serverPropertyProvider = serverPropertyProvider;
     }
-
 
 
     private String obtainClientDataJSON(HttpServletRequest request) {

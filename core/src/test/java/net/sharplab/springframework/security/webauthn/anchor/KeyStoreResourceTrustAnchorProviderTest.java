@@ -34,7 +34,7 @@ public class KeyStoreResourceTrustAnchorProviderTest {
     private KeyStoreResourceTrustAnchorProvider target;
 
     @Test
-    public void constructor_test(){
+    public void constructor_test() {
         Resource resource = new ClassPathResource("net/sharplab/springframework/security/webauthn/anchor/KeyStoreResourceTrustAnchorProviderImplTest/test.jks");
         KeyStoreResourceTrustAnchorProvider target = new KeyStoreResourceTrustAnchorProvider(resource);
         target.setPassword("password");
@@ -77,7 +77,7 @@ public class KeyStoreResourceTrustAnchorProviderTest {
         target.setKeyStore(resource);
         target.setPassword("password");
 
-        assertThatCode(()->{
+        assertThatCode(() -> {
             target.afterPropertiesSet();
         }).doesNotThrowAnyException();
     }

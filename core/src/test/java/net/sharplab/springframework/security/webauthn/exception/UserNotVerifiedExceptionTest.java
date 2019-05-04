@@ -28,7 +28,7 @@ public class UserNotVerifiedExceptionTest {
     @Test
     public void test() {
 
-        assertThatCode(()->{
+        assertThatCode(() -> {
             new UserNotVerifiedException("dummy", cause);
             new UserNotVerifiedException("dummy");
         }).doesNotThrowAnyException();

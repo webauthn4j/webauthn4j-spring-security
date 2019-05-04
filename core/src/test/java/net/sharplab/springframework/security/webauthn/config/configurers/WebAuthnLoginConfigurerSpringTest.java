@@ -178,11 +178,11 @@ public class WebAuthnLoginConfigurerSpringTest {
                     .registrationTimeout(10000L)
                     .authenticationTimeout(20000L)
                     .registrationExtensions()
-                        .addExtension(new SupportedExtensionsExtensionClientInput(true))
-                        .and()
+                    .addExtension(new SupportedExtensionsExtensionClientInput(true))
+                    .and()
                     .authenticationExtensions()
-                        .addExtension(new FIDOAppIDExtensionClientInput(""))
-                        .and();
+                    .addExtension(new FIDOAppIDExtensionClientInput(""))
+                    .and();
 
             http.apply(webAuthnLogin())
                     .usernameParameter("username")
@@ -196,8 +196,8 @@ public class WebAuthnLoginConfigurerSpringTest {
                     .failureForwardUrl("/login")
                     .loginPage("/login")
                     .optionsEndpoint()
-                        .processingUrl("/webauthn/options")
-                        .and()
+                    .processingUrl("/webauthn/options")
+                    .and()
                     .jsonConverter(jsonConverter)
                     .optionsProvider(optionsProvider)
                     .serverPropertyProvider(serverPropertyProvider);
@@ -212,7 +212,7 @@ public class WebAuthnLoginConfigurerSpringTest {
         static class BeanConfig {
 
             @Bean
-            public JsonConverter jsonConverter(){
+            public JsonConverter jsonConverter() {
                 return new JsonConverter();
             }
 
@@ -231,7 +231,7 @@ public class WebAuthnLoginConfigurerSpringTest {
             }
 
             @Bean
-            public OptionsEndpointFilter optionsEndpointFilter(OptionsProvider optionsProvider, JsonConverter jsonConverter){
+            public OptionsEndpointFilter optionsEndpointFilter(OptionsProvider optionsProvider, JsonConverter jsonConverter) {
                 return new OptionsEndpointFilter(optionsProvider, jsonConverter);
             }
 

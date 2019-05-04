@@ -27,7 +27,7 @@ public class OptionsExceptionTest {
     @Test
     public void test() {
 
-        assertThatCode(()->{
+        assertThatCode(() -> {
             new MetadataException("dummy", cause);
             new MetadataException("dummy");
             new MetadataException(cause);

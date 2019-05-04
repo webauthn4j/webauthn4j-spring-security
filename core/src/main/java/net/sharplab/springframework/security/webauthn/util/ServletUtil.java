@@ -31,6 +31,7 @@ public class ServletUtil {
 
     /**
      * Returns {@link Origin} corresponding {@link ServletRequest} url
+     *
      * @param request http servlet request
      * @return the {@link Origin}
      */

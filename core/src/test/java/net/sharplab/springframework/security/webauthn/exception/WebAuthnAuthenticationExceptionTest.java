@@ -28,7 +28,7 @@ public class WebAuthnAuthenticationExceptionTest {
     @Test
     public void test() {
 
-        assertThatCode(()->{
+        assertThatCode(() -> {
             new WebAuthnAuthenticationException("dummy", cause);
             new WebAuthnAuthenticationException("dummy");
         }).doesNotThrowAnyException();

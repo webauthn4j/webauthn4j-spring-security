@@ -346,7 +346,7 @@ public class WebAuthnAuthenticationProviderTest {
     }
 
     @Test
-    public void isUserVerificationRequired_test(){
+    public void isUserVerificationRequired_test() {
         WebAuthnUserDetails webAuthnUserDetails = mock(WebAuthnUserDetails.class);
         when(webAuthnUserDetails.getUsername()).thenReturn("john.doe");
         WebAuthnAuthenticationRequest credentials = mock(WebAuthnAuthenticationRequest.class);

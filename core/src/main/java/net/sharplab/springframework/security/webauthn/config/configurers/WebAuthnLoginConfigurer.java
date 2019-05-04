@@ -36,7 +36,8 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.security.web.util.matcher.RequestMatcher;
 import org.springframework.util.Assert;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Adds WebAuthn authentication. All attributes have reasonable defaults making all
@@ -76,16 +77,14 @@ import java.util.*;
 public final class WebAuthnLoginConfigurer<H extends HttpSecurityBuilder<H>> extends
         AbstractAuthenticationFilterConfigurer<H, WebAuthnLoginConfigurer<H>, WebAuthnProcessingFilter> {
 
+    private final WebAuthnLoginConfigurer<H>.OptionsEndpointConfig optionsEndpointConfig = new WebAuthnLoginConfigurer<H>.OptionsEndpointConfig();
+    private final WebAuthnLoginConfigurer<H>.ExpectedAuthenticationExtensionIdsConfig
+            expectedAuthenticationExtensionIdsConfig = new WebAuthnLoginConfigurer<H>.ExpectedAuthenticationExtensionIdsConfig();
     //~ Instance fields
     // ================================================================================================
     private OptionsProvider optionsProvider = null;
     private JsonConverter jsonConverter = null;
     private ServerPropertyProvider serverPropertyProvider = null;
-
-    private final WebAuthnLoginConfigurer<H>.OptionsEndpointConfig optionsEndpointConfig = new WebAuthnLoginConfigurer<H>.OptionsEndpointConfig();
-    private final WebAuthnLoginConfigurer<H>.ExpectedAuthenticationExtensionIdsConfig
-            expectedAuthenticationExtensionIdsConfig = new WebAuthnLoginConfigurer<H>.ExpectedAuthenticationExtensionIdsConfig();
-
     private String usernameParameter = null;
     private String passwordParameter = null;
     private String credentialIdParameter = null;
@@ -171,6 +170,7 @@ public final class WebAuthnLoginConfigurer<H extends HttpSecurityBuilder<H>> ext
 
     /**
      * Specifies the {@link OptionsProvider} to be used.
+     *
      * @param optionsProvider the {@link OptionsProvider}
      * @return the {@link WebAuthnLoginConfigurer} for additional customization
      */
@@ -182,6 +182,7 @@ public final class WebAuthnLoginConfigurer<H extends HttpSecurityBuilder<H>> ext
 
     /**
      * Specifies the {@link JsonConverter} to be used.
+     *
      * @param jsonConverter the {@link JsonConverter}
      * @return the {@link WebAuthnLoginConfigurer} for additional customization
      */
@@ -193,6 +194,7 @@ public final class WebAuthnLoginConfigurer<H extends HttpSecurityBuilder<H>> ext
 
     /**
      * Specifies the {@link ServerPropertyProvider} to be used.
+     *
      * @param serverPropertyProvider the {@link ServerPropertyProvider}
      * @return the {@link WebAuthnLoginConfigurer} for additional customization
      */
@@ -205,6 +207,7 @@ public final class WebAuthnLoginConfigurer<H extends HttpSecurityBuilder<H>> ext
 
     /**
      * Returns the {@link OptionsEndpointConfig} for configuring the {@link OptionsEndpointFilter}
+     *
      * @return the {@link OptionsEndpointConfig}
      */
     public WebAuthnLoginConfigurer<H>.OptionsEndpointConfig optionsEndpoint() {
@@ -213,9 +216,10 @@ public final class WebAuthnLoginConfigurer<H extends HttpSecurityBuilder<H>> ext
 
     /**
      * Returns the {@link ExpectedAuthenticationExtensionIdsConfig} for configuring the expectedAuthenticationExtensionId(s)
+     *
      * @return the {@link ExpectedAuthenticationExtensionIdsConfig}
      */
-    public WebAuthnLoginConfigurer<H>.ExpectedAuthenticationExtensionIdsConfig expectedAuthenticationExtensionIds(){
+    public WebAuthnLoginConfigurer<H>.ExpectedAuthenticationExtensionIdsConfig expectedAuthenticationExtensionIds() {
         return this.expectedAuthenticationExtensionIdsConfig;
     }
 
@@ -357,8 +361,9 @@ public final class WebAuthnLoginConfigurer<H extends HttpSecurityBuilder<H>> ext
 
     /**
      * Create the {@link RequestMatcher} given a loginProcessingUrl
+     *
      * @param loginProcessingUrl creates the {@link RequestMatcher} based upon the
-     * loginProcessingUrl
+     *                           loginProcessingUrl
      * @return the {@link RequestMatcher} to use based upon the loginProcessingUrl
      */
     @Override
@@ -392,6 +397,7 @@ public final class WebAuthnLoginConfigurer<H extends HttpSecurityBuilder<H>> ext
 
         /**
          * Sets the URL for the options endpoint
+         *
          * @param processingUrl the URL for the options endpoint
          * @return the {@link OptionsEndpointConfig} for additional customization
          */
@@ -417,16 +423,18 @@ public final class WebAuthnLoginConfigurer<H extends HttpSecurityBuilder<H>> ext
      */
     public class ExpectedAuthenticationExtensionIdsConfig {
 
-        private ExpectedAuthenticationExtensionIdsConfig(){}
-
         private List<String> expectedAuthenticationExtensionIds = new ArrayList<>();
+
+        private ExpectedAuthenticationExtensionIdsConfig() {
+        }
 
         /**
          * Add AuthenticationExtensionClientInput
+         *
          * @param expectedAuthenticationExtensionId the expected authentication extension id
          * @return the {@link WebAuthnLoginConfigurer.ExpectedAuthenticationExtensionIdsConfig}
          */
-        public ExpectedAuthenticationExtensionIdsConfig add(String expectedAuthenticationExtensionId){
+        public ExpectedAuthenticationExtensionIdsConfig add(String expectedAuthenticationExtensionId) {
             Assert.notNull(expectedAuthenticationExtensionId, "expectedAuthenticationExtensionId must not be null");
             expectedAuthenticationExtensionIds.add(expectedAuthenticationExtensionId);
             return this;

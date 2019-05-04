@@ -27,7 +27,7 @@ public class BadOriginExceptionTest {
 
     @Test
     public void test() {
-        assertThatCode(()->{
+        assertThatCode(() -> {
             new BadOriginException("dummy", cause);
             new BadOriginException("dummy");
         }).doesNotThrowAnyException();

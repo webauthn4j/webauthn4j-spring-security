@@ -28,7 +28,7 @@ public class BadRpIdExceptionTest {
     @Test
     public void test() {
 
-        assertThatCode(()->{
+        assertThatCode(() -> {
             new BadRpIdException("dummy", cause);
             new BadRpIdException("dummy");
         }).doesNotThrowAnyException();

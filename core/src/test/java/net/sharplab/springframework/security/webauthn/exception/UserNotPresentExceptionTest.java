@@ -28,7 +28,7 @@ public class UserNotPresentExceptionTest {
     @Test
     public void test() {
 
-        assertThatCode(()->{
+        assertThatCode(() -> {
             new UserNotPresentException("dummy", cause);
             new UserNotPresentException("dummy");
         }).doesNotThrowAnyException();

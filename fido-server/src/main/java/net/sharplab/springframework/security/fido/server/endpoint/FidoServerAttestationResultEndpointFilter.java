@@ -18,7 +18,6 @@ package net.sharplab.springframework.security.fido.server.endpoint;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.webauthn4j.converter.AttestationObjectConverter;
-import com.webauthn4j.converter.AuthenticatorTransportConverter;
 import com.webauthn4j.converter.CollectedClientDataConverter;
 import com.webauthn4j.converter.util.JsonConverter;
 import com.webauthn4j.data.attestation.AttestationObject;

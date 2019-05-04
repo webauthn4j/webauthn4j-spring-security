@@ -28,7 +28,7 @@ public class CertificateExceptionTest {
     @Test
     public void test() {
 
-        assertThatCode(()->{
+        assertThatCode(() -> {
             new CertificateException("dummy", cause);
             new CertificateException("dummy");
         }).doesNotThrowAnyException();

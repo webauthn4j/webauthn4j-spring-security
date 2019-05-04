@@ -22,7 +22,6 @@ import com.webauthn4j.data.PublicKeyCredentialParameters;
 import com.webauthn4j.data.PublicKeyCredentialRpEntity;
 import com.webauthn4j.data.extension.client.AuthenticationExtensionsClientInputs;
 
-import java.math.BigInteger;
 import java.util.List;
 
 public class ServerPublicKeyCredentialCreationOptionsResponse extends ServerResponseBase {

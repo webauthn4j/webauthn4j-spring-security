@@ -39,8 +39,6 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import java.util.Collections;
-
 import static net.sharplab.springframework.security.webauthn.config.configurers.WebAuthnLoginConfigurer.webAuthnLogin;
 import static org.assertj.core.api.Assertions.assertThat;
 

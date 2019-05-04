@@ -22,7 +22,6 @@ import com.webauthn4j.data.extension.client.AuthenticationExtensionsClientInputs
 import net.sharplab.springframework.security.webauthn.endpoint.Parameters;
 import org.junit.Test;
 
-import java.math.BigInteger;
 import java.util.Collections;
 import java.util.List;
 
