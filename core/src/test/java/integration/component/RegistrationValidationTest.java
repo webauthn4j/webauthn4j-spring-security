@@ -22,6 +22,7 @@ import com.webauthn4j.data.client.Origin;
 import com.webauthn4j.data.client.challenge.Challenge;
 import com.webauthn4j.data.client.challenge.DefaultChallenge;
 import com.webauthn4j.server.ServerProperty;
+import com.webauthn4j.test.authenticator.webauthn.PackedAuthenticator;
 import com.webauthn4j.test.authenticator.webauthn.WebAuthnAuthenticatorAdaptor;
 import com.webauthn4j.test.client.ClientPlatform;
 import com.webauthn4j.util.Base64UrlUtil;
@@ -48,7 +49,7 @@ public class RegistrationValidationTest {
     String rpId = "example.com";
     Challenge challenge = new DefaultChallenge();
     private Origin origin = new Origin("http://localhost");
-    private WebAuthnAuthenticatorAdaptor webAuthnModelAuthenticatorAdaptor = new WebAuthnAuthenticatorAdaptor();
+    private WebAuthnAuthenticatorAdaptor webAuthnModelAuthenticatorAdaptor = new WebAuthnAuthenticatorAdaptor(new PackedAuthenticator());
     private ClientPlatform clientPlatform = new ClientPlatform(origin, webAuthnModelAuthenticatorAdaptor);
     private ServerPropertyProvider serverPropertyProvider = mock(ServerPropertyProvider.class);
     private WebAuthnRegistrationRequestValidator target = new WebAuthnRegistrationRequestValidator(
