@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package net.sharplab.springframework.security.webauthn.sample.app.test;
+package net.sharplab.springframework.security.webauthn.sample.test;
 
 import com.webauthn4j.util.Base64UrlUtil;
 import net.sharplab.springframework.security.webauthn.sample.domain.entity.AuthenticatorEntity;

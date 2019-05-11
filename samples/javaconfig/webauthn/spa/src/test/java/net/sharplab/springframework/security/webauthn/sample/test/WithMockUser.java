@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package net.sharplab.springframework.security.webauthn.sample.app.test;
+package net.sharplab.springframework.security.webauthn.sample.test;
 
 import org.springframework.security.test.context.support.WithSecurityContext;
 

@@ -75,7 +75,7 @@
             <label class="col-8">Authenticators</label>
             <div class="button-group col-4 text-right">
               <div class="tooltip-wrapper">
-                <button type="button" class="btn btn-light btn-sm" (click)="addAuthenticator()" [disabled]="!isWebAuthnAvailable() || username.invalid">
+                <button type="button" id="addAuthenticator" class="btn btn-light btn-sm" (click)="addAuthenticator()" [disabled]="!isWebAuthnAvailable() || username.invalid">
                   <i class="fas fa-plus-square"></i>
                 </button>
               </div>
@@ -118,7 +118,7 @@
       </div>
     </div>
     <div class="mt-3 mb-3">
-      <button type="submit" class="btn btn-primary btn-block" [disabled]="signupForm.invalid || submitting || (user.authenticators.length == 0 && !user.singleFactorAuthenticationAllowed)">Register</button>
+      <button type="submit" id="register" class="btn btn-primary btn-block" [disabled]="signupForm.invalid || submitting || (user.authenticators.length == 0 && !user.singleFactorAuthenticationAllowed)">Register</button>
     </div>
 
     <a routerLink="/login" class="btn btn-link">Return to login page</a>
