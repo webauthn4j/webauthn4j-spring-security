@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package net.sharplab.springframework.security.webauthn.sample.infrastructure.config;
+package net.sharplab.springframework.security.webauthn.sample.test.infrastructure.config;
 
 import net.sharplab.springframework.security.webauthn.sample.domain.repository.AuthenticatorEntityRepository;
 import net.sharplab.springframework.security.webauthn.sample.domain.repository.AuthorityEntityRepository;

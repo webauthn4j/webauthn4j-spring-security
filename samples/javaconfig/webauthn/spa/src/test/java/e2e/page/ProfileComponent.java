@@ -14,21 +14,20 @@
  * limitations under the License.
  */
 
-package net.sharplab.springframework.security.webauthn.sample.app.config;
+package e2e.page;
 
-import net.sharplab.springframework.security.webauthn.sample.domain.component.UserManagerImpl;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Import;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
-/**
- * SecurityConfig for Test
- */
-@Import(WebSecurityConfig.class)
-@Configuration
-public class TestSecurityConfig {
+public class ProfileComponent {
 
-    @MockBean
-    UserManagerImpl userManager;
+    private WebDriver webDriver;
+    private WebDriverWait wait;
+
+
+    public ProfileComponent(WebDriver webDriver) {
+        this.webDriver = webDriver;
+        this.wait = new WebDriverWait(webDriver, 50);
+    }
 
 }

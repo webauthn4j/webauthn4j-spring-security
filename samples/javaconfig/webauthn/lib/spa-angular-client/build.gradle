@@ -55,9 +55,8 @@ npm_run_start {
  * limitations under the License.
  */
 
-// classes is a Java task
-classes.dependsOn npm_run_build
-npm_run_build.mustRunAfter processResources
+// processResources is a Java task
+processResources.dependsOn npm_run_build
 
 // test is a Java task
 test.dependsOn npm_run_test
