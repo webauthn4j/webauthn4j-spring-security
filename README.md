@@ -8,9 +8,9 @@
 Spring Security WebAuthn provides Web Authentication specification support for your Spring application.
 Users can login with WebAuthn compliant authenticator.
 
-**This library is intended to be merged into [Spring-Security](https://github.com/spring-projects/spring-security) 
-as a pull-request. Package name will be changed when it is remade into the pull-request. This library itself is 
-feature-complete, but is not for production use for now as it depends on customized Spring-Security build.**
+**This extension has been sent as [a Pull Request](https://github.com/spring-projects/spring-security/pull/6842) to [Spring-Security upstream](https://github.com/spring-projects/spring-security).
+If you are interested in WebAuthn support, check [the Pull Request](https://github.com/spring-projects/spring-security/pull/6842) and join the discussion.**
+
 
 ## Documentation
 
