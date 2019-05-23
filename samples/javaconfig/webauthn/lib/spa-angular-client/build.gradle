@@ -56,7 +56,8 @@ npm_run_start {
  */
 
 // processResources is a Java task
-processResources.dependsOn npm_run_build
+classes.dependsOn npm_run_build
+npm_run_build.mustRunAfter processResources
 
 // test is a Java task
 test.dependsOn npm_run_test
