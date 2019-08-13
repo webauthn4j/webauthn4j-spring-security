@@ -27,20 +27,18 @@ import javax.persistence.AttributeConverter;
  */
 public class AttestationStatementConverter implements AttributeConverter<AttestationStatement, String> {
 
-    private CborConverter cborConverter;
-
-    public AttestationStatementConverter(CborConverter cborConverter) {
-        this.cborConverter = cborConverter;
-    }
+    private CborConverter cborConverter = new CborConverter(); //TODO
 
     @Override
     public String convertToDatabaseColumn(AttestationStatement attribute) {
-        return Base64UrlUtil.encodeToString(cborConverter.writeValueAsBytes(attribute));
+        AttestationStatementSerializationContainer container = new AttestationStatementSerializationContainer(attribute);
+        return Base64UrlUtil.encodeToString(cborConverter.writeValueAsBytes(container));
     }
 
     @Override
     public AttestationStatement convertToEntityAttribute(String dbData) {
         byte[] data = Base64UrlUtil.decode(dbData);
-        return cborConverter.readValue(data, AttestationStatement.class);
+        AttestationStatementSerializationContainer container = cborConverter.readValue(data, AttestationStatementSerializationContainer.class);
+        return container.getAttestationStatement();
     }
 }
