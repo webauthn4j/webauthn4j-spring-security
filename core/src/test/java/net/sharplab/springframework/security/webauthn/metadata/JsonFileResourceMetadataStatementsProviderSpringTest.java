@@ -67,7 +67,7 @@ public class JsonFileResourceMetadataStatementsProviderSpringTest {
         @Bean
         public JsonFileResourceMetadataStatementsProvider jsonFileResourceMetadataItemListProvider(ResourceLoader resourceLoader) throws IOException {
             JsonFileResourceMetadataStatementsProvider provider = new JsonFileResourceMetadataStatementsProvider(jsonConverter);
-            Resource[] resources = ResourcePatternUtils.getResourcePatternResolver(resourceLoader).getResources("classpath:metadataStatements/fido-conformance-tools/*.json");
+            Resource[] resources = ResourcePatternUtils.getResourcePatternResolver(resourceLoader).getResources("classpath:metadata/test-tools/*.json");
             provider.setResources(Arrays.asList(resources));
             return provider;
         }

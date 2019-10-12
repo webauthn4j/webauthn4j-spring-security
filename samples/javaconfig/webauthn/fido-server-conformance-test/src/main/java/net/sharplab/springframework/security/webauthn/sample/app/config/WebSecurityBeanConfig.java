@@ -206,7 +206,7 @@ public class WebSecurityBeanConfig {
         list.add(new MetadataItemsMetadataStatementsProvider(metadataItemsProvider));
 
         JsonFileResourceMetadataStatementsProvider provider = new JsonFileResourceMetadataStatementsProvider(jsonConverter);
-        Resource[] resources = ResourcePatternUtils.getResourcePatternResolver(resourceLoader).getResources("classpath:metadataStatements/fido-conformance-tools/*.json");
+        Resource[] resources = ResourcePatternUtils.getResourcePatternResolver(resourceLoader).getResources("classpath:metadata/test-tools/*.json");
         provider.setResources(Arrays.asList(resources));
         list.add(provider);
 
