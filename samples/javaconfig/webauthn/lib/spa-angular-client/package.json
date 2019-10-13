@@ -8,20 +8,21 @@
     "test": "ng test --watch=false",
     "watchTest": "ng test --watch=true",
     "lint": "ng lint",
-    "e2e": "ng e2e"
+    "e2e": "ng e2e",
+    "updateCli": "ng update @angular/cli"
   },
   "private": true,
   "dependencies": {
-    "@angular/animations": "^7.2.14",
+    "@angular/animations": "^8.2.10",
     "@angular/cdk": "^7.3.7",
-    "@angular/common": "^7.2.14",
-    "@angular/compiler": "^7.2.14",
-    "@angular/core": "^7.2.14",
-    "@angular/forms": "^7.2.14",
+    "@angular/common": "^8.2.10",
+    "@angular/compiler": "^8.2.10",
+    "@angular/core": "^8.2.10",
+    "@angular/forms": "^8.2.10",
     "@angular/material": "^7.3.7",
-    "@angular/platform-browser": "^7.2.14",
-    "@angular/platform-browser-dynamic": "^7.2.14",
-    "@angular/router": "^7.2.14",
+    "@angular/platform-browser": "^8.2.10",
+    "@angular/platform-browser-dynamic": "^8.2.10",
+    "@angular/router": "^8.2.10",
     "@fortawesome/fontawesome-free": "^5.3.1",
     "@ng-bootstrap/ng-bootstrap": "^4.1.0",
     "base64-arraybuffer": "^0.2.0",
@@ -31,12 +32,12 @@
     "rfc4648": "^1.1.0",
     "rxjs": "~6.5.3",
     "tslib": "^1.10.0",
-    "zone.js": "~0.8.29"
+    "zone.js": "~0.9.1"
   },
   "devDependencies": {
-    "@angular-devkit/build-angular": "^0.13.8",
-    "@angular/cli": "~7.3.8",
-    "@angular/compiler-cli": "^7.2.14",
+    "@angular-devkit/build-angular": "~0.803.9",
+    "@angular/cli": "~8.3.9",
+    "@angular/compiler-cli": "^8.2.10",
     "@angular/language-service": "^8.2.10",
     "@types/base64-arraybuffer": "^0.1.0",
     "@types/jasmine": "~2.8.8",
@@ -44,7 +45,7 @@
     "@types/node": "~8.9.4",
     "@types/uuid": "^3.4.5",
     "@types/webappsec-credential-management": "^0.3.10",
-    "codelyzer": "~5.1.2",
+    "codelyzer": "^5.0.1",
     "jasmine-core": "~2.99.1",
     "jasmine-spec-reporter": "~4.2.1",
     "karma": "~4.3.0",
@@ -55,6 +56,6 @@
     "protractor": "~5.4.2",
     "ts-node": "~8.4.1",
     "tslint": "~5.20.0",
-    "typescript": "~3.2.4"
+    "typescript": "~3.5.3"
   }
 }
