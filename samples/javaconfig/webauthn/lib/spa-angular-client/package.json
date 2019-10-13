@@ -20,7 +20,6 @@
     "@angular/compiler": "^8.2.10",
     "@angular/core": "^8.2.10",
     "@angular/forms": "^8.2.10",
-    "@angular/material": "^7.3.7",
     "@angular/platform-browser": "^8.2.10",
     "@angular/platform-browser-dynamic": "^8.2.10",
     "@angular/router": "^8.2.10",
