@@ -19,7 +19,7 @@
 
 import {Injectable} from '@angular/core';
 import {HttpClient} from "@angular/common/http";
-import {base64url} from "rfc4648";
+import * as base64url from "./base64url";
 import {WebAuthn4NgCredentialCreationOptions} from "./web-authn-4-ng-credential-creation-options";
 import {WebAuthn4NgCredentialRequestOptions} from "./web-authn-4-ng-credential-request-options";
 import {ServerOptions} from "./server-options";
@@ -142,14 +142,14 @@ export class WebAuthnService {
       return {
         relyingParty: response.relyingParty,
         user: response.user,
-        challenge: base64url.parse(response.challenge, { loose: true }),
+        challenge: base64url.decodeBase64url(response.challenge),
         pubKeyCredParams: response.pubKeyCredParams,
         registrationTimeout: response.registrationTimeout,
         authenticationTimeout: response.authenticationTimeout,
         credentials: response.credentials.map(credential => {
           return {
             type: credential.type,
-            id: base64url.parse(credential.id, { loose: true })
+            id: base64url.decodeBase64url(credential.id)
           }
         }),
         parameters: response.parameters
