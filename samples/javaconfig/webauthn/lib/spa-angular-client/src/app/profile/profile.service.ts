@@ -19,7 +19,7 @@ import {HttpClient} from "@angular/common/http";
 import {RegisteringAuthenticatorViewModel} from "../webauthn/registering-authenticator.view-model";
 import {WebAuthnService} from "../webauthn/web-authn.service";
 import {Observable} from "rxjs/internal/Observable";
-import {base64url} from "rfc4648";
+import * as base64url from "../webauthn/base64url";
 import {ProfileUpdateViewModel} from "./profile-update.view-model";
 import {ProfileViewModel} from "./profile.view-model";
 import {ProfileCreateViewModel} from "./profile-create.view-model";
@@ -52,7 +52,7 @@ export class ProfileService implements OnInit {
     credentialIds: ArrayBuffer[],
     requireResidentKey: boolean
   ): Promise<Credential> {
-    let userHandle = base64url.parse(userHandleBase64, { loose: true });
+    let userHandle = base64url.decodeBase64url(userHandleBase64);
     let excludeCredentials: PublicKeyCredentialDescriptor[] = credentialIds.map(credentialId => {
       // noinspection UnnecessaryLocalVariableJS
       let credential: PublicKeyCredentialDescriptor = {type: "public-key", id: credentialId};
@@ -123,9 +123,9 @@ export class ProfileService implements OnInit {
     if((<RegisteringAuthenticatorForm>authenticatorForm).clientData && (<RegisteringAuthenticatorForm>authenticatorForm).attestationObject){
       let registeringAuthenticator: RegisteringAuthenticatorViewModel = {
         name: authenticatorForm.name,
-        credentialId: base64url.parse(authenticatorForm.credentialId, { loose: true }).buffer,
-        clientData: base64url.parse((<RegisteringAuthenticatorForm>authenticatorForm).clientData, { loose: true }).buffer,
-        attestationObject: base64url.parse((<RegisteringAuthenticatorForm>authenticatorForm).attestationObject, { loose: true }).buffer,
+        credentialId: base64url.decodeBase64url(authenticatorForm.credentialId).buffer,
+        clientData: base64url.decodeBase64url((<RegisteringAuthenticatorForm>authenticatorForm).clientData).buffer,
+        attestationObject: base64url.decodeBase64url((<RegisteringAuthenticatorForm>authenticatorForm).attestationObject).buffer,
         clientExtensionsJSON: (<RegisteringAuthenticatorForm>authenticatorForm).clientExtensionsJSON
       };
       return registeringAuthenticator;
@@ -134,7 +134,7 @@ export class ProfileService implements OnInit {
       let existingAuthenticator: ExistingAuthenticatorViewModel = {
         id: (<ExistingAuthenticatorForm>authenticatorForm).id,
         name: authenticatorForm.name,
-        credentialId: base64url.parse(authenticatorForm.credentialId, { loose: true }).buffer
+        credentialId: base64url.decodeBase64url(authenticatorForm.credentialId).buffer
       };
       return existingAuthenticator;
     }
@@ -147,9 +147,9 @@ export class ProfileService implements OnInit {
     if((<RegisteringAuthenticatorViewModel>authenticator).clientData && (<RegisteringAuthenticatorViewModel>authenticator).attestationObject){
       let registeringAuthenticatorForm: RegisteringAuthenticatorForm = {
         name: authenticator.name,
-        credentialId: base64url.stringify(new Uint8Array(authenticator.credentialId)),
-        clientData: base64url.stringify(new Uint8Array((<RegisteringAuthenticatorViewModel>authenticator).clientData)),
-        attestationObject: base64url.stringify(new Uint8Array((<RegisteringAuthenticatorViewModel>authenticator).attestationObject)),
+        credentialId: base64url.encodeBase64url(new Uint8Array(authenticator.credentialId)),
+        clientData: base64url.encodeBase64url(new Uint8Array((<RegisteringAuthenticatorViewModel>authenticator).clientData)),
+        attestationObject: base64url.encodeBase64url(new Uint8Array((<RegisteringAuthenticatorViewModel>authenticator).attestationObject)),
         clientExtensionsJSON: (<RegisteringAuthenticatorViewModel>authenticator).clientExtensionsJSON
       };
       return registeringAuthenticatorForm;
