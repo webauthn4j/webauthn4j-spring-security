@@ -9,7 +9,8 @@
     "watchTest": "ng test --watch=true",
     "lint": "ng lint",
     "e2e": "ng e2e",
-    "updateCli": "ng update @angular/cli"
+    "updateCli": "ng update @angular/cli",
+    "update": "ng update"
   },
   "private": true,
   "dependencies": {
