@@ -29,10 +29,9 @@
             <basic name="credentialId">
                 <column column-definition="blob"/>
             </basic>
-            <basic name="credentialPublicKey">
+            <basic name="coseKey">
                 <column column-definition="clob"/>
-                <convert
-                        converter="net.sharplab.springframework.security.webauthn.sample.infrastructure.util.jpa.converter.CredentialPublicKeyConverter"/>
+                <convert converter="net.sharplab.springframework.security.webauthn.sample.infrastructure.util.jpa.converter.COSEKeyConverter"/>
             </basic>
         </attributes>
     </embeddable>

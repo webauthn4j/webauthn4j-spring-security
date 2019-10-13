@@ -17,29 +17,29 @@
 package net.sharplab.springframework.security.webauthn.sample.infrastructure.util.jpa.converter;
 
 import com.webauthn4j.converter.util.CborConverter;
-import com.webauthn4j.data.attestation.authenticator.CredentialPublicKey;
+import com.webauthn4j.data.attestation.authenticator.COSEKey;
 import com.webauthn4j.util.Base64UrlUtil;
 
 import javax.persistence.AttributeConverter;
 import javax.persistence.Converter;
 
 @Converter
-public class CredentialPublicKeyConverter implements AttributeConverter<CredentialPublicKey, String> {
+public class COSEKeyConverter implements AttributeConverter<COSEKey, String> {
 
     private CborConverter cborConverter;
 
-    public CredentialPublicKeyConverter(CborConverter cborConverter) {
+    public COSEKeyConverter(CborConverter cborConverter) {
         this.cborConverter = cborConverter;
     }
 
     @Override
-    public String convertToDatabaseColumn(CredentialPublicKey attribute) {
+    public String convertToDatabaseColumn(COSEKey attribute) {
         return Base64UrlUtil.encodeToString(cborConverter.writeValueAsBytes(attribute));
     }
 
     @Override
-    public CredentialPublicKey convertToEntityAttribute(String dbData) {
+    public COSEKey convertToEntityAttribute(String dbData) {
         byte[] data = Base64UrlUtil.decode(dbData);
-        return cborConverter.readValue(data, CredentialPublicKey.class);
+        return cborConverter.readValue(data, COSEKey.class);
     }
 }

@@ -17,28 +17,25 @@
 package net.sharplab.springframework.security.webauthn.sample.infrastructure.util.jpa.converter;
 
 import com.webauthn4j.converter.util.CborConverter;
-import com.webauthn4j.data.attestation.statement.AttestationStatement;
+import com.webauthn4j.data.attestation.authenticator.COSEKey;
 import com.webauthn4j.util.Base64UrlUtil;
 
 import javax.persistence.AttributeConverter;
+import javax.persistence.Converter;
 
-/**
- * AttestationStatementConverter
- */
-public class AttestationStatementConverter implements AttributeConverter<AttestationStatement, String> {
+@Converter
+public class COSEKeyConverter implements AttributeConverter<COSEKey, String> {
 
     private CborConverter cborConverter = new CborConverter(); //TODO
 
     @Override
-    public String convertToDatabaseColumn(AttestationStatement attribute) {
-        AttestationStatementSerializationContainer container = new AttestationStatementSerializationContainer(attribute);
-        return Base64UrlUtil.encodeToString(cborConverter.writeValueAsBytes(container));
+    public String convertToDatabaseColumn(COSEKey attribute) {
+        return Base64UrlUtil.encodeToString(cborConverter.writeValueAsBytes(attribute));
     }
 
     @Override
-    public AttestationStatement convertToEntityAttribute(String dbData) {
+    public COSEKey convertToEntityAttribute(String dbData) {
         byte[] data = Base64UrlUtil.decode(dbData);
-        AttestationStatementSerializationContainer container = cborConverter.readValue(data, AttestationStatementSerializationContainer.class);
-        return container.getAttestationStatement();
+        return cborConverter.readValue(data, COSEKey.class);
     }
 }
