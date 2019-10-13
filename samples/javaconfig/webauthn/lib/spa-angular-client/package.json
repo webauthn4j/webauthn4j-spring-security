@@ -42,7 +42,7 @@
     "@types/jasmine": "~2.8.8",
     "@types/jasminewd2": "~2.0.8",
     "@types/node": "~8.9.4",
-    "@types/uuid": "^3.4.4",
+    "@types/uuid": "^3.4.5",
     "@types/webappsec-credential-management": "^0.3.10",
     "codelyzer": "~5.1.2",
     "jasmine-core": "~2.99.1",
