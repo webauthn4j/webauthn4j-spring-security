@@ -137,7 +137,6 @@ public class AuthenticatorEntity implements Authenticator {
         return clientExtensions;
     }
 
-    @Override
     public void setClientExtensions(Map<String, RegistrationExtensionClientOutput> clientExtensions) {
         this.clientExtensions = clientExtensions;
     }
@@ -147,7 +146,6 @@ public class AuthenticatorEntity implements Authenticator {
         return authenticatorExtensions;
     }
 
-    @Override
     public void setAuthenticatorExtensions(Map<String, RegistrationExtensionAuthenticatorOutput> authenticatorExtensions) {
         this.authenticatorExtensions = authenticatorExtensions;
     }
