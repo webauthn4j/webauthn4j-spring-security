@@ -24,7 +24,7 @@
     "@angular/router": "^7.2.14",
     "@fortawesome/fontawesome-free": "^5.3.1",
     "@ng-bootstrap/ng-bootstrap": "^4.1.0",
-    "base64-arraybuffer": "^0.1.5",
+    "base64-arraybuffer": "^0.2.0",
     "bootstrap": "^4.3.1",
     "core-js": "^2.5.4",
     "bowser": "^2.7.0",
