@@ -41,7 +41,7 @@ dependencies {
     compile("org.springframework:spring-web")
     compile("org.springframework.security:spring-security-config")
 
-    provided('javax.servlet:javax.servlet-api')
+    compile('javax.servlet:javax.servlet-api')
 
     //Test
     testCompile("com.webauthn4j:webauthn4j-test:${webauthn4jVersion}")
