@@ -27,7 +27,7 @@
     "@ng-bootstrap/ng-bootstrap": "^4.1.0",
     "base64-arraybuffer": "^0.2.0",
     "bootstrap": "^4.3.1",
-    "core-js": "^2.5.4",
+    "core-js": "^3.2.1",
     "bowser": "^2.7.0",
     "rfc4648": "^1.1.0",
     "rxjs": "~6.5.3",
