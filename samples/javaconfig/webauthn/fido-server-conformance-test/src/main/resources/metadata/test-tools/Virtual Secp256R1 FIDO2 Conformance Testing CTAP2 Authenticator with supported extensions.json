@@ -1,12 +1,10 @@
 {
-    "description": "Virtual Secp256K1 FIDO2 Conformance Testing U2F Authenticator",
+    "description": "Virtual Secp256R1 FIDO2 Conformance Testing CTAP2 Authenticator with supported extensions",
+    "aaguid": "69700f79-d1fb-472e-bd9b-a3a3b9a9eda0",
     "alternativeDescriptions": {
-        "ru-RU": "Виртуальный Secp256K1 U2F аутентификатор для тестирование серверов на соответсвие спецификации FIDO2"
+        "ru-RU": "Виртуальный Secp256R1 CTAP2 аутентификатор для тестирование серверов на соответсвие спецификации FIDO2 с дополнениями"
     },
-    "attestationCertificateKeyIdentifiers": [
-        "564df7c0f8c655b6a11f6c4d19f3bf41e2fd0179"
-    ],
-    "protocolFamily": "u2f",
+    "protocolFamily": "fido2",
     "authenticatorVersion": 2,
     "upv": [
         {
@@ -14,11 +12,12 @@
             "minor": 0
         }
     ],
-    "assertionScheme": "U2FV1BIN",
+    "assertionScheme": "FIDOV2",
     "authenticationAlgorithm": 1,
-    "publicKeyAlgAndEncoding": 256,
+    "publicKeyAlgAndEncoding": 260,
     "attestationTypes": [
-        15879
+        15879,
+        15880
     ],
     "userVerificationDetails": [
         [
@@ -27,13 +26,39 @@
             }
         ]
     ],
-    "keyProtection": 26,
+    "keyProtection": 10,
     "matcherProtection": 4,
     "cryptoStrength": 128,
     "operatingEnv": "Secure Element (SE)",
     "attachmentHint": 2,
-    "isSecondFactorOnly": true,
-    "tcDisplay": 0,
+    "isSecondFactorOnly": false,
+    "tcDisplay": 3,
+    "tcDisplayContentType": "image/png",
+    "tcDisplayPNGCharacteristics": [
+        {
+            "bitDepth": 16,
+            "colorType": 2,
+            "compression": 0,
+            "filter": 0,
+            "height": 240,
+            "interlace": 0,
+            "width": 320
+        }
+    ],
+    "supportedExtensions": [
+        {
+            "id": "example.extension",
+            "fail_if_unknown": false
+        },
+        {
+            "id": "txAuthGeneric",
+            "fail_if_unknown": false
+        },
+        {
+            "id": "txAuthSimple",
+            "fail_if_unknown": false
+        }
+    ],
     "attestationRootCertificates": [
         "MIIFwDCCA6gCCQCNm1u56oRwXTANBgkqhkiG9w0BAQsFADCBoTEYMBYGA1UEAwwPRklETzIgVEVTVCBST09UMTEwLwYJKoZIhvcNAQkBFiJjb25mb3JtYW5jZS10b29sc0BmaWRvYWxsaWFuY2Uub3JnMRYwFAYDVQQKDA1GSURPIEFsbGlhbmNlMQwwCgYDVQQLDANDV0cxCzAJBgNVBAYTAlVTMQswCQYDVQQIDAJNWTESMBAGA1UEBwwJV2FrZWZpZWxkMB4XDTE4MDMxNjE0MzUyN1oXDTQ1MDgwMTE0MzUyN1owgaExGDAWBgNVBAMMD0ZJRE8yIFRFU1QgUk9PVDExMC8GCSqGSIb3DQEJARYiY29uZm9ybWFuY2UtdG9vbHNAZmlkb2FsbGlhbmNlLm9yZzEWMBQGA1UECgwNRklETyBBbGxpYW5jZTEMMAoGA1UECwwDQ1dHMQswCQYDVQQGEwJVUzELMAkGA1UECAwCTVkxEjAQBgNVBAcMCVdha2VmaWVsZDCCAiIwDQYJKoZIhvcNAQEBBQADggIPADCCAgoCggIBAL11U5yAIVLMrL3xS8u8ysMSdOkDeoTO+RcAy+uXXp6k4SC+jOy37gICEtYI+MKQV1EMeMMf3rM1ueZAO3iPFa0NEdi/oQ7npnGjBNI8wMzD8FfNe6rWtzkDaHpsZW///MwWDpGyJR+Xyjcq6U4vS9bS6zZ7jslw0Oczx4UsYgOsIUXSSBaGOrRbxJ/JC5gnDYEYvtNM+PDPczLNKAyhdvBZWNWHr7MZ0P5TeJQcXsAoShRX2Y8U8fRNJm7SeiFKDP0Nn/QKxOSt7zGP4xt9nMasE1q2ZTdar2+W13CRz37RI0ZWpq/+YquoEbZ7Uj7NmBTcqhb260nmDER2FpwwYwPSark92IZbamozB8d7OEI1jJgsrjJhKan0EmRaWVBpHT4xYKdEu7r09S0JhKyU+52WDmmVQTMpYLrm4Xl7hRxyPyBYkalrozsGmPs8vlhNq3VsVbyBSMSpEmUaeAa7LLE9/Vh0agJLVFHh1ehYKJpzHnmmBXUqx0Fz3afmDm1NX0sr3O/6xIx1VSTViT3KNxBYpVH1qjHATLzuxcWmm+75fcJMiPYPSMXVmRb3Q1l91AM4BBeWhlP3Fbc7gDy0r+s7m0sGS6PT2J2rGog2rUxnJ+zCM11M7DeO0XM2nny4uRYPPk9w2EXzfvtdvieYU/5RB4RDm5TGxHhGXVZUgac5AgMBAAEwDQYJKoZIhvcNAQELBQADggIBAFt2XGd3k5GpbO1EUm3u60zT1fE6u6pOscp156k5VnsHgaHRHdIAPNLeLNmR7y5OnrXbh13CrGwU1q84jjJXpv+v14xUCc5i01yopFTQFLr4A7NHp2nNYfNhhIVSFAgW43EflJflbLEelCJzxLlWb5BoDsZeeNmEQsXIM1mJ26R3r0dzsHBb0uy+8LNR1gdVqdjhC8BLy3gh4+BWuidyZNt07LveDsSFW5rcj5wRrSx9hXPIyVpjQSljNvY7MVTouqJzNAAQMsTKkXPkTXldCop9Qo9UPkHRRm0l7LLtdaOoXrct0Ymocf8zxf9bFNiw9f4WRYQM6sMhzt8+s/oDilo4QhcUgeJEiEPESi6ynYTV62SHA4eMunUJ5dlCaRnFiR9DTImFa5IRzie326/nW/SPCaKc/yrFIihMMjJoSAPhpTb/K6yHOUG8r+KiQut7NzqGV301pQ9u62dGL5Oi1VXmCFlE2ramZs15BNOUyAo2CBbRJg3jKcdu/8QC6ojjDvQ863+7LPtn74wJC5RpUJsS0GhQWgq5pAXO3wA61Uobxi6MkOpCC0zBWx/d4CqpS4j4hFgxWBTXX48ihPu+hIxIF/AxbqtPvqLMExW/xZITn6ArpWyQ9e4SUVr3n3F33ap1XdDyZ0vwFcm18JQAtsvXT6qCLrWOXnHUgfn/+Viu"
     ],
