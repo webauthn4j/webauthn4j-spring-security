@@ -18,13 +18,12 @@ package net.sharplab.springframework.security.webauthn.sample.infrastructure.uti
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.webauthn4j.converter.util.JsonConverter;
-import com.webauthn4j.data.extension.authenticator.RegistrationExtensionAuthenticatorOutput;
 import com.webauthn4j.data.extension.client.RegistrationExtensionClientOutput;
 
 import javax.persistence.AttributeConverter;
 import java.util.Map;
 
-public class ClientExtensionsConverter implements AttributeConverter<Map<String, RegistrationExtensionClientOutput>, String> {
+public class ClientExtensionsConverter<T> implements AttributeConverter<Map<String, RegistrationExtensionClientOutput>, String> {
 
     private JsonConverter jsonConverter = new JsonConverter(); //TODO
 
@@ -35,6 +34,6 @@ public class ClientExtensionsConverter implements AttributeConverter<Map<String,
 
     @Override
     public Map<String, RegistrationExtensionClientOutput> convertToEntityAttribute(String dbData) {
-        return jsonConverter.readValue(dbData, new TypeReference<Map<String, RegistrationExtensionAuthenticatorOutput>>(){});
+        return jsonConverter.readValue(dbData, new TypeReference<Map<String, RegistrationExtensionClientOutput>>(){});
     }
 }
