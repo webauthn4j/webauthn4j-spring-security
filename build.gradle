@@ -27,7 +27,7 @@ buildscript {
 
 plugins {
     id "org.sonarqube" version "2.8"
-    id 'org.asciidoctor.convert' version "2.3.0"
+    id 'org.asciidoctor.convert' version "2.4.0"
 }
 
 group 'net.sharplab.springframework.security.extensions'
