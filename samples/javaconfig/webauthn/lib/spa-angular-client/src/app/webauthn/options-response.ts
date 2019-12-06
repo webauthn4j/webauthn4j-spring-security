@@ -24,7 +24,7 @@ export interface OptionsResponse {
   registrationTimeout?: number,
   authenticationTimeout?: number,
   credentials: {
-    type: PublicKeyCredentialType;
+    type: "public-key";
     id: string;
   }[];
   parameters: {

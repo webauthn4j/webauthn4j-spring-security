@@ -16,28 +16,24 @@
 
 package net.sharplab.springframework.security.webauthn.sample.infrastructure.util.jpa.converter;
 
-import com.webauthn4j.converter.util.CborConverter;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.webauthn4j.converter.util.JsonConverter;
-import com.webauthn4j.data.attestation.authenticator.CredentialPublicKey;
-import com.webauthn4j.data.attestation.statement.AttestationStatement;
-import com.webauthn4j.util.Base64UrlUtil;
+import com.webauthn4j.data.extension.client.RegistrationExtensionClientOutput;
 
 import javax.persistence.AttributeConverter;
-import javax.persistence.Converter;
+import java.util.Map;
 
-@Converter
-public class CredentialPublicKeyConverter implements AttributeConverter<CredentialPublicKey, String> {
+public class ClientExtensionsConverter<T> implements AttributeConverter<Map<String, RegistrationExtensionClientOutput>, String> {
 
-    private CborConverter cborConverter = new CborConverter(); //TODO
+    private JsonConverter jsonConverter = new JsonConverter(); //TODO
 
     @Override
-    public String convertToDatabaseColumn(CredentialPublicKey attribute) {
-        return Base64UrlUtil.encodeToString(cborConverter.writeValueAsBytes(attribute));
+    public String convertToDatabaseColumn(Map<String, RegistrationExtensionClientOutput> attribute) {
+        return jsonConverter.writeValueAsString(attribute);
     }
 
     @Override
-    public CredentialPublicKey convertToEntityAttribute(String dbData) {
-        byte[] data = Base64UrlUtil.decode(dbData);
-        return cborConverter.readValue(data, CredentialPublicKey.class);
+    public Map<String, RegistrationExtensionClientOutput> convertToEntityAttribute(String dbData) {
+        return jsonConverter.readValue(dbData, new TypeReference<Map<String, RegistrationExtensionClientOutput>>(){});
     }
 }

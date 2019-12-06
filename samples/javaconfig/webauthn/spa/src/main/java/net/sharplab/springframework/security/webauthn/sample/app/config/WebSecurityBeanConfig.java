@@ -21,8 +21,10 @@ import com.fasterxml.jackson.databind.jsontype.NamedType;
 import com.fasterxml.jackson.dataformat.cbor.CBORFactory;
 import com.webauthn4j.converter.util.CborConverter;
 import com.webauthn4j.converter.util.JsonConverter;
-import com.webauthn4j.data.extension.client.FIDOAppIDExtensionClientInput;
+import com.webauthn4j.data.extension.client.AuthenticationExtensionsClientInputs;
+import com.webauthn4j.data.extension.client.RegistrationExtensionClientInput;
 import com.webauthn4j.metadata.converter.jackson.WebAuthnMetadataJSONModule;
+import com.webauthn4j.util.ECUtil;
 import com.webauthn4j.validator.WebAuthnAuthenticationContextValidator;
 import com.webauthn4j.validator.WebAuthnRegistrationContextValidator;
 import net.sharplab.springframework.security.webauthn.WebAuthnRegistrationRequestValidator;
@@ -55,10 +57,11 @@ import org.springframework.security.web.authentication.logout.ForwardLogoutSucce
 import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
 import org.springframework.security.web.csrf.InvalidCsrfTokenException;
 import org.springframework.security.web.csrf.MissingCsrfTokenException;
-import sun.security.util.ECUtil;
 
 import java.security.interfaces.ECPublicKey;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.Map;
 
 @Configuration
 public class WebSecurityBeanConfig {
@@ -86,9 +89,13 @@ public class WebSecurityBeanConfig {
     @Bean
     public OptionsProvider optionsProvider(WebAuthnUserDetailsService webAuthnUserDetailsService, ChallengeRepository challengeRepository){
         OptionsProviderImpl optionsProvider = new OptionsProviderImpl(webAuthnUserDetailsService, challengeRepository);
-        CableRegistrationData cableRegistrationData = new CableRegistrationData((ECPublicKey) null); //TODO
+        ECPublicKey ecPublicKey = (ECPublicKey) ECUtil.createKeyPair().getPublic(); //TODO
+        CableRegistrationData cableRegistrationData = new CableRegistrationData(ecPublicKey);
         CableRegistrationExtensionClientInput cableRegistrationExtensionClientInput = new CableRegistrationExtensionClientInput(cableRegistrationData);
-        optionsProvider.getRegistrationExtensions().put(CableRegistrationExtensionAuthenticatorInput.ID, cableRegistrationExtensionClientInput);
+        Map<String, RegistrationExtensionClientInput> source = new HashMap<>();
+        source.put(CableRegistrationExtensionClientInput.ID, cableRegistrationExtensionClientInput);
+        AuthenticationExtensionsClientInputs<RegistrationExtensionClientInput> registrationExtensions = new AuthenticationExtensionsClientInputs<>(source);
+        optionsProvider.setRegistrationExtensions(registrationExtensions);
         return optionsProvider;
     }
 

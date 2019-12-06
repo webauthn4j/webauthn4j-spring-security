@@ -1,6 +1,6 @@
 # Spring Security WebAuthn
 
-[![Build Status](https://travis-ci.org/sharplab/spring-security-webauthn.svg?branch=master)](https://travis-ci.org/sharplab/spring-security-webauthn)
+[![Actions Status](https://github.com/sharplab/spring-security-webauthn/workflows/CI/badge.svg)](https://github.com/sharplab/spring-security-webauthn/actions)
 [![Coverage](https://sonarcloud.io/api/project_badges/measure?project=spring-security-webauthn&metric=coverage)](https://sonarcloud.io/dashboard?id=spring-security-webauthn)
 [![license](https://img.shields.io/github/license/sharplab/spring-security-webauthn.svg)](https://github.com/sharplab/spring-security-webauthn/blob/master/LICENSE.txt)
 
@@ -47,7 +47,7 @@ git clone https://github.com/sharplab/spring-security-webauthn
 ### Execute sample application
 
 ```
-./gradlew spring-security-webauthn-samples/javaconfig/webauthn/spa:bootRun
+./gradlew samples:javaconfig:webauthn:spa:bootRun
 ```
 
 ![Login view](./docs/src/reference/asciidoc/en/images/login.png "Login view")

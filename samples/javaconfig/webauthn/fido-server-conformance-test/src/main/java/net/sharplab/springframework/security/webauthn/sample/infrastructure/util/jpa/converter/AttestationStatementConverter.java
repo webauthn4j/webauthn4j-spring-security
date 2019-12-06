@@ -31,12 +31,14 @@ public class AttestationStatementConverter implements AttributeConverter<Attesta
 
     @Override
     public String convertToDatabaseColumn(AttestationStatement attribute) {
-        return Base64UrlUtil.encodeToString(cborConverter.writeValueAsBytes(attribute));
+        AttestationStatementEnvelope container = new AttestationStatementEnvelope(attribute);
+        return Base64UrlUtil.encodeToString(cborConverter.writeValueAsBytes(container));
     }
 
     @Override
     public AttestationStatement convertToEntityAttribute(String dbData) {
         byte[] data = Base64UrlUtil.decode(dbData);
-        return cborConverter.readValue(data, AttestationStatement.class);
+        AttestationStatementEnvelope container = cborConverter.readValue(data, AttestationStatementEnvelope.class);
+        return container.getAttestationStatement();
     }
 }

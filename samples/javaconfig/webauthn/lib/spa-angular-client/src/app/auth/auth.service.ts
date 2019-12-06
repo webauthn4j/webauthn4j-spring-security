@@ -16,7 +16,7 @@
 
 import {Injectable} from '@angular/core';
 import {HttpClient} from "@angular/common/http";
-import {base64url} from "rfc4648";
+import * as base64url from "../webauthn/base64url";
 import {WebAuthnService} from "../webauthn/web-authn.service";
 import {Observable} from "rxjs/internal/Observable";
 import {from} from 'rxjs';
@@ -60,10 +60,10 @@ export class AuthService {
 
       if(publicKeyCredential.response as AuthenticatorAttestationResponse){
         let formData = new FormData();
-        formData.set(data.serverOptions.parameters.credentialId, base64url.stringify(new Uint8Array(publicKeyCredential.rawId)));
-        formData.set(data.serverOptions.parameters.clientDataJSON, base64url.stringify(new Uint8Array(clientDataJSON)));
-        formData.set(data.serverOptions.parameters.authenticatorData, base64url.stringify(new Uint8Array(authenticatorData)));
-        formData.set(data.serverOptions.parameters.signature, base64url.stringify(new Uint8Array(signature)));
+        formData.set(data.serverOptions.parameters.credentialId, base64url.encodeBase64url(new Uint8Array(publicKeyCredential.rawId)));
+        formData.set(data.serverOptions.parameters.clientDataJSON, base64url.encodeBase64url(new Uint8Array(clientDataJSON)));
+        formData.set(data.serverOptions.parameters.authenticatorData, base64url.encodeBase64url(new Uint8Array(authenticatorData)));
+        formData.set(data.serverOptions.parameters.signature, base64url.encodeBase64url(new Uint8Array(signature)));
 
         return this.http.post(this.loginUrl, formData, {responseType: 'text'});
       }
