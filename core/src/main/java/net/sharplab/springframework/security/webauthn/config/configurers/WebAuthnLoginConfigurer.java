@@ -16,7 +16,7 @@
 
 package net.sharplab.springframework.security.webauthn.config.configurers;
 
-import com.webauthn4j.converter.util.JsonConverter;
+import com.webauthn4j.converter.util.ObjectConverter;
 import net.sharplab.springframework.security.webauthn.WebAuthnProcessingFilter;
 import net.sharplab.springframework.security.webauthn.challenge.ChallengeRepository;
 import net.sharplab.springframework.security.webauthn.endpoint.OptionsEndpointFilter;
@@ -83,7 +83,7 @@ public final class WebAuthnLoginConfigurer<H extends HttpSecurityBuilder<H>> ext
     //~ Instance fields
     // ================================================================================================
     private OptionsProvider optionsProvider = null;
-    private JsonConverter jsonConverter = null;
+    private ObjectConverter objectConverter = null;
     private ServerPropertyProvider serverPropertyProvider = null;
     private String usernameParameter = null;
     private String passwordParameter = null;
@@ -115,10 +115,10 @@ public final class WebAuthnLoginConfigurer<H extends HttpSecurityBuilder<H>> ext
             optionsProvider = WebAuthnConfigurerUtil.getOptionsProvider(http);
         }
         http.setSharedObject(OptionsProvider.class, optionsProvider);
-        if (jsonConverter == null) {
-            jsonConverter = WebAuthnConfigurerUtil.getJsonConverter(http);
+        if (objectConverter == null) {
+            objectConverter = WebAuthnConfigurerUtil.getObjectConverter(http);
         }
-        http.setSharedObject(JsonConverter.class, jsonConverter);
+        http.setSharedObject(ObjectConverter.class, objectConverter);
         if (serverPropertyProvider == null) {
             serverPropertyProvider = WebAuthnConfigurerUtil.getServerPropertyProvider(http);
         }
@@ -181,14 +181,14 @@ public final class WebAuthnLoginConfigurer<H extends HttpSecurityBuilder<H>> ext
     }
 
     /**
-     * Specifies the {@link JsonConverter} to be used.
+     * Specifies the {@link ObjectConverter} to be used.
      *
-     * @param jsonConverter the {@link JsonConverter}
+     * @param objectConverter the {@link ObjectConverter}
      * @return the {@link WebAuthnLoginConfigurer} for additional customization
      */
-    public WebAuthnLoginConfigurer<H> jsonConverter(JsonConverter jsonConverter) {
-        Assert.notNull(jsonConverter, "jsonConverter must not be null");
-        this.jsonConverter = jsonConverter;
+    public WebAuthnLoginConfigurer<H> objectConverter(ObjectConverter objectConverter) {
+        Assert.notNull(objectConverter, "objectConverter must not be null");
+        this.objectConverter = objectConverter;
         return this;
     }
 
@@ -386,7 +386,7 @@ public final class WebAuthnLoginConfigurer<H extends HttpSecurityBuilder<H>> ext
             ApplicationContext applicationContext = http.getSharedObject(ApplicationContext.class);
             String[] beanNames = applicationContext.getBeanNamesForType(OptionsEndpointFilter.class);
             if (beanNames.length == 0) {
-                optionsEndpointFilter = new OptionsEndpointFilter(optionsProvider, jsonConverter);
+                optionsEndpointFilter = new OptionsEndpointFilter(optionsProvider, objectConverter);
                 optionsEndpointFilter.setFilterProcessesUrl(processingUrl);
             } else {
                 optionsEndpointFilter = applicationContext.getBean(OptionsEndpointFilter.class);

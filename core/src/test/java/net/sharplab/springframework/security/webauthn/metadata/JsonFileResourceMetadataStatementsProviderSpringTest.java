@@ -18,7 +18,7 @@ package net.sharplab.springframework.security.webauthn.metadata;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.cbor.CBORFactory;
-import com.webauthn4j.converter.util.JsonConverter;
+import com.webauthn4j.converter.util.ObjectConverter;
 import com.webauthn4j.metadata.converter.jackson.WebAuthnMetadataJSONModule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -55,18 +55,18 @@ public class JsonFileResourceMetadataStatementsProviderSpringTest {
     @Configuration
     public static class Config {
 
-        private JsonConverter jsonConverter;
+        private ObjectConverter objectConverter;
 
         public Config() {
             ObjectMapper jsonMapper = new ObjectMapper();
             jsonMapper.registerModule(new WebAuthnMetadataJSONModule());
             ObjectMapper cborMapper = new ObjectMapper(new CBORFactory());
-            jsonConverter = new JsonConverter(jsonMapper, cborMapper);
+            objectConverter = new ObjectConverter(jsonMapper, cborMapper);
         }
 
         @Bean
         public JsonFileResourceMetadataStatementsProvider jsonFileResourceMetadataItemListProvider(ResourceLoader resourceLoader) throws IOException {
-            JsonFileResourceMetadataStatementsProvider provider = new JsonFileResourceMetadataStatementsProvider(jsonConverter);
+            JsonFileResourceMetadataStatementsProvider provider = new JsonFileResourceMetadataStatementsProvider(objectConverter);
             Resource[] resources = ResourcePatternUtils.getResourcePatternResolver(resourceLoader).getResources("classpath:metadata/test-tools/*.json");
             provider.setResources(Arrays.asList(resources));
             return provider;

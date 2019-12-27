@@ -16,13 +16,13 @@
 
 package net.sharplab.springframework.security.webauthn;
 
+import com.webauthn4j.WebAuthnManager;
 import com.webauthn4j.authenticator.Authenticator;
-import com.webauthn4j.data.WebAuthnAuthenticationContext;
+import com.webauthn4j.data.AuthenticationParameters;
+import com.webauthn4j.data.AuthenticationRequest;
 import com.webauthn4j.util.exception.WebAuthnException;
-import com.webauthn4j.validator.WebAuthnAuthenticationContextValidator;
 import net.sharplab.springframework.security.webauthn.authenticator.WebAuthnAuthenticatorService;
 import net.sharplab.springframework.security.webauthn.exception.CredentialIdNotFoundException;
-import net.sharplab.springframework.security.webauthn.request.WebAuthnAuthenticationRequest;
 import net.sharplab.springframework.security.webauthn.userdetails.WebAuthnUserDetails;
 import net.sharplab.springframework.security.webauthn.userdetails.WebAuthnUserDetailsService;
 import net.sharplab.springframework.security.webauthn.util.ExceptionUtil;
@@ -55,7 +55,7 @@ public class WebAuthnAuthenticationProvider implements AuthenticationProvider {
     protected MessageSourceAccessor messages = SpringSecurityWebAuthnMessageSource.getAccessor();
     private WebAuthnUserDetailsService userDetailsService;
     private WebAuthnAuthenticatorService authenticatorService;
-    private WebAuthnAuthenticationContextValidator authenticationContextValidator;
+    private WebAuthnManager webAuthnManager;
     private boolean forcePrincipalAsString = false;
     private boolean hideCredentialIdNotFoundExceptions = true;
     private UserDetailsChecker preAuthenticationChecks = new DefaultPreAuthenticationChecks();
@@ -68,15 +68,15 @@ public class WebAuthnAuthenticationProvider implements AuthenticationProvider {
     public WebAuthnAuthenticationProvider(
             WebAuthnUserDetailsService userDetailsService,
             WebAuthnAuthenticatorService authenticatorService,
-            WebAuthnAuthenticationContextValidator authenticationContextValidator) {
+            WebAuthnManager webAuthnManager) {
 
         Assert.notNull(userDetailsService, "userDetailsService must not be null");
         Assert.notNull(authenticatorService, "authenticatorService must not be null");
-        Assert.notNull(authenticationContextValidator, "authenticationContextValidator must not be null");
+        Assert.notNull(webAuthnManager, "webAuthnManager must not be null");
 
         this.userDetailsService = userDetailsService;
         this.authenticatorService = authenticatorService;
-        this.authenticationContextValidator = authenticationContextValidator;
+        this.webAuthnManager = webAuthnManager;
     }
 
     // ~ Methods
@@ -93,12 +93,13 @@ public class WebAuthnAuthenticationProvider implements AuthenticationProvider {
 
         WebAuthnAssertionAuthenticationToken authenticationToken = (WebAuthnAssertionAuthenticationToken) authentication;
 
-        WebAuthnAuthenticationRequest credentials = authenticationToken.getCredentials();
+        net.sharplab.springframework.security.webauthn.request.WebAuthnAuthenticationRequest credentials =
+                authenticationToken.getCredentials();
         if (credentials == null) {
             logger.debug("Authentication failed: no credentials provided");
 
             throw new BadCredentialsException(messages.getMessage(
-                    "WebAuthnAuthenticationContextValidator.badCredentials",
+                    "WebAuthnAuthenticationProvider.badCredentials",
                     "Bad credentials"));
         }
 
@@ -141,24 +142,27 @@ public class WebAuthnAuthenticationProvider implements AuthenticationProvider {
 
     void doAuthenticate(WebAuthnAssertionAuthenticationToken authenticationToken, Authenticator authenticator, WebAuthnUserDetails user) {
 
-        WebAuthnAuthenticationRequest credentials = authenticationToken.getCredentials();
+        net.sharplab.springframework.security.webauthn.request.WebAuthnAuthenticationRequest credentials = authenticationToken.getCredentials();
 
         boolean userVerificationRequired = isUserVerificationRequired(user, credentials);
 
-        WebAuthnAuthenticationContext authenticationContext = new WebAuthnAuthenticationContext(
+        AuthenticationRequest authenticationRequest = new AuthenticationRequest(
                 credentials.getCredentialId(),
-                credentials.getClientDataJSON(),
                 credentials.getAuthenticatorData(),
-                credentials.getSignature(),
+                credentials.getClientDataJSON(),
                 credentials.getClientExtensionsJSON(),
+                credentials.getSignature()
+        );
+        AuthenticationParameters authenticationParameters = new AuthenticationParameters(
                 credentials.getServerProperty(),
+                authenticator,
                 userVerificationRequired,
                 credentials.isUserPresenceRequired(),
                 credentials.getExpectedAuthenticationExtensionIds()
         );
 
         try {
-            authenticationContextValidator.validate(authenticationContext, authenticator);
+            webAuthnManager.validate(authenticationRequest, authenticationParameters);
         } catch (WebAuthnException e) {
             throw ExceptionUtil.wrapWithAuthenticationException(e);
         }
@@ -246,7 +250,7 @@ public class WebAuthnAuthenticationProvider implements AuthenticationProvider {
         return user;
     }
 
-    boolean isUserVerificationRequired(WebAuthnUserDetails user, WebAuthnAuthenticationRequest credentials) {
+    boolean isUserVerificationRequired(WebAuthnUserDetails user, net.sharplab.springframework.security.webauthn.request.WebAuthnAuthenticationRequest credentials) {
 
         Authentication currentAuthentication = SecurityContextHolder.getContext().getAuthentication();
 

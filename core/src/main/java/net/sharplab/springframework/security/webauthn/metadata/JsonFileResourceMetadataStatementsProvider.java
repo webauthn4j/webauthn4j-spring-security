@@ -17,6 +17,7 @@
 package net.sharplab.springframework.security.webauthn.metadata;
 
 import com.webauthn4j.converter.util.JsonConverter;
+import com.webauthn4j.converter.util.ObjectConverter;
 import com.webauthn4j.data.attestation.authenticator.AAGUID;
 import com.webauthn4j.metadata.MetadataStatementsProvider;
 import com.webauthn4j.metadata.data.statement.MetadataStatement;
@@ -49,9 +50,9 @@ public class JsonFileResourceMetadataStatementsProvider implements MetadataState
     // ~ Constructors
     // ===================================================================================================
 
-    public JsonFileResourceMetadataStatementsProvider(JsonConverter jsonConverter) {
-        Assert.notNull(jsonConverter, "jsonConverter must not be null");
-        this.jsonConverter = jsonConverter;
+    public JsonFileResourceMetadataStatementsProvider(ObjectConverter objectConverter) {
+        Assert.notNull(objectConverter, "objectConverter must not be null");
+        this.jsonConverter = objectConverter.getJsonConverter();
     }
 
     // ~ Methods

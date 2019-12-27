@@ -19,6 +19,7 @@ package net.sharplab.springframework.security.fido.server.endpoint;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.webauthn4j.converter.CollectedClientDataConverter;
 import com.webauthn4j.converter.util.JsonConverter;
+import com.webauthn4j.converter.util.ObjectConverter;
 import com.webauthn4j.data.UserVerificationRequirement;
 import com.webauthn4j.data.client.CollectedClientData;
 import com.webauthn4j.server.ServerProperty;
@@ -61,30 +62,30 @@ public class FidoServerAssertionResultEndpointFilter extends AbstractAuthenticat
     private List<String> expectedAuthenticationExtensionIds = Collections.emptyList();
 
     public FidoServerAssertionResultEndpointFilter(
-            JsonConverter jsonConverter,
+            ObjectConverter objectConverter,
             ServerPropertyProvider serverPropertyProvider,
             RequestMatcher requiresAuthenticationRequestMatcher) {
         super(requiresAuthenticationRequestMatcher);
 
-        this.jsonConverter = jsonConverter;
+        this.jsonConverter = objectConverter.getJsonConverter();
         this.serverPropertyProvider = serverPropertyProvider;
         this.serverPublicKeyCredentialValidator = new ServerPublicKeyCredentialValidator<>();
 
-        this.setAuthenticationSuccessHandler(new FidoServerAssertionResultEndpointSuccessHandler(jsonConverter));
-        this.setAuthenticationFailureHandler(new FidoServerAssertionResultEndpointFailureHandler(jsonConverter));
+        this.setAuthenticationSuccessHandler(new FidoServerAssertionResultEndpointSuccessHandler(objectConverter));
+        this.setAuthenticationFailureHandler(new FidoServerAssertionResultEndpointFailureHandler(objectConverter));
 
-        this.collectedClientDataConverter = new CollectedClientDataConverter(jsonConverter);
-        this.serverEndpointFilterUtil = new ServerEndpointFilterUtil(jsonConverter);
+        this.collectedClientDataConverter = new CollectedClientDataConverter(objectConverter);
+        this.serverEndpointFilterUtil = new ServerEndpointFilterUtil(objectConverter);
 
         checkConfig();
     }
 
-    public FidoServerAssertionResultEndpointFilter(JsonConverter jsonConverter, ServerPropertyProvider serverPropertyProvider, String defaultFilterProcessesUrl) {
-        this(jsonConverter, serverPropertyProvider, new AntPathRequestMatcher(defaultFilterProcessesUrl, HttpMethod.POST.name()));
+    public FidoServerAssertionResultEndpointFilter(ObjectConverter objectConverter, ServerPropertyProvider serverPropertyProvider, String defaultFilterProcessesUrl) {
+        this(objectConverter, serverPropertyProvider, new AntPathRequestMatcher(defaultFilterProcessesUrl, HttpMethod.POST.name()));
     }
 
-    public FidoServerAssertionResultEndpointFilter(JsonConverter jsonConverter, ServerPropertyProvider serverPropertyProvider) {
-        this(jsonConverter, serverPropertyProvider, new AntPathRequestMatcher(FILTER_URL, HttpMethod.POST.name()));
+    public FidoServerAssertionResultEndpointFilter(ObjectConverter objectConverter, ServerPropertyProvider serverPropertyProvider) {
+        this(objectConverter, serverPropertyProvider, new AntPathRequestMatcher(FILTER_URL, HttpMethod.POST.name()));
     }
 
     @Override

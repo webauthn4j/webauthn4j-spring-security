@@ -18,6 +18,7 @@ package net.sharplab.springframework.security.webauthn.sample.infrastructure.uti
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.webauthn4j.converter.util.JsonConverter;
+import com.webauthn4j.converter.util.ObjectConverter;
 import com.webauthn4j.data.extension.client.RegistrationExtensionClientOutput;
 
 import javax.persistence.AttributeConverter;
@@ -25,7 +26,11 @@ import java.util.Map;
 
 public class ClientExtensionsConverter<T> implements AttributeConverter<Map<String, RegistrationExtensionClientOutput>, String> {
 
-    private JsonConverter jsonConverter = new JsonConverter(); //TODO
+    private JsonConverter jsonConverter;
+
+    public ClientExtensionsConverter(ObjectConverter objectConverter){
+        this.jsonConverter = objectConverter.getJsonConverter();
+    }
 
     @Override
     public String convertToDatabaseColumn(Map<String, RegistrationExtensionClientOutput> attribute) {

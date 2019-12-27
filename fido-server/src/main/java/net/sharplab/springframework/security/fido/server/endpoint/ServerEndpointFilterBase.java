@@ -16,7 +16,7 @@
 
 package net.sharplab.springframework.security.fido.server.endpoint;
 
-import com.webauthn4j.converter.util.JsonConverter;
+import com.webauthn4j.converter.util.ObjectConverter;
 import com.webauthn4j.util.exception.WebAuthnException;
 import net.sharplab.springframework.security.webauthn.util.ExceptionUtil;
 import org.springframework.context.support.MessageSourceAccessor;
@@ -40,7 +40,7 @@ public abstract class ServerEndpointFilterBase extends GenericFilterBean {
     //~ Instance fields
     // ================================================================================================
     protected MessageSourceAccessor messages = SpringSecurityMessageSource.getAccessor();
-    protected JsonConverter jsonConverter;
+    protected ObjectConverter objectConverter;
     protected ServerEndpointFilterUtil serverEndpointFilterUtil;
     /**
      * Url this filter should get activated on.
@@ -50,10 +50,10 @@ public abstract class ServerEndpointFilterBase extends GenericFilterBean {
 
     public ServerEndpointFilterBase(
             String filterProcessesUrl,
-            JsonConverter jsonConverter) {
+            ObjectConverter objectConverter) {
         this.filterProcessesUrl = filterProcessesUrl;
-        this.jsonConverter = jsonConverter;
-        this.serverEndpointFilterUtil = new ServerEndpointFilterUtil(this.jsonConverter);
+        this.objectConverter = objectConverter;
+        this.serverEndpointFilterUtil = new ServerEndpointFilterUtil(this.objectConverter);
         checkConfig();
     }
 
@@ -67,7 +67,7 @@ public abstract class ServerEndpointFilterBase extends GenericFilterBean {
 
     private void checkConfig() {
         Assert.notNull(filterProcessesUrl, "filterProcessesUrl must not be null");
-        Assert.notNull(jsonConverter, "jsonConverter must not be null");
+        Assert.notNull(objectConverter, "objectConverter must not be null");
     }
 
     @Override

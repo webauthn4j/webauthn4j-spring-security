@@ -19,7 +19,7 @@ package net.sharplab.springframework.security.fido.server.endpoint;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.webauthn4j.converter.AttestationObjectConverter;
 import com.webauthn4j.converter.CollectedClientDataConverter;
-import com.webauthn4j.converter.util.JsonConverter;
+import com.webauthn4j.converter.util.ObjectConverter;
 import com.webauthn4j.data.attestation.AttestationObject;
 import com.webauthn4j.data.client.CollectedClientData;
 import net.sharplab.springframework.security.fido.server.validator.ServerPublicKeyCredentialValidator;
@@ -55,12 +55,12 @@ public class FidoServerAttestationResultEndpointFilter extends ServerEndpointFil
     };
 
     public FidoServerAttestationResultEndpointFilter(
-            JsonConverter jsonConverter,
+            ObjectConverter objectConverter,
             WebAuthnUserDetailsService webAuthnUserDetailsService,
             WebAuthnRegistrationRequestValidator webAuthnRegistrationRequestValidator) {
-        super(FILTER_URL, jsonConverter);
-        this.attestationObjectConverter = new AttestationObjectConverter(jsonConverter.getCborConverter());
-        this.collectedClientDataConverter = new CollectedClientDataConverter(jsonConverter);
+        super(FILTER_URL, objectConverter);
+        this.attestationObjectConverter = new AttestationObjectConverter(objectConverter);
+        this.collectedClientDataConverter = new CollectedClientDataConverter(objectConverter);
         this.serverPublicKeyCredentialValidator = new ServerPublicKeyCredentialValidator<>();
 
         this.webAuthnUserDetailsService = webAuthnUserDetailsService;
@@ -89,7 +89,7 @@ public class FidoServerAttestationResultEndpointFilter extends ServerEndpointFil
             throw new UncheckedIOException(e);
         }
         ServerPublicKeyCredential<ServerAuthenticatorAttestationResponse> credential =
-                this.jsonConverter.readValue(inputStream, credentialTypeRef);
+                this.objectConverter.getJsonConverter().readValue(inputStream, credentialTypeRef);
         serverPublicKeyCredentialValidator.validate(credential);
         ServerAuthenticatorAttestationResponse response = credential.getResponse();
         CollectedClientData collectedClientData = collectedClientDataConverter.convert(response.getClientDataJSON());

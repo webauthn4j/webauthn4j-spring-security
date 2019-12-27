@@ -16,7 +16,7 @@
 
 package net.sharplab.springframework.security.webauthn.endpoint;
 
-import com.webauthn4j.converter.util.JsonConverter;
+import com.webauthn4j.converter.util.ObjectConverter;
 import net.sharplab.springframework.security.webauthn.options.AssertionOptions;
 import net.sharplab.springframework.security.webauthn.options.AttestationOptions;
 import net.sharplab.springframework.security.webauthn.options.OptionsProvider;
@@ -39,11 +39,11 @@ import static org.mockito.Mockito.*;
 
 public class OptionsEndpointFilterTest {
 
-    private JsonConverter jsonConverter = new JsonConverter();
+    private ObjectConverter objectConverter = new ObjectConverter();
 
     @Test
     public void getter_setter_test() {
-        OptionsEndpointFilter optionsEndpointFilter = new OptionsEndpointFilter(mock(OptionsProvider.class), jsonConverter);
+        OptionsEndpointFilter optionsEndpointFilter = new OptionsEndpointFilter(mock(OptionsProvider.class), objectConverter);
         MFATokenEvaluator mfaTokenEvaluator = new MFATokenEvaluatorImpl();
         AuthenticationTrustResolver trustResolver = new AuthenticationTrustResolverImpl();
         optionsEndpointFilter.setMFATokenEvaluator(mfaTokenEvaluator);
@@ -54,7 +54,7 @@ public class OptionsEndpointFilterTest {
 
     @Test
     public void afterPropertiesSet_test() {
-        OptionsEndpointFilter optionsEndpointFilter = new OptionsEndpointFilter(mock(OptionsProvider.class), jsonConverter);
+        OptionsEndpointFilter optionsEndpointFilter = new OptionsEndpointFilter(mock(OptionsProvider.class), objectConverter);
         assertThatCode(optionsEndpointFilter::afterPropertiesSet).doesNotThrowAnyException();
     }
 
@@ -65,7 +65,7 @@ public class OptionsEndpointFilterTest {
         when(optionsProvider.getAttestationOptions(any(), any(), any())).thenReturn(attestationOptions);
         AssertionOptions assertionOptions = new AssertionOptions(null, null, null, null, null, null);
         when(optionsProvider.getAssertionOptions(any(), any(), any())).thenReturn(assertionOptions);
-        OptionsEndpointFilter optionsEndpointFilter = new OptionsEndpointFilter(optionsProvider, jsonConverter);
+        OptionsEndpointFilter optionsEndpointFilter = new OptionsEndpointFilter(optionsProvider, objectConverter);
         MFATokenEvaluator mfaTokenEvaluator = new MFATokenEvaluatorImpl();
         AuthenticationTrustResolver trustResolver = new AuthenticationTrustResolverImpl();
         optionsEndpointFilter.setMFATokenEvaluator(mfaTokenEvaluator);
@@ -84,7 +84,7 @@ public class OptionsEndpointFilterTest {
     public void doFilter_with_error_test() throws IOException, ServletException {
         OptionsProvider optionsProvider = mock(OptionsProvider.class);
         doThrow(new RuntimeException()).when(optionsProvider).getAttestationOptions(any(), any(), any());
-        OptionsEndpointFilter optionsEndpointFilter = new OptionsEndpointFilter(optionsProvider, jsonConverter);
+        OptionsEndpointFilter optionsEndpointFilter = new OptionsEndpointFilter(optionsProvider, objectConverter);
         MFATokenEvaluator mfaTokenEvaluator = new MFATokenEvaluatorImpl();
         AuthenticationTrustResolver trustResolver = new AuthenticationTrustResolverImpl();
         optionsEndpointFilter.setMFATokenEvaluator(mfaTokenEvaluator);
@@ -102,7 +102,7 @@ public class OptionsEndpointFilterTest {
     @Test
     public void writeErrorResponse_with_RuntimeException_test() throws IOException {
         OptionsProvider optionsProvider = mock(OptionsProvider.class);
-        OptionsEndpointFilter optionsEndpointFilter = new OptionsEndpointFilter(optionsProvider, jsonConverter);
+        OptionsEndpointFilter optionsEndpointFilter = new OptionsEndpointFilter(optionsProvider, objectConverter);
 
         MockHttpServletResponse response = new MockHttpServletResponse();
         RuntimeException exception = new RuntimeException();
@@ -113,7 +113,7 @@ public class OptionsEndpointFilterTest {
     @Test
     public void writeErrorResponse_with_InsufficientAuthenticationException_test() throws IOException {
         OptionsProvider optionsProvider = mock(OptionsProvider.class);
-        OptionsEndpointFilter optionsEndpointFilter = new OptionsEndpointFilter(optionsProvider, jsonConverter);
+        OptionsEndpointFilter optionsEndpointFilter = new OptionsEndpointFilter(optionsProvider, objectConverter);
 
         MockHttpServletResponse response = new MockHttpServletResponse();
         InsufficientAuthenticationException exception = new InsufficientAuthenticationException(null);

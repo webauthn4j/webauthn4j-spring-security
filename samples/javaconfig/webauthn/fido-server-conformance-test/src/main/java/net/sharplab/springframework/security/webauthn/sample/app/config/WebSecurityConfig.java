@@ -16,9 +16,9 @@
 
 package net.sharplab.springframework.security.webauthn.sample.app.config;
 
+import com.webauthn4j.WebAuthnManager;
 import com.webauthn4j.data.PublicKeyCredentialType;
 import com.webauthn4j.data.attestation.statement.COSEAlgorithmIdentifier;
-import com.webauthn4j.validator.WebAuthnAuthenticationContextValidator;
 import net.sharplab.springframework.security.webauthn.WebAuthnRegistrationRequestValidator;
 import net.sharplab.springframework.security.webauthn.authenticator.WebAuthnAuthenticatorService;
 import net.sharplab.springframework.security.webauthn.config.configurers.WebAuthnAuthenticationProviderConfigurer;
@@ -43,8 +43,6 @@ import org.springframework.security.web.authentication.AuthenticationFailureHand
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
 import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
-
-import java.util.Collections;
 
 import static net.sharplab.springframework.security.fido.server.config.configurer.FidoServerConfigurer.fidoServer;
 import static net.sharplab.springframework.security.webauthn.config.configurers.WebAuthnConfigurer.webAuthn;
@@ -86,7 +84,7 @@ WebSecurityConfig extends WebSecurityConfigurerAdapter {
     private WebAuthnAuthenticatorService authenticatorService;
 
     @Autowired
-    private WebAuthnAuthenticationContextValidator webAuthnAuthenticationContextValidator;
+    private WebAuthnManager webAuthnManager;
 
     @Autowired
     private WebAuthnRegistrationRequestValidator webAuthnRegistrationRequestValidator;
@@ -96,7 +94,7 @@ WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     public void configure(AuthenticationManagerBuilder builder) throws Exception {
-        builder.apply(new WebAuthnAuthenticationProviderConfigurer<>(userDetailsService, authenticatorService, webAuthnAuthenticationContextValidator));
+        builder.apply(new WebAuthnAuthenticationProviderConfigurer<>(userDetailsService, authenticatorService, webAuthnManager));
         builder.apply(new MultiFactorAuthenticationProviderConfigurer<>(daoAuthenticationProvider));
     }
 

@@ -19,17 +19,15 @@ package net.sharplab.springframework.security.webauthn.sample.app.config;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.jsontype.NamedType;
 import com.fasterxml.jackson.dataformat.cbor.CBORFactory;
+import com.webauthn4j.WebAuthnManager;
 import com.webauthn4j.anchor.TrustAnchorsProvider;
 import com.webauthn4j.anchor.TrustAnchorsResolver;
 import com.webauthn4j.anchor.TrustAnchorsResolverImpl;
-import com.webauthn4j.converter.util.CborConverter;
-import com.webauthn4j.converter.util.JsonConverter;
+import com.webauthn4j.converter.util.ObjectConverter;
 import com.webauthn4j.metadata.*;
 import com.webauthn4j.metadata.converter.jackson.WebAuthnMetadataJSONModule;
 import com.webauthn4j.util.Base64Util;
 import com.webauthn4j.util.CertificateUtil;
-import com.webauthn4j.validator.WebAuthnAuthenticationContextValidator;
-import com.webauthn4j.validator.WebAuthnRegistrationContextValidator;
 import com.webauthn4j.validator.attestation.statement.androidkey.AndroidKeyAttestationStatementValidator;
 import com.webauthn4j.validator.attestation.statement.androidsafetynet.AndroidSafetyNetAttestationStatementValidator;
 import com.webauthn4j.validator.attestation.statement.none.NoneAttestationStatementValidator;
@@ -80,15 +78,17 @@ import org.springframework.web.client.RestTemplate;
 
 import java.io.IOException;
 import java.security.cert.X509Certificate;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.LinkedHashMap;
+import java.util.List;
 
 @Configuration
 public class WebSecurityBeanConfig {
 
     @Bean
-    public WebAuthnRegistrationRequestValidator webAuthnRegistrationRequestValidator(WebAuthnRegistrationContextValidator registrationContextValidator, ServerPropertyProvider serverPropertyProvider) {
-        WebAuthnRegistrationRequestValidator webAuthnRegistrationRequestValidator = new WebAuthnRegistrationRequestValidator(registrationContextValidator, serverPropertyProvider);
-        return webAuthnRegistrationRequestValidator;
+    public WebAuthnRegistrationRequestValidator webAuthnRegistrationRequestValidator(WebAuthnManager webAuthnManager, ServerPropertyProvider serverPropertyProvider) {
+        return new WebAuthnRegistrationRequestValidator(webAuthnManager, serverPropertyProvider);
     }
 
     @Bean
@@ -117,14 +117,13 @@ public class WebSecurityBeanConfig {
     }
 
     @Bean
-    public WebAuthnRegistrationContextValidator webAuthnRegistrationContextValidator(
+    public WebAuthnManager webAuthnManager(
             CertPathTrustworthinessValidator certPathTrustworthinessValidator,
             FidoMdsMetadataValidator fidoMdsMetadataValidator,
-            JsonConverter jsonConverter,
-            CborConverter cborConverter
+            ObjectConverter objectConverter
     ) {
 
-        WebAuthnRegistrationContextValidator webAuthnRegistrationContextValidator = new WebAuthnRegistrationContextValidator(
+        WebAuthnManager webAuthnManager = new WebAuthnManager(
                 Arrays.asList(
                         new PackedAttestationStatementValidator(),
                         new FIDOU2FAttestationStatementValidator(),
@@ -136,11 +135,10 @@ public class WebSecurityBeanConfig {
                 certPathTrustworthinessValidator,
                 new DefaultECDAATrustworthinessValidator(),
                 new DefaultSelfAttestationTrustworthinessValidator(),
-                jsonConverter,
-                cborConverter
+                objectConverter
         );
-        webAuthnRegistrationContextValidator.getCustomRegistrationValidators().add(fidoMdsMetadataValidator);
-        return webAuthnRegistrationContextValidator;
+        webAuthnManager.getRegistrationDataValidator().getCustomRegistrationValidators().add(fidoMdsMetadataValidator);
+        return webAuthnManager;
     }
 
     @Bean
@@ -166,11 +164,6 @@ public class WebSecurityBeanConfig {
     }
 
     @Bean
-    public WebAuthnAuthenticationContextValidator webAuthnAuthenticationContextValidator(JsonConverter jsonConverter, CborConverter cborConverter) {
-        return new WebAuthnAuthenticationContextValidator(jsonConverter, cborConverter);
-    }
-
-    @Bean
     public MetadataItemsResolver fidoMdsMetadataItemsResolver(MetadataItemsProvider fidoMetadataItemsProvider){
         return new MetadataItemsResolverImpl(fidoMetadataItemsProvider);
     }
@@ -181,7 +174,7 @@ public class WebSecurityBeanConfig {
     }
 
     @Bean
-    public MetadataItemsProvider fidoMetadataItemsProvider(JsonConverter jsonConverter, HttpClient httpClient){
+    public MetadataItemsProvider fidoMetadataItemsProvider(ObjectConverter objectConverter, HttpClient httpClient){
         X509Certificate conformanceTestCertificate = CertificateUtil.generateX509Certificate(Base64Util.decode("MIICZzCCAe6gAwIBAgIPBF0rd3WL/GExWV/szYNVMAoGCCqGSM49BAMDMGcxCzAJBgNVBAYTAlVTMRYwFAYDVQQKDA1GSURPIEFsbGlhbmNlMScwJQYDVQQLDB5GQUtFIE1ldGFkYXRhIFRPQyBTaWduaW5nIEZBS0UxFzAVBgNVBAMMDkZBS0UgUm9vdCBGQUtFMB4XDTE3MDIwMTAwMDAwMFoXDTQ1MDEzMTIzNTk1OVowZzELMAkGA1UEBhMCVVMxFjAUBgNVBAoMDUZJRE8gQWxsaWFuY2UxJzAlBgNVBAsMHkZBS0UgTWV0YWRhdGEgVE9DIFNpZ25pbmcgRkFLRTEXMBUGA1UEAwwORkFLRSBSb290IEZBS0UwdjAQBgcqhkjOPQIBBgUrgQQAIgNiAARcVLd6r4fnNHzs5K2zfbg//4X9/oBqmsdRVtZ9iXhlgM9vFYaKviYtqmwkq0D3Lihg3qefeZgXXYi4dFgvzU7ZLBapSNM3CT8RDBe/MBJqsPwaRQbIsGmmItmt/ESNQD6jYDBeMAsGA1UdDwQEAwIBBjAPBgNVHRMBAf8EBTADAQH/MB0GA1UdDgQWBBTd95rIHO/hX9Oh69szXzD0ahmZWTAfBgNVHSMEGDAWgBTd95rIHO/hX9Oh69szXzD0ahmZWTAKBggqhkjOPQQDAwNnADBkAjBkP3L99KEXQzviJVGytDMWBmITMBYv1LgNXXiSilWixTyQqHrYrFpLvNFyPZQvS6sCMFMAOUCwAch/515XH0XlDbMgdIe2N4zzdY77TVwiHmsxTFWRT0FtS7fUk85c/LzSPQ=="));
         String[] urls = new String[]{
                 "https://fidoalliance.co.nz/mds/execute/24972a67c1d02c6a848f457c5ab1955f63148441e031e4d3d7eaa79e25ae6a46",
@@ -192,7 +185,7 @@ public class WebSecurityBeanConfig {
         };
         List<MetadataItemsProvider> list = new ArrayList<>();
         Arrays.stream(urls).map(url -> {
-            FidoMdsMetadataItemsProvider metadataItemsProvider = new FidoMdsMetadataItemsProvider(jsonConverter, httpClient, conformanceTestCertificate);
+            FidoMdsMetadataItemsProvider metadataItemsProvider = new FidoMdsMetadataItemsProvider(objectConverter, httpClient, conformanceTestCertificate);
             metadataItemsProvider.setFidoMetadataServiceEndpoint(url);
             return metadataItemsProvider;
         }).forEach(list::add);
@@ -200,12 +193,12 @@ public class WebSecurityBeanConfig {
     }
 
     @Bean
-    public MetadataStatementsProvider metadataStatementsProvider(MetadataItemsProvider metadataItemsProvider, ResourceLoader resourceLoader, JsonConverter jsonConverter) throws IOException {
+    public MetadataStatementsProvider metadataStatementsProvider(MetadataItemsProvider metadataItemsProvider, ResourceLoader resourceLoader, ObjectConverter objectConverter) throws IOException {
 
         List<MetadataStatementsProvider> list = new ArrayList<>();
         list.add(new MetadataItemsMetadataStatementsProvider(metadataItemsProvider));
 
-        JsonFileResourceMetadataStatementsProvider provider = new JsonFileResourceMetadataStatementsProvider(jsonConverter);
+        JsonFileResourceMetadataStatementsProvider provider = new JsonFileResourceMetadataStatementsProvider(objectConverter);
         Resource[] resources = ResourcePatternUtils.getResourcePatternResolver(resourceLoader).getResources("classpath:metadata/test-tools/*.json");
         provider.setResources(Arrays.asList(resources));
         list.add(provider);
@@ -239,19 +232,15 @@ public class WebSecurityBeanConfig {
     }
 
     @Bean
-    public JsonConverter jsonConverter() {
+    public ObjectConverter objectConverter(){
         ObjectMapper jsonMapper = new ObjectMapper();
         jsonMapper.registerModule(new WebAuthnMetadataJSONModule());
         jsonMapper.registerSubtypes(new NamedType(ExampleExtensionClientInput.class, ExampleExtensionClientInput.ID));
         ObjectMapper cborMapper = new ObjectMapper(new CBORFactory());
         cborMapper.registerSubtypes(new NamedType(ExampleExtensionAuthenticatorOutput.class, ExampleExtensionAuthenticatorOutput.ID));
-        return new JsonConverter(jsonMapper, cborMapper);
+        return new ObjectConverter(jsonMapper, cborMapper);
     }
 
-    @Bean
-    public CborConverter cborConverter(JsonConverter jsonConverter){
-        return jsonConverter.getCborConverter();
-    }
 
     @Bean
     public AuthenticationSuccessHandler authenticationSuccessHandler() {

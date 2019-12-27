@@ -16,10 +16,11 @@
 
 package net.sharplab.springframework.security.webauthn;
 
+import com.webauthn4j.WebAuthnManager;
 import com.webauthn4j.authenticator.Authenticator;
 import com.webauthn4j.authenticator.AuthenticatorImpl;
-import com.webauthn4j.data.WebAuthnAuthenticationContext;
-import com.webauthn4j.validator.WebAuthnAuthenticationContextValidator;
+import com.webauthn4j.data.AuthenticationParameters;
+import com.webauthn4j.data.AuthenticationRequest;
 import net.sharplab.springframework.security.webauthn.authenticator.WebAuthnAuthenticator;
 import net.sharplab.springframework.security.webauthn.authenticator.WebAuthnAuthenticatorService;
 import net.sharplab.springframework.security.webauthn.exception.BadChallengeException;
@@ -54,14 +55,14 @@ public class WebAuthnAuthenticationProviderTest {
 
     private WebAuthnAuthenticatorService authenticatorService = mock(WebAuthnAuthenticatorService.class);
 
-    private WebAuthnAuthenticationContextValidator authenticationContextValidator = mock(WebAuthnAuthenticationContextValidator.class);
+    private WebAuthnManager webAuthnManager = mock(WebAuthnManager.class);
 
     private WebAuthnAuthenticationProvider authenticationProvider
-            = new WebAuthnAuthenticationProvider(userDetailsService, authenticatorService, authenticationContextValidator);
+            = new WebAuthnAuthenticationProvider(userDetailsService, authenticatorService, webAuthnManager);
 
     @Before
     public void setup() {
-        authenticationProvider = new WebAuthnAuthenticationProvider(userDetailsService, authenticatorService, authenticationContextValidator);
+        authenticationProvider = new WebAuthnAuthenticationProvider(userDetailsService, authenticatorService, webAuthnManager);
     }
 
     /**
@@ -101,17 +102,18 @@ public class WebAuthnAuthenticationProviderTest {
         when(authenticator.getAttestedCredentialData().getCredentialId()).thenReturn(credentialId);
 
         //When
-        WebAuthnAuthenticationRequest credential = mock(WebAuthnAuthenticationRequest.class);
+        net.sharplab.springframework.security.webauthn.request.WebAuthnAuthenticationRequest credential = mock(net.sharplab.springframework.security.webauthn.request.WebAuthnAuthenticationRequest.class);
         when(credential.getCredentialId()).thenReturn(credentialId);
         when(userDetailsService.loadUserByCredentialId(credentialId)).thenReturn(user);
         Authentication token = new WebAuthnAssertionAuthenticationToken(credential);
         Authentication authenticatedToken = authenticationProvider.authenticate(token);
 
-        ArgumentCaptor<WebAuthnAuthenticationContext> captor = ArgumentCaptor.forClass(WebAuthnAuthenticationContext.class);
-        verify(authenticationContextValidator).validate(captor.capture(), any());
-        WebAuthnAuthenticationContext authenticationContext = captor.getValue();
+        ArgumentCaptor<AuthenticationRequest> requestCaptor = ArgumentCaptor.forClass(AuthenticationRequest.class);
+        ArgumentCaptor<AuthenticationParameters> parameterCaptor = ArgumentCaptor.forClass(AuthenticationParameters.class);
+        verify(webAuthnManager).validate(requestCaptor.capture(), parameterCaptor.capture());
+        AuthenticationParameters authenticationParameters = parameterCaptor.getValue();
 
-        assertThat(authenticationContext.getExpectedExtensionIds()).isEqualTo(credential.getExpectedAuthenticationExtensionIds());
+        assertThat(authenticationParameters.getExpectedExtensionIds()).isEqualTo(credential.getExpectedAuthenticationExtensionIds());
 
         assertThat(authenticatedToken.getPrincipal()).isInstanceOf(WebAuthnUserDetailsImpl.class);
         assertThat(authenticatedToken.getCredentials()).isEqualTo(credential);
@@ -165,7 +167,7 @@ public class WebAuthnAuthenticationProviderTest {
                 Collections.singletonList(grantedAuthority));
         when(authenticator.getAttestedCredentialData().getCredentialId()).thenReturn(credentialId);
 
-        doThrow(com.webauthn4j.validator.exception.BadChallengeException.class).when(authenticationContextValidator).validate(any(), any());
+        doThrow(com.webauthn4j.validator.exception.BadChallengeException.class).when(webAuthnManager).validate((AuthenticationRequest) any(), any());
 
         //When
         WebAuthnAuthenticationRequest credential = mock(WebAuthnAuthenticationRequest.class);

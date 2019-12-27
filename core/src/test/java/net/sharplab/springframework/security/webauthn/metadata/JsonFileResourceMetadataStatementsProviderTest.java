@@ -17,7 +17,7 @@
 package net.sharplab.springframework.security.webauthn.metadata;
 
 
-import com.webauthn4j.converter.util.JsonConverter;
+import com.webauthn4j.converter.util.ObjectConverter;
 import com.webauthn4j.data.attestation.authenticator.AAGUID;
 import com.webauthn4j.metadata.data.statement.MetadataStatement;
 import org.junit.Test;
@@ -33,9 +33,9 @@ import static org.mockito.Mockito.when;
 
 public class JsonFileResourceMetadataStatementsProviderTest {
 
-    private JsonConverter jsonConverter = new JsonConverter();
+    private ObjectConverter objectConverter = new ObjectConverter();
 
-    private JsonFileResourceMetadataStatementsProvider target = new JsonFileResourceMetadataStatementsProvider(jsonConverter);
+    private JsonFileResourceMetadataStatementsProvider target = new JsonFileResourceMetadataStatementsProvider(objectConverter);
 
     @Test(expected = IllegalArgumentException.class)
     public void resources_not_configured_test() {

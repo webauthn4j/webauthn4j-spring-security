@@ -16,15 +16,21 @@
 
 package net.sharplab.springframework.security.webauthn.exception;
 
-/**
- * Thrown if malicious data is specified
- */
-public class MaliciousDataException extends ValidationException {
-    public MaliciousDataException(String message, Throwable cause) {
-        super(message, cause);
-    }
+import org.junit.Test;
 
-    public MaliciousDataException(String message) {
-        super(message);
+import static org.assertj.core.api.Assertions.assertThatCode;
+
+@SuppressWarnings("ThrowableNotThrown")
+public class InconsistentClientDataTypeExceptionTest {
+
+    private RuntimeException cause = new RuntimeException();
+
+    @Test
+    public void test() {
+
+        assertThatCode(() -> {
+            new InconsistentClientDataTypeException("dummy", cause);
+            new InconsistentClientDataTypeException("dummy");
+        }).doesNotThrowAnyException();
     }
 }

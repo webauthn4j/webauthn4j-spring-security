@@ -17,7 +17,7 @@
 package net.sharplab.springframework.security.webauthn.config.configurers;
 
 
-import com.webauthn4j.converter.util.JsonConverter;
+import com.webauthn4j.converter.util.ObjectConverter;
 import com.webauthn4j.data.PublicKeyCredentialType;
 import com.webauthn4j.data.attestation.statement.COSEAlgorithmIdentifier;
 import com.webauthn4j.data.client.challenge.DefaultChallenge;
@@ -155,7 +155,7 @@ public class WebAuthnLoginConfigurerSpringTest {
     static class Config extends WebSecurityConfigurerAdapter {
 
         @Autowired
-        private JsonConverter jsonConverter;
+        private ObjectConverter objectConverter;
 
         @Autowired
         private OptionsProvider optionsProvider;
@@ -198,7 +198,7 @@ public class WebAuthnLoginConfigurerSpringTest {
                     .optionsEndpoint()
                     .processingUrl("/webauthn/options")
                     .and()
-                    .jsonConverter(jsonConverter)
+                    .objectConverter(objectConverter)
                     .optionsProvider(optionsProvider)
                     .serverPropertyProvider(serverPropertyProvider);
 
@@ -212,8 +212,8 @@ public class WebAuthnLoginConfigurerSpringTest {
         static class BeanConfig {
 
             @Bean
-            public JsonConverter jsonConverter() {
-                return new JsonConverter();
+            public ObjectConverter objectConverter() {
+                return new ObjectConverter();
             }
 
             @Bean
@@ -231,8 +231,8 @@ public class WebAuthnLoginConfigurerSpringTest {
             }
 
             @Bean
-            public OptionsEndpointFilter optionsEndpointFilter(OptionsProvider optionsProvider, JsonConverter jsonConverter) {
-                return new OptionsEndpointFilter(optionsProvider, jsonConverter);
+            public OptionsEndpointFilter optionsEndpointFilter(OptionsProvider optionsProvider, ObjectConverter objectConverter) {
+                return new OptionsEndpointFilter(optionsProvider, objectConverter);
             }
 
             @Bean

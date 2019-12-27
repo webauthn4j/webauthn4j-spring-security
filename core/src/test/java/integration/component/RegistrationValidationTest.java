@@ -16,6 +16,7 @@
 
 package integration.component;
 
+import com.webauthn4j.WebAuthnManager;
 import com.webauthn4j.data.*;
 import com.webauthn4j.data.attestation.statement.COSEAlgorithmIdentifier;
 import com.webauthn4j.data.client.Origin;
@@ -26,7 +27,6 @@ import com.webauthn4j.test.authenticator.webauthn.PackedAuthenticator;
 import com.webauthn4j.test.authenticator.webauthn.WebAuthnAuthenticatorAdaptor;
 import com.webauthn4j.test.client.ClientPlatform;
 import com.webauthn4j.util.Base64UrlUtil;
-import com.webauthn4j.validator.WebAuthnRegistrationContextValidator;
 import net.sharplab.springframework.security.webauthn.WebAuthnRegistrationRequestValidationResponse;
 import net.sharplab.springframework.security.webauthn.WebAuthnRegistrationRequestValidator;
 import net.sharplab.springframework.security.webauthn.server.ServerPropertyProvider;
@@ -53,7 +53,7 @@ public class RegistrationValidationTest {
     private ClientPlatform clientPlatform = new ClientPlatform(origin, webAuthnModelAuthenticatorAdaptor);
     private ServerPropertyProvider serverPropertyProvider = mock(ServerPropertyProvider.class);
     private WebAuthnRegistrationRequestValidator target = new WebAuthnRegistrationRequestValidator(
-            WebAuthnRegistrationContextValidator.createNonStrictRegistrationContextValidator(), serverPropertyProvider
+            WebAuthnManager.createNonStrictWebAuthnManager(), serverPropertyProvider
     );
 
     @Test

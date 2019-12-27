@@ -16,7 +16,7 @@
 
 package net.sharplab.springframework.security.fido.server.config.configurer;
 
-import com.webauthn4j.converter.util.JsonConverter;
+import com.webauthn4j.converter.util.ObjectConverter;
 import net.sharplab.springframework.security.fido.server.endpoint.*;
 import net.sharplab.springframework.security.webauthn.WebAuthnRegistrationRequestValidator;
 import net.sharplab.springframework.security.webauthn.config.configurers.WebAuthnConfigurerUtil;
@@ -46,7 +46,7 @@ public class FidoServerConfigurer<H extends HttpSecurityBuilder<H>> extends Abst
     //~ Instance fields
     // ================================================================================================
     private OptionsProvider optionsProvider;
-    private JsonConverter jsonConverter;
+    private ObjectConverter objectConverter;
 
     public static FidoServerConfigurer<HttpSecurity> fidoServer() {
         return new FidoServerConfigurer<>();
@@ -59,10 +59,10 @@ public class FidoServerConfigurer<H extends HttpSecurityBuilder<H>> extends Abst
             optionsProvider = WebAuthnConfigurerUtil.getOptionsProvider(http);
         }
         http.setSharedObject(OptionsProvider.class, optionsProvider);
-        if (jsonConverter == null) {
-            jsonConverter = WebAuthnConfigurerUtil.getJsonConverter(http);
+        if (objectConverter == null) {
+            objectConverter = WebAuthnConfigurerUtil.getObjectConverter(http);
         }
-        http.setSharedObject(JsonConverter.class, jsonConverter);
+        http.setSharedObject(ObjectConverter.class, objectConverter);
 
         fidoServerAttestationOptionsEndpointConfig.configure(http);
         fidoServerAttestationResultEndpointConfig.configure(http);
@@ -92,9 +92,9 @@ public class FidoServerConfigurer<H extends HttpSecurityBuilder<H>> extends Abst
         return this;
     }
 
-    public FidoServerConfigurer<H> jsonConverter(JsonConverter jsonConverter) {
-        Assert.notNull(jsonConverter, "jsonConverter must not be null");
-        this.jsonConverter = jsonConverter;
+    public FidoServerConfigurer<H> jsonConverter(ObjectConverter objectConverter) {
+        Assert.notNull(objectConverter, "objectConverter must not be null");
+        this.objectConverter = objectConverter;
         return this;
     }
 
@@ -106,7 +106,7 @@ public class FidoServerConfigurer<H extends HttpSecurityBuilder<H>> extends Abst
 
         @Override
         protected FidoServerAttestationOptionsEndpointFilter createInstance() {
-            return new FidoServerAttestationOptionsEndpointFilter(jsonConverter, optionsProvider);
+            return new FidoServerAttestationOptionsEndpointFilter(objectConverter, optionsProvider);
         }
     }
 
@@ -176,7 +176,7 @@ public class FidoServerConfigurer<H extends HttpSecurityBuilder<H>> extends Abst
 
         @Override
         protected FidoServerAttestationResultEndpointFilter createInstance() {
-            FidoServerAttestationResultEndpointFilter filter = new FidoServerAttestationResultEndpointFilter(jsonConverter, webAuthnUserDetailsService, webAuthnRegistrationRequestValidator);
+            FidoServerAttestationResultEndpointFilter filter = new FidoServerAttestationResultEndpointFilter(objectConverter, webAuthnUserDetailsService, webAuthnRegistrationRequestValidator);
             filter.setUsernameNotFoundHandler(usernameNotFoundHandler);
             return filter;
         }
@@ -222,7 +222,7 @@ public class FidoServerConfigurer<H extends HttpSecurityBuilder<H>> extends Abst
 
         @Override
         protected FidoServerAssertionOptionsEndpointFilter createInstance() {
-            return new FidoServerAssertionOptionsEndpointFilter(jsonConverter, optionsProvider);
+            return new FidoServerAssertionOptionsEndpointFilter(objectConverter, optionsProvider);
         }
     }
 
@@ -255,7 +255,7 @@ public class FidoServerConfigurer<H extends HttpSecurityBuilder<H>> extends Abst
             ApplicationContext applicationContext = http.getSharedObject(ApplicationContext.class);
             String[] beanNames = applicationContext.getBeanNamesForType(FidoServerAssertionResultEndpointFilter.class);
             if (beanNames.length == 0) {
-                serverEndpointFilter = new FidoServerAssertionResultEndpointFilter(jsonConverter, serverPropertyProvider);
+                serverEndpointFilter = new FidoServerAssertionResultEndpointFilter(objectConverter, serverPropertyProvider);
                 if (filterProcessingUrl != null) {
                     serverEndpointFilter.setFilterProcessesUrl(filterProcessingUrl);
                 }
