@@ -44,7 +44,7 @@ public class ExceptionUtilTest {
         map.put(new com.webauthn4j.validator.exception.CertificateException("dummy"), CertificateException.class);
         map.put(new com.webauthn4j.validator.exception.ConstraintViolationException("dummy"), ConstraintViolationException.class);
         map.put(new com.webauthn4j.validator.exception.MaliciousCounterValueException("dummy"), MaliciousCounterValueException.class);
-        map.put(new com.webauthn4j.validator.exception.MaliciousDataException("dummy"), MaliciousDataException.class);
+        map.put(new com.webauthn4j.validator.exception.InconsistentClientDataTypeException("dummy"), InconsistentClientDataTypeException.class);
         map.put(new com.webauthn4j.validator.exception.MissingChallengeException("dummy"), MissingChallengeException.class);
         map.put(new com.webauthn4j.validator.exception.PublicKeyMismatchException("dummy"), PublicKeyMismatchException.class);
         map.put(new com.webauthn4j.validator.exception.SelfAttestationProhibitedException("dummy"), SelfAttestationProhibitedException.class);

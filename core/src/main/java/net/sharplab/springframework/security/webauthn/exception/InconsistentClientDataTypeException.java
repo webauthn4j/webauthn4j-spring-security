@@ -16,21 +16,15 @@
 
 package net.sharplab.springframework.security.webauthn.exception;
 
-import org.junit.Test;
+/**
+ * Thrown if inconsistent client data type is specified
+ */
+public class InconsistentClientDataTypeException extends ValidationException {
+    public InconsistentClientDataTypeException(String message, Throwable cause) {
+        super(message, cause);
+    }
 
-import static org.assertj.core.api.Assertions.assertThatCode;
-
-@SuppressWarnings("ThrowableNotThrown")
-public class MaliciousDataExceptionTest {
-
-    private RuntimeException cause = new RuntimeException();
-
-    @Test
-    public void test() {
-
-        assertThatCode(() -> {
-            new MaliciousDataException("dummy", cause);
-            new MaliciousDataException("dummy");
-        }).doesNotThrowAnyException();
+    public InconsistentClientDataTypeException(String message) {
+        super(message);
     }
 }

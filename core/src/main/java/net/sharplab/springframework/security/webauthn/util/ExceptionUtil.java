@@ -64,8 +64,8 @@ public class ExceptionUtil {
             return new ConstraintViolationException(e.getMessage(), e);
         } else if (e instanceof com.webauthn4j.validator.exception.MaliciousCounterValueException) {
             return new MaliciousCounterValueException(e.getMessage(), e);
-        } else if (e instanceof com.webauthn4j.validator.exception.MaliciousDataException) {
-            return new MaliciousDataException(e.getMessage(), e);
+        } else if (e instanceof com.webauthn4j.validator.exception.InconsistentClientDataTypeException) {
+            return new InconsistentClientDataTypeException(e.getMessage(), e);
         } else if (e instanceof com.webauthn4j.validator.exception.MissingChallengeException) {
             return new MissingChallengeException(e.getMessage(), e);
         } else if (e instanceof com.webauthn4j.validator.exception.PublicKeyMismatchException) {
