@@ -16,14 +16,15 @@
 
 package net.sharplab.springframework.security.webauthn;
 
-import com.webauthn4j.data.WebAuthnRegistrationContext;
+import com.webauthn4j.WebAuthnManager;
+import com.webauthn4j.data.RegistrationData;
+import com.webauthn4j.data.RegistrationParameters;
+import com.webauthn4j.data.RegistrationRequest;
 import com.webauthn4j.data.attestation.AttestationObject;
 import com.webauthn4j.data.client.CollectedClientData;
 import com.webauthn4j.data.extension.client.AuthenticationExtensionsClientOutputs;
 import com.webauthn4j.server.ServerProperty;
 import com.webauthn4j.util.Base64UrlUtil;
-import com.webauthn4j.validator.WebAuthnRegistrationContextValidationResponse;
-import com.webauthn4j.validator.WebAuthnRegistrationContextValidator;
 import net.sharplab.springframework.security.webauthn.exception.BadAttestationStatementException;
 import net.sharplab.springframework.security.webauthn.server.ServerPropertyProvider;
 import org.junit.Rule;
@@ -42,7 +43,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 /**
- * Test for WebAuthnRegistrationContextValidator
+ * Test for WebAuthnRegistrationRequestValidator
  */
 public class WebAuthnRegistrationRequestValidatorTest {
 
@@ -50,7 +51,7 @@ public class WebAuthnRegistrationRequestValidatorTest {
     public MockitoRule mockito = MockitoJUnit.rule();
 
     @Mock
-    private WebAuthnRegistrationContextValidator registrationContextValidator;
+    private WebAuthnManager webAuthnManager;
 
     @Mock
     private ServerPropertyProvider serverPropertyProvider;
@@ -59,7 +60,7 @@ public class WebAuthnRegistrationRequestValidatorTest {
     @Test
     public void validate_test() {
         WebAuthnRegistrationRequestValidator target = new WebAuthnRegistrationRequestValidator(
-                registrationContextValidator, serverPropertyProvider
+                webAuthnManager, serverPropertyProvider
         );
 
         ServerProperty serverProperty = mock(ServerProperty.class);
@@ -68,8 +69,8 @@ public class WebAuthnRegistrationRequestValidatorTest {
         CollectedClientData collectedClientData = mock(CollectedClientData.class);
         AttestationObject attestationObject = mock(AttestationObject.class);
         AuthenticationExtensionsClientOutputs clientExtensionOutputs = new AuthenticationExtensionsClientOutputs();
-        when(registrationContextValidator.validate(any())).thenReturn(
-                new WebAuthnRegistrationContextValidationResponse(collectedClientData, attestationObject, clientExtensionOutputs));
+        when(webAuthnManager.validate(any(RegistrationRequest.class), any(RegistrationParameters.class))).thenReturn(
+                new RegistrationData(attestationObject, null, collectedClientData, null, clientExtensionOutputs, null));
 
         MockHttpServletRequest mockHttpServletRequest = new MockHttpServletRequest();
         mockHttpServletRequest.setScheme("https");
@@ -82,21 +83,23 @@ public class WebAuthnRegistrationRequestValidatorTest {
 
         target.validate(mockHttpServletRequest, clientDataBase64, attestationObjectBase64, transports, clientExtensionsJSON);
 
-        ArgumentCaptor<WebAuthnRegistrationContext> argumentCaptor = ArgumentCaptor.forClass(WebAuthnRegistrationContext.class);
-        verify(registrationContextValidator).validate(argumentCaptor.capture());
-        WebAuthnRegistrationContext registrationContext = argumentCaptor.getValue();
+        ArgumentCaptor<RegistrationRequest> registrationRequestArgumentCaptor = ArgumentCaptor.forClass(RegistrationRequest.class);
+        ArgumentCaptor<RegistrationParameters> registrationParametersArgumentCaptor = ArgumentCaptor.forClass(RegistrationParameters.class);
+        verify(webAuthnManager).validate(registrationRequestArgumentCaptor.capture(), registrationParametersArgumentCaptor.capture());
+        RegistrationRequest registrationRequest = registrationRequestArgumentCaptor.getValue();
+        RegistrationParameters registrationParameters = registrationParametersArgumentCaptor.getValue();
 
-        assertThat(registrationContext.getClientDataJSON()).isEqualTo(Base64UrlUtil.decode(clientDataBase64));
-        assertThat(registrationContext.getAttestationObject()).isEqualTo(Base64UrlUtil.decode(attestationObjectBase64));
-        assertThat(registrationContext.getClientExtensionsJSON()).isEqualTo(clientExtensionsJSON);
-        assertThat(registrationContext.getServerProperty()).isEqualTo(serverProperty);
-        assertThat(registrationContext.getExpectedExtensionIds()).isEqualTo(target.getExpectedRegistrationExtensionIds());
+        assertThat(registrationRequest.getClientDataJSON()).isEqualTo(Base64UrlUtil.decode(clientDataBase64));
+        assertThat(registrationRequest.getAttestationObject()).isEqualTo(Base64UrlUtil.decode(attestationObjectBase64));
+        assertThat(registrationRequest.getClientExtensionsJSON()).isEqualTo(clientExtensionsJSON);
+        assertThat(registrationParameters.getServerProperty()).isEqualTo(serverProperty);
+        assertThat(registrationParameters.getExpectedExtensionIds()).isEqualTo(target.getExpectedRegistrationExtensionIds());
     }
 
     @Test
     public void validate_with_transports_null_test() {
         WebAuthnRegistrationRequestValidator target = new WebAuthnRegistrationRequestValidator(
-                registrationContextValidator, serverPropertyProvider
+                webAuthnManager, serverPropertyProvider
         );
 
         ServerProperty serverProperty = mock(ServerProperty.class);
@@ -105,8 +108,8 @@ public class WebAuthnRegistrationRequestValidatorTest {
         CollectedClientData collectedClientData = mock(CollectedClientData.class);
         AttestationObject attestationObject = mock(AttestationObject.class);
         AuthenticationExtensionsClientOutputs clientExtensionOutputs = new AuthenticationExtensionsClientOutputs();
-        when(registrationContextValidator.validate(any())).thenReturn(
-                new WebAuthnRegistrationContextValidationResponse(collectedClientData, attestationObject, clientExtensionOutputs));
+        when(webAuthnManager.validate(any(RegistrationRequest.class), any(RegistrationParameters.class))).thenReturn(
+                new RegistrationData(attestationObject, null, collectedClientData, null, clientExtensionOutputs, null));
 
         MockHttpServletRequest mockHttpServletRequest = new MockHttpServletRequest();
         mockHttpServletRequest.setScheme("https");
@@ -118,22 +121,24 @@ public class WebAuthnRegistrationRequestValidatorTest {
 
         target.validate(mockHttpServletRequest, clientDataBase64, attestationObjectBase64, null, clientExtensionsJSON);
 
-        ArgumentCaptor<WebAuthnRegistrationContext> argumentCaptor = ArgumentCaptor.forClass(WebAuthnRegistrationContext.class);
-        verify(registrationContextValidator).validate(argumentCaptor.capture());
-        WebAuthnRegistrationContext registrationContext = argumentCaptor.getValue();
+        ArgumentCaptor<RegistrationRequest> registrationRequestArgumentCaptor = ArgumentCaptor.forClass(RegistrationRequest.class);
+        ArgumentCaptor<RegistrationParameters> registrationParametersArgumentCaptor = ArgumentCaptor.forClass(RegistrationParameters.class);
+        verify(webAuthnManager).validate(registrationRequestArgumentCaptor.capture(), registrationParametersArgumentCaptor.capture());
+        RegistrationRequest registrationRequest = registrationRequestArgumentCaptor.getValue();
+        RegistrationParameters registrationParameters = registrationParametersArgumentCaptor.getValue();
 
-        assertThat(registrationContext.getClientDataJSON()).isEqualTo(Base64UrlUtil.decode(clientDataBase64));
-        assertThat(registrationContext.getAttestationObject()).isEqualTo(Base64UrlUtil.decode(attestationObjectBase64));
-        assertThat(registrationContext.getClientExtensionsJSON()).isEqualTo(clientExtensionsJSON);
-        assertThat(registrationContext.getServerProperty()).isEqualTo(serverProperty);
-        assertThat(registrationContext.getExpectedExtensionIds()).isEqualTo(target.getExpectedRegistrationExtensionIds());
+        assertThat(registrationRequest.getClientDataJSON()).isEqualTo(Base64UrlUtil.decode(clientDataBase64));
+        assertThat(registrationRequest.getAttestationObject()).isEqualTo(Base64UrlUtil.decode(attestationObjectBase64));
+        assertThat(registrationRequest.getClientExtensionsJSON()).isEqualTo(clientExtensionsJSON);
+        assertThat(registrationParameters.getServerProperty()).isEqualTo(serverProperty);
+        assertThat(registrationParameters.getExpectedExtensionIds()).isEqualTo(target.getExpectedRegistrationExtensionIds());
     }
 
 
     @Test
     public void getter_setter_test() {
         WebAuthnRegistrationRequestValidator target = new WebAuthnRegistrationRequestValidator(
-                registrationContextValidator, serverPropertyProvider
+                webAuthnManager, serverPropertyProvider
         );
         target.setExpectedRegistrationExtensionIds(Collections.singletonList("appId"));
         assertThat(target.getExpectedRegistrationExtensionIds()).containsExactly("appId");
@@ -143,9 +148,9 @@ public class WebAuthnRegistrationRequestValidatorTest {
     @Test(expected = BadAttestationStatementException.class)
     public void validate_caught_exception_test() {
         WebAuthnRegistrationRequestValidator target = new WebAuthnRegistrationRequestValidator(
-                registrationContextValidator, serverPropertyProvider
+                webAuthnManager, serverPropertyProvider
         );
-        when(registrationContextValidator.validate(any())).thenThrow(new com.webauthn4j.validator.exception.BadAttestationStatementException("dummy"));
+        when(webAuthnManager.validate(any(RegistrationRequest.class), any(RegistrationParameters.class))).thenThrow(new com.webauthn4j.validator.exception.BadAttestationStatementException("dummy"));
 
         MockHttpServletRequest mockHttpServletRequest = new MockHttpServletRequest();
         mockHttpServletRequest.setScheme("https");

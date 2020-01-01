@@ -18,6 +18,7 @@ package net.sharplab.springframework.security.webauthn.sample.infrastructure.uti
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.webauthn4j.converter.util.CborConverter;
+import com.webauthn4j.converter.util.ObjectConverter;
 import com.webauthn4j.data.extension.authenticator.RegistrationExtensionAuthenticatorOutput;
 import com.webauthn4j.util.Base64UrlUtil;
 
@@ -26,7 +27,11 @@ import java.util.Map;
 
 public class AuthenticatorExtensionsConverter implements AttributeConverter<Map<String, RegistrationExtensionAuthenticatorOutput>, String> {
 
-    private CborConverter cborConverter = new CborConverter(); //TODO
+    private CborConverter cborConverter;
+
+    public AuthenticatorExtensionsConverter(ObjectConverter objectConverter){
+        this.cborConverter = objectConverter.getCborConverter();
+    }
 
     @Override
     public String convertToDatabaseColumn(Map<String, RegistrationExtensionAuthenticatorOutput> attribute) {

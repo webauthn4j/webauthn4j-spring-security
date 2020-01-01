@@ -16,7 +16,7 @@
 
 package net.sharplab.springframework.security.webauthn.config.configurers;
 
-import com.webauthn4j.validator.WebAuthnAuthenticationContextValidator;
+import com.webauthn4j.WebAuthnManager;
 import net.sharplab.springframework.security.webauthn.WebAuthnAuthenticationProvider;
 import net.sharplab.springframework.security.webauthn.authenticator.WebAuthnAuthenticatorService;
 import net.sharplab.springframework.security.webauthn.challenge.ChallengeRepository;
@@ -99,7 +99,7 @@ public class WebAuthnAuthenticationProviderConfigurerSpringTest {
 
         @Override
         public void configure(AuthenticationManagerBuilder builder) throws Exception {
-            builder.apply(new WebAuthnAuthenticationProviderConfigurer<>(userDetailsService, authenticatorService, new WebAuthnAuthenticationContextValidator()));
+            builder.apply(new WebAuthnAuthenticationProviderConfigurer<>(userDetailsService, authenticatorService, WebAuthnManager.createNonStrictWebAuthnManager()));
         }
 
     }

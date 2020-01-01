@@ -17,7 +17,7 @@
 package net.sharplab.springframework.security.webauthn.converter;
 
 import com.webauthn4j.converter.CollectedClientDataConverter;
-import com.webauthn4j.converter.util.JsonConverter;
+import com.webauthn4j.converter.util.ObjectConverter;
 import com.webauthn4j.data.client.CollectedClientData;
 import org.springframework.core.convert.converter.Converter;
 
@@ -33,8 +33,8 @@ public class Base64UrlStringToCollectedClientDataConverter implements Converter<
     // ~ Constructor
     // ========================================================================================================
 
-    public Base64UrlStringToCollectedClientDataConverter(JsonConverter jsonConverter) {
-        converter = new CollectedClientDataConverter(jsonConverter);
+    public Base64UrlStringToCollectedClientDataConverter(ObjectConverter objectConverter) {
+        converter = new CollectedClientDataConverter(objectConverter);
     }
 
     /**

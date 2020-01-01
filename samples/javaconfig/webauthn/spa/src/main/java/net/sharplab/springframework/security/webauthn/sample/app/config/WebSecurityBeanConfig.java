@@ -18,11 +18,9 @@ package net.sharplab.springframework.security.webauthn.sample.app.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.cbor.CBORFactory;
-import com.webauthn4j.converter.util.CborConverter;
-import com.webauthn4j.converter.util.JsonConverter;
+import com.webauthn4j.WebAuthnManager;
+import com.webauthn4j.converter.util.ObjectConverter;
 import com.webauthn4j.metadata.converter.jackson.WebAuthnMetadataJSONModule;
-import com.webauthn4j.validator.WebAuthnAuthenticationContextValidator;
-import com.webauthn4j.validator.WebAuthnRegistrationContextValidator;
 import net.sharplab.springframework.security.webauthn.WebAuthnRegistrationRequestValidator;
 import net.sharplab.springframework.security.webauthn.challenge.ChallengeRepository;
 import net.sharplab.springframework.security.webauthn.challenge.HttpSessionChallengeRepository;
@@ -59,8 +57,8 @@ import java.util.LinkedHashMap;
 public class WebSecurityBeanConfig {
 
     @Bean
-    public WebAuthnRegistrationRequestValidator webAuthnRegistrationRequestValidator(WebAuthnRegistrationContextValidator registrationContextValidator, ServerPropertyProvider serverPropertyProvider) {
-        return new WebAuthnRegistrationRequestValidator(registrationContextValidator, serverPropertyProvider);
+    public WebAuthnRegistrationRequestValidator webAuthnRegistrationRequestValidator(WebAuthnManager webAuthnManager, ServerPropertyProvider serverPropertyProvider) {
+        return new WebAuthnRegistrationRequestValidator(webAuthnManager, serverPropertyProvider);
     }
 
     @Bean
@@ -89,26 +87,18 @@ public class WebSecurityBeanConfig {
     }
 
     @Bean
-    public WebAuthnRegistrationContextValidator webAuthnRegistrationContextValidator(JsonConverter jsonConverter, CborConverter cborConverter) {
-        return WebAuthnRegistrationContextValidator.createNonStrictRegistrationContextValidator(jsonConverter, cborConverter);
+    public WebAuthnManager webAuthnManager(ObjectConverter objectConverter) {
+
+        return WebAuthnManager.createNonStrictWebAuthnManager(objectConverter);
     }
 
-    @Bean
-    public WebAuthnAuthenticationContextValidator webAuthnAuthenticationContextValidator(JsonConverter jsonConverter, CborConverter cborConverter){
-        return new WebAuthnAuthenticationContextValidator(jsonConverter, cborConverter);
-    }
 
     @Bean
-    public JsonConverter jsonConverter(){
+    public ObjectConverter objectConverter(){
         ObjectMapper jsonMapper = new ObjectMapper();
         jsonMapper.registerModule(new WebAuthnMetadataJSONModule());
         ObjectMapper cborMapper = new ObjectMapper(new CBORFactory());
-        return new JsonConverter(jsonMapper, cborMapper);
-    }
-
-    @Bean
-    public CborConverter cborConverter(JsonConverter jsonConverter){
-        return jsonConverter.getCborConverter();
+        return new ObjectConverter(jsonMapper, cborMapper);
     }
 
     @Bean

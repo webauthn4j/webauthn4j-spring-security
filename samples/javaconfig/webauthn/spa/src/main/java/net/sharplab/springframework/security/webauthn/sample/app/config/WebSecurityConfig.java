@@ -16,6 +16,7 @@
 
 package net.sharplab.springframework.security.webauthn.sample.app.config;
 
+import com.webauthn4j.WebAuthnManager;
 import com.webauthn4j.data.PublicKeyCredentialType;
 import com.webauthn4j.data.attestation.statement.COSEAlgorithmIdentifier;
 import com.webauthn4j.data.extension.client.SupportedExtensionsExtensionClientInput;
@@ -80,11 +81,11 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     private WebAuthnAuthenticatorService authenticatorService;
 
     @Autowired
-    private WebAuthnAuthenticationContextValidator webAuthnAuthenticationContextValidator;
+    private WebAuthnManager webAuthnManager;
 
     @Override
     public void configure(AuthenticationManagerBuilder builder) throws Exception {
-        builder.apply(new WebAuthnAuthenticationProviderConfigurer<>(userDetailsService, authenticatorService, webAuthnAuthenticationContextValidator));
+        builder.apply(new WebAuthnAuthenticationProviderConfigurer<>(userDetailsService, authenticatorService, webAuthnManager));
         builder.apply(new MultiFactorAuthenticationProviderConfigurer<>(daoAuthenticationProvider));
     }
 

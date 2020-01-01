@@ -17,6 +17,7 @@
 package net.sharplab.springframework.security.webauthn.sample.infrastructure.util.jpa.converter;
 
 import com.webauthn4j.converter.util.CborConverter;
+import com.webauthn4j.converter.util.ObjectConverter;
 import com.webauthn4j.data.attestation.authenticator.COSEKey;
 import com.webauthn4j.util.Base64UrlUtil;
 
@@ -26,7 +27,11 @@ import javax.persistence.Converter;
 @Converter
 public class COSEKeyConverter implements AttributeConverter<COSEKey, String> {
 
-    private CborConverter cborConverter = new CborConverter(); //TODO
+    private CborConverter cborConverter;
+
+    public COSEKeyConverter(ObjectConverter objectConverter){
+        this.cborConverter = objectConverter.getCborConverter();
+    }
 
     @Override
     public String convertToDatabaseColumn(COSEKey attribute) {

@@ -16,7 +16,7 @@
 
 package net.sharplab.springframework.security.webauthn.config.configurers;
 
-import com.webauthn4j.validator.WebAuthnAuthenticationContextValidator;
+import com.webauthn4j.WebAuthnManager;
 import net.sharplab.springframework.security.webauthn.WebAuthnAuthenticationProvider;
 import net.sharplab.springframework.security.webauthn.authenticator.WebAuthnAuthenticatorService;
 import net.sharplab.springframework.security.webauthn.userdetails.WebAuthnUserDetailsService;
@@ -35,31 +35,31 @@ public class WebAuthnAuthenticationProviderConfigurer<
         B extends ProviderManagerBuilder<B>,
         U extends WebAuthnUserDetailsService,
         A extends WebAuthnAuthenticatorService,
-        V extends WebAuthnAuthenticationContextValidator>
+        V extends WebAuthnManager>
         extends SecurityConfigurerAdapter<AuthenticationManager, B> {
 
     //~ Instance fields
     // ================================================================================================
     private U userDetailsService;
     private A authenticatorService;
-    private V authenticationContextValidator;
+    private V webAuthnManager;
 
     /**
      * Constructor
      *
      * @param userDetailsService             {@link WebAuthnUserDetailsService}
      * @param authenticatorService           {@link WebAuthnAuthenticatorService}
-     * @param authenticationContextValidator {@link WebAuthnAuthenticationContextValidator}
+     * @param webAuthnManager {@link WebAuthnManager}
      */
-    public WebAuthnAuthenticationProviderConfigurer(U userDetailsService, A authenticatorService, V authenticationContextValidator) {
+    public WebAuthnAuthenticationProviderConfigurer(U userDetailsService, A authenticatorService, V webAuthnManager) {
 
         Assert.notNull(userDetailsService, "userDetailsService must not be null");
         Assert.notNull(authenticatorService, "authenticatorService must not be null");
-        Assert.notNull(authenticationContextValidator, "authenticationContextValidator must not be null");
+        Assert.notNull(webAuthnManager, "webAuthnManager must not be null");
 
         this.userDetailsService = userDetailsService;
         this.authenticatorService = authenticatorService;
-        this.authenticationContextValidator = authenticationContextValidator;
+        this.webAuthnManager = webAuthnManager;
     }
 
     // ~ Methods
@@ -68,7 +68,7 @@ public class WebAuthnAuthenticationProviderConfigurer<
     @Override
     public void configure(B builder) {
         WebAuthnAuthenticationProvider authenticationProvider =
-                new WebAuthnAuthenticationProvider(userDetailsService, authenticatorService, authenticationContextValidator);
+                new WebAuthnAuthenticationProvider(userDetailsService, authenticatorService, webAuthnManager);
         authenticationProvider = postProcess(authenticationProvider);
         builder.authenticationProvider(authenticationProvider);
     }

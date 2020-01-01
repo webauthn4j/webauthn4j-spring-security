@@ -18,7 +18,7 @@ package net.sharplab.springframework.security.webauthn.config.configurers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.cbor.CBORFactory;
-import com.webauthn4j.converter.util.JsonConverter;
+import com.webauthn4j.converter.util.ObjectConverter;
 import com.webauthn4j.metadata.converter.jackson.WebAuthnMetadataJSONModule;
 import net.sharplab.springframework.security.webauthn.WebAuthnRegistrationRequestValidator;
 import net.sharplab.springframework.security.webauthn.challenge.ChallengeRepository;
@@ -64,19 +64,19 @@ public class WebAuthnConfigurerUtil {
         return optionsProvider;
     }
 
-    public static <H extends HttpSecurityBuilder<H>> JsonConverter getJsonConverter(H http) {
+    public static <H extends HttpSecurityBuilder<H>> ObjectConverter getObjectConverter(H http) {
         ApplicationContext applicationContext = http.getSharedObject(ApplicationContext.class);
-        JsonConverter jsonConverter;
-        String[] beanNames = applicationContext.getBeanNamesForType(JsonConverter.class);
+        ObjectConverter objectConverter;
+        String[] beanNames = applicationContext.getBeanNamesForType(ObjectConverter.class);
         if (beanNames.length == 0) {
             ObjectMapper jsonMapper = new ObjectMapper();
             jsonMapper.registerModule(new WebAuthnMetadataJSONModule());
             ObjectMapper cborMapper = new ObjectMapper(new CBORFactory());
-            jsonConverter = new JsonConverter(jsonMapper, cborMapper);
+            objectConverter = new ObjectConverter(jsonMapper, cborMapper);
         } else {
-            jsonConverter = applicationContext.getBean(JsonConverter.class);
+            objectConverter = applicationContext.getBean(ObjectConverter.class);
         }
-        return jsonConverter;
+        return objectConverter;
     }
 
     public static <H extends HttpSecurityBuilder<H>> ServerPropertyProvider getServerPropertyProvider(H http) {

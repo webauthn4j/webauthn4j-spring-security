@@ -17,7 +17,7 @@
 package net.sharplab.springframework.security.webauthn.request;
 
 import com.webauthn4j.converter.AuthenticatorDataConverter;
-import com.webauthn4j.converter.util.CborConverter;
+import com.webauthn4j.converter.util.ObjectConverter;
 import com.webauthn4j.data.client.ClientDataType;
 import com.webauthn4j.data.client.Origin;
 import com.webauthn4j.data.client.challenge.Challenge;
@@ -32,13 +32,13 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 public class WebAuthnAuthenticationRequestTest {
 
-    private CborConverter cborConverter = new CborConverter();
+    private ObjectConverter objectConverter = new ObjectConverter();
 
     @Test
     public void getter_test() {
         Challenge challenge = new DefaultChallenge();
         byte[] clientDataJSON = TestDataUtil.createClientDataJSON(ClientDataType.GET);
-        byte[] authenticatorData = new AuthenticatorDataConverter(cborConverter).convert(TestDataUtil.createAuthenticatorData());
+        byte[] authenticatorData = new AuthenticatorDataConverter(objectConverter).convert(TestDataUtil.createAuthenticatorData());
         ServerProperty serverProperty = new ServerProperty(
                 new Origin("https://example.com"),
                 "example.com",
@@ -71,7 +71,7 @@ public class WebAuthnAuthenticationRequestTest {
     public void equals_hashCode_test() {
         Challenge challenge = new DefaultChallenge();
         byte[] clientDataJSON = TestDataUtil.createClientDataJSON(ClientDataType.GET);
-        byte[] authenticatorData = new AuthenticatorDataConverter(cborConverter).convert(TestDataUtil.createAuthenticatorData());
+        byte[] authenticatorData = new AuthenticatorDataConverter(objectConverter).convert(TestDataUtil.createAuthenticatorData());
         WebAuthnAuthenticationRequest requestA = new WebAuthnAuthenticationRequest(
                 new byte[]{0x01, 0x23},
                 clientDataJSON,

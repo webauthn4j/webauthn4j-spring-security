@@ -17,6 +17,7 @@
 package net.sharplab.springframework.security.webauthn.endpoint;
 
 import com.webauthn4j.converter.util.JsonConverter;
+import com.webauthn4j.converter.util.ObjectConverter;
 import com.webauthn4j.data.PublicKeyCredentialRpEntity;
 import com.webauthn4j.data.client.challenge.Challenge;
 import net.sharplab.springframework.security.webauthn.options.AssertionOptions;
@@ -73,9 +74,9 @@ public class OptionsEndpointFilter extends GenericFilterBean {
     // ~ Constructors
     // ===================================================================================================
 
-    public OptionsEndpointFilter(OptionsProvider optionsProvider, JsonConverter jsonConverter) {
+    public OptionsEndpointFilter(OptionsProvider optionsProvider, ObjectConverter objectConverter) {
         this.optionsProvider = optionsProvider;
-        this.jsonConverter = jsonConverter;
+        this.jsonConverter = objectConverter.getJsonConverter();
         this.trustResolver = new AuthenticationTrustResolverImpl();
         this.mfaTokenEvaluator = new MFATokenEvaluatorImpl();
         checkConfig();
