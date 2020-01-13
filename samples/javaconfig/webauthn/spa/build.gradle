@@ -72,7 +72,7 @@ dependencies {
     testCompile('org.assertj:assertj-core')
     testCompile("org.dbunit:dbunit:${dbunitVersion}")
     testCompile("com.github.springtestdbunit:spring-test-dbunit:${springTestDbunitVersion}")
-    testCompile("io.github.bonigarcia:webdrivermanager:3.7.1")
+    testCompile("io.github.bonigarcia:webdrivermanager:3.8.0")
     testCompile("org.seleniumhq.selenium:selenium-java")
 
 }
