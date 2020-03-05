@@ -36,7 +36,7 @@ bootJar {
 dependencies {
     // Custom Spring Security
     compile('org.springframework.security:spring-security-core:5.1.0.BUILD-SNAPSHOT')
-    compile('org.springframework.security:spring-security-config:5.1.0.BUILD-SNAPSHOT')
+    compile('org.springframework.security:spring-security-config:5.3.0.RELEASE')
     compile('org.springframework.security:spring-security-web:5.1.0.BUILD-SNAPSHOT')
 
     compile project(':spring-security-webauthn-core')
