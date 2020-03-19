@@ -36,7 +36,7 @@
     "@angular-devkit/build-angular": "~0.803.25",
     "@angular/cli": "~8.3.24",
     "@angular/compiler-cli": "^8.2.10",
-    "@angular/language-service": "^9.0.5",
+    "@angular/language-service": "^9.0.7",
     "@types/base64-arraybuffer": "^0.1.0",
     "@types/jasmine": "~3.5.8",
     "@types/jasminewd2": "~2.0.8",
