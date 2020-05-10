@@ -33,6 +33,9 @@ dependencies {
     compile('org.springframework.security:spring-security-config:5.1.0.BUILD-SNAPSHOT')
     compile('org.springframework.security:spring-security-web:5.1.0.BUILD-SNAPSHOT')
 
+    implementation("com.fasterxml.jackson.core:jackson-databind")
+    implementation("com.fasterxml.jackson.dataformat:jackson-dataformat-cbor")
+
     //Test
     testCompile('org.projectlombok:lombok')
     testCompile('org.springframework:spring-webmvc')
