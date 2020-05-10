@@ -43,6 +43,10 @@ dependencies {
 
     compile('javax.servlet:javax.servlet-api')
 
+    implementation("com.fasterxml.jackson.core:jackson-databind")
+    implementation("com.fasterxml.jackson.dataformat:jackson-dataformat-cbor")
+
+
     //Test
     testCompile("com.webauthn4j:webauthn4j-test:${webauthn4jVersion}")
     testCompile('org.projectlombok:lombok')
