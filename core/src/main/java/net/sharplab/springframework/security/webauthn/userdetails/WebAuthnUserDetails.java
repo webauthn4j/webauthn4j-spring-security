@@ -17,7 +17,6 @@
 package net.sharplab.springframework.security.webauthn.userdetails;
 
 import com.webauthn4j.authenticator.Authenticator;
-import org.springframework.security.core.userdetails.MFAUserDetails;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
@@ -25,12 +24,14 @@ import java.util.Collection;
 /**
  * An extended {@link UserDetails} interface for WebAuthn
  */
-public interface WebAuthnUserDetails extends MFAUserDetails {
+public interface WebAuthnUserDetails extends UserDetails {
 
     @SuppressWarnings("squid:S1452")
     Collection<? extends Authenticator> getAuthenticators();
 
     void setSingleFactorAuthenticationAllowed(boolean singleFactorAuthenticationAllowed);
+
+    boolean isSingleFactorAuthenticationAllowed();
 
     byte[] getUserHandle();
 }

@@ -65,14 +65,14 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 ```
 ==== ユーザーディレクトリとの統合
 
-Spring Security WebAuthnは `WebAuthnUserDetailsService` インタフェースを通じてユーザーを検索します。
+WebAuthn4J Spring Securityは `WebAuthnUserDetailsService` インタフェースを通じてユーザーを検索します。
 `WebAuthnUserDetailsService` を実装したクラスを `WebAuthnAuthenticationProvider` および
 `MultiFactorAuthenticationProvider` の委譲先の `AuthenticationProvider` にセットして下さい。
 
 ==== 認証デバイス登録時の検証
 
 認証デバイス登録操作のハンドリングは、基本的にはアプリケーション側の責務ですが、登録しようとしているCredentialが
-認証時に使用できるものであるか検証する為に、Spring Security WebAuthnはコンバータおよびバリデータを提供します。
+認証時に使用できるものであるか検証する為に、WebAuthn4J Spring Securityはコンバータおよびバリデータを提供します。
 `Base64StringToCollectedClientDataConverter` はBase64URL文字列を `CollectedClientData` に変換します。
 `Base64StringToAttestationObjectConverter` はBase64URL文字列を `AttestationObject` に変換します。
 
@@ -81,7 +81,7 @@ Spring Security WebAuthnは `WebAuthnUserDetailsService` インタフェース�
 ==== クライアントサイドとのインタフェース仕様
 
 WebAuthentication仕様では、ブラウザのJavaScript APIが規定されており、取得したCredentialをサーバーに対して送信する
-インタフェースについては規定がありません。Spring Security WebAuthnでは、ログインURLに対して送信されたリクエストから
+インタフェースについては規定がありません。WebAuthn4J Spring Securityでは、ログインURLに対して送信されたリクエストから
 `WebAuthnProcessingFilter` がリクエストパラメータとして `credentialId` 、`clientData` 、 `authenticatorData` 、
 `signature` 、`clientExtensionsJSON` を取得して認証を行います。 `credentialId` 、`clientData` 、 `authenticatorData` 、
 `signature` はバイナリデータの為、Base64URLエンコードして送信して下さい。
@@ -91,13 +91,13 @@ WebAuthentication仕様では、ブラウザのJavaScript APIが規定されて�
 WebAuthentication仕様では、認証に先立ってサーバーからチャレンジを取得する必要があります。
 また、FIDO-U2Fトークンを認証デバイスとして使用する場合は、第一認証要素によって特定されたユーザーに紐づけられた
 CredentialIdをサーバーから取得する必要があります。これらのデータを取得するためのエンドポイントとして、
-Spring Security WebAuthnでは`OptionsEndpointFilter`を用意しています。
+WebAuthn4J Spring Securityでは`OptionsEndpointFilter`を用意しています。
 
 === カスタマイズ
 
 ==== 認証方法の選択
 
-Spring Security WebAuthnでは、認証方法として「ユーザー検証機能付き認証デバイスによるパスワードレス多要素認証」、
+WebAuthn4J Spring Securityでは、認証方法として「ユーザー検証機能付き認証デバイスによるパスワードレス多要素認証」、
 「パスワード＋認証デバイスによる多要素認証」、「パスワード等による単一要素認証」をサポートしています。
 パスワード認証をサポートし、ユーザーへの間口を広げることも出来ますし、パスワード認証を制限することで、
 セキュリティを高めることも出来ます。
@@ -110,7 +110,7 @@ Spring Security WebAuthnでは、認証方法として「ユーザー検証機�
 
 ===== MultiFactorAuthenticationProvider
 
-Spring Security WebAuthnは、多要素認証の実現に `MultiFactorAuthenticationProvider` を使用します。
+WebAuthn4J Spring Securityは、多要素認証の実現に `MultiFactorAuthenticationProvider` を使用します。
 `MultiFactorAuthenticationProvider` はSpring Securityで多要素認証を実現するための `AuthenticationProvider`
 インタフェースの実装で、認証処理自体は別の `AuthenticationProvider` に委譲します。
 委譲先の `AuthenticationProvider` での認証処理が成功し、単一要素認証が許可されていない場合、
@@ -121,7 +121,7 @@ Spring Security WebAuthnは、多要素認証の実現に `MultiFactorAuthentica
 `Authentication` インタフェースの実装です。`AnonymousAuthenticationToken` と同様に、
 認証が完了していないPrincipalとして扱われます。
 
-Spring Security WebAuthnでパスワード＋認証デバイスによる多要素認証を実現するには、パスワード認証のための
+WebAuthn4J Spring Securityでパスワード＋認証デバイスによる多要素認証を実現するには、パスワード認証のための
 `DaoAuthenticationProvider` を委譲先とした `MultiFactorAuthenticationProvider` を用意し、
 `MultiFactorAuthenticationProvider` のみ `AuthenticationManager` に登録する必要があります。
 委譲先である `DaoAuthenticationProvider` は `AuthenticationManager` にセットしてはいけません。
@@ -164,7 +164,7 @@ Web Authentication仕様では、Credentialの作成時、即ち認証デバイ�
 `dev.example.com` とそのサブドメインの範囲だけで利用できますが、 `rpId` を `example.com` とすることで、
 Credentialが利用可能な範囲を `example.com` およびそのサブドメインに広げることが出来ます。
 
-Spring Security WebAuthnでは、 `rpId` は `ServerPropertyProviderImpl` のプロパティとして設定可能です。
+WebAuthn4J Spring Securityでは、 `rpId` は `ServerPropertyProviderImpl` のプロパティとして設定可能です。
 
 
 ==== 構成証明ステートメントの検証
@@ -188,7 +188,7 @@ WebAuthn4Jでは、`WebAuthnRegistrationContextValidator` が認証デバイス�
 ==== SpringのResourceを活用したTrustAnchorProvider
 
 認証デバイスを登録時に証明書パスから検証する場合、 `TrustAnchorCertPathTrustworthinessValidator` クラスは
-`TrustAnchorProvider` インタフェースの実装クラスから取得した `TrustAnchor` を使用します。Spring Security WebAuthnでは、
+`TrustAnchorProvider` インタフェースの実装クラスから取得した `TrustAnchor` を使用します。WebAuthn4J Spring Securityでは、
 SpringのResourceとして読み込んだJava Key Storeファイルを `TrustAnchor` として使用する `TrustAnchorProvider` として、
 `KeyStoreResourceTrustAnchorProvider` クラスを提供します。
 

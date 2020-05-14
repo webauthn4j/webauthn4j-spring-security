@@ -14,10 +14,19 @@
  * limitations under the License.
  */
 
-package net.sharplab.springframework.security.webauthn.sample.app.api;
+package net.sharplab.springframework.security.webauthn;
 
-public enum AuthStatus {
-    NOT_AUTHENTICATED,
-    AUTHENTICATED,
-    MULTI_FACTOR_AUTHENTICATED
+import org.springframework.security.core.Authentication;
+
+public class WebAuthnSecurityExpression {
+
+    public boolean isWebAuthnAuthenticated(Authentication authentication) {
+        if(authentication == null){
+            return false;
+        }
+        else {
+            return WebAuthnAuthenticationToken.class.isAssignableFrom(authentication.getClass());
+        }
+    }
+
 }

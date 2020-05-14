@@ -39,7 +39,7 @@ describe('AppComponent', () => {
             useFactory: () => {
               let authServiceMock = new AuthService(null, null);
               spyOn(authServiceMock, "loginWithPublicKeyCredential").and.returnValue(of(null));
-              spyOn(authServiceMock, "getAuthenticationStatus").and.returnValue(of("Anonymous"));
+              spyOn(authServiceMock, "getAuthenticationStatus").and.returnValue(of("NOT_AUTHENTICATED"));
               return authServiceMock;
             }
           }
@@ -52,10 +52,10 @@ describe('AppComponent', () => {
     const app = fixture.debugElement.componentInstance;
     expect(app).toBeTruthy();
   }));
-  it(`should have as title 'Spring Security WebAuthn Sample SPA'`, async(() => {
+  it(`should have as title 'WebAuthn4J Spring Security Sample SPA'`, async(() => {
     const fixture = TestBed.createComponent(AppComponent);
     const app = fixture.debugElement.componentInstance;
-    expect(app.title).toEqual('Spring Security WebAuthn Sample SPA');
+    expect(app.title).toEqual('WebAuthn4J Spring Security Sample SPA');
   }));
   // it('should render title in a h1 tag', async(() => {
   //   const fixture = TestBed.createComponent(AppComponent);

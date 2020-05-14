@@ -1,7 +1,7 @@
 [sample-app]
 == Sample application
 
-Spring Security WebAuthn contains a sample application demonstrates its major functionality.
+WebAuthn4J Spring Security contains a sample application demonstrates its major functionality.
 
 === Sample application execution
 

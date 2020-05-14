@@ -17,7 +17,7 @@
 group 'net.sharplab.springframework.security.extensions'
 version "${springSecurityWebAuthnVersion}"
 
-description = "Spring Security WebAuthn Thymeleaf Extension library"
+description = "WebAuthn4J Spring Security Thymeleaf Extension library"
 
 repositories {
     flatDir {

@@ -17,21 +17,15 @@
 group 'net.sharplab.springframework.security.extensions'
 version "${springSecurityWebAuthnVersion}"
 
-description = "Spring Security WebAuthn Thymeleaf Extension library"
-
-repositories {
-    flatDir {
-        dirs "../libs"
-    }
-}
+description = "WebAuthn4J Spring Security Thymeleaf Extension library"
 
 dependencies {
     api project(':spring-security-webauthn-core')
 
     // Custom Spring Security
-    api('org.springframework.security:spring-security-core:5.1.0.BUILD-SNAPSHOT')
-    api('org.springframework.security:spring-security-config:5.1.0.BUILD-SNAPSHOT')
-    api('org.springframework.security:spring-security-web:5.1.0.BUILD-SNAPSHOT')
+    implementation('org.springframework.security:spring-security-core')
+    implementation('org.springframework.security:spring-security-config')
+    implementation('org.springframework.security:spring-security-web')
 
     implementation("org.springframework:spring-web")
 

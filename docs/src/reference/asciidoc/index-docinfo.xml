@@ -15,7 +15,7 @@
   -->
 
 <releaseinfo>{revnumber}</releaseinfo>
-<productname>Spring Security WebAuthn</productname>
+<productname>WebAuthn4J Spring Security</productname>
 <authorgroup>
 <author>
     <firstname>Yoshikazu</firstname>

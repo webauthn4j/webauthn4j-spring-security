@@ -20,10 +20,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.webauthn4j.util.Base64UrlUtil;
 import com.webauthn4j.util.UUIDUtil;
 import net.sharplab.springframework.security.webauthn.sample.app.config.AppConfig;
-import net.sharplab.springframework.security.webauthn.sample.test.app.config.TestSecurityConfig;
 import net.sharplab.springframework.security.webauthn.sample.app.service.ProfileAppService;
-import net.sharplab.springframework.security.webauthn.sample.test.WithMockUser;
 import net.sharplab.springframework.security.webauthn.sample.domain.entity.UserEntity;
+import net.sharplab.springframework.security.webauthn.sample.test.WithMockWebAuthnUser;
+import net.sharplab.springframework.security.webauthn.sample.test.app.config.TestSecurityConfig;
 import net.sharplab.springframework.security.webauthn.sample.test.infrastructure.config.InfrastructureMockConfig;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -65,7 +65,7 @@ public class ProfileControllerTest {
     ObjectMapper objectMapper;
 
     @Test
-    @WithMockUser(id=1, firstName = "John", lastName = "Doe", emailAddress = "john.doe@example.com", authorities = {"ROLE_USER"}, authenticators = {})
+    @WithMockWebAuthnUser(id=1, firstName = "John", lastName = "Doe", emailAddress = "john.doe@example.com", authorities = {"ROLE_USER"}, authenticators = {})
     public void show_test() throws Exception{
         int userId = 1;
 
@@ -139,7 +139,7 @@ public class ProfileControllerTest {
     }
 
     @Test
-    @WithMockUser(id=1, firstName = "John", lastName = "Doe", emailAddress = "john.doe@example.com", authorities = {"ROLE_USER"}, authenticators = {})
+    @WithMockWebAuthnUser(id=1, firstName = "John", lastName = "Doe", emailAddress = "john.doe@example.com", authorities = {"ROLE_USER"}, authenticators = {})
     public void update_test() throws Exception{
         int userId = 1;
 
@@ -186,7 +186,7 @@ public class ProfileControllerTest {
     }
 
     @Test
-    @WithMockUser(id=1, firstName = "John", lastName = "Doe", emailAddress = "john.doe@example.com", authorities = {"ROLE_USER"}, authenticators = {})
+    @WithMockWebAuthnUser(id=1, firstName = "John", lastName = "Doe", emailAddress = "john.doe@example.com", authorities = {"ROLE_USER"}, authenticators = {})
     public void delete_test() throws Exception{
 
         //When

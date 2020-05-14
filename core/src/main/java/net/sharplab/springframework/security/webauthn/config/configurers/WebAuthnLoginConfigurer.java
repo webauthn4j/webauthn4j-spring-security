@@ -23,7 +23,6 @@ import net.sharplab.springframework.security.webauthn.endpoint.OptionsEndpointFi
 import net.sharplab.springframework.security.webauthn.options.OptionsProvider;
 import net.sharplab.springframework.security.webauthn.server.ServerPropertyProvider;
 import org.springframework.context.ApplicationContext;
-import org.springframework.security.authentication.MFATokenEvaluator;
 import org.springframework.security.config.annotation.web.HttpSecurityBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
@@ -68,7 +67,6 @@ import java.util.List;
  *
  * <ul>
  * <li>{@link org.springframework.security.authentication.AuthenticationManager}</li>
- * <li>{@link MFATokenEvaluator}</li>
  * </ul>
  *
  * @see WebAuthnConfigurer

@@ -26,7 +26,7 @@ import {Router} from "@angular/router";
 })
 export class LoginComponent implements OnInit {
 
-  authStatus: AuthenticationStatus = "Anonymous";
+  authStatus: AuthenticationStatus = "NOT_AUTHENTICATED";
 
   constructor(private authService: AuthService, private router: Router) {
     router.events.subscribe(_ => {

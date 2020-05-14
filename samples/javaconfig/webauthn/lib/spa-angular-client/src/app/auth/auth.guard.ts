@@ -29,7 +29,7 @@ export class AuthGuard implements CanActivate {
 
   canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean> | Promise<boolean> | boolean {
     return this.authService.getAuthenticationStatus().pipe(map(status => {
-        if(status == "Authenticated"){
+        if(status == "MULTI_FACTOR_AUTHENTICATED"){
           return true;
         }
         else {

@@ -10,9 +10,9 @@ Implementation is in progress in major browsers, the specification offers excell
 Initially, the specification was developed as "FIDO 2.0: Web API for accessing FIDO 2.0 credentials" by the FIDO Alliance,
 but it has been transferred to W3C.
 
-=== Spring Security WebAuthn
+=== WebAuthn4J Spring Security
 
-Spring Security WebAuthn is a Spring Security extension module to provide Web Authentication specification support for your Spring web application.
+WebAuthn4J Spring Security is a Spring Security extension module to provide Web Authentication specification support for your Spring web application.
 
 === Requirements
 
@@ -55,7 +55,7 @@ git clone https://github.com/sharplab/spring-security-webauthn
 
 === License
 
-Spring Security WebAuthn is an open source software licensed under http://www.apache.org/licenses/LICENSE-2.0.html[Apache 2.0 license].
+WebAuthn4J Spring Security is an open source software licensed under http://www.apache.org/licenses/LICENSE-2.0.html[Apache 2.0 license].
 
 === Related Project
 

@@ -27,13 +27,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.HttpMethod;
-import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
-import org.springframework.security.config.annotation.authentication.configurers.mfa.MultiFactorAuthenticationProviderConfigurer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
@@ -71,9 +70,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     private AuthenticationEntryPoint authenticationEntryPoint;
 
     @Autowired
-    private DaoAuthenticationProvider daoAuthenticationProvider;
-
-    @Autowired
     private WebAuthnUserDetailsService userDetailsService;
 
     @Autowired
@@ -82,10 +78,13 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     private WebAuthnManager webAuthnManager;
 
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
     @Override
     public void configure(AuthenticationManagerBuilder builder) throws Exception {
         builder.apply(new WebAuthnAuthenticationProviderConfigurer<>(userDetailsService, authenticatorService, webAuthnManager));
-        builder.apply(new MultiFactorAuthenticationProviderConfigurer<>(daoAuthenticationProvider));
+        builder.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder);
     }
 
     @Override
@@ -107,7 +106,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
         // WebAuthn Config
         http.apply(webAuthn())
-                .rpName("Spring Security WebAuthn Sample")
+                .rpName("WebAuthn4J Spring Security Sample")
                 .publicKeyCredParams()
                     .addPublicKeyCredParams(PublicKeyCredentialType.PUBLIC_KEY, COSEAlgorithmIdentifier.RS256)  // Windows Hello
                     .addPublicKeyCredParams(PublicKeyCredentialType.PUBLIC_KEY, COSEAlgorithmIdentifier.ES256) // FIDO U2F Key, etc
@@ -145,8 +144,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .mvcMatchers("/health/**").permitAll()
                 .mvcMatchers("/info/**").permitAll()
                 .mvcMatchers("/h2-console/**").denyAll()
-                .mvcMatchers("/api/admin/**").hasRole(ADMIN_ROLE)
-                .anyRequest().fullyAuthenticated();
+                .mvcMatchers("/api/admin/**").access("hasRole('ADMIN_ROLE') and isAuthenticated()")
+                .anyRequest().access("@webAuthnSecurityExpression.isWebAuthnAuthenticated(authentication)");
 
         http.sessionManagement()
                 .sessionAuthenticationFailureHandler(authenticationFailureHandler);

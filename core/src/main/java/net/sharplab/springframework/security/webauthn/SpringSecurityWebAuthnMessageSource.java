@@ -20,9 +20,9 @@ import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.context.support.ResourceBundleMessageSource;
 
 /**
- * The default <code>MessageSource</code> used by Spring Security WebAuthn.
+ * The default <code>MessageSource</code> used by WebAuthn4J Spring Security.
  * <p>
- * All Spring Security WebAuthn classes requiring message localization will by default use this
+ * All WebAuthn4J Spring Security classes requiring message localization will by default use this
  * class. However, all such classes will also implement <code>MessageSourceAware</code> so
  * that the application context can inject an alternative message source. Therefore this
  * class is only used when the deployment environment has not specified an alternative

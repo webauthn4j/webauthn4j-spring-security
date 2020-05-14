@@ -15,7 +15,7 @@
   -->
 
 <div class="login-container" [ngSwitch]="this.authStatus">
-  <app-password-login *ngSwitchCase="'Anonymous'"></app-password-login>
-  <app-authenticator-login *ngSwitchCase="'PartiallyAuthenticated'"></app-authenticator-login>
-  <app-password-login *ngSwitchCase="'Authenticated'"></app-password-login>
+  <app-password-login *ngSwitchCase="'NOT_AUTHENTICATED'"></app-password-login>
+  <app-authenticator-login *ngSwitchCase="'AUTHENTICATED'"></app-authenticator-login>
+  <app-password-login *ngSwitchCase="'MULTI_FACTOR_AUTHENTICATED'"></app-password-login>
 </div>

@@ -5,7 +5,7 @@
 
 ==== Maven dependency
 
-[line-through]#Please add following to pom.xml to introduce Spring Security WebAuthn and its dependencies.#
+[line-through]#Please add following to pom.xml to introduce WebAuthn4J Spring Security and its dependencies.#
 For now, it is not published to Maven Central as it requires Spring Security custom build.
 
 [source, xml]
@@ -68,13 +68,13 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
 ==== User directory integration
 
-Spring Security WebAuthn looks up a user through the `WebAuthnUserDetailsService` interface.
+WebAuthn4J Spring Security looks up a user through the `WebAuthnUserDetailsService` interface.
 Please set a class implementing `WebAuthnUserDetailsService` to the `WebAuthnAuthenticationProvider` and the delegated
  `AuthenticationProvider`.
 
 ==== Validation on an authenticator registration
 
-While it is basically application's responsibility to handle an authenticator registration process, Spring Security WebAuthn
+While it is basically application's responsibility to handle an authenticator registration process, WebAuthn4J Spring Security
 provides converters and validators to examine the credential in question.
 `Base64StringToCollectedClientDataConverter` converts Base64 string to a `CollectedClientData`.
 `Base64StringToAttestationObjectConverter` converts Base64 string to a `AttestationObject`.
@@ -84,7 +84,7 @@ provides converters and validators to examine the credential in question.
 ==== Client interface specification
 
 Web Authentication defines browser JavaScript APIs only. It is up to implementation the way to send corrected credential.
-Regarding Spring Security WebAuthn, `WebAuthnProcessingFilter` retrieves `credentialId`, `clientData`, `authenticatorData`,
+Regarding WebAuthn4J Spring Security, `WebAuthnProcessingFilter` retrieves `credentialId`, `clientData`, `authenticatorData`,
 `signature`, `clientExtensionsJSON` for authentication, and `credentialId`, `clientData`, `authenticatorData` and
 `signature` is binary data, please send them as Base64 strings.
 
@@ -93,13 +93,13 @@ Regarding Spring Security WebAuthn, `WebAuthnProcessingFilter` retrieves `creden
 Web Authentication requests to obtain a challenge from the server prior to authentication.
 When using the FIDO-U2F token as an authentication device, the CredentialIds associated with the user identified by
 the first authentication factor are also need to be obtained from the server.
-To retrieve these data, Spring Security WebAuthn offers `OptionsEndpointFilter`.
+To retrieve these data, WebAuthn4J Spring Security offers `OptionsEndpointFilter`.
 
 === Customization
 
 ==== Selecting authentication method
 
-Spring Security WebAuthn supports "Password-less multi-factor authentication with a user-verifying authenticator",
+WebAuthn4J Spring Security supports "Password-less multi-factor authentication with a user-verifying authenticator",
 "Multi-factor authentication with password and authenticator" and "Single-factor authentication like password".
 If you put value on adoption, you may allow password authentication in your web system, or if you give greater importance
 to security, you may restrict password authentication.
@@ -114,7 +114,7 @@ like password.
 
 ===== MultiFactorAuthenticationProvider
 
-Spring Security WebAuthn utilizes `MultiFactorAuthenticationProvider` to realize multi-factor authentication.
+WebAuthn4J Spring Security utilizes `MultiFactorAuthenticationProvider` to realize multi-factor authentication.
 `MultiFactorAuthenticationProvider` is an `AuthenticationProvider` interface implementation, which delegates authentication
 decision itself to another `AuthenticationProvider`. If authentication succeeds in the delegated `AuthenticationProvider`
 and single-factor authentication is not permitted, `MultiFactorAuthenticationProvider` returns a `MultiFactorAuthenticationToken`
@@ -167,7 +167,7 @@ For example, in the case where the domain of the site is `webauthn.example.com`,
 `rpId`, the credential is only available in `webauthn.example.com` and its sub-domain, but if `example.com`
 is set to `rpId`, the scope of the credential is relaxed to `example.com` and its sub-domain.
 
-Spring Security WebAuthn supports `rpId` configuration through the `rpId` property of `ServerPropertyProviderImpl`.
+WebAuthn4J Spring Security supports `rpId` configuration through the `rpId` property of `ServerPropertyProviderImpl`.
 
 ==== Attestation statement verification
 
@@ -191,5 +191,5 @@ attestation statement signature and trustworthiness validation to `AttestationSt
 
 While validating an authenticator attestation certificate path on registration,
 `TrustAnchorCertPathTrustworthinessValidator` class uses `TrustAnchor` retrieved through `TrustAnchorProvider` interface
-implementation. Spring Security WebAuthn offers `KeyStoreResourceTrustAnchorProvider` class, which retrieves a
+implementation. WebAuthn4J Spring Security offers `KeyStoreResourceTrustAnchorProvider` class, which retrieves a
 `TrustAnchor` from a Java Key Store file loaded as Spring `Resource`.

@@ -44,11 +44,8 @@ public class OptionsEndpointFilterTest {
     @Test
     public void getter_setter_test() {
         OptionsEndpointFilter optionsEndpointFilter = new OptionsEndpointFilter(mock(OptionsProvider.class), objectConverter);
-        MFATokenEvaluator mfaTokenEvaluator = new MFATokenEvaluatorImpl();
         AuthenticationTrustResolver trustResolver = new AuthenticationTrustResolverImpl();
-        optionsEndpointFilter.setMFATokenEvaluator(mfaTokenEvaluator);
         optionsEndpointFilter.setTrustResolver(trustResolver);
-        assertThat(optionsEndpointFilter.getMFATokenEvaluator()).isEqualTo(mfaTokenEvaluator);
         assertThat(optionsEndpointFilter.getTrustResolver()).isEqualTo(trustResolver);
     }
 
@@ -66,9 +63,7 @@ public class OptionsEndpointFilterTest {
         AssertionOptions assertionOptions = new AssertionOptions(null, null, null, null, null, null);
         when(optionsProvider.getAssertionOptions(any(), any(), any())).thenReturn(assertionOptions);
         OptionsEndpointFilter optionsEndpointFilter = new OptionsEndpointFilter(optionsProvider, objectConverter);
-        MFATokenEvaluator mfaTokenEvaluator = new MFATokenEvaluatorImpl();
         AuthenticationTrustResolver trustResolver = new AuthenticationTrustResolverImpl();
-        optionsEndpointFilter.setMFATokenEvaluator(mfaTokenEvaluator);
         optionsEndpointFilter.setTrustResolver(trustResolver);
 
         MockHttpServletRequest request = new MockHttpServletRequest();
@@ -85,9 +80,7 @@ public class OptionsEndpointFilterTest {
         OptionsProvider optionsProvider = mock(OptionsProvider.class);
         doThrow(new RuntimeException()).when(optionsProvider).getAttestationOptions(any(), any(), any());
         OptionsEndpointFilter optionsEndpointFilter = new OptionsEndpointFilter(optionsProvider, objectConverter);
-        MFATokenEvaluator mfaTokenEvaluator = new MFATokenEvaluatorImpl();
         AuthenticationTrustResolver trustResolver = new AuthenticationTrustResolverImpl();
-        optionsEndpointFilter.setMFATokenEvaluator(mfaTokenEvaluator);
         optionsEndpointFilter.setTrustResolver(trustResolver);
 
         MockHttpServletRequest request = new MockHttpServletRequest();

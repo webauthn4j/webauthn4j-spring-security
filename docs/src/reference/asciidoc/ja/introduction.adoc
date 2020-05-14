@@ -9,7 +9,7 @@ Web Authenticationは、W3Cで仕様策定が進められている、Webアプ�
 当初はFIDO AllianceでFIDO 2.0: Web API for accessing FIDO 2.0 credentialsとして仕様策定が進められていましたが、
 現在はW3Cに移管され、仕様策定が行われています。
 
-=== Spring Security WebAuthnとは
+=== WebAuthn4J Spring Securityとは
 
 Spring Securityで保護されたWebアプリケーションに対して、Web Authentication仕様に基づく認証機能を提供するための
 Spring Security拡張です。
@@ -24,7 +24,7 @@ Spring Security拡張です。
 
 ==== 動作環境
 
-Spring Security WebAuthnの動作環境は、以下の要件を満たす必要があります。
+WebAuthn4J Spring Securityの動作環境は、以下の要件を満たす必要があります。
 
 * SecureContext
 * ブラウザ
@@ -55,7 +55,7 @@ git clone https://github.com/sharplab/spring-security-webauthn
 
 === ライセンス
 
-Spring Security WebAuthnは http://www.apache.org/licenses/LICENSE-2.0.html[Apache 2.0 license] ライセンスの
+WebAuthn4J Spring Securityは http://www.apache.org/licenses/LICENSE-2.0.html[Apache 2.0 license] ライセンスの
 オープンソースソフトウェアです。
 
 === 関連プロジェクト

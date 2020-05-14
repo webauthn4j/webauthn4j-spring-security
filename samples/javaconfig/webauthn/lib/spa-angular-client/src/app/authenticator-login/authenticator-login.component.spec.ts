@@ -49,7 +49,7 @@ describe('AuthenticatorLoginComponent', () => {
             useFactory: ()=>{
               let authServiceMock = new AuthService(null, null);
               spyOn(authServiceMock, "loginWithPublicKeyCredential").and.returnValue(of(""));
-              spyOn(authServiceMock, "getAuthenticationStatus").and.returnValue(of("Anonymous"));
+              spyOn(authServiceMock, "getAuthenticationStatus").and.returnValue(of("NOT_AUTHENTICATED"));
               return authServiceMock;
             }
           }

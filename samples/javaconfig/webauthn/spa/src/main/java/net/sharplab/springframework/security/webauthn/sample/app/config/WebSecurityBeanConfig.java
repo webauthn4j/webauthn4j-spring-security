@@ -22,6 +22,7 @@ import com.webauthn4j.WebAuthnManager;
 import com.webauthn4j.converter.util.ObjectConverter;
 import com.webauthn4j.metadata.converter.jackson.WebAuthnMetadataJSONModule;
 import net.sharplab.springframework.security.webauthn.WebAuthnRegistrationRequestValidator;
+import net.sharplab.springframework.security.webauthn.WebAuthnSecurityExpression;
 import net.sharplab.springframework.security.webauthn.challenge.ChallengeRepository;
 import net.sharplab.springframework.security.webauthn.challenge.HttpSessionChallengeRepository;
 import net.sharplab.springframework.security.webauthn.options.OptionsProvider;
@@ -34,11 +35,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.AuthenticationTrustResolver;
 import org.springframework.security.authentication.AuthenticationTrustResolverImpl;
-import org.springframework.security.authentication.MFATokenEvaluator;
-import org.springframework.security.authentication.MFATokenEvaluatorImpl;
-import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.AuthenticationEntryPoint;
@@ -67,11 +64,6 @@ public class WebSecurityBeanConfig {
     }
 
     @Bean
-    public MFATokenEvaluator mfaTokenEvaluator(){
-        return new MFATokenEvaluatorImpl();
-    }
-
-    @Bean
     public ChallengeRepository challengeRepository() {
         return new HttpSessionChallengeRepository();
     }
@@ -92,6 +84,11 @@ public class WebSecurityBeanConfig {
         return WebAuthnManager.createNonStrictWebAuthnManager(objectConverter);
     }
 
+    @Bean
+    public WebAuthnSecurityExpression webAuthnSecurityExpression(){
+        return new WebAuthnSecurityExpression();
+    }
+
 
     @Bean
     public ObjectConverter objectConverter(){
@@ -104,16 +101,6 @@ public class WebSecurityBeanConfig {
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
-    }
-
-    // Not to register DaoAuthenticationProvider to ProviderManager,
-    // initialize DaoAuthenticationProvider manually instead of using DaoAuthenticationConfigurer.
-    @Bean
-    public DaoAuthenticationProvider daoAuthenticationProvider(PasswordEncoder passwordEncoder, UserDetailsService userDetailsService) {
-        DaoAuthenticationProvider daoAuthenticationProvider = new DaoAuthenticationProvider();
-        daoAuthenticationProvider.setPasswordEncoder(passwordEncoder);
-        daoAuthenticationProvider.setUserDetailsService(userDetailsService);
-        return daoAuthenticationProvider;
     }
 
     @Bean

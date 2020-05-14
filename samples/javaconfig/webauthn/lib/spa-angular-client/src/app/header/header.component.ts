@@ -34,7 +34,7 @@ export class HeaderComponent implements OnInit {
     });
   }
 
-  authStatus: AuthenticationStatus = "Anonymous";
+  authStatus: AuthenticationStatus = "NOT_AUTHENTICATED";
 
   ngOnInit() {}
 

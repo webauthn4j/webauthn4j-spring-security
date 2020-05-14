@@ -58,8 +58,6 @@ import org.springframework.core.io.support.ResourcePatternUtils;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.AuthenticationTrustResolver;
 import org.springframework.security.authentication.AuthenticationTrustResolverImpl;
-import org.springframework.security.authentication.MFATokenEvaluator;
-import org.springframework.security.authentication.MFATokenEvaluatorImpl;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -96,10 +94,6 @@ public class WebSecurityBeanConfig {
         return new AuthenticationTrustResolverImpl();
     }
 
-    @Bean
-    public MFATokenEvaluator mfaTokenEvaluator() {
-        return new MFATokenEvaluatorImpl();
-    }
 
     @Bean
     public ChallengeRepository challengeRepository() {

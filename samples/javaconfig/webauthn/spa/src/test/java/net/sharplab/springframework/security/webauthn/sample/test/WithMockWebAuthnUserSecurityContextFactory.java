@@ -17,11 +17,12 @@
 package net.sharplab.springframework.security.webauthn.sample.test;
 
 import com.webauthn4j.util.Base64UrlUtil;
+import net.sharplab.springframework.security.webauthn.WebAuthnAuthenticationToken;
+import net.sharplab.springframework.security.webauthn.request.WebAuthnAuthenticationRequest;
 import net.sharplab.springframework.security.webauthn.sample.domain.entity.AuthenticatorEntity;
 import net.sharplab.springframework.security.webauthn.sample.domain.entity.AuthorityEntity;
 import net.sharplab.springframework.security.webauthn.sample.domain.entity.GroupEntity;
 import net.sharplab.springframework.security.webauthn.sample.domain.entity.UserEntity;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -31,20 +32,22 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static org.mockito.Mockito.mock;
+
 /**
  * SecurityContextFactory for WithMockUser
  */
-public class WithMockUserSecurityContextFactory implements WithSecurityContextFactory<WithMockUser> {
+public class WithMockWebAuthnUserSecurityContextFactory implements WithSecurityContextFactory<WithMockWebAuthnUser> {
 
     /**
      * Create a {@link SecurityContext} given an Annotation.
      *
-     * @param user the {@link WithMockUser} to create the {@link SecurityContext}
+     * @param user the {@link WithMockWebAuthnUser} to create the {@link SecurityContext}
      *                   from. Cannot be null.
      * @return the {@link SecurityContext} to use. Cannot be null.
      */
     @Override
-    public SecurityContext createSecurityContext(WithMockUser user) {
+    public SecurityContext createSecurityContext(WithMockWebAuthnUser user) {
 
         SecurityContext context = SecurityContextHolder.createEmptyContext();
         List<AuthorityEntity> authorities = Arrays.stream(user.authorities()).map((name) -> new AuthorityEntity(null, name)).collect(Collectors.toList());
@@ -70,8 +73,10 @@ public class WithMockUserSecurityContextFactory implements WithSecurityContextFa
         principal.setLocked(user.locked());
         principal.setSingleFactorAuthenticationAllowed(user.singleFactorAuthenticationAllowed());
 
+        WebAuthnAuthenticationRequest request = mock(WebAuthnAuthenticationRequest.class);
+
         Authentication auth =
-                new UsernamePasswordAuthenticationToken(principal, "password", principal.getAuthorities());
+                new WebAuthnAuthenticationToken(principal, request, principal.getAuthorities());
         context.setAuthentication(auth);
         return context;
     }
