@@ -25,7 +25,7 @@
     "@angular/router": "^8.2.10",
     "@fortawesome/fontawesome-free": "^5.13.0",
     "@ng-bootstrap/ng-bootstrap": "^5.3.1",
-    "bootstrap": "^4.4.1",
+    "bootstrap": "^4.5.0",
     "core-js": "^3.6.5",
     "bowser": "^2.9.0",
     "rxjs": "~6.5.5",
