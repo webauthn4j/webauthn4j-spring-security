@@ -26,23 +26,23 @@ repositories {
 }
 
 dependencies {
-    compile project(':spring-security-webauthn-core')
+    implementation project(':spring-security-webauthn-core')
 
-    compile("org.springframework.security:spring-security-core")
-    compile("org.springframework.security:spring-security-web")
-    compile("org.springframework.boot:spring-boot-starter-thymeleaf")
+    implementation("org.springframework.security:spring-security-core")
+    implementation("org.springframework.security:spring-security-web")
+    implementation("org.springframework.boot:spring-boot-starter-thymeleaf")
 
-    compile("org.thymeleaf.extras:thymeleaf-extras-springsecurity5:3.0.4.RELEASE")
+    implementation("org.thymeleaf.extras:thymeleaf-extras-springsecurity5:3.0.4.RELEASE")
 
     //Test
-    testCompile('org.projectlombok:lombok')
-    testCompile('org.springframework:spring-webmvc')
-    testCompile('org.springframework.boot:spring-boot-starter-test')
-    testCompile('org.springframework.security:spring-security-test')
-    testCompile('org.thymeleaf:thymeleaf-testing:3.0.4.RELEASE')
-    testCompile('junit:junit')
-    testCompile('org.mockito:mockito-core')
-    testCompile('org.assertj:assertj-core')
+    testImplementation('org.projectlombok:lombok')
+    testImplementation('org.springframework:spring-webmvc')
+    testImplementation('org.springframework.boot:spring-boot-starter-test')
+    testImplementation('org.springframework.security:spring-security-test')
+    testImplementation('org.thymeleaf:thymeleaf-testing:3.0.4.RELEASE')
+    testImplementation('junit:junit')
+    testImplementation('org.mockito:mockito-core')
+    testImplementation('org.assertj:assertj-core')
 
 }
 

@@ -26,37 +26,40 @@ repositories {
 }
 
 dependencies {
-    compile("com.webauthn4j:webauthn4j-core:${webauthn4jVersion}")
-    compile("com.webauthn4j:webauthn4j-metadata:${webauthn4jVersion}")
+    api("com.webauthn4j:webauthn4j-core:${webauthn4jVersion}")
+    api("com.webauthn4j:webauthn4j-metadata:${webauthn4jVersion}")
 
     // Custom Spring Security
-    compile('org.springframework.security:spring-security-core:5.1.0.BUILD-SNAPSHOT')
-    compile('org.springframework.security:spring-security-config:5.1.0.BUILD-SNAPSHOT')
-    compile('org.springframework.security:spring-security-web:5.1.0.BUILD-SNAPSHOT')
+    implementation('org.springframework.security:spring-security-core:5.1.0.BUILD-SNAPSHOT')
+    implementation('org.springframework.security:spring-security-config:5.1.0.BUILD-SNAPSHOT')
+    implementation('org.springframework.security:spring-security-web:5.1.0.BUILD-SNAPSHOT')
 
-    compile("org.springframework:spring-core")
-    compile("org.springframework:spring-context")
-    compile("org.springframework:spring-aop")
-    compile("org.springframework:spring-jdbc")
-    compile("org.springframework:spring-web")
-    compile("org.springframework.security:spring-security-config")
+    api("org.springframework:spring-core")
+    api("org.springframework:spring-context")
+    implementation("org.springframework:spring-aop")
+    implementation("org.springframework:spring-jdbc")
+    implementation("org.springframework:spring-web")
 
-    compile('javax.servlet:javax.servlet-api')
+    api('javax.servlet:javax.servlet-api')
+
+    implementation("com.fasterxml.jackson.core:jackson-databind")
+    implementation("com.fasterxml.jackson.dataformat:jackson-dataformat-cbor")
+
 
     implementation("com.fasterxml.jackson.core:jackson-databind")
     implementation("com.fasterxml.jackson.dataformat:jackson-dataformat-cbor")
 
 
     //Test
-    testCompile("com.webauthn4j:webauthn4j-test:${webauthn4jVersion}")
-    testCompile('org.projectlombok:lombok')
-    testCompile("org.springframework:spring-webmvc")
-    testCompile('org.springframework.boot:spring-boot-starter-test')
-    testCompile('org.springframework.security:spring-security-test')
-    testCompile('com.h2database:h2')
-    testCompile('junit:junit')
-    testCompile('org.mockito:mockito-core')
-    testCompile('org.assertj:assertj-core')
+    testImplementation("com.webauthn4j:webauthn4j-test:${webauthn4jVersion}")
+    testImplementation('org.projectlombok:lombok')
+    testImplementation("org.springframework:spring-webmvc")
+    testImplementation('org.springframework.boot:spring-boot-starter-test')
+    testImplementation('org.springframework.security:spring-security-test')
+    testImplementation('com.h2database:h2')
+    testImplementation('junit:junit')
+    testImplementation('org.mockito:mockito-core')
+    testImplementation('org.assertj:assertj-core')
 
 }
 
