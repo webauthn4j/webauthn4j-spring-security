@@ -35,47 +35,48 @@ bootJar {
 
 dependencies {
     // Custom Spring Security
-    compile('org.springframework.security:spring-security-core:5.1.0.BUILD-SNAPSHOT')
-    compile('org.springframework.security:spring-security-config:5.1.0.BUILD-SNAPSHOT')
-    compile('org.springframework.security:spring-security-web:5.1.0.BUILD-SNAPSHOT')
+    implementation('org.springframework.security:spring-security-core:5.1.0.BUILD-SNAPSHOT')
+    implementation('org.springframework.security:spring-security-config:5.1.0.BUILD-SNAPSHOT')
+    implementation('org.springframework.security:spring-security-web:5.1.0.BUILD-SNAPSHOT')
 
-    compile project(':spring-security-webauthn-core')
-    compile project(':spring-security-webauthn-fido-server')
-    compile project(':spring-security-webauthn-thymeleaf')
-    compile project(':samples:javaconfig:webauthn:lib:spa-angular-client')
+    implementation project(':spring-security-webauthn-core')
+    implementation project(':spring-security-webauthn-fido-server')
+    implementation project(':spring-security-webauthn-thymeleaf')
+    implementation project(':samples:javaconfig:webauthn:lib:spa-angular-client')
 
     // Spring Framework
-    compile('org.springframework.boot:spring-boot-starter-data-jpa')
-    compile('org.springframework.boot:spring-boot-starter-web')
-    compile('org.springframework.boot:spring-boot-starter-security')
+    implementation('org.springframework.boot:spring-boot-starter-data-jpa')
+    implementation('org.springframework.boot:spring-boot-starter-web')
+    implementation('org.springframework.boot:spring-boot-starter-security')
 
-    //Terasoluna
-    compile("org.terasoluna.gfw:terasoluna-gfw-common:${terasolunaVersion}")
-    compile("org.terasoluna.gfw:terasoluna-gfw-web:${terasolunaVersion}")
-
-    //Others
-    compile("org.slf4j:jcl-over-slf4j")
-    compile('ch.qos.logback:logback-classic')
-    compile('javax.xml.bind:jaxb-api')
     implementation("com.fasterxml.jackson.core:jackson-databind")
     implementation("com.fasterxml.jackson.dataformat:jackson-dataformat-cbor")
-    compile("org.modelmapper:modelmapper:${modelMapperVersion}")
-    compile('org.flywaydb:flyway-core')
+
+    //Terasoluna
+    implementation("org.terasoluna.gfw:terasoluna-gfw-common:${terasolunaVersion}")
+    implementation("org.terasoluna.gfw:terasoluna-gfw-web:${terasolunaVersion}")
+
+    //Others
+    implementation("org.slf4j:jcl-over-slf4j")
+    implementation('ch.qos.logback:logback-classic')
+    implementation('javax.xml.bind:jaxb-api')
+    implementation("org.modelmapper:modelmapper:${modelMapperVersion}")
+    implementation('org.flywaydb:flyway-core')
     runtime('com.h2database:h2')
     runtime('mysql:mysql-connector-java')
-    compile("org.lazyluke:log4jdbc-remix:${log4jdbcVersion}")
+    implementation("org.lazyluke:log4jdbc-remix:${log4jdbcVersion}")
 
     //Test
-    testCompile("com.webauthn4j:webauthn4j-test:${webauthn4jVersion}")
-    testCompile('org.springframework.boot:spring-boot-starter-test')
-    testCompile('org.springframework.security:spring-security-test')
-    testCompile('junit:junit')
-    testCompile('org.mockito:mockito-core')
-    testCompile('org.assertj:assertj-core')
-    testCompile("org.dbunit:dbunit:${dbunitVersion}")
-    testCompile("com.github.springtestdbunit:spring-test-dbunit:${springTestDbunitVersion}")
-    testCompile("io.github.bonigarcia:webdrivermanager:4.0.0")
-    testCompile("org.seleniumhq.selenium:selenium-java")
+    testImplementation("com.webauthn4j:webauthn4j-test:${webauthn4jVersion}")
+    testImplementation('org.springframework.boot:spring-boot-starter-test')
+    testImplementation('org.springframework.security:spring-security-test')
+    testImplementation('junit:junit')
+    testImplementation('org.mockito:mockito-core')
+    testImplementation('org.assertj:assertj-core')
+    testImplementation("org.dbunit:dbunit:${dbunitVersion}")
+    testImplementation("com.github.springtestdbunit:spring-test-dbunit:${springTestDbunitVersion}")
+    testImplementation("io.github.bonigarcia:webdrivermanager:3.8.1")
+    testImplementation("org.seleniumhq.selenium:selenium-java")
 
 }
 

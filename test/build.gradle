@@ -26,14 +26,14 @@ repositories {
 }
 
 dependencies {
-    compile project(':spring-security-webauthn-core')
-    compile('junit:junit')
-    compile('org.springframework.boot:spring-boot-starter-test')
-    compile('org.springframework.security:spring-security-test')
+    implementation project(':spring-security-webauthn-core')
+    implementation('junit:junit')
+    implementation('org.springframework.boot:spring-boot-starter-test')
+    implementation('org.springframework.security:spring-security-test')
 
     //Test
-    testCompile('org.mockito:mockito-core')
-    testCompile('org.assertj:assertj-core')
+    testImplementation('org.mockito:mockito-core')
+    testImplementation('org.assertj:assertj-core')
 
 }
 

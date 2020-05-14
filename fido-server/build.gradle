@@ -26,24 +26,29 @@ repositories {
 }
 
 dependencies {
-    compile project(':spring-security-webauthn-core')
+    api project(':spring-security-webauthn-core')
 
     // Custom Spring Security
-    compile('org.springframework.security:spring-security-core:5.1.0.BUILD-SNAPSHOT')
-    compile('org.springframework.security:spring-security-config:5.1.0.BUILD-SNAPSHOT')
-    compile('org.springframework.security:spring-security-web:5.1.0.BUILD-SNAPSHOT')
+    api('org.springframework.security:spring-security-core:5.1.0.BUILD-SNAPSHOT')
+    api('org.springframework.security:spring-security-config:5.1.0.BUILD-SNAPSHOT')
+    api('org.springframework.security:spring-security-web:5.1.0.BUILD-SNAPSHOT')
+
+    implementation("org.springframework:spring-web")
+
+    implementation("com.fasterxml.jackson.core:jackson-databind")
+    implementation("com.fasterxml.jackson.dataformat:jackson-dataformat-cbor")
 
     implementation("com.fasterxml.jackson.core:jackson-databind")
     implementation("com.fasterxml.jackson.dataformat:jackson-dataformat-cbor")
 
     //Test
-    testCompile('org.projectlombok:lombok')
-    testCompile('org.springframework:spring-webmvc')
-    testCompile('org.springframework.boot:spring-boot-starter-test')
-    testCompile('org.springframework.security:spring-security-test')
-    testCompile('junit:junit')
-    testCompile('org.mockito:mockito-core')
-    testCompile('org.assertj:assertj-core')
+    testImplementation('org.projectlombok:lombok')
+    testImplementation('org.springframework:spring-webmvc')
+    testImplementation('org.springframework.boot:spring-boot-starter-test')
+    testImplementation('org.springframework.security:spring-security-test')
+    testImplementation('junit:junit')
+    testImplementation('org.mockito:mockito-core')
+    testImplementation('org.assertj:assertj-core')
 
 }
 

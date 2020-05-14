@@ -20,7 +20,7 @@ include "fido-server"
 include "test"
 include "samples:javaconfig:webauthn:lib:spa-angular-client"
 include "samples:javaconfig:webauthn:spa"
-include "samples:javaconfig:webauthn:fido-server-conformance-test"
+include "samples:javaconfig:webauthn:fido-server-test-app"
 
 project(":core").name = "spring-security-webauthn-core"
 project(":thymeleaf").name = "spring-security-webauthn-thymeleaf"
