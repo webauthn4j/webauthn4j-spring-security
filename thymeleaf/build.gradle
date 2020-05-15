@@ -26,7 +26,7 @@ repositories {
 }
 
 dependencies {
-    implementation project(':spring-security-webauthn-core')
+    implementation project(':webauthn4j-spring-security-core')
 
     implementation("org.springframework.security:spring-security-core")
     implementation("org.springframework.security:spring-security-web")

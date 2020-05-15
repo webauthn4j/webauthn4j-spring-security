@@ -12,7 +12,7 @@
 ----
 <dependency>
 	<groupId>net.sharplab.springframework.security.registrationExtensions</groupId>
-	<artifactId>spring-security-webauthn-core</artifactId>
+	<artifactId>webauthn4j-spring-security-core</artifactId>
 	<version>${version}</version>
 </dependency>
 ----

@@ -6,7 +6,7 @@ WebAuthn4J Spring Security contains a sample application demonstrates its major 
 It can be launched with a following command.
 
 ```
-./gradlew spring-security-webauthn-samples/javaconfig/webauthn/spa:bootRun
+./gradlew webauthn4j-spring-security-samples/javaconfig/webauthn/spa:bootRun
 ```
 
 image::images/login.png[login view]

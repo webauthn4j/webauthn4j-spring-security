@@ -29,7 +29,7 @@ repositories {
 }
 
 bootJar {
-    baseName = "spring-security-webauthn-sample-spa"
+    baseName = "webauthn4j-spring-security-sample-spa"
     version = null
 }
 
@@ -39,9 +39,9 @@ dependencies {
     compile('org.springframework.security:spring-security-config')
     compile('org.springframework.security:spring-security-web')
 
-    implementation project(':spring-security-webauthn-core')
-    implementation project(':spring-security-webauthn-fido-server')
-    implementation project(':spring-security-webauthn-thymeleaf')
+    implementation project(':webauthn4j-spring-security-core')
+    implementation project(':webauthn4j-spring-security-fido-server')
+    implementation project(':webauthn4j-spring-security-thymeleaf')
     implementation project(':samples:javaconfig:webauthn:lib:spa-angular-client')
 
     // Spring Framework

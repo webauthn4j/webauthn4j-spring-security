@@ -6,13 +6,13 @@
 ==== Maven dependency
 
 [line-through]#Please add following to pom.xml to introduce WebAuthn4J Spring Security and its dependencies.#
-For now, it is not published to Maven Central as it requires Spring Security custom build.
+For now, it is not published to Maven Central.
 
 [source, xml]
 ----
 <dependency>
 	<groupId>net.sharplab.springframework.security.registrationExtensions</groupId>
-	<artifactId>spring-security-webauthn-core</artifactId>
+	<artifactId>webauthn4j-spring-security-core</artifactId>
 	<version>${version}</version>
 </dependency>
 ----

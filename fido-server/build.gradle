@@ -20,7 +20,7 @@ version "${springSecurityWebAuthnVersion}"
 description = "WebAuthn4J Spring Security Thymeleaf Extension library"
 
 dependencies {
-    api project(':spring-security-webauthn-core')
+    api project(':webauthn4j-spring-security-core')
 
     // Custom Spring Security
     implementation('org.springframework.security:spring-security-core')

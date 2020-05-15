@@ -1,8 +1,8 @@
 # WebAuthn4J Spring Security
 
-[![Actions Status](https://github.com/sharplab/spring-security-webauthn/workflows/CI/badge.svg)](https://github.com/sharplab/spring-security-webauthn/actions)
-[![Coverage](https://sonarcloud.io/api/project_badges/measure?project=spring-security-webauthn&metric=coverage)](https://sonarcloud.io/dashboard?id=spring-security-webauthn)
-[![license](https://img.shields.io/github/license/sharplab/spring-security-webauthn.svg)](https://github.com/sharplab/spring-security-webauthn/blob/master/LICENSE.txt)
+[![Actions Status](https://github.com/sharplab/webauthn4j-spring-security/workflows/CI/badge.svg)](https://github.com/sharplab/webauthn4j-spring-security/actions)
+<!-- [![Coverage](https://sonarcloud.io/api/project_badges/measure?project=webauthn4j-spring-security&metric=coverage)](https://sonarcloud.io/dashboard?id=webauthn4j-spring-security) -->
+[![license](https://img.shields.io/github/license/sharplab/webauthn4j-spring-security.svg)](https://github.com/sharplab/webauthn4j-spring-security/blob/master/LICENSE.txt)
 
 WebAuthn4J Spring Security provides Web Authentication specification support for your Spring application by using WebAuthn4J library.
 Users can login with WebAuthn compliant authenticator.
@@ -29,7 +29,7 @@ self-contained bootstrap mechanism for the build.
 ### Checkout sources
 
 ```
-git clone https://github.com/sharplab/spring-security-webauthn
+git clone https://github.com/sharplab/webauthn4j-spring-security
 ```
 
 ### Build all jars
