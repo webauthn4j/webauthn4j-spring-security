@@ -17,7 +17,7 @@
 group 'net.sharplab.springframework.security.extensions'
 version "${springSecurityWebAuthnVersion}"
 
-description = "Spring Security WebAuthn test library"
+description = "WebAuthn4J Spring Security test library"
 
 repositories {
     flatDir {

@@ -6,7 +6,7 @@ plugins {
 group 'net.sharplab.springframework.security.extensions'
 version "${springSecurityWebAuthnVersion}"
 
-description = "Spring Security WebAuthn Sample angular client library"
+description = "WebAuthn4J Spring Security Sample angular client library"
 
 node {
   download = true

@@ -14,4 +14,4 @@
  * limitations under the License.
  */
 
-export type AuthenticationStatus = "Anonymous" | "PartiallyAuthenticated" | "Authenticated";
+export type AuthenticationStatus = "NOT_AUTHENTICATED" | "AUTHENTICATED" | "MULTI_FACTOR_AUTHENTICATED";

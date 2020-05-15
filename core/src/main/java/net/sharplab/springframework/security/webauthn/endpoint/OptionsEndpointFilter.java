@@ -24,7 +24,9 @@ import net.sharplab.springframework.security.webauthn.options.AssertionOptions;
 import net.sharplab.springframework.security.webauthn.options.AttestationOptions;
 import net.sharplab.springframework.security.webauthn.options.OptionsProvider;
 import org.springframework.context.support.MessageSourceAccessor;
-import org.springframework.security.authentication.*;
+import org.springframework.security.authentication.AuthenticationTrustResolver;
+import org.springframework.security.authentication.AuthenticationTrustResolverImpl;
+import org.springframework.security.authentication.InsufficientAuthenticationException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.SpringSecurityMessageSource;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -67,7 +69,6 @@ public class OptionsEndpointFilter extends GenericFilterBean {
     protected JsonConverter jsonConverter;
 
     private AuthenticationTrustResolver trustResolver;
-    private MFATokenEvaluator mfaTokenEvaluator;
 
     private OptionsProvider optionsProvider;
 
@@ -78,7 +79,6 @@ public class OptionsEndpointFilter extends GenericFilterBean {
         this.optionsProvider = optionsProvider;
         this.jsonConverter = objectConverter.getJsonConverter();
         this.trustResolver = new AuthenticationTrustResolverImpl();
-        this.mfaTokenEvaluator = new MFATokenEvaluatorImpl();
         checkConfig();
     }
 
@@ -94,7 +94,6 @@ public class OptionsEndpointFilter extends GenericFilterBean {
         Assert.notNull(filterProcessesUrl, "filterProcessesUrl must not be null");
         Assert.notNull(jsonConverter, "jsonConverter must not be null");
         Assert.notNull(trustResolver, "trustResolver must not be null");
-        Assert.notNull(mfaTokenEvaluator, "mfaTokenEvaluator must not be null");
         Assert.notNull(optionsProvider, "optionsProvider must not be null");
     }
 
@@ -145,14 +144,6 @@ public class OptionsEndpointFilter extends GenericFilterBean {
         this.trustResolver = trustResolver;
     }
 
-    public MFATokenEvaluator getMFATokenEvaluator() {
-        return mfaTokenEvaluator;
-    }
-
-    public void setMFATokenEvaluator(MFATokenEvaluator mfaTokenEvaluator) {
-        this.mfaTokenEvaluator = mfaTokenEvaluator;
-    }
-
 
     /**
      * The filter will be used in case the URL of the request contains the FILTER_URL.
@@ -188,7 +179,7 @@ public class OptionsEndpointFilter extends GenericFilterBean {
 
     String getLoginUsername() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication == null || (trustResolver.isAnonymous(authentication) && !mfaTokenEvaluator.isMultiFactorAuthentication(authentication))) {
+        if (authentication == null || trustResolver.isAnonymous(authentication)) {
             return null;
         } else {
             return authentication.getName();
@@ -198,4 +189,5 @@ public class OptionsEndpointFilter extends GenericFilterBean {
     public void setFilterProcessesUrl(String filterProcessesUrl) {
         this.filterProcessesUrl = filterProcessesUrl;
     }
+
 }

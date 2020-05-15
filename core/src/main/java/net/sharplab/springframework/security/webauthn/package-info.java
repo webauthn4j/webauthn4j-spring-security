@@ -15,6 +15,6 @@
  */
 
 /**
- * Spring Security WebAuthn classes
+ * WebAuthn4J Spring Security classes
  */
 package net.sharplab.springframework.security.webauthn;

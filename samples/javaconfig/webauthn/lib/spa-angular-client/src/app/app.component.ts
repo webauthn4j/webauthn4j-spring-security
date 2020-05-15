@@ -22,5 +22,5 @@ import {Component} from '@angular/core';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
-  title = 'Spring Security WebAuthn Sample SPA';
+  title = 'WebAuthn4J Spring Security Sample SPA';
 }

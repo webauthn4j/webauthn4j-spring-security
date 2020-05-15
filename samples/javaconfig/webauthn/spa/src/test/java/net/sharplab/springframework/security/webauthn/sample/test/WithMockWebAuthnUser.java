@@ -25,8 +25,8 @@ import java.lang.annotation.RetentionPolicy;
  * Annotation for instructing to use UserEntity's Mock
  */
 @Retention(RetentionPolicy.RUNTIME)
-@WithSecurityContext(factory = WithMockUserSecurityContextFactory.class)
-public @interface WithMockUser {
+@WithSecurityContext(factory = WithMockWebAuthnUserSecurityContextFactory.class)
+public @interface WithMockWebAuthnUser {
 
     int id() default 0;
     String userHandleBase64Url() default "";

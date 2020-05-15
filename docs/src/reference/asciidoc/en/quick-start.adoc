@@ -1,7 +1,7 @@
 [quick-start]
 == Quick start
 
-Spring Security WebAuthn contains a sample application demonstrates its major functionality.
+WebAuthn4J Spring Security contains a sample application demonstrates its major functionality.
 
 It can be launched with a following command.
 

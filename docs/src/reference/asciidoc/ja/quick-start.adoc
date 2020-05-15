@@ -1,7 +1,7 @@
 [quick-start]
 == クイックスタート
 
-Spring Security WebAuthnは主要機能をデモするサンプルアプリケーションを含みます。
+WebAuthn4J Spring Securityは主要機能をデモするサンプルアプリケーションを含みます。
 
 サンプルアプリケーションは以下のコマンドで実行することが出来ます。
 

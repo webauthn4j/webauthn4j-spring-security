@@ -17,22 +17,16 @@
 group 'net.sharplab.springframework.security.extensions'
 version "${springSecurityWebAuthnVersion}"
 
-description = "Spring Security WebAuthn Core library"
-
-repositories {
-    flatDir {
-        dirs "../libs"
-    }
-}
+description = "WebAuthn4J Spring Security Core library"
 
 dependencies {
     api("com.webauthn4j:webauthn4j-core:${webauthn4jVersion}")
     api("com.webauthn4j:webauthn4j-metadata:${webauthn4jVersion}")
 
     // Custom Spring Security
-    implementation('org.springframework.security:spring-security-core:5.1.0.BUILD-SNAPSHOT')
-    implementation('org.springframework.security:spring-security-config:5.1.0.BUILD-SNAPSHOT')
-    implementation('org.springframework.security:spring-security-web:5.1.0.BUILD-SNAPSHOT')
+    implementation('org.springframework.security:spring-security-core')
+    implementation('org.springframework.security:spring-security-config')
+    implementation('org.springframework.security:spring-security-web')
 
     api("org.springframework:spring-core")
     api("org.springframework:spring-context")

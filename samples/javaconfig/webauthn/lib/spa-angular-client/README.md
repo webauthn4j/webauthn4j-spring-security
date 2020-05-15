@@ -1,10 +1,10 @@
-# Spring Security WebAuthn Sample SPA Angular Client
+# WebAuthn4J Spring Security Sample SPA Angular Client
 
-Spring Security WebAuthn Sample SPA Angular Client is a client (frontend) module for Spring Security WebAuthn Sample SPA based on Angular.
+WebAuthn4J Spring Security Sample SPA Angular Client is a client (frontend) module for WebAuthn4J Spring Security Sample SPA based on Angular.
 
 ## Build
 
-Spring Security WebAuthn Sample SPA Angular Client uses a Gradle based build system.
+WebAuthn4J Spring Security Sample SPA Angular Client uses a Gradle based build system.
 In the instructions below, `gradlew` is invoked from the root of the source tree and serves as a cross-platform,
 self-contained bootstrap mechanism for the build.
 

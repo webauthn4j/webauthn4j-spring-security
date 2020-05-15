@@ -1,6 +1,6 @@
-# Spring Security WebAuthn Samples
+# WebAuthn4J Spring Security Samples
 
-Spring Security WebAuthn Sample SPA is a sample SPA application for Spring Security WebAuthn.
+WebAuthn4J Spring Security Sample SPA is a sample SPA application for WebAuthn4J Spring Security.
 
 ## Modules
 * spa
