@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-group 'com.webauthn4j.springframework.security.extensions'
+group 'com.webauthn4j'
 version "${springSecurityWebAuthnVersion}"
 
 description = "WebAuthn4J Spring Security Thymeleaf Extension library"
