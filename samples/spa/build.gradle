@@ -38,7 +38,7 @@ dependencies {
     implementation("com.fasterxml.jackson.core:jackson-databind")
     implementation("com.fasterxml.jackson.dataformat:jackson-dataformat-cbor")
 
-    implementation("org.hibernate:hibernate-validator:6.0.0.Final") //FIXME
+    implementation("org.hibernate:hibernate-validator:6.1.5.Final") //FIXME
 
     //Terasoluna
     implementation("org.terasoluna.gfw:terasoluna-gfw-common")
