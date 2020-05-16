@@ -9,8 +9,9 @@
     "watchTest": "ng test --watch=true",
     "lint": "ng lint",
     "e2e": "ng e2e",
-    "updateCli": "ng update @angular/cli",
-    "update": "ng update"
+    "update": "npm run update:core & npm run update:cli",
+    "update:core": "ng update @angular/core",
+    "update:cli": "ng update @angular/cli"
   },
   "private": true,
   "dependencies": {
@@ -29,7 +30,7 @@
     "core-js": "^3.6.5",
     "bowser": "^2.9.0",
     "rxjs": "~6.5.5",
-    "tslib": "^2.0.0",
+    "tslib": "^1.10.0",
     "zone.js": "~0.9.1"
   },
   "devDependencies": {
