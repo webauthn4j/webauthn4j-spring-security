@@ -30,16 +30,10 @@ dependencies {
     implementation project(':webauthn4j-spring-security-thymeleaf')
     implementation project(':samples:lib:spa-angular-client')
 
-    // Spring Security
-    compile('org.springframework.security:spring-security-core')
-    compile('org.springframework.security:spring-security-config')
-    compile('org.springframework.security:spring-security-web')
-
     // Spring Framework
     implementation('org.springframework.boot:spring-boot-starter-data-jpa')
     implementation('org.springframework.boot:spring-boot-starter-web')
     implementation('org.springframework.boot:spring-boot-starter-security')
-
 
     implementation("com.fasterxml.jackson.core:jackson-databind")
     implementation("com.fasterxml.jackson.dataformat:jackson-dataformat-cbor")

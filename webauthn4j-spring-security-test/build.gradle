@@ -22,12 +22,12 @@ description = "WebAuthn4J Spring Security test library"
 dependencies {
     implementation project(':webauthn4j-spring-security-core')
     implementation('junit:junit')
-    implementation('org.springframework.boot:spring-boot-starter-test')
-    implementation('org.springframework.security:spring-security-test')
 
     //Test
     testImplementation('org.mockito:mockito-core')
     testImplementation('org.assertj:assertj-core')
+    testImplementation('org.springframework.boot:spring-boot-starter-test')
+    testImplementation('org.springframework.security:spring-security-test')
 
 }
 

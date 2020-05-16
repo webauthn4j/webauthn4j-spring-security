@@ -28,10 +28,6 @@ dependencies {
     implementation project(':webauthn4j-spring-security-core')
     implementation project(':webauthn4j-spring-security-fido-server')
 
-    implementation('org.springframework.security:spring-security-core')
-    implementation('org.springframework.security:spring-security-config')
-    implementation('org.springframework.security:spring-security-web')
-
     // Spring Framework
     implementation('org.springframework.boot:spring-boot-starter-data-jpa')
     implementation('org.springframework.boot:spring-boot-starter-web')
@@ -39,7 +35,6 @@ dependencies {
 
     implementation("com.fasterxml.jackson.core:jackson-databind")
     implementation("com.fasterxml.jackson.dataformat:jackson-dataformat-cbor")
-
 
     //Terasoluna
     implementation("org.terasoluna.gfw:terasoluna-gfw-common")

@@ -22,10 +22,8 @@ description = "WebAuthn4J Spring Security Thymeleaf Extension library"
 dependencies {
     implementation project(':webauthn4j-spring-security-core')
 
-    implementation("org.springframework.security:spring-security-core")
-    implementation("org.springframework.security:spring-security-web")
-    implementation("org.springframework.boot:spring-boot-starter-thymeleaf")
-
+    implementation("org.thymeleaf:thymeleaf")
+    implementation("org.thymeleaf:thymeleaf-spring5")
     implementation("org.thymeleaf.extras:thymeleaf-extras-springsecurity5")
 
     //Test
