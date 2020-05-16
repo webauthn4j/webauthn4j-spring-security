@@ -16,7 +16,7 @@
 
 <div>
   <h2 class="h4 font-weight-normal text-center">Login</h2>
-  <form name="loginForm" class="loginForm" #loginForm="ngForm" (submit)="loginWithPasswordCredential()" novalidate>
+  <form name="loginForm" class="loginForm" #loginForm="ngForm" (submit)="loginWithPublicKeyCredential()" novalidate>
     <div *ngFor="let alert of alerts">
       <ngb-alert [type]="alert.type" [dismissible]="false">{{ alert.message }}</ngb-alert>
     </div>

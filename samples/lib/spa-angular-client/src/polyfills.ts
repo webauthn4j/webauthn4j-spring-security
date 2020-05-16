@@ -19,6 +19,7 @@
  */
 import 'zone.js/dist/zone'; // Included with Angular CLI.
 
+import '@angular/localize/init'
 
 /**
  * Web Animations `@angular/platform-browser/animations`

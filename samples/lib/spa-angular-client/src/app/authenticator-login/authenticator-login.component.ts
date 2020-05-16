@@ -28,6 +28,7 @@ import {Alert} from "../alert/alert";
 export class AuthenticatorLoginComponent implements OnInit, AfterContentInit {
 
   alerts: Alert[] = [];
+  submitting = false;
 
   constructor(private authService: AuthService, private router: Router) { }
 
