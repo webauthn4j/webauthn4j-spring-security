@@ -48,9 +48,9 @@ Windows Helloを認証デバイスとして使用できるため、パスワー�
 
 === ソースコード
 
-ソースコードは https://github.com/sharplab/webauthn4j-spring-security[Github] で管理されています。
+ソースコードは https://github.com/webauthn4j/webauthn4j-spring-security[Github] で管理されています。
 ----
-git clone https://github.com/sharplab/webauthn4j-spring-security
+git clone https://github.com/webauthn4j/webauthn4j-spring-security
 ----
 
 === ライセンス
