@@ -72,6 +72,8 @@ public interface UserService {
      * update the specified user
      *
      * @param id userId
+     * @param consumer consumer
+     * @return updated userEntity
      */
     UserEntity update(int id, Consumer<UserEntity> consumer);
 
