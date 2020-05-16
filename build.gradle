@@ -30,7 +30,7 @@ plugins {
     id 'org.asciidoctor.convert' version "2.4.0"
 }
 
-group 'net.sharplab.springframework.security.extensions'
+group 'com.webauthn4j.springframework.security.extensions'
 version "${springSecurityWebAuthnVersion}"
 
 subprojects {

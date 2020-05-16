@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-group 'net.sharplab.springframework.security.extensions'
+group 'com.webauthn4j.springframework.security.extensions'
 version "${springSecurityWebAuthnVersion}"
 
 description = "WebAuthn4J Spring Security test library"

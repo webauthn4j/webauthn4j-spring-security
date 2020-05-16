@@ -19,7 +19,7 @@ plugins {
     id "io.spring.dependency-management"
 }
 
-group 'net.sharplab.springframework.security.extensions'
+group 'com.webauthn4j.springframework.security.extensions'
 description = "WebAuthn4J Spring Security Angular Sample"
 
 repositories {

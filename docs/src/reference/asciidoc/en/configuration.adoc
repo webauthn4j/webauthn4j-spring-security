@@ -11,7 +11,7 @@ For now, it is not published to Maven Central.
 [source, xml]
 ----
 <dependency>
-	<groupId>net.sharplab.springframework.security.registrationExtensions</groupId>
+	<groupId>com.webauthn4j.springframework.security.registrationExtensions</groupId>
 	<artifactId>webauthn4j-spring-security-core</artifactId>
 	<version>${version}</version>
 </dependency>
@@ -28,7 +28,7 @@ in a method overrides `configure(HttpSecurity http)`.
 
 ```java
 
-import static net.sharplab.springframework.security.webauthn.config.configurers.WebAuthnLoginConfigurer.webAuthnLogin;
+import static WebAuthnLoginConfigurer.webAuthnLogin;
 
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
