@@ -21,6 +21,7 @@
     "@angular/compiler": "^9.1.7",
     "@angular/core": "^9.1.7",
     "@angular/forms": "^9.1.7",
+    "@angular/localize": "^9.1.7",
     "@angular/platform-browser": "^9.1.7",
     "@angular/platform-browser-dynamic": "^9.1.7",
     "@angular/router": "^9.1.7",
@@ -58,3 +59,4 @@
     "typescript": "~3.8.3"
   }
 }
+

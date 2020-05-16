@@ -37,6 +37,8 @@ export class PasswordLoginComponent implements OnInit {
     username: "",
     password: ""
   };
+  submitting = false;
+
 
   constructor(private authService: AuthService, private router: Router) { }
 
