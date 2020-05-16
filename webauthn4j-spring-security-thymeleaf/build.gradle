@@ -26,14 +26,14 @@ dependencies {
     implementation("org.springframework.security:spring-security-web")
     implementation("org.springframework.boot:spring-boot-starter-thymeleaf")
 
-    implementation("org.thymeleaf.extras:thymeleaf-extras-springsecurity5:3.0.4.RELEASE")
+    implementation("org.thymeleaf.extras:thymeleaf-extras-springsecurity5")
 
     //Test
     testImplementation('org.projectlombok:lombok')
     testImplementation('org.springframework:spring-webmvc')
     testImplementation('org.springframework.boot:spring-boot-starter-test')
     testImplementation('org.springframework.security:spring-security-test')
-    testImplementation('org.thymeleaf:thymeleaf-testing:3.0.4.RELEASE')
+    testImplementation('org.thymeleaf:thymeleaf-testing')
     testImplementation('junit:junit')
     testImplementation('org.mockito:mockito-core')
     testImplementation('org.assertj:assertj-core')

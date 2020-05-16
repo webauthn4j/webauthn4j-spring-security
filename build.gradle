@@ -66,6 +66,7 @@ subprojects {
     def springSecurityVersion = '5.3.2.RELEASE'
     def springBootVersion = '2.3.0.RELEASE'
     def terasolunaVersion = '5.4.0.RELEASE'
+    def thymeleafVersion = '3.0.4.RELEASE'
     def modelMapperVersion = '0.7.8'
     def log4jdbcVersion = '0.2.6'
     def dbunitVersion = '2.5.3'
@@ -86,6 +87,7 @@ subprojects {
         // Independent libraries for Sample applications
         implementation platform("org.terasoluna.gfw:terasoluna-gfw-common:$terasolunaVersion")
         implementation platform("org.terasoluna.gfw:terasoluna-gfw-web:$terasolunaVersion")
+        implementation platform("org.thymeleaf:thymeleaf-testing:$thymeleafVersion")
         implementation platform("org.modelmapper:modelmapper:$modelMapperVersion")
         implementation platform("org.lazyluke:log4jdbc-remix:$log4jdbcVersion")
         implementation platform("org.dbunit:dbunit:$dbunitVersion")

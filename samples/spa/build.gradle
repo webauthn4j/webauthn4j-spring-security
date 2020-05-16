@@ -69,7 +69,7 @@ dependencies {
     testImplementation('org.assertj:assertj-core')
     testImplementation("org.dbunit:dbunit")
     testImplementation("com.github.springtestdbunit:spring-test-dbunit")
-    testImplementation("io.github.bonigarcia:webdrivermanager:3.8.1")
+    testImplementation("io.github.bonigarcia:webdrivermanager")
     testImplementation("org.seleniumhq.selenium:selenium-java")
 
 }
