@@ -46,9 +46,9 @@ dependencies {
     implementation('javax.xml.bind:jaxb-api')
     implementation("org.modelmapper:modelmapper")
     implementation('org.flywaydb:flyway-core')
-    implementation('com.h2database:h2')
-    implementation('mysql:mysql-connector-java')
-    implementation("org.lazyluke:log4jdbc-remix")
+    runtimeOnly('com.h2database:h2')
+    runtimeOnly('mysql:mysql-connector-java')
+    runtimeOnly("org.lazyluke:log4jdbc-remix")
 
     //Test
     testImplementation("com.webauthn4j:webauthn4j-test")
