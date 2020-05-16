@@ -1,4 +1,3 @@
-[sample-app]
 == サンプルアプリケーション
 
 webauthn4j-spring-securityは主要機能をデモするサンプルアプリケーションを含みます。
@@ -7,9 +6,10 @@ webauthn4j-spring-securityは主要機能をデモするサンプルアプリケ
 
 サンプルアプリケーションは以下のコマンドで実行することが出来ます。
 
-```
+[source,bash]
+----
 ./gradlew samples:spa:bootRun
-```
+----
 
 === ユーザーおよび認証デバイスの登録
 

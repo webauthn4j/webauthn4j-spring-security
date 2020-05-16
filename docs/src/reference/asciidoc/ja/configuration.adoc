@@ -1,4 +1,3 @@
-[configuration]
 == 設定
 
 === アプリケーションへの組込
@@ -26,7 +25,8 @@ WebAuthnの認証要求を受け付ける `WebAuthnProcessingFilter` はJavaConf
 `WebAuthnLoginConfigurer` を適用して下さい。 `WebAuthnLoginConfigurer` はインスタンスを返却する `webAuthnLogin()` という
 staticメソッドを持っていますので、そちらを活用すると良いでしょう。
 
-```java
+[source,java]
+----
 
 import static WebAuthnLoginConfigurer.webAuthnLogin;
 
@@ -41,7 +41,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .passwordParameter("rawPassword");
     }
 }
-```
+----
 
 ===== WebAuthnAuthenticationProviderの組込
 
@@ -54,7 +54,8 @@ Web Authentication用の `AuthenticationProvider` である `WebAuthnAuthenticat
 委譲する場合、 `DaoAuthenticationProvider` を `AuthenticationManager` に登録する `DaoAuthenticationConfigurer` や、
 `AuthenticationManagerBuilder#userDetailsService` は使用しないで下さい。
 
-```java
+[source,java]
+----
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     public void configure(AuthenticationManagerBuilder builder) throws Exception {
@@ -62,7 +63,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         builder.apply(new MultiFactorAuthenticationProviderConfigurer<>(daoAuthenticationProvider));
     }
 }
-```
+----
+
 ==== ユーザーディレクトリとの統合
 
 WebAuthn4J Spring Securityは `WebAuthnUserDetailsService` インタフェースを通じてユーザーを検索します。
@@ -143,7 +145,8 @@ WebAuthn4J Spring Securityでパスワード＋認証デバイスによる多要
 表示したい場合、以下のように現在の `Authentication` インスタンスが `MultiFactorAuthenticationToken` か否かで
 判断することが出来ます。
 
-```java
+[source,java]
+----
 @RequestMapping(value = "/login", method = RequestMethod.GET)
 public String login() {
     Authentication authentication =
@@ -154,7 +157,7 @@ public String login() {
         return ViewNames.VIEW_LOGIN_LOGIN;
     }
 }
-```
+----
 
 ==== Credentialの有効範囲（RpId）設定
 

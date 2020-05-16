@@ -55,7 +55,9 @@ subprojects {
     sourceCompatibility = 1.8
 
     tasks.withType(JavaCompile) {
-        //options.compilerArgs << "-Xlint:unchecked" << "-Xlint:deprecation" << "-Werror" //FIXME
+        //options.compilerArgs << "-Xlint:unchecked" //FIXME
+        options.compilerArgs << "-Xlint:deprecation"
+        options.compilerArgs << "-Werror"
     }
 
     repositories {

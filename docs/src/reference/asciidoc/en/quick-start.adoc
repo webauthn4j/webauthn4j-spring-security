@@ -1,13 +1,13 @@
-[quick-start]
 == Quick start
 
 WebAuthn4J Spring Security contains a sample application demonstrates its major functionality.
 
 It can be launched with a following command.
 
-```
+[source,bash]
+----
 ./gradlew samples:spa:bootRun
-```
+----
 
 image::images/login.png[login view]
 
