@@ -19,7 +19,7 @@ plugins {
     id "io.spring.dependency-management"
 }
 
-group 'net.sharplab.springframework.security.extensions'
+group 'com.webauthn4j.springframework.security.extensions'
 description = "WebAuthn4J Spring Security Angular Sample"
 
 repositories {
@@ -29,7 +29,7 @@ repositories {
 }
 
 bootJar {
-    baseName = "spring-security-webauthn-sample-spa"
+    baseName = "webauthn4j-spring-security-sample-spa"
     version = null
 }
 
@@ -39,8 +39,8 @@ dependencies {
     implementation('org.springframework.security:spring-security-config')
     implementation('org.springframework.security:spring-security-web')
 
-    implementation project(':spring-security-webauthn-core')
-    implementation project(':spring-security-webauthn-fido-server')
+    implementation project(':webauthn4j-spring-security-core')
+    implementation project(':webauthn4j-spring-security-fido-server')
 
     // Spring Framework
     implementation('org.springframework.boot:spring-boot-starter-data-jpa')

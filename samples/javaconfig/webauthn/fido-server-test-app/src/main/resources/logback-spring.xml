@@ -26,7 +26,7 @@
         <appender-ref ref="FILE"/>
     </root>
 
-    <logger name="net.sharplab.springframework.security.webauthn" level="DEBUG">
+    <logger name="com.webauthn4j.springframework.security.webauthn" level="DEBUG">
         <appender-ref ref="CONSOLE"/>
         <appender-ref ref="FILE"/>
     </logger>

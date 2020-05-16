@@ -11,8 +11,8 @@
 [source, xml]
 ----
 <dependency>
-	<groupId>net.sharplab.springframework.security.registrationExtensions</groupId>
-	<artifactId>spring-security-webauthn-core</artifactId>
+	<groupId>com.webauthn4j.springframework.security.registrationExtensions</groupId>
+	<artifactId>webauthn4j-spring-security-core</artifactId>
 	<version>${version}</version>
 </dependency>
 ----
@@ -28,7 +28,7 @@ staticメソッドを持っていますので、そちらを活用すると良�
 
 ```java
 
-import static net.sharplab.springframework.security.webauthn.config.configurers.WebAuthnLoginConfigurer.webAuthnLogin;
+import static WebAuthnLoginConfigurer.webAuthnLogin;
 
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override

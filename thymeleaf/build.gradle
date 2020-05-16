@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-group 'net.sharplab.springframework.security.extensions'
+group 'com.webauthn4j.springframework.security.extensions'
 version "${springSecurityWebAuthnVersion}"
 
 description = "WebAuthn4J Spring Security Thymeleaf Extension library"
@@ -26,7 +26,7 @@ repositories {
 }
 
 dependencies {
-    implementation project(':spring-security-webauthn-core')
+    implementation project(':webauthn4j-spring-security-core')
 
     implementation("org.springframework.security:spring-security-core")
     implementation("org.springframework.security:spring-security-web")

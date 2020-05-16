@@ -24,14 +24,14 @@
         <attributes>
             <basic name="aaguid">
                 <column column-definition="blob"/>
-                <convert converter="net.sharplab.springframework.security.webauthn.sample.infrastructure.util.jpa.converter.AAGUIDConverter" />
+                <convert converter="com.webauthn4j.springframework.security.webauthn.sample.infrastructure.util.jpa.converter.AAGUIDConverter" />
             </basic>
             <basic name="credentialId">
                 <column column-definition="blob"/>
             </basic>
             <basic name="coseKey">
                 <column column-definition="clob"/>
-                <convert converter="net.sharplab.springframework.security.webauthn.sample.infrastructure.util.jpa.converter.COSEKeyConverter"/>
+                <convert converter="com.webauthn4j.springframework.security.webauthn.sample.infrastructure.util.jpa.converter.COSEKeyConverter"/>
             </basic>
         </attributes>
     </embeddable>

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-group 'net.sharplab.springframework.security.extensions'
+group 'com.webauthn4j.springframework.security.extensions'
 version "${springSecurityWebAuthnVersion}"
 
 description = "WebAuthn4J Spring Security test library"
@@ -26,7 +26,7 @@ repositories {
 }
 
 dependencies {
-    implementation project(':spring-security-webauthn-core')
+    implementation project(':webauthn4j-spring-security-core')
     implementation('junit:junit')
     implementation('org.springframework.boot:spring-boot-starter-test')
     implementation('org.springframework.security:spring-security-test')
