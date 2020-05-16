@@ -1,4 +1,3 @@
-[introduction]
 == 導入
 
 === Web Authenticationとは
@@ -49,6 +48,7 @@ Windows Helloを認証デバイスとして使用できるため、パスワー�
 === ソースコード
 
 ソースコードは https://github.com/webauthn4j/webauthn4j-spring-security[Github] で管理されています。
+[source,bash]
 ----
 git clone https://github.com/webauthn4j/webauthn4j-spring-security
 ----

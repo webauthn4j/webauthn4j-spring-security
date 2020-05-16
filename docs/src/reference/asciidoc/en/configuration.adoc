@@ -1,4 +1,3 @@
-[configuration]
 == Configuration
 
 === Applications integration
@@ -26,7 +25,8 @@ Please define a configuration class, make it inherit `WebSecurityConfigurerAdapt
 in a method overrides `configure(HttpSecurity http)`.
 `WebAuthnLoginConfigurer` has a factory method named `webAuthnLogin()`, which can be utilized.
 
-```java
+[source,java]
+----
 
 import static WebAuthnLoginConfigurer.webAuthnLogin;
 
@@ -41,7 +41,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .passwordParameter("rawPassword");
     }
 }
-```
+----
 
 ===== Integrating WebAuthnAuthenticationProvider
 
@@ -56,7 +56,8 @@ There are some points to be kept in mind when using `MultiFactorAuthenticationPr
 to `DaoAuthenticationProvider`, it is important not to use `DaoAuthenticationConfigurer` or
 `AuthenticationManagerBuilder#userDetailsService`.
 
-```java
+[source,java]
+----
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     public void configure(AuthenticationManagerBuilder builder) throws Exception {
@@ -64,7 +65,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         builder.apply(new MultiFactorAuthenticationProviderConfigurer<>(daoAuthenticationProvider));
     }
 }
-```
+----
 
 ==== User directory integration
 
@@ -145,7 +146,8 @@ In the case where it is needed to show a different login view like the one asks 
 first factor is verified but second factor is not provided yet, the distinction can be made by checking the type of
 `Authentication` instance is a descendant of `MultiFactorAuthenticationToken` or not.
 
-```java
+[source,java]
+----
 @RequestMapping(value = "/login", method = RequestMethod.GET)
 public String login() {
     Authentication authentication =
@@ -156,7 +158,7 @@ public String login() {
         return ViewNames.VIEW_LOGIN_LOGIN;
     }
 }
-```
+----
 
 ==== Configuring a credential scope (rpId)
 

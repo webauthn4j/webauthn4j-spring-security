@@ -1,13 +1,13 @@
-[quick-start]
 == クイックスタート
 
 WebAuthn4J Spring Securityは主要機能をデモするサンプルアプリケーションを含みます。
 
 サンプルアプリケーションは以下のコマンドで実行することが出来ます。
 
-```
+[source,bash]
+----
 ./gradlew samples:spa:bootRun
-```
+----
 
 image::images/login.png[ログイン画面]
 
