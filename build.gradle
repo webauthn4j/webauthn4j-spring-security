@@ -50,11 +50,12 @@ subprojects {
 
     apply plugin: 'java-library'
     apply plugin: 'jacoco'
+    apply plugin: 'org.owasp.dependencycheck'
 
     sourceCompatibility = 1.8
 
     tasks.withType(JavaCompile) {
-        //options.compilerArgs << "-Xlint:unchecked" << "-Xlint:deprecation" << "-Werror"
+        //options.compilerArgs << "-Xlint:unchecked" << "-Xlint:deprecation" << "-Werror" //FIXME
     }
 
     repositories {
@@ -99,6 +100,30 @@ subprojects {
         options.charSet = 'UTF-8'
         options.encoding = 'UTF-8'
     }
+
+    task sourcesJar(type: Jar, dependsOn: classes) {
+        archiveClassifier = 'sources'
+        from sourceSets.main.allSource
+    }
+
+    task javadocJar(type: Jar, dependsOn: javadoc) {
+        archiveClassifier = 'javadoc'
+        from javadoc.destinationDir
+    }
+
+    check.dependsOn dependencyCheckAnalyze
+
+    artifacts {
+        archives sourcesJar
+        archives javadocJar
+    }
+
+    jacocoTestReport {
+        reports {
+            xml.enabled true
+        }
+    }
+
 }
 
 
