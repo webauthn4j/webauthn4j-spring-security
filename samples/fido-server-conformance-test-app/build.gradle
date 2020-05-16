@@ -14,19 +14,10 @@
  * limitations under the License.
  */
 
-plugins {
-    id "org.springframework.boot"
-    id "io.spring.dependency-management"
-}
+apply plugin: 'org.springframework.boot'
 
 group 'com.webauthn4j'
 description = "WebAuthn4J Spring Security Angular Sample"
-
-repositories {
-    flatDir {
-        dirs "../../../../libs"
-    }
-}
 
 bootJar {
     baseName = "webauthn4j-spring-security-sample-spa"
@@ -34,11 +25,6 @@ bootJar {
 }
 
 dependencies {
-    // Custom Spring Security
-    implementation('org.springframework.security:spring-security-core')
-    implementation('org.springframework.security:spring-security-config')
-    implementation('org.springframework.security:spring-security-web')
-
     implementation project(':webauthn4j-spring-security-core')
     implementation project(':webauthn4j-spring-security-fido-server')
 
@@ -50,38 +36,30 @@ dependencies {
     implementation("com.fasterxml.jackson.core:jackson-databind")
     implementation("com.fasterxml.jackson.dataformat:jackson-dataformat-cbor")
 
-
     //Terasoluna
-    implementation("org.terasoluna.gfw:terasoluna-gfw-common:${terasolunaVersion}")
-    implementation("org.terasoluna.gfw:terasoluna-gfw-web:${terasolunaVersion}")
+    implementation("org.terasoluna.gfw:terasoluna-gfw-common")
+    implementation("org.terasoluna.gfw:terasoluna-gfw-web")
 
     //Others
     implementation("org.slf4j:jcl-over-slf4j")
     implementation('ch.qos.logback:logback-classic')
     implementation('javax.xml.bind:jaxb-api')
-    implementation("org.modelmapper:modelmapper:${modelMapperVersion}")
+    implementation("org.modelmapper:modelmapper")
     implementation('org.flywaydb:flyway-core')
-    implementation('com.h2database:h2')
-    implementation('mysql:mysql-connector-java')
-    implementation("org.lazyluke:log4jdbc-remix:${log4jdbcVersion}")
+    runtimeOnly('com.h2database:h2')
+    runtimeOnly('mysql:mysql-connector-java')
+    runtimeOnly("org.lazyluke:log4jdbc-remix")
 
     //Test
-    testImplementation("com.webauthn4j:webauthn4j-test:${webauthn4jVersion}")
+    testImplementation("com.webauthn4j:webauthn4j-test")
     testImplementation('org.springframework.boot:spring-boot-starter-test')
     testImplementation('org.springframework.security:spring-security-test')
     testImplementation('junit:junit')
     testImplementation('org.mockito:mockito-core')
     testImplementation('org.assertj:assertj-core')
-    testImplementation("org.dbunit:dbunit:${dbunitVersion}")
-    testImplementation("com.github.springtestdbunit:spring-test-dbunit:${springTestDbunitVersion}")
+    testImplementation("org.dbunit:dbunit")
+    testImplementation("com.github.springtestdbunit:spring-test-dbunit")
 
-}
-
-dependencyManagement {
-    imports {
-        mavenBom "org.springframework.boot:spring-boot-dependencies:${springBootVersion}"
-        mavenBom "org.springframework.security:spring-security-bom:${springSecurityVersion}"
-    }
 }
 
 sonarqube {

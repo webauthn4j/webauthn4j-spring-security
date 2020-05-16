@@ -15,27 +15,40 @@
  */
 
 buildscript {
+    def springBootVersion = '2.3.0.RELEASE'
+    def sonarqubeVersion = "2.8.0.1969"
+    def asciidoctorGradleVersion="1.6.1"
+    def artifactoryVersion="4.15.2"
+    def bintrayVersion = "1.8.5"
+    def owaspDependencyCheckVersion = "5.3.2.1"
+    def httpBuilderVersion = "0.7.2"
+
     repositories {
-        maven { url 'http://repo.spring.io/plugins-release' }
+        mavenCentral()
+        jcenter()
     }
     dependencies {
-        classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
-        classpath("org.asciidoctor:asciidoctor-gradle-plugin:${asciidoctorVersion}")
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:$springBootVersion")
+        classpath("org.sonarsource.scanner.gradle:sonarqube-gradle-plugin:$sonarqubeVersion")
+        classpath("org.asciidoctor:asciidoctor-gradle-plugin:$asciidoctorGradleVersion")
+        classpath("org.jfrog.buildinfo:build-info-extractor-gradle:$artifactoryVersion")
+        classpath("com.jfrog.bintray.gradle:gradle-bintray-plugin:$bintrayVersion")
+        classpath("org.owasp:dependency-check-gradle:$owaspDependencyCheckVersion")
+        classpath("org.codehaus.groovy.modules.http-builder:http-builder:$httpBuilderVersion")
     }
 
 }
 
-plugins {
-    id "org.sonarqube" version "2.8"
-    id 'org.asciidoctor.convert' version "2.4.0"
-}
+apply plugin: 'org.sonarqube'
+apply plugin: 'org.asciidoctor.convert'
 
-group 'com.webauthn4j.springframework.security.extensions'
-version "${springSecurityWebAuthnVersion}"
+
+group 'com.webauthn4j'
+version "${WebAuthn4JSpringSecurityVersion}"
 
 subprojects {
-    apply plugin: "java-library"
-    apply plugin: "io.spring.dependency-management"
+
+    apply plugin: 'java-library'
     apply plugin: 'jacoco'
 
     sourceCompatibility = 1.8
@@ -47,6 +60,39 @@ subprojects {
     repositories {
         mavenCentral()
         maven { url "https://oss.jfrog.org/artifactory/libs-snapshot" }
+    }
+
+    def webauthn4jVersion = '0.11.1.RELEASE'
+    def springSecurityVersion = '5.3.2.RELEASE'
+    def springBootVersion = '2.3.0.RELEASE'
+    def terasolunaVersion = '5.4.0.RELEASE'
+    def thymeleafVersion = '3.0.4.RELEASE'
+    def modelMapperVersion = '0.7.8'
+    def log4jdbcVersion = '0.2.6'
+    def dbunitVersion = '2.5.3'
+    def springTestDbunitVersion = '1.3.0'
+    def webDriverManagerVersion = '3.8.1'
+
+    dependencies {
+        // BOM
+        implementation platform("org.springframework.boot:spring-boot-dependencies:${springBootVersion}")
+        implementation platform("org.springframework.security:spring-security-bom:${springSecurityVersion}")
+
+        // Independent libraries
+        implementation platform("com.webauthn4j:webauthn4j-util:$webauthn4jVersion")
+        implementation platform("com.webauthn4j:webauthn4j-core:$webauthn4jVersion")
+        implementation platform("com.webauthn4j:webauthn4j-metadata:$webauthn4jVersion")
+        implementation platform("com.webauthn4j:webauthn4j-test:$webauthn4jVersion")
+
+        // Independent libraries for Sample applications
+        implementation platform("org.terasoluna.gfw:terasoluna-gfw-common:$terasolunaVersion")
+        implementation platform("org.terasoluna.gfw:terasoluna-gfw-web:$terasolunaVersion")
+        implementation platform("org.thymeleaf:thymeleaf-testing:$thymeleafVersion")
+        implementation platform("org.modelmapper:modelmapper:$modelMapperVersion")
+        implementation platform("org.lazyluke:log4jdbc-remix:$log4jdbcVersion")
+        implementation platform("org.dbunit:dbunit:$dbunitVersion")
+        implementation platform("com.github.springtestdbunit:spring-test-dbunit:$springTestDbunitVersion")
+        implementation platform("io.github.bonigarcia:webdrivermanager:$webDriverManagerVersion")
     }
 
     javadoc {
@@ -81,5 +127,5 @@ asciidoctor {
             idseparator: '-',
             doctype: 'book',
             numbered: '',
-            revnumber: "${springSecurityWebAuthnVersion}"
+            revnumber: "${WebAuthn4JSpringSecurityVersion}"
 }

@@ -15,33 +15,20 @@
  */
 
 group 'com.webauthn4j'
-version "${springSecurityWebAuthnVersion}"
+version "${WebAuthn4JSpringSecurityVersion}"
 
 description = "WebAuthn4J Spring Security test library"
-
-repositories {
-    flatDir {
-        dirs "../libs"
-    }
-}
 
 dependencies {
     implementation project(':webauthn4j-spring-security-core')
     implementation('junit:junit')
-    implementation('org.springframework.boot:spring-boot-starter-test')
-    implementation('org.springframework.security:spring-security-test')
 
     //Test
     testImplementation('org.mockito:mockito-core')
     testImplementation('org.assertj:assertj-core')
+    testImplementation('org.springframework.boot:spring-boot-starter-test')
+    testImplementation('org.springframework.security:spring-security-test')
 
-}
-
-dependencyManagement {
-    imports {
-        mavenBom "org.springframework.boot:spring-boot-dependencies:${springBootVersion}"
-        mavenBom "org.springframework.security:spring-security-bom:${springSecurityVersion}"
-    }
 }
 
 sonarqube {

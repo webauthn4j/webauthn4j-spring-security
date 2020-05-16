@@ -15,22 +15,12 @@
  */
 
 group 'com.webauthn4j'
-version "${springSecurityWebAuthnVersion}"
+version "${WebAuthn4JSpringSecurityVersion}"
 
 description = "WebAuthn4J Spring Security Thymeleaf Extension library"
 
 dependencies {
     api project(':webauthn4j-spring-security-core')
-
-    // Custom Spring Security
-    implementation('org.springframework.security:spring-security-core')
-    implementation('org.springframework.security:spring-security-config')
-    implementation('org.springframework.security:spring-security-web')
-
-    implementation("org.springframework:spring-web")
-
-    implementation("com.fasterxml.jackson.core:jackson-databind")
-    implementation("com.fasterxml.jackson.dataformat:jackson-dataformat-cbor")
 
     implementation("com.fasterxml.jackson.core:jackson-databind")
     implementation("com.fasterxml.jackson.dataformat:jackson-dataformat-cbor")
@@ -44,13 +34,6 @@ dependencies {
     testImplementation('org.mockito:mockito-core')
     testImplementation('org.assertj:assertj-core')
 
-}
-
-dependencyManagement {
-    imports {
-        mavenBom "org.springframework.boot:spring-boot-dependencies:${springBootVersion}"
-        mavenBom "org.springframework.security:spring-security-bom:${springSecurityVersion}"
-    }
 }
 
 sonarqube {

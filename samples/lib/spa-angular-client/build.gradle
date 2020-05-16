@@ -1,10 +1,9 @@
 plugins {
-  id "java"
   id "com.github.node-gradle.node" version "2.2.3"
 }
 
 group 'com.webauthn4j'
-version "${springSecurityWebAuthnVersion}"
+version "${WebAuthn4JSpringSecurityVersion}"
 
 description = "WebAuthn4J Spring Security Sample angular client library"
 
