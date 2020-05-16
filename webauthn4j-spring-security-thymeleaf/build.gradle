@@ -15,7 +15,7 @@
  */
 
 group 'com.webauthn4j'
-version "${springSecurityWebAuthnVersion}"
+version "${WebAuthn4JSpringSecurityVersion}"
 
 description = "WebAuthn4J Spring Security Thymeleaf Extension library"
 
