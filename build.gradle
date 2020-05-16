@@ -65,7 +65,7 @@ subprojects {
     def webauthn4jVersion = '0.11.1.RELEASE'
     def springSecurityVersion = '5.3.2.RELEASE'
     def springBootVersion = '2.3.0.RELEASE'
-    def terasolunaVersion = '5.4.0.RELEASE'
+    def terasolunaVersion = '5.5.1.RELEASE'
     def thymeleafVersion = '3.0.4.RELEASE'
     def modelMapperVersion = '0.7.8'
     def log4jdbcVersion = '0.2.7'
