@@ -19,12 +19,6 @@ version "${WebAuthn4JSpringSecurityVersion}"
 
 description = "WebAuthn4J Spring Security Thymeleaf Extension library"
 
-repositories {
-    flatDir {
-        dirs "../libs"
-    }
-}
-
 dependencies {
     implementation project(':webauthn4j-spring-security-core')
 

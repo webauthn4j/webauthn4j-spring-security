@@ -16,15 +16,8 @@
 
 apply plugin: 'org.springframework.boot'
 
-
 group 'com.webauthn4j'
 description = "WebAuthn4J Spring Security Angular Sample"
-
-repositories {
-    flatDir {
-        dirs "../../../../libs"
-    }
-}
 
 bootJar {
     baseName = "webauthn4j-spring-security-sample-spa"
