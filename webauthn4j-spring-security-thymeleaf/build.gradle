@@ -45,10 +45,3 @@ dependencies {
     testImplementation('org.assertj:assertj-core')
 
 }
-
-dependencyManagement {
-    imports {
-        mavenBom "org.springframework.boot:spring-boot-dependencies:${springBootVersion}"
-        mavenBom "org.springframework.security:spring-security-bom:${springSecurityVersion}"
-    }
-}

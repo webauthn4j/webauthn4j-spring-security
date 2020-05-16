@@ -20,8 +20,8 @@ version "${springSecurityWebAuthnVersion}"
 description = "WebAuthn4J Spring Security Core library"
 
 dependencies {
-    api("com.webauthn4j:webauthn4j-core:${webauthn4jVersion}")
-    api("com.webauthn4j:webauthn4j-metadata:${webauthn4jVersion}")
+    api("com.webauthn4j:webauthn4j-core")
+    api("com.webauthn4j:webauthn4j-metadata")
 
     // Custom Spring Security
     implementation('org.springframework.security:spring-security-core')
@@ -45,7 +45,7 @@ dependencies {
 
 
     //Test
-    testImplementation("com.webauthn4j:webauthn4j-test:${webauthn4jVersion}")
+    testImplementation("com.webauthn4j:webauthn4j-test")
     testImplementation('org.projectlombok:lombok')
     testImplementation("org.springframework:spring-webmvc")
     testImplementation('org.springframework.boot:spring-boot-starter-test')
@@ -55,11 +55,4 @@ dependencies {
     testImplementation('org.mockito:mockito-core')
     testImplementation('org.assertj:assertj-core')
 
-}
-
-dependencyManagement {
-    imports {
-        mavenBom "org.springframework.boot:spring-boot-dependencies:${springBootVersion}"
-        mavenBom "org.springframework.security:spring-security-bom:${springSecurityVersion}"
-    }
 }

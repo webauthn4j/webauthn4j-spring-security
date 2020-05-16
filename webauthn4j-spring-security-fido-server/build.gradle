@@ -46,13 +46,6 @@ dependencies {
 
 }
 
-dependencyManagement {
-    imports {
-        mavenBom "org.springframework.boot:spring-boot-dependencies:${springBootVersion}"
-        mavenBom "org.springframework.security:spring-security-bom:${springSecurityVersion}"
-    }
-}
-
 sonarqube {
     skipProject = true
 }
