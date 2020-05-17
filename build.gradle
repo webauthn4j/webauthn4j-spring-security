@@ -47,7 +47,6 @@ apply plugin: 'org.asciidoctor.convert'
 group 'com.webauthn4j'
 version "${webAuthn4JSpringSecurityVersion}"
 
-
 def sampleAppProjects = subprojects.findAll {["fido-server-conformance-test-app", "spa", "spa-angular-client"].contains(it.name)};
 def webAuthn4JSpringSecurityLibraryProjects = subprojects.findAll {it.name.startsWith('webauthn4j-spring-security')};;
 def allJavaProjects = new HashSet();
@@ -250,4 +249,13 @@ asciidoctor {
             doctype: 'book',
             numbered: '',
             revnumber: "${webAuthn4JSpringSecurityVersion}"
+}
+
+sonarqube {
+    properties {
+        property 'sonar.projectKey', 'webauthn4j-spring-security'
+        property 'sonar.issue.ignore.multicriteria', 'e1'
+        property 'sonar.issue.ignore.multicriteria.e1.ruleKey', 'java:S110'
+        property 'sonar.issue.ignore.multicriteria.e1.resourceKey', '**/*.java'
+    }
 }
