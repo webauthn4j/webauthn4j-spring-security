@@ -31,10 +31,6 @@ dependencies {
 
 }
 
-artifactoryPublish {
-    skip = !"${webAuthn4JSpringSecurityVersion}".endsWith("-SNAPSHOT") // Publish only when it is SNAPSHOT release
-}
-
 sonarqube {
     skipProject = true
 }

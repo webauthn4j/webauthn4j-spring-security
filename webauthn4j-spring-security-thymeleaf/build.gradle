@@ -37,7 +37,3 @@ dependencies {
     testImplementation('org.assertj:assertj-core')
 
 }
-
-artifactoryPublish {
-    skip = !"${webAuthn4JSpringSecurityVersion}".endsWith("-SNAPSHOT") // Publish only when it is SNAPSHOT release
-}

@@ -47,60 +47,18 @@ apply plugin: 'org.asciidoctor.convert'
 group 'com.webauthn4j'
 version "${webAuthn4JSpringSecurityVersion}"
 
-subprojects {
 
+def sampleAppProjects = subprojects.findAll {["fido-server-conformance-test-app", "spa"].contains(it.name)};
+def webAuthn4JSpringSecurityLibraryProjects = subprojects.findAll {it.name.startsWith('webauthn4j-spring-security')};;
+def allJavaProjects = new HashSet();
+allJavaProjects.addAll(webAuthn4JSpringSecurityLibraryProjects);
+allJavaProjects.addAll(sampleAppProjects);
+
+configure(webAuthn4JSpringSecurityLibraryProjects) {
     apply plugin: 'java-library'
     apply plugin: 'jacoco'
-    apply plugin: 'org.owasp.dependencycheck'
     apply plugin: "maven-publish"
     apply plugin: "com.jfrog.artifactory"
-
-
-    sourceCompatibility = 1.8
-
-    tasks.withType(JavaCompile) {
-        //options.compilerArgs << "-Xlint:unchecked" //FIXME
-        options.compilerArgs << "-Xlint:deprecation"
-        options.compilerArgs << "-Werror"
-    }
-
-    repositories {
-        mavenCentral()
-        maven { url "https://oss.jfrog.org/artifactory/libs-snapshot" }
-    }
-
-    def webauthn4jVersion = '0.11.1.RELEASE'
-    def springSecurityVersion = '5.3.2.RELEASE'
-    def springBootVersion = '2.3.0.RELEASE'
-    def terasolunaVersion = '5.5.1.RELEASE'
-    def thymeleafVersion = '3.0.4.RELEASE'
-    def modelMapperVersion = '2.3.7'
-    def log4jdbcVersion = '0.2.7'
-    def dbunitVersion = '2.7.0'
-    def springTestDbunitVersion = '1.3.0'
-    def webDriverManagerVersion = '3.8.1'
-
-    dependencies {
-        // BOM
-        implementation platform("org.springframework.boot:spring-boot-dependencies:${springBootVersion}")
-        implementation platform("org.springframework.security:spring-security-bom:${springSecurityVersion}")
-
-        // Independent libraries
-        implementation platform("com.webauthn4j:webauthn4j-util:$webauthn4jVersion")
-        implementation platform("com.webauthn4j:webauthn4j-core:$webauthn4jVersion")
-        implementation platform("com.webauthn4j:webauthn4j-metadata:$webauthn4jVersion")
-        implementation platform("com.webauthn4j:webauthn4j-test:$webauthn4jVersion")
-
-        // Independent libraries for Sample applications
-        implementation platform("org.terasoluna.gfw:terasoluna-gfw-common:$terasolunaVersion")
-        implementation platform("org.terasoluna.gfw:terasoluna-gfw-web:$terasolunaVersion")
-        implementation platform("org.thymeleaf:thymeleaf-testing:$thymeleafVersion")
-        implementation platform("org.modelmapper:modelmapper:$modelMapperVersion")
-        implementation platform("org.lazyluke:log4jdbc-remix:$log4jdbcVersion")
-        implementation platform("org.dbunit:dbunit:$dbunitVersion")
-        implementation platform("com.github.springtestdbunit:spring-test-dbunit:$springTestDbunitVersion")
-        implementation platform("io.github.bonigarcia:webdrivermanager:$webDriverManagerVersion")
-    }
 
     javadoc {
         options.charSet = 'UTF-8'
@@ -116,8 +74,6 @@ subprojects {
         archiveClassifier = 'javadoc'
         from javadoc.destinationDir
     }
-
-    check.dependsOn dependencyCheckAnalyze
 
     artifacts {
         archives sourcesJar
@@ -204,9 +160,69 @@ subprojects {
             }
         }
     }
-    // artifactoryPublish is configured in each sub-projects.
+
+    artifactoryPublish {
+        skip = !"${webAuthn4JSpringSecurityVersion}".endsWith("-SNAPSHOT") // Publish only when it is SNAPSHOT release
+    }
+
 }
 
+configure(sampleAppProjects) {
+    apply plugin: 'java'
+}
+
+configure(allJavaProjects){
+    apply plugin: 'org.owasp.dependencycheck'
+
+    sourceCompatibility = 1.8
+
+    tasks.withType(JavaCompile) {
+        //options.compilerArgs << "-Xlint:unchecked" //FIXME
+        options.compilerArgs << "-Xlint:deprecation"
+        options.compilerArgs << "-Werror"
+    }
+
+    repositories {
+        mavenCentral()
+        maven { url "https://oss.jfrog.org/artifactory/libs-snapshot" }
+    }
+
+    def webauthn4jVersion = '0.11.1.RELEASE'
+    def springSecurityVersion = '5.3.2.RELEASE'
+    def springBootVersion = '2.3.0.RELEASE'
+    def terasolunaVersion = '5.5.1.RELEASE'
+    def thymeleafVersion = '3.0.4.RELEASE'
+    def modelMapperVersion = '2.3.7'
+    def log4jdbcVersion = '0.2.7'
+    def dbunitVersion = '2.7.0'
+    def springTestDbunitVersion = '1.3.0'
+    def webDriverManagerVersion = '3.8.1'
+
+    dependencies {
+        // BOM
+        implementation platform("org.springframework.boot:spring-boot-dependencies:${springBootVersion}")
+        implementation platform("org.springframework.security:spring-security-bom:${springSecurityVersion}")
+
+        // Independent libraries
+        implementation platform("com.webauthn4j:webauthn4j-util:$webauthn4jVersion")
+        implementation platform("com.webauthn4j:webauthn4j-core:$webauthn4jVersion")
+        implementation platform("com.webauthn4j:webauthn4j-metadata:$webauthn4jVersion")
+        implementation platform("com.webauthn4j:webauthn4j-test:$webauthn4jVersion")
+
+        // Independent libraries for Sample applications
+        implementation platform("org.terasoluna.gfw:terasoluna-gfw-common:$terasolunaVersion")
+        implementation platform("org.terasoluna.gfw:terasoluna-gfw-web:$terasolunaVersion")
+        implementation platform("org.thymeleaf:thymeleaf-testing:$thymeleafVersion")
+        implementation platform("org.modelmapper:modelmapper:$modelMapperVersion")
+        implementation platform("org.lazyluke:log4jdbc-remix:$log4jdbcVersion")
+        implementation platform("org.dbunit:dbunit:$dbunitVersion")
+        implementation platform("com.github.springtestdbunit:spring-test-dbunit:$springTestDbunitVersion")
+        implementation platform("io.github.bonigarcia:webdrivermanager:$webDriverManagerVersion")
+    }
+
+    check.dependsOn dependencyCheckAnalyze
+
+}
 
 asciidoctorj {
     version = asciidoctorVersion
