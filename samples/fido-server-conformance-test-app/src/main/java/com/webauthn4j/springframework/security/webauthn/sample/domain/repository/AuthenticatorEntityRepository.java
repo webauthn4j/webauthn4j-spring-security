@@ -24,7 +24,7 @@ import org.springframework.data.repository.query.Param;
 import java.util.Optional;
 
 /**
- * Created by ynojima on 2017/07/02.
+ * {@link AuthenticatorEntity} repository
  */
 public interface AuthenticatorEntityRepository extends JpaRepository<AuthenticatorEntity, Integer> {
 

@@ -24,7 +24,7 @@ import java.util.List;
 import java.util.function.Consumer;
 
 /**
- * UserEntity service
+ * User service
  */
 public interface UserService {
 

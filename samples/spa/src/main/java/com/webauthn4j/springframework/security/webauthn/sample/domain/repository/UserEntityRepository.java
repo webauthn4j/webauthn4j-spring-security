@@ -27,7 +27,7 @@ import org.springframework.data.repository.query.Param;
 import java.util.Optional;
 
 /**
- * ユーザーレポジトリ
+ * {@link UserEntity} repository
  */
 public interface UserEntityRepository extends JpaRepository<UserEntity, Integer> {
 

@@ -17,6 +17,7 @@
 package com.webauthn4j.springframework.security.webauthn.sample.domain.repository;
 
 
+import com.webauthn4j.springframework.security.webauthn.sample.domain.entity.AuthenticatorEntity;
 import com.webauthn4j.springframework.security.webauthn.sample.domain.entity.UserEntity;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -27,7 +28,7 @@ import org.springframework.data.repository.query.Param;
 import java.util.Optional;
 
 /**
- * ユーザーレポジトリ
+ * {@link UserEntity} repository
  */
 public interface UserEntityRepository extends JpaRepository<UserEntity, Integer> {
 

@@ -26,7 +26,7 @@ import org.springframework.data.repository.query.Param;
 import java.util.Optional;
 
 /**
- * グループレポジトリ
+ * {@link GroupEntity} repository
  */
 public interface GroupEntityRepository extends JpaRepository<GroupEntity, Integer> {
 
