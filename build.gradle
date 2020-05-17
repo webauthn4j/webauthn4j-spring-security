@@ -58,6 +58,7 @@ configure(webAuthn4JSpringSecurityLibraryProjects) {
     apply plugin: 'java-library'
     apply plugin: 'jacoco'
     apply plugin: "maven-publish"
+    apply plugin: 'com.jfrog.bintray'
     apply plugin: "com.jfrog.artifactory"
 
     javadoc {
@@ -147,6 +148,20 @@ configure(webAuthn4JSpringSecurityLibraryProjects) {
     def mavenCentralUser = getVariable('MAVEN_CENTRAL_USER', 'mavenCentralUser')
     def mavenCentralPassword = getVariable('MAVEN_CENTRAL_PASSWORD', 'mavenCentralPassword')
 
+    task bintrayGpgSign(){
+        group = "publishing"
+        doLast{
+            signArtifactsOnBintray(bintrayUser, bintrayToken);
+        }
+    }
+
+    task bintrayMavenCentralSync(){
+        group = "publishing"
+        doLast{
+            syncMavenCentralToBintray(bintrayUser, bintrayToken);
+        }
+    }
+
     artifactory {
         contextUrl = 'http://oss.jfrog.org/artifactory/simple/'
         publish {
@@ -165,6 +180,35 @@ configure(webAuthn4JSpringSecurityLibraryProjects) {
         skip = !"${webAuthn4JSpringSecurityVersion}".endsWith("-SNAPSHOT") // Publish only when it is SNAPSHOT release
     }
 
+    bintray {
+        user = bintrayUser
+        key = bintrayToken
+        configurations = ['archives']
+        publish = true
+        dryRun = !("${webAuthn4JSpringSecurityVersion}".endsWith(".RELEASE")) // Publish only when it is RELEASE release
+        publications = ['standard']
+        pkg {
+            userOrg = "webauthn4j"
+            repo = "webauthn4j"
+            name = project.name
+            desc = project.description
+            licenses = ['Apache-2.0']
+            vcsUrl = githubUrl
+            version {
+                name = "${webAuthn4JSpringSecurityVersion}"
+                released = new Date()
+                vcsTag = "${webAuthn4JSpringSecurityVersion}"
+                gpg {
+                    sign = true
+                }
+                //Optional configuration for Maven Central sync of the version
+                mavenCentralSync {
+                    user = mavenCentralUser
+                    password = mavenCentralPassword
+                }
+            }
+        }
+    }
 }
 
 configure(sampleAppProjects) {
