@@ -15,7 +15,7 @@
  */
 
 group 'com.webauthn4j'
-version "${WebAuthn4JSpringSecurityVersion}"
+version "${webAuthn4JSpringSecurityVersion}"
 
 description = "WebAuthn4J Spring Security Thymeleaf Extension library"
 
@@ -36,4 +36,8 @@ dependencies {
     testImplementation('org.mockito:mockito-core')
     testImplementation('org.assertj:assertj-core')
 
+}
+
+artifactoryPublish {
+    skip = !"${webAuthn4JSpringSecurityVersion}".endsWith("-SNAPSHOT") // Publish only when it is SNAPSHOT release
 }

@@ -15,7 +15,7 @@
  */
 
 group 'com.webauthn4j'
-version "${WebAuthn4JSpringSecurityVersion}"
+version "${webAuthn4JSpringSecurityVersion}"
 
 description = "WebAuthn4J Spring Security test library"
 
@@ -29,6 +29,10 @@ dependencies {
     testImplementation('org.springframework.boot:spring-boot-starter-test')
     testImplementation('org.springframework.security:spring-security-test')
 
+}
+
+artifactoryPublish {
+    skip = !"${webAuthn4JSpringSecurityVersion}".endsWith("-SNAPSHOT") // Publish only when it is SNAPSHOT release
 }
 
 sonarqube {

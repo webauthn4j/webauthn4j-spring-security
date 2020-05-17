@@ -45,7 +45,7 @@ apply plugin: 'org.asciidoctor.convert'
 
 
 group 'com.webauthn4j'
-version "${WebAuthn4JSpringSecurityVersion}"
+version "${webAuthn4JSpringSecurityVersion}"
 
 subprojects {
 
@@ -191,6 +191,20 @@ subprojects {
     def mavenCentralUser = getVariable('MAVEN_CENTRAL_USER', 'mavenCentralUser')
     def mavenCentralPassword = getVariable('MAVEN_CENTRAL_PASSWORD', 'mavenCentralPassword')
 
+    artifactory {
+        contextUrl = 'http://oss.jfrog.org/artifactory/simple/'
+        publish {
+            repository {
+                repoKey = 'oss-snapshot-local' // The Artifactory repository key to publish to
+                username = artifactoryUser
+                password = artifactoryPassword
+            }
+            defaults {
+                publications('standard')
+            }
+        }
+    }
+    // artifactoryPublish is configured in each sub-projects.
 }
 
 
@@ -219,5 +233,5 @@ asciidoctor {
             idseparator: '-',
             doctype: 'book',
             numbered: '',
-            revnumber: "${WebAuthn4JSpringSecurityVersion}"
+            revnumber: "${webAuthn4JSpringSecurityVersion}"
 }

@@ -19,7 +19,7 @@ plugins {
 }
 
 group 'com.webauthn4j'
-version "${WebAuthn4JSpringSecurityVersion}"
+version "${webAuthn4JSpringSecurityVersion}"
 
 description = "WebAuthn4J Spring Security Sample angular client library"
 
