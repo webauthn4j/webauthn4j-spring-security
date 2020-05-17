@@ -116,7 +116,6 @@ public class WebAuthnAuthenticationProvider implements AuthenticationProvider {
         doAuthenticate(authenticationToken, authenticator, user);
         postAuthenticationChecks.check(user);
 
-        //noinspection ConstantConditions
         authenticatorService.updateCounter(credentialId, authenticator.getCounter());
 
         Serializable principalToReturn = user;
