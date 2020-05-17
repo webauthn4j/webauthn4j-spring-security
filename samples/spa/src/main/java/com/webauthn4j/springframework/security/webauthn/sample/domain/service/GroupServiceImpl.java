@@ -30,7 +30,7 @@ import org.terasoluna.gfw.common.message.ResultMessages;
 import java.util.List;
 
 /**
- * グループサービス
+ * Implementation for {@link GroupService}
  */
 @Service
 @Transactional

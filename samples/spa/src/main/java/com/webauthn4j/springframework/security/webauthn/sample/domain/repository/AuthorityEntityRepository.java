@@ -26,7 +26,7 @@ import org.springframework.data.repository.query.Param;
 import java.util.Optional;
 
 /**
- * 権限レポジトリ
+ * {@link AuthorityEntity} repository
  */
 public interface AuthorityEntityRepository extends JpaRepository<AuthorityEntity, Integer> {
 

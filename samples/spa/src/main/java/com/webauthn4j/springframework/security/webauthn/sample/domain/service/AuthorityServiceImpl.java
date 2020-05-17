@@ -35,7 +35,7 @@ import org.terasoluna.gfw.common.message.ResultMessages;
 import java.util.List;
 
 /**
- * 権限サービス
+ * Implementation for {@link AuthorityService}
  */
 @Service
 @Transactional

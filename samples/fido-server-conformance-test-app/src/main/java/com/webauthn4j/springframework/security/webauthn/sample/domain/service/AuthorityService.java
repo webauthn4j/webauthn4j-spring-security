@@ -26,7 +26,7 @@ import org.springframework.data.domain.Pageable;
 import java.util.List;
 
 /**
- * 権限サービス
+ * Authority service
  */
 public interface AuthorityService {
     Page<AuthorityEntity> findAllByKeyword(Pageable pageable, String keyword);

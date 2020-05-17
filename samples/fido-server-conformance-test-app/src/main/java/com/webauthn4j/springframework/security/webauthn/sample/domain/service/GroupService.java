@@ -23,7 +23,7 @@ import org.springframework.data.domain.Pageable;
 import java.util.List;
 
 /**
- * group service
+ * Group service
  */
 public interface GroupService {
 
