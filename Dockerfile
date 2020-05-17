@@ -11,7 +11,7 @@ FROM openjdk:8-jre
 
 LABEL maintainer="Yoshikazu Nojima <mail@ynojima.net>"
 
-COPY --from=build-env /workspace/samples/javaconfig/webauthn/spa/build/libs/webauthn4j-spring-security-sample-spa.jar /opt/webauthn4j-spring-security/webauthn4j-spring-security-sample-spa.jar
+COPY --from=build-env /workspace/samples/spa/build/libs/webauthn4j-spring-security-sample-spa.jar /opt/webauthn4j-spring-security/webauthn4j-spring-security-sample-spa.jar
 
 WORKDIR /opt/webauthn4j-spring-security
 CMD ["java", "-XX:+UnlockExperimentalVMOptions", "-XX:+UseCGroupMemoryLimitForHeap", "-jar", "/opt/webauthn4j-spring-security/webauthn4j-spring-security-sample-spa.jar"]

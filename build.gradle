@@ -40,6 +40,7 @@ buildscript {
 }
 
 apply plugin: 'org.sonarqube'
+apply plugin: 'com.jfrog.artifactory'
 apply plugin: 'org.asciidoctor.convert'
 
 
@@ -51,6 +52,9 @@ subprojects {
     apply plugin: 'java-library'
     apply plugin: 'jacoco'
     apply plugin: 'org.owasp.dependencycheck'
+    apply plugin: "maven-publish"
+    apply plugin: "com.jfrog.artifactory"
+
 
     sourceCompatibility = 1.8
 
@@ -125,6 +129,67 @@ subprojects {
             xml.enabled true
         }
     }
+
+    apply from: "$rootDir/helper.gradle";
+
+    def githubUrl = "https://github.com/webauthn4j/webauthn4j-spring-security"
+
+    publishing {
+        publications {
+            standard(MavenPublication) {
+                from components.java
+                artifact sourcesJar
+                artifact javadocJar
+
+                // "Resolved versions" strategy is used to define dependency version because WebAuthn4J use dependencyManagement (BOM) feature
+                // to define its dependency versions. Without "Resolved versions" strategy, version will not be exposed
+                // to dependencies.dependency.version in POM file, and it cause warning in the library consumer environment.
+                versionMapping {
+                    usage('java-api') {
+                        fromResolutionOf('runtimeClasspath')
+                    }
+                    usage('java-runtime') {
+                        fromResolutionResult()
+                    }
+                }
+
+                pom {
+                    name = project.name
+//                    description = project.description //TODO: this doesn't work. to be fixed. https://github.com/gradle/gradle/issues/12259
+                    url = githubUrl
+                    licenses {
+                        license {
+                            name = 'The Apache Software License, Version 2.0'
+                            url = 'http://www.apache.org/license/LICENSE-2.0.txt'
+                            distribution = 'repo'
+                        }
+                    }
+                    developers {
+                        developer {
+                            id = 'ynojima'
+                            name = 'Yoshikazu Nojima'
+                            email = 'mail@ynojima.net'
+                        }
+                    }
+                    scm {
+                        url = githubUrl
+                    }
+
+                    resolveStrategy = DELEGATE_FIRST
+                }
+                pom.withXml { pom ->
+                    pom.asNode().appendNode("description", project.description) // workaround for https://github.com/gradle/gradle/issues/12259
+                }
+            }
+        }
+    }
+
+    def bintrayUser = getVariable('BINTRAY_USER', 'bintrayUser')
+    def bintrayToken = getVariable('BINTRAY_TOKEN', 'bintrayToken')
+    def artifactoryUser = getVariable('ARTIFACTORY_USER', 'artifactoryUser')
+    def artifactoryPassword = getVariable('ARTIFACTORY_PASSWORD', 'artifactoryPassword')
+    def mavenCentralUser = getVariable('MAVEN_CENTRAL_USER', 'mavenCentralUser')
+    def mavenCentralPassword = getVariable('MAVEN_CENTRAL_PASSWORD', 'mavenCentralPassword')
 
 }
 
