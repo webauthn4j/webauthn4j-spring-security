@@ -28,7 +28,7 @@ public class ClientExtensionsConverter<T> implements AttributeConverter<Map<Stri
 
     private JsonConverter jsonConverter;
 
-    public ClientExtensionsConverter(ObjectConverter objectConverter){
+    public ClientExtensionsConverter(ObjectConverter objectConverter) {
         this.jsonConverter = objectConverter.getJsonConverter();
     }
 
@@ -39,6 +39,7 @@ public class ClientExtensionsConverter<T> implements AttributeConverter<Map<Stri
 
     @Override
     public Map<String, RegistrationExtensionClientOutput<?>> convertToEntityAttribute(String dbData) {
-        return jsonConverter.readValue(dbData, new TypeReference<Map<String, RegistrationExtensionClientOutput<?>>>(){});
+        return jsonConverter.readValue(dbData, new TypeReference<Map<String, RegistrationExtensionClientOutput<?>>>() {
+        });
     }
 }

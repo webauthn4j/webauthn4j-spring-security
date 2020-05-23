@@ -26,24 +26,24 @@ describe('ResidentKeyRequirementDialogComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ ResidentKeyRequirementDialogComponent ],
+      declarations: [ResidentKeyRequirementDialogComponent],
       imports: [
         NgbModalModule,
         FormsModule
       ]
     })
-    .overrideComponent(ResidentKeyRequirementDialogComponent, {
-      set:{
-        providers: [
-          {
-            provide: NgbActiveModal,
-            useFactory: ()=>{
-              return new NgbActiveModal();
+      .overrideComponent(ResidentKeyRequirementDialogComponent, {
+        set: {
+          providers: [
+            {
+              provide: NgbActiveModal,
+              useFactory: () => {
+                return new NgbActiveModal();
+              }
             }
-          }
-        ]
-      }
-    }).compileComponents();
+          ]
+        }
+      }).compileComponents();
   }));
 
   beforeEach(() => {

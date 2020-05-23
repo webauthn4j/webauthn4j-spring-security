@@ -23,10 +23,10 @@ import com.webauthn4j.springframework.security.webauthn.WebAuthnRegistrationRequ
 import com.webauthn4j.springframework.security.webauthn.authenticator.WebAuthnAuthenticatorService;
 import com.webauthn4j.springframework.security.webauthn.config.configurers.WebAuthnAuthenticationProviderConfigurer;
 import com.webauthn4j.springframework.security.webauthn.config.configurers.WebAuthnConfigurer;
-import com.webauthn4j.springframework.security.webauthn.sample.domain.component.UserManager;
-import com.webauthn4j.springframework.security.webauthn.userdetails.WebAuthnUserDetailsService;
 import com.webauthn4j.springframework.security.webauthn.sample.app.security.ExampleExtensionClientInput;
 import com.webauthn4j.springframework.security.webauthn.sample.app.security.SampleUsernameNotFoundHandler;
+import com.webauthn4j.springframework.security.webauthn.sample.domain.component.UserManager;
+import com.webauthn4j.springframework.security.webauthn.userdetails.WebAuthnUserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
@@ -120,10 +120,10 @@ WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .addPublicKeyCredParams(PublicKeyCredentialType.PUBLIC_KEY, COSEAlgorithmIdentifier.RS256)  // Windows Hello
                 .addPublicKeyCredParams(PublicKeyCredentialType.PUBLIC_KEY, COSEAlgorithmIdentifier.ES256)  // FIDO U2F Key, etc
                 .and()
-            .registrationExtensions()
+                .registrationExtensions()
                 .addExtension(new ExampleExtensionClientInput("test"))
                 .and()
-            .authenticationExtensions()
+                .authenticationExtensions()
                 .addExtension(new ExampleExtensionClientInput("test"))
                 .and();
 

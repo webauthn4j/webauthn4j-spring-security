@@ -35,13 +35,14 @@ import {AuthService} from "../auth/auth.service";
 export class ProfileComponent implements OnInit {
 
   constructor(
-              private profileService: ProfileService,
-              private authService: AuthService,
-              private router: Router,
-              private modalService: NgbModal) { }
+    private profileService: ProfileService,
+    private authService: AuthService,
+    private router: Router,
+    private modalService: NgbModal) {
+  }
 
   ngOnInit() {
-    this.profileService.load().subscribe((user)=>{
+    this.profileService.load().subscribe((user) => {
       this.user.userHandle = user.userHandle;
       this.user.firstName = user.firstName;
       this.user.lastName = user.lastName;
@@ -49,7 +50,7 @@ export class ProfileComponent implements OnInit {
       this.user.authenticators = user.authenticators;
       this.user.singleFactorAuthenticationAllowed = user.singleFactorAuthenticationAllowed;
     });
-    this.checkUVPAA().then((isUVPAA)=>{
+    this.checkUVPAA().then((isUVPAA) => {
       this.isUVPAA = isUVPAA;
     });
   }
@@ -67,15 +68,15 @@ export class ProfileComponent implements OnInit {
     emailAddress: "",
     authenticators: [],
     singleFactorAuthenticationAllowed: false
-};
+  };
 
   addAuthenticator() {
 
-    this.checkResidentKeyRequirement().then(residentKeyRequirement =>{
+    this.checkResidentKeyRequirement().then(residentKeyRequirement => {
       let credentialIds = this.user.authenticators.map(authenticator => authenticator.credentialId);
       this.profileService.createCredential(this.user.userHandle, this.user.emailAddress, this.user.emailAddress, credentialIds, residentKeyRequirement)
-        .then( credential => {
-          if(credential.type != "public-key"){
+        .then(credential => {
+          if (credential.type != "public-key") {
             Promise.reject("Unexpected credential type");
           }
           let publicKeyCredential: PublicKeyCredential = credential as PublicKeyCredential;
@@ -93,10 +94,9 @@ export class ProfileComponent implements OnInit {
 
           this.alerts = [];
           return Promise.resolve();
-        }).catch(exception =>{
+        }).catch(exception => {
         let message: string;
-        switch(exception.name)
-        {
+        switch (exception.name) {
           case "NotAllowedError":
             console.info(exception);
             return;
@@ -113,29 +113,29 @@ export class ProfileComponent implements OnInit {
         };
         this.alerts = [alert];
       });
-    }, ()=>{});
+    }, () => {
+    });
   }
 
-  editAuthenticator(authenticator){
+  editAuthenticator(authenticator) {
     let modal = this.modalService.open(AuthenticatorDialogComponent);
     let component = modal.componentInstance;
     component.authenticator = {name: authenticator.name};
-    modal.result.then( () => {
+    modal.result.then(() => {
       authenticator.name = component.authenticator.name;
     });
   }
 
 
-  removeAuthenticator(authenticator){
-    this.user.authenticators.splice(this.user.authenticators.indexOf(authenticator),1);
+  removeAuthenticator(authenticator) {
+    this.user.authenticators.splice(this.user.authenticators.indexOf(authenticator), 1);
   }
 
-  update(){
-    this.reconfirmAuthenticatorRegistration().then(result =>{
-      if(result){
+  update() {
+    this.reconfirmAuthenticatorRegistration().then(result => {
+      if (result) {
         this.addAuthenticator();
-      }
-      else {
+      } else {
         this.submitting = true;
         this.profileService.update(this.user)
           .subscribe(
@@ -163,23 +163,23 @@ export class ProfileComponent implements OnInit {
     });
   }
 
-  checkUVPAA(): Promise<boolean>{
+  checkUVPAA(): Promise<boolean> {
     let untypedWindow: any = window;
     return untypedWindow.PublicKeyCredential.isUserVerifyingPlatformAuthenticatorAvailable();
   }
 
-  checkResidentKeyRequirement(): Promise<boolean>{
-    return this.modalService.open(ResidentKeyRequirementDialogComponent, { centered: true }).result;
+  checkResidentKeyRequirement(): Promise<boolean> {
+    return this.modalService.open(ResidentKeyRequirementDialogComponent, {centered: true}).result;
   }
 
-  reconfirmAuthenticatorRegistration(): Promise<boolean>{
-    if(this.user.authenticators.length == 0 && this.isUVPAA){
-      return this.modalService.open(AuthenticatorRegistrationReconfirmationDialogComponent, { centered: true }).result;
+  reconfirmAuthenticatorRegistration(): Promise<boolean> {
+    if (this.user.authenticators.length == 0 && this.isUVPAA) {
+      return this.modalService.open(AuthenticatorRegistrationReconfirmationDialogComponent, {centered: true}).result;
     }
     return Promise.resolve(false);
   }
 
-  isWebAuthnAvailable(): boolean{
+  isWebAuthnAvailable(): boolean {
     return WebAuthnService.isWebAuthnAvailable();
   }
 

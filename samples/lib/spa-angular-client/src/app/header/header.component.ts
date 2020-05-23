@@ -28,7 +28,7 @@ export class HeaderComponent implements OnInit {
 
   constructor(private authService: AuthService, private router: Router) {
     router.events.subscribe(event => {
-      this.authService.getAuthenticationStatus().subscribe( authStatus =>{
+      this.authService.getAuthenticationStatus().subscribe(authStatus => {
         this.authStatus = authStatus;
       });
     });
@@ -36,9 +36,10 @@ export class HeaderComponent implements OnInit {
 
   authStatus: AuthenticationStatus = "NOT_AUTHENTICATED";
 
-  ngOnInit() {}
+  ngOnInit() {
+  }
 
-  logout(){
+  logout() {
     this.authService.logout()
       .subscribe(
         () => {

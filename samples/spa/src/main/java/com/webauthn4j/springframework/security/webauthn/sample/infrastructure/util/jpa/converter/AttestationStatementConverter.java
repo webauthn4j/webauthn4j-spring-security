@@ -30,11 +30,11 @@ public class AttestationStatementConverter implements AttributeConverter<Attesta
 
     private CborConverter cborConverter;
 
-    public AttestationStatementConverter(ObjectConverter objectConverter){
+    public AttestationStatementConverter(ObjectConverter objectConverter) {
         this.cborConverter = objectConverter.getCborConverter();
     }
 
-                                         @Override
+    @Override
     public String convertToDatabaseColumn(AttestationStatement attribute) {
         AttestationStatementSerializationContainer container = new AttestationStatementSerializationContainer(attribute);
         return Base64UrlUtil.encodeToString(cborConverter.writeValueAsBytes(container));

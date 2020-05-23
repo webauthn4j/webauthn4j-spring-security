@@ -29,16 +29,23 @@ import java.lang.annotation.RetentionPolicy;
 public @interface WithMockWebAuthnUser {
 
     int id() default 0;
+
     String userHandleBase64Url() default "";
-    String  firstName() default "";
-    String  lastName() default "";
-    String  emailAddress() default "";
+
+    String firstName() default "";
+
+    String lastName() default "";
+
+    String emailAddress() default "";
 
     String[] authorities() default {};
+
     String[] groups() default {};
+
     String[] authenticators() default {};
 
     boolean locked() default false;
+
     boolean singleFactorAuthenticationAllowed() default false;
 
 }

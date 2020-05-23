@@ -16,29 +16,7 @@
 
 package com.webauthn4j.springframework.security.webauthn.util;
 
-import com.webauthn4j.springframework.security.webauthn.exception.BadAaguidException;
-import com.webauthn4j.springframework.security.webauthn.exception.BadAlgorithmException;
-import com.webauthn4j.springframework.security.webauthn.exception.BadAttestationStatementException;
-import com.webauthn4j.springframework.security.webauthn.exception.BadChallengeException;
-import com.webauthn4j.springframework.security.webauthn.exception.BadOriginException;
-import com.webauthn4j.springframework.security.webauthn.exception.BadRpIdException;
-import com.webauthn4j.springframework.security.webauthn.exception.BadSignatureException;
-import com.webauthn4j.springframework.security.webauthn.exception.BadStatusException;
-import com.webauthn4j.springframework.security.webauthn.exception.CertificateException;
-import com.webauthn4j.springframework.security.webauthn.exception.ConstraintViolationException;
-import com.webauthn4j.springframework.security.webauthn.exception.DataConversionException;
-import com.webauthn4j.springframework.security.webauthn.exception.InconsistentClientDataTypeException;
-import com.webauthn4j.springframework.security.webauthn.exception.KeyDescriptionValidationException;
-import com.webauthn4j.springframework.security.webauthn.exception.MaliciousCounterValueException;
-import com.webauthn4j.springframework.security.webauthn.exception.MissingChallengeException;
-import com.webauthn4j.springframework.security.webauthn.exception.PublicKeyMismatchException;
-import com.webauthn4j.springframework.security.webauthn.exception.SelfAttestationProhibitedException;
-import com.webauthn4j.springframework.security.webauthn.exception.TokenBindingException;
-import com.webauthn4j.springframework.security.webauthn.exception.TrustAnchorNotFoundException;
-import com.webauthn4j.springframework.security.webauthn.exception.UnexpectedExtensionException;
-import com.webauthn4j.springframework.security.webauthn.exception.UserNotPresentException;
-import com.webauthn4j.springframework.security.webauthn.exception.UserNotVerifiedException;
-import com.webauthn4j.springframework.security.webauthn.exception.ValidationException;
+import com.webauthn4j.springframework.security.webauthn.exception.*;
 import com.webauthn4j.util.exception.WebAuthnException;
 import org.junit.Test;
 import org.springframework.security.authentication.AuthenticationServiceException;

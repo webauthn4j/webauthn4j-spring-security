@@ -16,9 +16,9 @@
 
 package com.webauthn4j.springframework.security.webauthn.sample.domain.service;
 
-import com.webauthn4j.springframework.security.webauthn.sample.domain.repository.UserEntityRepository;
 import com.webauthn4j.springframework.security.webauthn.sample.domain.component.UserManager;
 import com.webauthn4j.springframework.security.webauthn.sample.domain.entity.UserEntity;
+import com.webauthn4j.springframework.security.webauthn.sample.domain.repository.UserEntityRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

@@ -26,18 +26,18 @@ import org.springframework.web.bind.annotation.RestController;
 public class StatusController {
 
     @RequestMapping("/200")
-    public ResponseEntity status200(){
-        return new ResponseEntity(HttpStatus.OK);
+    public ResponseEntity<String> status200() {
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @RequestMapping("/401")
-    public ResponseEntity status401(){
-        return new ResponseEntity(HttpStatus.UNAUTHORIZED);
+    public ResponseEntity<String> status401() {
+        return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
     }
 
     @RequestMapping("/403")
-    public ResponseEntity status403(){
-        return new ResponseEntity(HttpStatus.FORBIDDEN);
+    public ResponseEntity<String> status403() {
+        return new ResponseEntity<>(HttpStatus.FORBIDDEN);
     }
 
 }

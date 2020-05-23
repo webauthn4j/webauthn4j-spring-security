@@ -19,8 +19,8 @@ package com.webauthn4j.springframework.security.webauthn.sample.app.config;
 import com.webauthn4j.converter.util.ObjectConverter;
 import com.webauthn4j.springframework.security.webauthn.converter.Base64UrlStringToAttestationObjectConverter;
 import com.webauthn4j.springframework.security.webauthn.converter.Base64UrlStringToCollectedClientDataConverter;
-import com.webauthn4j.springframework.security.webauthn.sample.app.formatter.CollectedClientDataFormFormatter;
 import com.webauthn4j.springframework.security.webauthn.sample.app.formatter.AttestationObjectFormFormatter;
+import com.webauthn4j.springframework.security.webauthn.sample.app.formatter.CollectedClientDataFormFormatter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -31,18 +31,18 @@ import org.springframework.context.annotation.Configuration;
 public class ConverterConfig {
 
     @Bean
-    public Base64UrlStringToCollectedClientDataConverter base64StringToCollectedClientDataConverter(ObjectConverter objectConverter){
+    public Base64UrlStringToCollectedClientDataConverter base64StringToCollectedClientDataConverter(ObjectConverter objectConverter) {
         return new Base64UrlStringToCollectedClientDataConverter(objectConverter);
     }
 
     @Bean
-    public Base64UrlStringToAttestationObjectConverter base64StringToWebAuthnAttestationObjectConverter(ObjectConverter objectConverter){
+    public Base64UrlStringToAttestationObjectConverter base64StringToWebAuthnAttestationObjectConverter(ObjectConverter objectConverter) {
         return new Base64UrlStringToAttestationObjectConverter(objectConverter);
     }
 
     @Bean
     public CollectedClientDataFormFormatter collectedClientDataFromToBase64StringConverter(
-            Base64UrlStringToCollectedClientDataConverter base64UrlStringToCollectedClientDataConverter){
+            Base64UrlStringToCollectedClientDataConverter base64UrlStringToCollectedClientDataConverter) {
         return new CollectedClientDataFormFormatter(base64UrlStringToCollectedClientDataConverter);
     }
 

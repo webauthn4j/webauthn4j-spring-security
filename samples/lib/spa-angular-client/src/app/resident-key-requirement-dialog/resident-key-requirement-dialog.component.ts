@@ -24,7 +24,8 @@ import {NgbActiveModal} from "@ng-bootstrap/ng-bootstrap";
 })
 export class ResidentKeyRequirementDialogComponent implements OnInit {
 
-  constructor(public activeModal: NgbActiveModal) { }
+  constructor(public activeModal: NgbActiveModal) {
+  }
 
   ngOnInit() {
   }

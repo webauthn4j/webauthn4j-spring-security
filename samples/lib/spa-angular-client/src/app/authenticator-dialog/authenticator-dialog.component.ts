@@ -24,16 +24,17 @@ import {NgbActiveModal} from '@ng-bootstrap/ng-bootstrap';
 })
 export class AuthenticatorDialogComponent implements OnInit {
 
-  authenticator: {name: String} = {name: ""};
+  authenticator: { name: String } = {name: ""};
   submitting = false;
 
 
-  constructor(public activeModal: NgbActiveModal) { }
+  constructor(public activeModal: NgbActiveModal) {
+  }
 
   ngOnInit() {
   }
 
-  save(){
+  save() {
     this.activeModal.close(this.authenticator);
   }
 

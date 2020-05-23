@@ -31,18 +31,18 @@ describe('ProfileComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ ProfileComponent ],
+      declarations: [ProfileComponent],
       imports: [
         FormsModule,
         NgbAlertModule,
         RouterTestingModule
       ]
     }).overrideComponent(ProfileComponent, {
-      set:{
+      set: {
         providers: [
           {
             provide: AuthService,
-            useFactory: ()=>{
+            useFactory: () => {
               let authServiceMock = new AuthService(null, null);
               spyOn(authServiceMock, "getAuthenticationStatus").and.returnValue(of("NOT_AUTHENTICATED"));
               return authServiceMock;
@@ -50,7 +50,7 @@ describe('ProfileComponent', () => {
           },
           {
             provide: ProfileService,
-            useFactory: ()=>{
+            useFactory: () => {
               let profileServiceMock = new ProfileService(null, null);
               let profile: ProfileViewModel = {
                 userHandle: "",
@@ -68,7 +68,7 @@ describe('ProfileComponent', () => {
         ]
       }
     })
-    .compileComponents();
+      .compileComponents();
   }));
 
   beforeEach(() => {

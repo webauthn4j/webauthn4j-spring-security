@@ -40,20 +40,20 @@ export class PasswordLoginComponent implements OnInit {
   submitting = false;
 
 
-  constructor(private authService: AuthService, private router: Router) { }
+  constructor(private authService: AuthService, private router: Router) {
+  }
 
   ngOnInit() {
 
   }
 
-  loginWithPasswordCredential(){
+  loginWithPasswordCredential() {
     this.authService.loginWithPasswordCredential(this.passwordLoginCredential.username, this.passwordLoginCredential.password)
-      .subscribe((data: string) =>{
+      .subscribe((data: string) => {
         this.router.navigate(["/profile"]);
-      }, (error) =>{
+      }, (error) => {
         let alert: Alert;
-        switch(error.name)
-        {
+        switch (error.name) {
           case "NotAllowedError":
             console.info(error);
             return;
@@ -79,12 +79,11 @@ export class PasswordLoginComponent implements OnInit {
 
     this.authService.loginWithPublicKeyCredential({
       userVerification: "required"
-    }).subscribe((data: string) =>{
+    }).subscribe((data: string) => {
       this.router.navigate(["/profile"]);
-    }, (error) =>{
+    }, (error) => {
       let alert: Alert;
-      switch(error.name)
-      {
+      switch (error.name) {
         case "NotAllowedError":
           console.info(error);
           return;
@@ -106,48 +105,48 @@ export class PasswordLoginComponent implements OnInit {
     });
   }
 
-  isWebAuthnAvailable(): boolean{
+  isWebAuthnAvailable(): boolean {
     return WebAuthnService.isWebAuthnAvailable();
   }
 
-  isChromeForWindows(): boolean{
-    return this.bowser.satisfies({windows: { chrome: '>0' } })
+  isChromeForWindows(): boolean {
+    return this.bowser.satisfies({windows: {chrome: '>0'}})
   }
 
-  isChromeForMac(): boolean{
-    return this.bowser.satisfies({macos: { chrome: '>0' } })
+  isChromeForMac(): boolean {
+    return this.bowser.satisfies({macos: {chrome: '>0'}})
   }
 
-  isChromeForAndroid(): boolean{
-    return this.bowser.satisfies({android: { chrome: '>0' } })
+  isChromeForAndroid(): boolean {
+    return this.bowser.satisfies({android: {chrome: '>0'}})
   }
 
-  isChromeForIOS(): boolean{
-    return this.bowser.satisfies({ios: { chrome: '>0' } })
+  isChromeForIOS(): boolean {
+    return this.bowser.satisfies({ios: {chrome: '>0'}})
   }
 
-  isFirefoxForWindows(): boolean{
-    return this.bowser.satisfies({windows: { firefox: '>0' } })
+  isFirefoxForWindows(): boolean {
+    return this.bowser.satisfies({windows: {firefox: '>0'}})
   }
 
-  isFirefoxForMac(): boolean{
-    return this.bowser.satisfies({macos: { firefox: '>0' } })
+  isFirefoxForMac(): boolean {
+    return this.bowser.satisfies({macos: {firefox: '>0'}})
   }
 
-  isFirefoxForAndroid(): boolean{
-    return this.bowser.satisfies({android: { firefox: '>0' } })
+  isFirefoxForAndroid(): boolean {
+    return this.bowser.satisfies({android: {firefox: '>0'}})
   }
 
-  isFirefoxForIOS(): boolean{
-    return this.bowser.satisfies({ios: { firefox: '>0' } })
+  isFirefoxForIOS(): boolean {
+    return this.bowser.satisfies({ios: {firefox: '>0'}})
   }
 
-  isSafariForMac(): boolean{
-    return this.bowser.satisfies({macos: { safari: '>0' } })
+  isSafariForMac(): boolean {
+    return this.bowser.satisfies({macos: {safari: '>0'}})
   }
 
-  isSafariForIOS(): boolean{
-    return this.bowser.satisfies({ios: { safari: '>0' } })
+  isSafariForIOS(): boolean {
+    return this.bowser.satisfies({ios: {safari: '>0'}})
   }
 
 }

@@ -33,23 +33,23 @@ public class SignupComponent {
         this.residentKeyRequirementDialog = new ResidentKeyRequirementDialog(webDriver);
     }
 
-    public void navigate(){
+    public void navigate() {
         webDriver.navigate().to("http://localhost:8080/angular/signup");
     }
 
-    public void setFirstname(String value){
+    public void setFirstname(String value) {
         webDriver.findElement(By.id("firstname")).sendKeys(value);
     }
 
-    public void setLastname(String value){
+    public void setLastname(String value) {
         webDriver.findElement(By.id("lastname")).sendKeys(value);
     }
 
-    public void setUsername(String value){
+    public void setUsername(String value) {
         webDriver.findElement(By.id("username")).sendKeys(value);
     }
 
-    public void setPassword(String value){
+    public void setPassword(String value) {
         webDriver.findElement(By.id("password")).sendKeys(value);
     }
 
@@ -61,7 +61,7 @@ public class SignupComponent {
         webDriver.findElement(By.id("register")).click();
     }
 
-    public void clickAddAuthenticator (){
+    public void clickAddAuthenticator() {
         webDriver.findElement(By.id("addAuthenticator")).click();
     }
 

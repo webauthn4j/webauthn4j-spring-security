@@ -27,16 +27,16 @@ describe('DashboardComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ DashboardComponent ],
+      declarations: [DashboardComponent],
       imports: [
         RouterTestingModule
       ]
     }).overrideComponent(DashboardComponent, {
-      set:{
+      set: {
         providers: [
           {
             provide: ProfileService,
-            useFactory: ()=>{
+            useFactory: () => {
               let profileServiceMock = new ProfileService(null, null);
               spyOn(profileServiceMock, "load").and.returnValue(of({
                 userHandle: "userHandle",
@@ -44,7 +44,7 @@ describe('DashboardComponent', () => {
                 lastName: "lastName",
                 emailAddress: "dummy@example.com",
                 password: "password",
-                authenticators:  [],
+                authenticators: [],
                 singleFactorAuthenticationAllowed: true
               }));
               return profileServiceMock;
@@ -54,7 +54,7 @@ describe('DashboardComponent', () => {
         ]
       }
     })
-    .compileComponents();
+      .compileComponents();
   }));
 
   beforeEach(() => {

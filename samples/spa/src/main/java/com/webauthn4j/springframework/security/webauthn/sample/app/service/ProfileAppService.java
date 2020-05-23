@@ -16,8 +16,8 @@
 
 package com.webauthn4j.springframework.security.webauthn.sample.app.service;
 
-import com.webauthn4j.springframework.security.webauthn.sample.domain.entity.UserEntity;
 import com.webauthn4j.springframework.security.webauthn.sample.app.api.ProfileUpdateForm;
+import com.webauthn4j.springframework.security.webauthn.sample.domain.entity.UserEntity;
 
 public interface ProfileAppService {
 

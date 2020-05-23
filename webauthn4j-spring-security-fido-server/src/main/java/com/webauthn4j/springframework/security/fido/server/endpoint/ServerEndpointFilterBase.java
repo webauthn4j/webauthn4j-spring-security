@@ -17,8 +17,8 @@
 package com.webauthn4j.springframework.security.fido.server.endpoint;
 
 import com.webauthn4j.converter.util.ObjectConverter;
-import com.webauthn4j.util.exception.WebAuthnException;
 import com.webauthn4j.springframework.security.webauthn.util.ExceptionUtil;
+import com.webauthn4j.util.exception.WebAuthnException;
 import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationServiceException;

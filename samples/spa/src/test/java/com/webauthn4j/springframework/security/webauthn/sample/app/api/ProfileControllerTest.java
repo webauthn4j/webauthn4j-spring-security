@@ -17,14 +17,14 @@
 package com.webauthn4j.springframework.security.webauthn.sample.app.api;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.webauthn4j.util.Base64UrlUtil;
-import com.webauthn4j.util.UUIDUtil;
 import com.webauthn4j.springframework.security.webauthn.sample.app.config.AppConfig;
 import com.webauthn4j.springframework.security.webauthn.sample.app.service.ProfileAppService;
 import com.webauthn4j.springframework.security.webauthn.sample.domain.entity.UserEntity;
 import com.webauthn4j.springframework.security.webauthn.sample.test.WithMockWebAuthnUser;
 import com.webauthn4j.springframework.security.webauthn.sample.test.app.config.TestSecurityConfig;
 import com.webauthn4j.springframework.security.webauthn.sample.test.infrastructure.config.InfrastructureMockConfig;
+import com.webauthn4j.util.Base64UrlUtil;
+import com.webauthn4j.util.UUIDUtil;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -65,8 +65,8 @@ public class ProfileControllerTest {
     ObjectMapper objectMapper;
 
     @Test
-    @WithMockWebAuthnUser(id=1, firstName = "John", lastName = "Doe", emailAddress = "john.doe@example.com", authorities = {"ROLE_USER"}, authenticators = {})
-    public void show_test() throws Exception{
+    @WithMockWebAuthnUser(id = 1, firstName = "John", lastName = "Doe", emailAddress = "john.doe@example.com", authorities = {"ROLE_USER"}, authenticators = {})
+    public void show_test() throws Exception {
         int userId = 1;
 
         UserEntity userEntity = new UserEntity();
@@ -82,21 +82,21 @@ public class ProfileControllerTest {
 
         //When
         mvc.perform(get("/api/profile"))
-        //Then
-        .andExpect(status().isOk())
-        .andExpect(jsonPath("$.id", is(1)))
-        .andExpect(jsonPath("$.userHandle", is("")))
-        .andExpect(jsonPath("$.firstName", is("John")))
-        .andExpect(jsonPath("$.lastName", is("Doe")))
-        .andExpect(jsonPath("$.emailAddress", is("john.doe@example.com")))
-        .andExpect(jsonPath("$.authenticators", is(empty())))
-        .andExpect(jsonPath("$.singleFactorAuthenticationAllowed", is(true)))
+                //Then
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id", is(1)))
+                .andExpect(jsonPath("$.userHandle", is("")))
+                .andExpect(jsonPath("$.firstName", is("John")))
+                .andExpect(jsonPath("$.lastName", is("Doe")))
+                .andExpect(jsonPath("$.emailAddress", is("john.doe@example.com")))
+                .andExpect(jsonPath("$.authenticators", is(empty())))
+                .andExpect(jsonPath("$.singleFactorAuthenticationAllowed", is(true)))
         ;
     }
 
     @Test
     @WithAnonymousUser
-    public void create_test() throws Exception{
+    public void create_test() throws Exception {
 
         ProfileCreateForm userCreateForm = new ProfileCreateForm();
         userCreateForm.setUserHandle("ORZClsZpTvWrYGl7mXL5Wg");
@@ -121,26 +121,26 @@ public class ProfileControllerTest {
         //When
         mvc.perform(
                 post("/api/profile")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(userCreateForm))
-                .with(SecurityMockMvcRequestPostProcessors.csrf())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(userCreateForm))
+                        .with(SecurityMockMvcRequestPostProcessors.csrf())
         )
-        //Then
-        .andExpect(status().isOk())
-        .andExpect(jsonPath("$.id", is(1)))
-        .andExpect(jsonPath("$.userHandle", is("ORZClsZpTvWrYGl7mXL5Wg")))
-        .andExpect(jsonPath("$.firstName", is("John")))
-        .andExpect(jsonPath("$.lastName", is("Doe")))
-        .andExpect(jsonPath("$.emailAddress", is("john.doe@example.com")))
-        .andExpect(jsonPath("$.authenticators", is(empty())))
-        .andExpect(jsonPath("$.singleFactorAuthenticationAllowed", is(true)))
+                //Then
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id", is(1)))
+                .andExpect(jsonPath("$.userHandle", is("ORZClsZpTvWrYGl7mXL5Wg")))
+                .andExpect(jsonPath("$.firstName", is("John")))
+                .andExpect(jsonPath("$.lastName", is("Doe")))
+                .andExpect(jsonPath("$.emailAddress", is("john.doe@example.com")))
+                .andExpect(jsonPath("$.authenticators", is(empty())))
+                .andExpect(jsonPath("$.singleFactorAuthenticationAllowed", is(true)))
         ;
         verify(profileAppService).create(any());
     }
 
     @Test
-    @WithMockWebAuthnUser(id=1, firstName = "John", lastName = "Doe", emailAddress = "john.doe@example.com", authorities = {"ROLE_USER"}, authenticators = {})
-    public void update_test() throws Exception{
+    @WithMockWebAuthnUser(id = 1, firstName = "John", lastName = "Doe", emailAddress = "john.doe@example.com", authorities = {"ROLE_USER"}, authenticators = {})
+    public void update_test() throws Exception {
         int userId = 1;
 
         ProfileUpdateForm userUpdateForm = new ProfileUpdateForm();
@@ -172,30 +172,30 @@ public class ProfileControllerTest {
                         .content(objectMapper.writeValueAsString(userEntity))
                         .with(SecurityMockMvcRequestPostProcessors.csrf())
         )
-        //Then
-        .andExpect(status().isOk())
-        .andExpect(jsonPath("$.id", is(1)))
-        .andExpect(jsonPath("$.userHandle", is(Base64UrlUtil.encodeToString(userHandle))))
-        .andExpect(jsonPath("$.firstName", is("John")))
-        .andExpect(jsonPath("$.lastName", is("Smith")))
-        .andExpect(jsonPath("$.emailAddress", is("john.smith@example.com")))
-        .andExpect(jsonPath("$.authenticators", is(empty())))
-        .andExpect(jsonPath("$.singleFactorAuthenticationAllowed", is(true)))
+                //Then
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id", is(1)))
+                .andExpect(jsonPath("$.userHandle", is(Base64UrlUtil.encodeToString(userHandle))))
+                .andExpect(jsonPath("$.firstName", is("John")))
+                .andExpect(jsonPath("$.lastName", is("Smith")))
+                .andExpect(jsonPath("$.emailAddress", is("john.smith@example.com")))
+                .andExpect(jsonPath("$.authenticators", is(empty())))
+                .andExpect(jsonPath("$.singleFactorAuthenticationAllowed", is(true)))
         ;
         verify(profileAppService).update(anyInt(), any());
     }
 
     @Test
-    @WithMockWebAuthnUser(id=1, firstName = "John", lastName = "Doe", emailAddress = "john.doe@example.com", authorities = {"ROLE_USER"}, authenticators = {})
-    public void delete_test() throws Exception{
+    @WithMockWebAuthnUser(id = 1, firstName = "John", lastName = "Doe", emailAddress = "john.doe@example.com", authorities = {"ROLE_USER"}, authenticators = {})
+    public void delete_test() throws Exception {
 
         //When
         mvc.perform(
                 delete("/api/profile")
-                .with(SecurityMockMvcRequestPostProcessors.csrf())
+                        .with(SecurityMockMvcRequestPostProcessors.csrf())
         )
-        //Then
-        .andExpect(status().isOk());
+                //Then
+                .andExpect(status().isOk());
         verify(profileAppService).delete(anyInt());
     }
 

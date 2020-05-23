@@ -16,6 +16,8 @@
 
 package com.webauthn4j.springframework.security.webauthn.sample.domain.service;
 
+import com.webauthn4j.springframework.security.webauthn.sample.domain.constant.MessageCodes;
+import com.webauthn4j.springframework.security.webauthn.sample.domain.dto.AuthorityUpdateDto;
 import com.webauthn4j.springframework.security.webauthn.sample.domain.entity.AuthorityEntity;
 import com.webauthn4j.springframework.security.webauthn.sample.domain.entity.GroupEntity;
 import com.webauthn4j.springframework.security.webauthn.sample.domain.entity.UserEntity;
@@ -23,8 +25,6 @@ import com.webauthn4j.springframework.security.webauthn.sample.domain.exception.
 import com.webauthn4j.springframework.security.webauthn.sample.domain.repository.AuthorityEntityRepository;
 import com.webauthn4j.springframework.security.webauthn.sample.domain.repository.GroupEntityRepository;
 import com.webauthn4j.springframework.security.webauthn.sample.domain.repository.UserEntityRepository;
-import com.webauthn4j.springframework.security.webauthn.sample.domain.constant.MessageCodes;
-import com.webauthn4j.springframework.security.webauthn.sample.domain.dto.AuthorityUpdateDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

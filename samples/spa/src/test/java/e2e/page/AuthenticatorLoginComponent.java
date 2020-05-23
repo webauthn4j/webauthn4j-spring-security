@@ -27,7 +27,7 @@ public class AuthenticatorLoginComponent {
         this.webDriver = webDriver;
     }
 
-    public void navigate(){
+    public void navigate() {
         webDriver.navigate().to("http://localhost:8080/angular/login");
     }
 

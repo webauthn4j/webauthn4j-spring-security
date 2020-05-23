@@ -16,13 +16,13 @@
 
 package com.webauthn4j.springframework.security.webauthn.sample.test;
 
-import com.webauthn4j.util.Base64UrlUtil;
 import com.webauthn4j.springframework.security.webauthn.WebAuthnAuthenticationToken;
 import com.webauthn4j.springframework.security.webauthn.request.WebAuthnAuthenticationRequest;
 import com.webauthn4j.springframework.security.webauthn.sample.domain.entity.AuthenticatorEntity;
 import com.webauthn4j.springframework.security.webauthn.sample.domain.entity.AuthorityEntity;
 import com.webauthn4j.springframework.security.webauthn.sample.domain.entity.GroupEntity;
 import com.webauthn4j.springframework.security.webauthn.sample.domain.entity.UserEntity;
+import com.webauthn4j.util.Base64UrlUtil;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -43,7 +43,7 @@ public class WithMockWebAuthnUserSecurityContextFactory implements WithSecurityC
      * Create a {@link SecurityContext} given an Annotation.
      *
      * @param user the {@link WithMockWebAuthnUser} to create the {@link SecurityContext}
-     *                   from. Cannot be null.
+     *             from. Cannot be null.
      * @return the {@link SecurityContext} to use. Cannot be null.
      */
     @Override

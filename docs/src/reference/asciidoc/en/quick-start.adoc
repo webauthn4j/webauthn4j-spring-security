@@ -11,4 +11,5 @@ It can be launched with a following command.
 
 image::images/login.png[login view]
 
-Sample application is documented in a dedicated chapter. Please refer link:./sample-app[Sample application].
+Sample application is documented in a dedicated chapter.
+Please refer link:./sample-app[Sample application].

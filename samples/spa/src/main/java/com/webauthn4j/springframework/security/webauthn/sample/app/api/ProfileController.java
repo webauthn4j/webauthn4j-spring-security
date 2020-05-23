@@ -60,27 +60,27 @@ public class ProfileController {
     }
 
     @GetMapping
-    public ProfileForm show(@AuthenticationPrincipal UserEntity loginUserEntity){
+    public ProfileForm show(@AuthenticationPrincipal UserEntity loginUserEntity) {
         UserEntity userEntity = profileAppService.findOne(loginUserEntity.getId());
         return mapper.mapToProfileForm(userEntity);
     }
 
     @PostMapping
-    public ProfileForm create(@Valid @RequestBody ProfileCreateForm profileCreateForm){
+    public ProfileForm create(@Valid @RequestBody ProfileCreateForm profileCreateForm) {
         UserEntity userEntity = mapper.mapForCreate(profileCreateForm);
         UserEntity createdUserEntity = profileAppService.create(userEntity);
         return mapper.mapToProfileForm(createdUserEntity);
     }
 
     @PutMapping
-    public ProfileForm update(@AuthenticationPrincipal UserEntity loginUserEntity, @Valid @RequestBody ProfileUpdateForm profileUpdateForm){
+    public ProfileForm update(@AuthenticationPrincipal UserEntity loginUserEntity, @Valid @RequestBody ProfileUpdateForm profileUpdateForm) {
         int id = loginUserEntity.getId();
         UserEntity updatedUserEntity = profileAppService.update(id, profileUpdateForm);
         return mapper.mapToProfileForm(updatedUserEntity);
     }
 
     @DeleteMapping
-    public void delete(@AuthenticationPrincipal UserEntity loginUserEntity){
+    public void delete(@AuthenticationPrincipal UserEntity loginUserEntity) {
         int id = loginUserEntity.getId();
         profileAppService.delete(id);
         SecurityContextHolder.clearContext();

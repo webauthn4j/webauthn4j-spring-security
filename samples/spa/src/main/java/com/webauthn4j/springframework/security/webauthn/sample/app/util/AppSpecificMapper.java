@@ -16,6 +16,10 @@
 
 package com.webauthn4j.springframework.security.webauthn.sample.app.util;
 
+import com.webauthn4j.springframework.security.webauthn.sample.app.api.AuthenticatorForm;
+import com.webauthn4j.springframework.security.webauthn.sample.app.api.ProfileCreateForm;
+import com.webauthn4j.springframework.security.webauthn.sample.app.api.ProfileForm;
+import com.webauthn4j.springframework.security.webauthn.sample.app.api.ProfileUpdateForm;
 import com.webauthn4j.springframework.security.webauthn.sample.app.api.admin.UserCreateForm;
 import com.webauthn4j.springframework.security.webauthn.sample.app.api.admin.UserForm;
 import com.webauthn4j.springframework.security.webauthn.sample.app.api.admin.UserUpdateForm;
@@ -23,10 +27,6 @@ import com.webauthn4j.springframework.security.webauthn.sample.domain.entity.Aut
 import com.webauthn4j.springframework.security.webauthn.sample.domain.entity.UserEntity;
 import com.webauthn4j.springframework.security.webauthn.sample.domain.exception.WebAuthnSampleEntityNotFoundException;
 import com.webauthn4j.util.Base64UrlUtil;
-import com.webauthn4j.springframework.security.webauthn.sample.app.api.AuthenticatorForm;
-import com.webauthn4j.springframework.security.webauthn.sample.app.api.ProfileCreateForm;
-import com.webauthn4j.springframework.security.webauthn.sample.app.api.ProfileForm;
-import com.webauthn4j.springframework.security.webauthn.sample.app.api.ProfileUpdateForm;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -44,7 +44,7 @@ public class AppSpecificMapper {
     @Autowired
     PasswordEncoder passwordEncoder;
 
-    public UserEntity mapForCreate(UserCreateForm userForm){
+    public UserEntity mapForCreate(UserCreateForm userForm) {
         UserEntity userEntity = new UserEntity();
         userEntity.setId(null);
         userEntity.setUserHandle(mapFromBase64Url(userForm.getUserHandle()));
@@ -53,10 +53,10 @@ public class AppSpecificMapper {
         userEntity.setEmailAddress(userForm.getEmailAddress());
 
         // authenticators
-        if(userForm.getAuthenticators() == null){
+        if (userForm.getAuthenticators() == null) {
             userForm.setAuthenticators(new ArrayList<>());
         }
-        if(userEntity.getAuthenticators() == null){
+        if (userEntity.getAuthenticators() == null) {
             userEntity.setAuthenticators(new ArrayList<>());
         }
         mapToAuthenticatorListForCreate(userForm.getAuthenticators(), userEntity.getAuthenticators());
@@ -68,14 +68,14 @@ public class AppSpecificMapper {
         return userEntity;
     }
 
-    public UserEntity mapForUpdate(UserUpdateForm userForm, UserEntity userEntity){
+    public UserEntity mapForUpdate(UserUpdateForm userForm, UserEntity userEntity) {
         userEntity.setUserHandle(mapFromBase64Url(userForm.getUserHandle()));
         userEntity.setFirstName(userForm.getFirstName());
         userEntity.setLastName(userForm.getLastName());
         userEntity.setEmailAddress(userForm.getEmailAddress());
 
         // authenticators
-        if(userForm.getAuthenticators() == null){
+        if (userForm.getAuthenticators() == null) {
             userForm.setAuthenticators(new ArrayList<>());
         }
         mapToAuthenticatorListForUpdate(userForm.getAuthenticators(), userEntity.getAuthenticators());
@@ -123,7 +123,7 @@ public class AppSpecificMapper {
         return new PageImpl<>(users.stream().map(this::mapToUserForm).collect(Collectors.toList()), users.getPageable(), users.getTotalElements());
     }
 
-    private AuthenticatorEntity mapForCreate(AuthenticatorForm authenticatorForm){
+    private AuthenticatorEntity mapForCreate(AuthenticatorForm authenticatorForm) {
         AuthenticatorEntity authenticatorEntity = new AuthenticatorEntity();
         authenticatorEntity.setName(authenticatorForm.getName());
         authenticatorEntity.setAttestationStatement(authenticatorForm.getAttestationObject().getAttestationObject().getAttestationStatement());
@@ -131,7 +131,7 @@ public class AppSpecificMapper {
         return authenticatorEntity;
     }
 
-    private AuthenticatorEntity mapForUpdate(AuthenticatorForm authenticatorForm, AuthenticatorEntity authenticatorEntity){
+    private AuthenticatorEntity mapForUpdate(AuthenticatorForm authenticatorForm, AuthenticatorEntity authenticatorEntity) {
         authenticatorEntity.setName(authenticatorForm.getName());
         // attestationStatement and attestedCredentialData won't be updated
         return authenticatorEntity;
@@ -163,7 +163,7 @@ public class AppSpecificMapper {
         return userEntity;
     }
 
-    public UserEntity mapForUpdate(ProfileUpdateForm profileUpdateForm, UserEntity userEntity){
+    public UserEntity mapForUpdate(ProfileUpdateForm profileUpdateForm, UserEntity userEntity) {
         userEntity.setUserHandle(mapFromBase64Url(profileUpdateForm.getUserHandle()));
         userEntity.setFirstName(profileUpdateForm.getFirstName());
         userEntity.setLastName(profileUpdateForm.getLastName());
@@ -181,14 +181,14 @@ public class AppSpecificMapper {
     }
 
     private List<AuthenticatorForm> mapToAuthenticatorFormList(List<AuthenticatorEntity> authenticatorEntities, List<AuthenticatorForm> authenticatorForms) {
-        for(AuthenticatorEntity authenticatorEntity : authenticatorEntities){
+        for (AuthenticatorEntity authenticatorEntity : authenticatorEntities) {
             authenticatorForms.add(mapToAuthenticatorForm(authenticatorEntity));
         }
         return authenticatorForms;
     }
 
     private List<AuthenticatorEntity> mapToAuthenticatorListForCreate(List<AuthenticatorForm> authenticatorForms, List<AuthenticatorEntity> authenticatorEntities) {
-        for(AuthenticatorForm authenticatorForm: authenticatorForms){
+        for (AuthenticatorForm authenticatorForm : authenticatorForms) {
             authenticatorEntities.add(mapForCreate(authenticatorForm));
         }
         return authenticatorEntities;
@@ -198,17 +198,17 @@ public class AppSpecificMapper {
         int[] sortedKeptIds = authenticatorForms.stream()
                 .filter(authenticator -> authenticator.getId() != null)
                 .mapToInt(AuthenticatorForm::getId).sorted().toArray();
-        for(AuthenticatorForm authenticatorForm: authenticatorForms){
+        for (AuthenticatorForm authenticatorForm : authenticatorForms) {
             Integer id = authenticatorForm.getId();
             // addExtension new authenticator
-            if(id == null){
+            if (id == null) {
                 authenticatorEntities.add(mapForCreate(authenticatorForm));
             }
             // update existing authenticator
             else {
                 AuthenticatorEntity correspondingAuthenticatorEntity =
                         authenticatorEntities.stream().filter(item -> item.getId().equals(id))
-                                .findFirst().orElseThrow(()-> new WebAuthnSampleEntityNotFoundException("Corresponding authenticator is not found."));
+                                .findFirst().orElseThrow(() -> new WebAuthnSampleEntityNotFoundException("Corresponding authenticator is not found."));
                 mapForUpdate(authenticatorForm, correspondingAuthenticatorEntity);
             }
 
@@ -216,7 +216,7 @@ public class AppSpecificMapper {
         // delete authenticatorEntities if it is not included in authenticatorForms
         authenticatorEntities.removeIf(authenticatorEntity -> {
             Integer id = authenticatorEntity.getId();
-            if(id == null){
+            if (id == null) {
                 return false;
             }
             return Arrays.binarySearch(sortedKeptIds, id) < 0;
@@ -224,7 +224,7 @@ public class AppSpecificMapper {
         return authenticatorEntities;
     }
 
-    public byte[] mapFromBase64Url(String base64url){
+    public byte[] mapFromBase64Url(String base64url) {
         return Base64UrlUtil.decode(base64url);
     }
 

@@ -35,11 +35,11 @@
     var uint8Array = new Uint8Array(arrayBuffer);
 
     var j = 0;
-    for (var i = 0; i < base64urlLength; i+=4) {
+    for (var i = 0; i < base64urlLength; i += 4) {
       var tmp0 = reverseLookup[base64url.charCodeAt(i)];
-      var tmp1 = reverseLookup[base64url.charCodeAt(i+1)];
-      var tmp2 = reverseLookup[base64url.charCodeAt(i+2)];
-      var tmp3 = reverseLookup[base64url.charCodeAt(i+3)];
+      var tmp1 = reverseLookup[base64url.charCodeAt(i + 1)];
+      var tmp2 = reverseLookup[base64url.charCodeAt(i + 2)];
+      var tmp3 = reverseLookup[base64url.charCodeAt(i + 3)];
 
       uint8Array[j++] = (tmp0 << 2) | (tmp1 >> 4);
       uint8Array[j++] = ((tmp1 & 15) << 4) | (tmp2 >> 2);
@@ -54,7 +54,7 @@
     var length = uint8Array.length;
     var base64url = "";
 
-    for (var i = 0; i < length; i+=3) {
+    for (var i = 0; i < length; i += 3) {
       base64url += lookup[uint8Array[i] >> 2];
       base64url += lookup[((uint8Array[i] & 3) << 4) | (uint8Array[i + 1] >> 4)];
       base64url += lookup[((uint8Array[i + 1] & 15) << 2) | (uint8Array[i + 2] >> 6)];

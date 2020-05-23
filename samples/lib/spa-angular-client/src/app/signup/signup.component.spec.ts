@@ -29,31 +29,31 @@ describe('SignupComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ SignupComponent ],
+      declarations: [SignupComponent],
       imports: [
         NgbAlertModule,
         FormsModule,
         RouterTestingModule
       ]
     }).overrideComponent(SignupComponent, {
-      set:{
+      set: {
         providers: [
           {
             provide: ProfileService,
-            useFactory: ()=>{
+            useFactory: () => {
               return new ProfileService(null, null);
             }
           },
           {
             provide: AuthService,
-            useFactory: ()=>{
+            useFactory: () => {
               return new AuthService(null, null);
             }
           }
         ]
       }
     })
-    .compileComponents();
+      .compileComponents();
   }));
 
   beforeEach(() => {

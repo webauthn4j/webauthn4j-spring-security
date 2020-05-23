@@ -20,8 +20,8 @@ import com.webauthn4j.data.client.Origin;
 import com.webauthn4j.data.client.challenge.Challenge;
 import com.webauthn4j.server.ServerProperty;
 import com.webauthn4j.springframework.security.webauthn.challenge.ChallengeRepository;
-import com.webauthn4j.springframework.security.webauthn.util.ServletUtil;
 import com.webauthn4j.springframework.security.webauthn.options.OptionsProvider;
+import com.webauthn4j.springframework.security.webauthn.util.ServletUtil;
 import org.springframework.util.Assert;
 
 import javax.servlet.http.HttpServletRequest;

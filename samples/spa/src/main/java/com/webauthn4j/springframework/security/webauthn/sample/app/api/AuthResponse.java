@@ -20,7 +20,7 @@ package com.webauthn4j.springframework.security.webauthn.sample.app.api;
 public class AuthResponse {
     private AuthStatus status;
 
-    public AuthResponse(AuthStatus status){
+    public AuthResponse(AuthStatus status) {
         this.status = status;
     }
 

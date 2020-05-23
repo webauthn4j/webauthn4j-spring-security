@@ -65,7 +65,6 @@ public class WebAuthnLoginConfigurerSetterSpringTest {
     @Autowired
     private ServerPropertyProvider serverPropertyProvider;
 
-    @SuppressWarnings("unchecked")
     @Before
     public void setup() {
         WebAuthnUserDetails mockUserDetails = mock(WebAuthnUserDetails.class);

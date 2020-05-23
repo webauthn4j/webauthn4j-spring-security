@@ -26,24 +26,24 @@ describe('AuthenticatorRegistrationReconfirmationDialogComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ AuthenticatorRegistrationReconfirmationDialogComponent ],
+      declarations: [AuthenticatorRegistrationReconfirmationDialogComponent],
       imports: [
         NgbModalModule,
         FormsModule
       ]
     }).overrideComponent(AuthenticatorRegistrationReconfirmationDialogComponent, {
-      set:{
+      set: {
         providers: [
           {
             provide: NgbActiveModal,
-            useFactory: ()=>{
+            useFactory: () => {
               return new NgbActiveModal();
             }
           }
         ]
       }
     })
-    .compileComponents();
+      .compileComponents();
   }));
 
   beforeEach(() => {

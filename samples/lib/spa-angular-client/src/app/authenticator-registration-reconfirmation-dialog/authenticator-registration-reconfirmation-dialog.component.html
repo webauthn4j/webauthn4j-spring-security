@@ -14,7 +14,8 @@
   ~ limitations under the License.
   -->
 
-<form name="authenticatorRegistrationReconfirmationForm" class="authenticatorRegistrationReconfirmationForm" #authenticatorRegistrationReconfirmationForm="ngForm" novalidate>
+<form name="authenticatorRegistrationReconfirmationForm" class="authenticatorRegistrationReconfirmationForm"
+      #authenticatorRegistrationReconfirmationForm="ngForm" novalidate>
   <div class="modal-header">
     <h5 class="modal-title">WebAuthn4J Spring Security Sample</h5>
     <button type="button" class="close" aria-label="Close" (click)="activeModal.dismiss()">
@@ -25,7 +26,7 @@
     <p>Authenticators are available for registration. Would you like to add one before sign-up?</p>
   </div>
   <div class="modal-footer">
-    <button type="button" class="btn btn-primary"  (click)="activeModal.close(true)">Yes</button>
+    <button type="button" class="btn btn-primary" (click)="activeModal.close(true)">Yes</button>
     <button type="button" class="btn btn-secondary" (click)="activeModal.close(false)">No</button>
   </div>
 </form>

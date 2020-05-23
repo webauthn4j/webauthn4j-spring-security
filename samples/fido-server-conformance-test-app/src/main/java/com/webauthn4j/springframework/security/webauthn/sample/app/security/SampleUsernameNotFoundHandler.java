@@ -16,9 +16,9 @@
 
 package com.webauthn4j.springframework.security.webauthn.sample.app.security;
 
+import com.webauthn4j.springframework.security.fido.server.endpoint.UsernameNotFoundHandler;
 import com.webauthn4j.springframework.security.webauthn.sample.domain.component.UserManager;
 import com.webauthn4j.springframework.security.webauthn.sample.domain.entity.UserEntity;
-import com.webauthn4j.springframework.security.fido.server.endpoint.UsernameNotFoundHandler;
 
 import java.util.Collections;
 

@@ -21,10 +21,9 @@ import org.springframework.security.core.Authentication;
 public class WebAuthnSecurityExpression {
 
     public boolean isWebAuthnAuthenticated(Authentication authentication) {
-        if(authentication == null){
+        if (authentication == null) {
             return false;
-        }
-        else {
+        } else {
             return WebAuthnAuthenticationToken.class.isAssignableFrom(authentication.getClass());
         }
     }

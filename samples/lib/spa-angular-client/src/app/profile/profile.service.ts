@@ -31,7 +31,6 @@ import {RegisteringAuthenticatorForm} from "./registering-authenticator.form";
 import {ExistingAuthenticatorForm} from "./existing-authenticator.form";
 import {ExistingAuthenticatorViewModel} from "../webauthn/existing-authenticator.view-model";
 import {map} from "rxjs/operators";
-import {UserForm} from "../user/user.form";
 
 @Injectable({
   providedIn: 'root'
@@ -40,7 +39,8 @@ export class ProfileService implements OnInit {
 
   private profileUrl: string = "/api/profile";
 
-  constructor(private webauthnService: WebAuthnService, private http: HttpClient) { }
+  constructor(private webauthnService: WebAuthnService, private http: HttpClient) {
+  }
 
   ngOnInit(): void {
   }
@@ -109,7 +109,7 @@ export class ProfileService implements OnInit {
         lastName: profileForm.lastName,
         emailAddress: profileForm.emailAddress,
         password: profileForm.password,
-        authenticators:  profileForm.authenticators.map(authenticator => this.mapToAuthenticatorViewModel(authenticator)),
+        authenticators: profileForm.authenticators.map(authenticator => this.mapToAuthenticatorViewModel(authenticator)),
         singleFactorAuthenticationAllowed: profileForm.singleFactorAuthenticationAllowed
       };
     }));
@@ -119,8 +119,8 @@ export class ProfileService implements OnInit {
     return this.http.delete<void>(this.profileUrl);
   }
 
-  private mapToAuthenticatorViewModel(authenticatorForm: AuthenticatorForm): AuthenticatorViewModel{
-    if((<RegisteringAuthenticatorForm>authenticatorForm).clientData && (<RegisteringAuthenticatorForm>authenticatorForm).attestationObject){
+  private mapToAuthenticatorViewModel(authenticatorForm: AuthenticatorForm): AuthenticatorViewModel {
+    if ((<RegisteringAuthenticatorForm>authenticatorForm).clientData && (<RegisteringAuthenticatorForm>authenticatorForm).attestationObject) {
       let registeringAuthenticator: RegisteringAuthenticatorViewModel = {
         name: authenticatorForm.name,
         credentialId: base64url.decodeBase64url(authenticatorForm.credentialId).buffer,
@@ -129,22 +129,20 @@ export class ProfileService implements OnInit {
         clientExtensionsJSON: (<RegisteringAuthenticatorForm>authenticatorForm).clientExtensionsJSON
       };
       return registeringAuthenticator;
-    }
-    else if((<ExistingAuthenticatorForm>authenticatorForm).id){
+    } else if ((<ExistingAuthenticatorForm>authenticatorForm).id) {
       let existingAuthenticator: ExistingAuthenticatorViewModel = {
         id: (<ExistingAuthenticatorForm>authenticatorForm).id,
         name: authenticatorForm.name,
         credentialId: base64url.decodeBase64url(authenticatorForm.credentialId).buffer
       };
       return existingAuthenticator;
-    }
-    else {
+    } else {
       throw new Error("Unexpected Authenticator type is provided");
     }
   }
 
   private mapToAuthenticatorForm(authenticator: AuthenticatorViewModel): AuthenticatorForm {
-    if((<RegisteringAuthenticatorViewModel>authenticator).clientData && (<RegisteringAuthenticatorViewModel>authenticator).attestationObject){
+    if ((<RegisteringAuthenticatorViewModel>authenticator).clientData && (<RegisteringAuthenticatorViewModel>authenticator).attestationObject) {
       let registeringAuthenticatorForm: RegisteringAuthenticatorForm = {
         name: authenticator.name,
         credentialId: base64url.encodeBase64url(new Uint8Array(authenticator.credentialId)),
@@ -153,16 +151,14 @@ export class ProfileService implements OnInit {
         clientExtensionsJSON: (<RegisteringAuthenticatorViewModel>authenticator).clientExtensionsJSON
       };
       return registeringAuthenticatorForm;
-    }
-    else if((<ExistingAuthenticatorViewModel>authenticator).id){
+    } else if ((<ExistingAuthenticatorViewModel>authenticator).id) {
       let existingAuthenticatorForm: ExistingAuthenticatorForm = {
         id: (<ExistingAuthenticatorViewModel>authenticator).id,
         name: authenticator.name,
         credentialId: base64url.stringify(authenticator.credentialId)
       };
       return existingAuthenticatorForm;
-    }
-    else {
+    } else {
       throw new Error("Unexpected Authenticator type is provided");
     }
   }

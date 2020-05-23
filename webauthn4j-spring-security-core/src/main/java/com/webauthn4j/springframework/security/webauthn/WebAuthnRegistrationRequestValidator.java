@@ -21,10 +21,10 @@ import com.webauthn4j.data.RegistrationData;
 import com.webauthn4j.data.RegistrationParameters;
 import com.webauthn4j.data.RegistrationRequest;
 import com.webauthn4j.server.ServerProperty;
-import com.webauthn4j.util.Base64UrlUtil;
-import com.webauthn4j.util.exception.WebAuthnException;
 import com.webauthn4j.springframework.security.webauthn.server.ServerPropertyProvider;
 import com.webauthn4j.springframework.security.webauthn.util.ExceptionUtil;
+import com.webauthn4j.util.Base64UrlUtil;
+import com.webauthn4j.util.exception.WebAuthnException;
 import org.springframework.util.Assert;
 
 import javax.servlet.http.HttpServletRequest;
@@ -47,8 +47,8 @@ public class WebAuthnRegistrationRequestValidator {
     /**
      * Constructor
      *
-     * @param webAuthnManager validator for {@link WebAuthnManager}
-     * @param serverPropertyProvider       provider for {@link ServerProperty}
+     * @param webAuthnManager        validator for {@link WebAuthnManager}
+     * @param serverPropertyProvider provider for {@link ServerProperty}
      */
     public WebAuthnRegistrationRequestValidator(WebAuthnManager webAuthnManager, ServerPropertyProvider serverPropertyProvider) {
 
@@ -81,7 +81,7 @@ public class WebAuthnRegistrationRequestValidator {
                 createRegistrationParameters(httpServletRequest);
 
         try {
-            RegistrationData response = webAuthnManager.validate(webAuthnRegistrationRequest,webAuthnRegistrationParameters);
+            RegistrationData response = webAuthnManager.validate(webAuthnRegistrationRequest, webAuthnRegistrationParameters);
             return new WebAuthnRegistrationRequestValidationResponse(
                     response.getCollectedClientData(),
                     response.getAttestationObject(),
@@ -92,9 +92,9 @@ public class WebAuthnRegistrationRequestValidator {
     }
 
     RegistrationRequest createRegistrationRequest(String clientDataBase64,
-                                                          String attestationObjectBase64,
-                                                          Set<String> transports,
-                                                          String clientExtensionsJSON) {
+                                                  String attestationObjectBase64,
+                                                  Set<String> transports,
+                                                  String clientExtensionsJSON) {
 
         byte[] clientDataBytes = Base64UrlUtil.decode(clientDataBase64);
         byte[] attestationObjectBytes = Base64UrlUtil.decode(attestationObjectBase64);
@@ -107,7 +107,7 @@ public class WebAuthnRegistrationRequestValidator {
         );
     }
 
-    RegistrationParameters createRegistrationParameters(HttpServletRequest request){
+    RegistrationParameters createRegistrationParameters(HttpServletRequest request) {
         ServerProperty serverProperty = serverPropertyProvider.provide(request);
         return new RegistrationParameters(
                 serverProperty,

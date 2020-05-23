@@ -31,7 +31,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
         registry.addResourceHandler("/static/**")
                 .addResourceLocations("classpath:/static/");
 
-        registry.addResourceHandler("/angular/**", "/angular/",  "/angular")
+        registry.addResourceHandler("/angular/**", "/angular/", "/angular")
                 .addResourceLocations("classpath:/static/angular/index.html")
                 .resourceChain(true)
                 // Override PathResourceResolver to serve a specific file to Angular urls.

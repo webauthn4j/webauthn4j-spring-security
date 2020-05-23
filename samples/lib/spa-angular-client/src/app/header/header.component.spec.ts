@@ -20,7 +20,6 @@ import {HeaderComponent} from './header.component';
 import {AuthService} from "../auth/auth.service";
 import {of} from "rxjs/internal/observable/of";
 import {RouterTestingModule} from "@angular/router/testing";
-import {ProfileService} from "../profile/profile.service";
 
 describe('HeaderComponent', () => {
   let component: HeaderComponent;
@@ -28,16 +27,16 @@ describe('HeaderComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ HeaderComponent ],
+      declarations: [HeaderComponent],
       imports: [
         RouterTestingModule
       ]
     }).overrideComponent(HeaderComponent, {
-      set:{
+      set: {
         providers: [
           {
             provide: AuthService,
-            useFactory: ()=>{
+            useFactory: () => {
               let authServiceMock = new AuthService(null, null);
               spyOn(authServiceMock, "getAuthenticationStatus").and.returnValue(of("NOT_AUTHENTICATED"));
               return authServiceMock;
@@ -46,7 +45,7 @@ describe('HeaderComponent', () => {
         ]
       }
     })
-    .compileComponents();
+      .compileComponents();
   }));
 
   beforeEach(() => {
