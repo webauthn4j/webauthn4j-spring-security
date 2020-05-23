@@ -23,13 +23,13 @@ import com.webauthn4j.data.client.Origin;
 import com.webauthn4j.data.client.challenge.Challenge;
 import com.webauthn4j.data.client.challenge.DefaultChallenge;
 import com.webauthn4j.server.ServerProperty;
+import com.webauthn4j.springframework.security.webauthn.WebAuthnRegistrationRequestValidationResponse;
+import com.webauthn4j.springframework.security.webauthn.WebAuthnRegistrationRequestValidator;
+import com.webauthn4j.springframework.security.webauthn.server.ServerPropertyProvider;
 import com.webauthn4j.test.authenticator.webauthn.PackedAuthenticator;
 import com.webauthn4j.test.authenticator.webauthn.WebAuthnAuthenticatorAdaptor;
 import com.webauthn4j.test.client.ClientPlatform;
 import com.webauthn4j.util.Base64UrlUtil;
-import com.webauthn4j.springframework.security.webauthn.WebAuthnRegistrationRequestValidationResponse;
-import com.webauthn4j.springframework.security.webauthn.WebAuthnRegistrationRequestValidator;
-import com.webauthn4j.springframework.security.webauthn.server.ServerPropertyProvider;
 import org.junit.Test;
 import org.springframework.mock.web.MockHttpServletRequest;
 

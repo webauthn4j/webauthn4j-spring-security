@@ -16,12 +16,12 @@
 
 package e2e;
 
+import com.webauthn4j.springframework.security.webauthn.sample.SampleWebApplication;
 import e2e.page.AuthenticatorLoginComponent;
 import e2e.page.PasswordLoginComponent;
 import e2e.page.ProfileComponent;
 import e2e.page.SignupComponent;
 import io.github.bonigarcia.wdm.WebDriverManager;
-import com.webauthn4j.springframework.security.webauthn.sample.SampleWebApplication;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -45,7 +45,7 @@ public class RegistrationAndAuthenticationE2ETest {
     private WebDriverWait wait;
 
     @BeforeClass
-    public static void setupClassTest(){
+    public static void setupClassTest() {
         WebDriverManager.chromedriver().setup();
     }
 

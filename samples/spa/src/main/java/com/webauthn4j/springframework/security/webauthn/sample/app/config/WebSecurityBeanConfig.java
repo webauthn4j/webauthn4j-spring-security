@@ -59,7 +59,7 @@ public class WebSecurityBeanConfig {
     }
 
     @Bean
-    public AuthenticationTrustResolver authenticationTrustResolver(){
+    public AuthenticationTrustResolver authenticationTrustResolver() {
         return new AuthenticationTrustResolverImpl();
     }
 
@@ -69,7 +69,7 @@ public class WebSecurityBeanConfig {
     }
 
     @Bean
-    public OptionsProvider optionsProvider(WebAuthnUserDetailsService webAuthnUserDetailsService, ChallengeRepository challengeRepository){
+    public OptionsProvider optionsProvider(WebAuthnUserDetailsService webAuthnUserDetailsService, ChallengeRepository challengeRepository) {
         return new OptionsProviderImpl(webAuthnUserDetailsService, challengeRepository);
     }
 
@@ -85,13 +85,13 @@ public class WebSecurityBeanConfig {
     }
 
     @Bean
-    public WebAuthnSecurityExpression webAuthnSecurityExpression(){
+    public WebAuthnSecurityExpression webAuthnSecurityExpression() {
         return new WebAuthnSecurityExpression();
     }
 
 
     @Bean
-    public ObjectConverter objectConverter(){
+    public ObjectConverter objectConverter() {
         ObjectMapper jsonMapper = new ObjectMapper();
         jsonMapper.registerModule(new WebAuthnMetadataJSONModule());
         ObjectMapper cborMapper = new ObjectMapper(new CBORFactory());
@@ -104,12 +104,12 @@ public class WebSecurityBeanConfig {
     }
 
     @Bean
-    public AuthenticationSuccessHandler authenticationSuccessHandler(){
+    public AuthenticationSuccessHandler authenticationSuccessHandler() {
         return new ForwardAuthenticationSuccessHandler("/api/status/200");
     }
 
     @Bean
-    public AuthenticationFailureHandler authenticationFailureHandler(){
+    public AuthenticationFailureHandler authenticationFailureHandler() {
         LinkedHashMap<Class<? extends AuthenticationException>, AuthenticationFailureHandler> authenticationFailureHandlers = new LinkedHashMap<>();
 
         // authenticator error handler
@@ -123,7 +123,7 @@ public class WebSecurityBeanConfig {
     }
 
     @Bean
-    public LogoutSuccessHandler logoutSuccessHandler(){
+    public LogoutSuccessHandler logoutSuccessHandler() {
         return new ForwardLogoutSuccessHandler("/api/status/200");
     }
 
@@ -149,7 +149,7 @@ public class WebSecurityBeanConfig {
     }
 
     @Bean
-    public AuthenticationEntryPoint authenticationEntryPoint(){
+    public AuthenticationEntryPoint authenticationEntryPoint() {
         LoginUrlAuthenticationEntryPoint authenticationEntryPoint = new LoginUrlAuthenticationEntryPoint("/api/status/401");
         authenticationEntryPoint.setUseForward(true);
         return authenticationEntryPoint;

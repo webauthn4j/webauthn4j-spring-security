@@ -26,8 +26,10 @@
     </div>
 
     <div class="mt-3 mb-3">
-      <button id="two-step-login" class="btn btn-primary btn-block" type="button" [disabled]="!isWebAuthnAvailable() || submitting"
-              (click)="loginWithPublicKeyCredential()">Two-step Login</button>
+      <button id="two-step-login" class="btn btn-primary btn-block" type="button"
+              [disabled]="!isWebAuthnAvailable() || submitting"
+              (click)="loginWithPublicKeyCredential()">Two-step Login
+      </button>
     </div>
 
     <button (click)="logout()" class="btn btn-link">Return to login page</button>

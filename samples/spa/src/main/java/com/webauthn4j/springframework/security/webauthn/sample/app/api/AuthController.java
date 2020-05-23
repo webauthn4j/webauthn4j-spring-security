@@ -33,16 +33,14 @@ public class AuthController {
     private AuthenticationTrustResolver trustResolver;
 
     @RequestMapping("/status")
-    public AuthResponse status(){
+    public AuthResponse status() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         AuthStatus status;
-        if(authentication == null || trustResolver.isAnonymous(authentication)){
+        if (authentication == null || trustResolver.isAnonymous(authentication)) {
             status = AuthStatus.NOT_AUTHENTICATED;
-        }
-        else if(WebAuthnAuthenticationToken.class.isAssignableFrom(authentication.getClass())){
+        } else if (WebAuthnAuthenticationToken.class.isAssignableFrom(authentication.getClass())) {
             status = AuthStatus.MULTI_FACTOR_AUTHENTICATED;
-        }
-        else {
+        } else {
             status = AuthStatus.AUTHENTICATED;
         }
         return new AuthResponse(status);

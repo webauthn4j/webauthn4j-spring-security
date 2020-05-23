@@ -17,7 +17,6 @@
 package com.webauthn4j.springframework.security.webauthn.sample.domain.repository;
 
 
-import com.webauthn4j.springframework.security.webauthn.sample.domain.entity.AuthenticatorEntity;
 import com.webauthn4j.springframework.security.webauthn.sample.domain.entity.UserEntity;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

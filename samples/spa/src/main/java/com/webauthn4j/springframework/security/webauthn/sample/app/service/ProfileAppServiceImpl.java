@@ -16,10 +16,10 @@
 
 package com.webauthn4j.springframework.security.webauthn.sample.app.service;
 
+import com.webauthn4j.springframework.security.webauthn.sample.app.api.ProfileUpdateForm;
 import com.webauthn4j.springframework.security.webauthn.sample.app.util.AppSpecificMapper;
 import com.webauthn4j.springframework.security.webauthn.sample.domain.entity.UserEntity;
 import com.webauthn4j.springframework.security.webauthn.sample.domain.service.UserService;
-import com.webauthn4j.springframework.security.webauthn.sample.app.api.ProfileUpdateForm;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

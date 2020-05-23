@@ -71,7 +71,7 @@ public interface UserService {
     /**
      * update the specified user
      *
-     * @param id userId
+     * @param id       userId
      * @param consumer consumer
      * @return updated userEntity
      */

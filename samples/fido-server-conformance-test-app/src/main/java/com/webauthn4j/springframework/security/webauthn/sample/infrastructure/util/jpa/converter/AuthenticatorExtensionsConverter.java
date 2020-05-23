@@ -29,7 +29,7 @@ public class AuthenticatorExtensionsConverter implements AttributeConverter<Map<
 
     private CborConverter cborConverter;
 
-    public AuthenticatorExtensionsConverter(ObjectConverter objectConverter){
+    public AuthenticatorExtensionsConverter(ObjectConverter objectConverter) {
         this.cborConverter = objectConverter.getCborConverter();
     }
 
@@ -40,6 +40,7 @@ public class AuthenticatorExtensionsConverter implements AttributeConverter<Map<
 
     @Override
     public Map<String, RegistrationExtensionAuthenticatorOutput<?>> convertToEntityAttribute(String dbData) {
-        return cborConverter.readValue(Base64UrlUtil.decode(dbData), new TypeReference<Map<String, RegistrationExtensionAuthenticatorOutput<?>>>(){});
+        return cborConverter.readValue(Base64UrlUtil.decode(dbData), new TypeReference<Map<String, RegistrationExtensionAuthenticatorOutput<?>>>() {
+        });
     }
 }

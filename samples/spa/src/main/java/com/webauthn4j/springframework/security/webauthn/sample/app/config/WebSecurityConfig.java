@@ -107,12 +107,12 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         http.apply(WebAuthnConfigurer.webAuthn())
                 .rpName("WebAuthn4J Spring Security Sample")
                 .publicKeyCredParams()
-                    .addPublicKeyCredParams(PublicKeyCredentialType.PUBLIC_KEY, COSEAlgorithmIdentifier.RS256)  // Windows Hello
-                    .addPublicKeyCredParams(PublicKeyCredentialType.PUBLIC_KEY, COSEAlgorithmIdentifier.ES256) // FIDO U2F Key, etc
-                    .and()
+                .addPublicKeyCredParams(PublicKeyCredentialType.PUBLIC_KEY, COSEAlgorithmIdentifier.RS256)  // Windows Hello
+                .addPublicKeyCredParams(PublicKeyCredentialType.PUBLIC_KEY, COSEAlgorithmIdentifier.ES256) // FIDO U2F Key, etc
+                .and()
                 .registrationExtensions()
-                    .addExtension(new SupportedExtensionsExtensionClientInput(true))
-                    .and();
+                .addExtension(new SupportedExtensionsExtensionClientInput(true))
+                .and();
 
 
         // WebAuthn Login

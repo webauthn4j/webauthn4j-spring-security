@@ -17,8 +17,8 @@
 package com.webauthn4j.springframework.security.webauthn.sample.app.api.validator;
 
 import com.webauthn4j.springframework.security.webauthn.WebAuthnRegistrationRequestValidator;
-import com.webauthn4j.validator.exception.ValidationException;
 import com.webauthn4j.springframework.security.webauthn.sample.app.api.AuthenticatorForm;
+import com.webauthn4j.validator.exception.ValidationException;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 
@@ -27,7 +27,7 @@ import javax.servlet.http.HttpServletRequest;
 @Component
 public class AuthenticatorFormValidator {
 
-    private static final String NOT_NULL = "not.null" ;
+    private static final String NOT_NULL = "not.null";
 
     private WebAuthnRegistrationRequestValidator webAuthnRegistrationRequestValidator;
 
@@ -36,28 +36,27 @@ public class AuthenticatorFormValidator {
     }
 
     public void validate(HttpServletRequest request, AuthenticatorForm form, Errors errors) {
-        if(form.getId() == null){
-            if(form.getCredentialId() == null){
+        if (form.getId() == null) {
+            if (form.getCredentialId() == null) {
                 errors.rejectValue("credentialId", NOT_NULL);
             }
-            if(form.getAttestationObject() == null){
+            if (form.getAttestationObject() == null) {
                 errors.rejectValue("attestationObject", NOT_NULL);
             }
-            if(form.getClientData() == null){
+            if (form.getClientData() == null) {
                 errors.rejectValue("clientData", NOT_NULL);
             }
-            if(form.getClientExtensionsJSON() == null){
+            if (form.getClientExtensionsJSON() == null) {
                 errors.rejectValue("clientExtensionsJSON", NOT_NULL);
             }
-            try{
+            try {
                 webAuthnRegistrationRequestValidator.validate(
                         request,
                         form.getClientData().getClientDataBase64(),
                         form.getAttestationObject().getAttestationObjectBase64(),
                         form.getTransports(),
                         form.getClientExtensionsJSON());
-            }
-            catch (ValidationException exception){
+            } catch (ValidationException exception) {
                 errors.reject("e.AuthenticatorFormValidator.invalidAuthenticator", "AuthenticatorEntity is invalid.");
             }
 

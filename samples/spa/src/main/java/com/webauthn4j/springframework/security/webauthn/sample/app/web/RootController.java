@@ -19,7 +19,6 @@ package com.webauthn4j.springframework.security.webauthn.sample.app.web;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 
 
 /**

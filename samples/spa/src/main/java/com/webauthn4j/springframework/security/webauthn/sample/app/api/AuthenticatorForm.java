@@ -24,7 +24,7 @@ import java.util.Set;
 public class AuthenticatorForm {
 
     /**
-     *     correlation validation is implemented in {@link AuthenticatorFormValidator}
+     * correlation validation is implemented in {@link AuthenticatorFormValidator}
      */
     private Integer id;
 
@@ -34,19 +34,19 @@ public class AuthenticatorForm {
     private String name;
 
     /**
-     *     correlation validation is implemented in {@link AuthenticatorFormValidator}
+     * correlation validation is implemented in {@link AuthenticatorFormValidator}
      */
     private CollectedClientDataForm clientData;
 
     /**
-     *     correlation validation is implemented in {@link AuthenticatorFormValidator}
+     * correlation validation is implemented in {@link AuthenticatorFormValidator}
      */
     private AttestationObjectForm attestationObject;
 
     private Set<String> transports;
 
     /**
-     *     correlation validation is implemented in {@link AuthenticatorFormValidator}
+     * correlation validation is implemented in {@link AuthenticatorFormValidator}
      */
     private String clientExtensionsJSON;
 

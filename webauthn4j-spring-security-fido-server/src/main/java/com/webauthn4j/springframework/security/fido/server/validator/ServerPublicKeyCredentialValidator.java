@@ -16,11 +16,11 @@
 
 package com.webauthn4j.springframework.security.fido.server.validator;
 
-import com.webauthn4j.util.Base64UrlUtil;
 import com.webauthn4j.springframework.security.fido.server.endpoint.ServerAuthenticatorResponse;
 import com.webauthn4j.springframework.security.fido.server.endpoint.ServerPublicKeyCredential;
 import com.webauthn4j.springframework.security.fido.server.util.BeanAssertUtil;
 import com.webauthn4j.springframework.security.webauthn.exception.BadCredentialIdException;
+import com.webauthn4j.util.Base64UrlUtil;
 
 public class ServerPublicKeyCredentialValidator<T extends ServerAuthenticatorResponse> {
 

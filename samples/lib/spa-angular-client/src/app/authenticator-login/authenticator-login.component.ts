@@ -30,12 +30,13 @@ export class AuthenticatorLoginComponent implements OnInit, AfterContentInit {
   alerts: Alert[] = [];
   submitting = false;
 
-  constructor(private authService: AuthService, private router: Router) { }
+  constructor(private authService: AuthService, private router: Router) {
+  }
 
   ngOnInit() {
   }
 
-  ngAfterContentInit(){
+  ngAfterContentInit() {
     this.loginWithPublicKeyCredential();
   }
 
@@ -43,12 +44,11 @@ export class AuthenticatorLoginComponent implements OnInit, AfterContentInit {
 
     this.authService.loginWithPublicKeyCredential({
       userVerification: "preferred"
-    }).subscribe((data: string) =>{
+    }).subscribe((data: string) => {
       this.router.navigate(["profile"]);
-    } , (error) =>{
+    }, (error) => {
       let alert: Alert;
-      switch(error.name)
-      {
+      switch (error.name) {
         case "NotAllowedError":
           console.info(error);
           return;
@@ -70,7 +70,7 @@ export class AuthenticatorLoginComponent implements OnInit, AfterContentInit {
     });
   }
 
-  logout(){
+  logout() {
     this.authService.logout()
       .subscribe(
         () => {
@@ -79,7 +79,7 @@ export class AuthenticatorLoginComponent implements OnInit, AfterContentInit {
       );
   }
 
-  isWebAuthnAvailable(): boolean{
+  isWebAuthnAvailable(): boolean {
     return WebAuthnService.isWebAuthnAvailable();
   }
 

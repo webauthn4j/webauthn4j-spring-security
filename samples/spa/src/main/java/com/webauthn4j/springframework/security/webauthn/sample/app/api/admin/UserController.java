@@ -42,32 +42,32 @@ public class UserController {
     }
 
     @GetMapping("/")
-    public Page<UserForm> list(Pageable pageable, Model model, @RequestParam(required = false, value = "keyword") String keyword){
+    public Page<UserForm> list(Pageable pageable, Model model, @RequestParam(required = false, value = "keyword") String keyword) {
         Page<UserEntity> users = userService.findAllByKeyword(pageable, keyword);
         return mapper.mapToUserPage(users);
     }
 
     @GetMapping("/{id}")
-    public UserForm show(@PathVariable(value = "id") int id){
+    public UserForm show(@PathVariable(value = "id") int id) {
         UserEntity userEntity = userService.findOne(id);
         return mapper.mapToUserForm(userEntity);
     }
 
     @PostMapping
-    public UserForm create(@Valid @RequestBody UserCreateForm userCreateForm){
+    public UserForm create(@Valid @RequestBody UserCreateForm userCreateForm) {
         UserEntity userEntity = mapper.mapForCreate(userCreateForm);
         UserEntity createdUserEntity = userService.create(userEntity);
         return mapper.mapToUserForm(createdUserEntity);
     }
 
     @PutMapping("/{id}")
-    public UserForm update(@PathVariable(value = "id") int id, @Valid @RequestBody UserUpdateForm userUpdateForm){
+    public UserForm update(@PathVariable(value = "id") int id, @Valid @RequestBody UserUpdateForm userUpdateForm) {
         UserEntity updatedUserEntity = userService.update(id, user -> mapper.mapForUpdate(userUpdateForm, user));
         return mapper.mapToUserForm(updatedUserEntity);
     }
 
     @DeleteMapping("/{id}")
-    public void delete(@PathVariable(value = "id") int id){
+    public void delete(@PathVariable(value = "id") int id) {
         userService.delete(id);
     }
 }

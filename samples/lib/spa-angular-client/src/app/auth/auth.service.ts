@@ -20,10 +20,9 @@ import * as base64url from "../webauthn/base64url";
 import {WebAuthnService} from "../webauthn/web-authn.service";
 import {Observable} from "rxjs/internal/Observable";
 import {from} from 'rxjs';
-import {map, concatMap} from 'rxjs/operators';
+import {concatMap, map} from 'rxjs/operators';
 import {throwError} from "rxjs/internal/observable/throwError";
 import {WebAuthn4NgCredentialRequestOptions} from "../webauthn/web-authn-4-ng-credential-request-options";
-import {ServerOptions} from "../webauthn/server-options";
 import {AuthResponse} from "./auth-response";
 import {AuthenticationStatus} from "./authentication-status";
 
@@ -36,18 +35,19 @@ export class AuthService {
   private logoutUrl: string = "/logout";
   private authStatusUrl: string = "/api/auth/status";
 
-  constructor(private webauthnService: WebAuthnService, private http: HttpClient) { }
+  constructor(private webauthnService: WebAuthnService, private http: HttpClient) {
+  }
 
 
   loginWithPublicKeyCredential(credentialRequestOptions: WebAuthn4NgCredentialRequestOptions): Observable<string> {
-    let promise = this.webauthnService.fetchServerOptions().toPromise().then((serverOptions)=>{
+    let promise = this.webauthnService.fetchServerOptions().toPromise().then((serverOptions) => {
       return this.webauthnService.getCredential(credentialRequestOptions, serverOptions).then(credential => {
         return {serverOptions: serverOptions, credential: credential}
       });
     });
 
-    return from(promise).pipe(concatMap((data) =>{
-      if(data.credential.type != "public-key"){
+    return from(promise).pipe(concatMap((data) => {
+      if (data.credential.type != "public-key") {
         throwError("Unexpected credential type");
       }
       let publicKeyCredential: PublicKeyCredential = data.credential as PublicKeyCredential;
@@ -58,7 +58,7 @@ export class AuthService {
       // let clientExtensions = publicKeyCredential.getClientExtensionResults(); //Edge preview throws exception as of build 180603-1447
       let clientExtensions = {};
 
-      if(publicKeyCredential.response as AuthenticatorAttestationResponse){
+      if (publicKeyCredential.response as AuthenticatorAttestationResponse) {
         let formData = new FormData();
         formData.set(data.serverOptions.parameters.credentialId, base64url.encodeBase64url(new Uint8Array(publicKeyCredential.rawId)));
         formData.set(data.serverOptions.parameters.clientDataJSON, base64url.encodeBase64url(new Uint8Array(clientDataJSON)));
@@ -78,7 +78,7 @@ export class AuthService {
     return this.http.post(this.loginUrl, data, {responseType: 'text'});
   }
 
-  logout(): Observable<string>{
+  logout(): Observable<string> {
     return this.http.post(this.logoutUrl, null, {responseType: 'text'});
   }
 

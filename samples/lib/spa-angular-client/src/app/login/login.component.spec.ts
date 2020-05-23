@@ -32,18 +32,18 @@ describe('LoginComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ LoginComponent, PasswordLoginComponent, AuthenticatorLoginComponent],
+      declarations: [LoginComponent, PasswordLoginComponent, AuthenticatorLoginComponent],
       imports: [
         FormsModule,
         NgbAlertModule,
         RouterTestingModule
       ]
     }).overrideComponent(LoginComponent, {
-      set:{
+      set: {
         providers: [
           {
             provide: AuthService,
-            useFactory: ()=>{
+            useFactory: () => {
               let authServiceMock = new AuthService(null, null);
               spyOn(authServiceMock, "getAuthenticationStatus").and.returnValue(of("NOT_AUTHENTICATED"));
               return authServiceMock;
@@ -52,7 +52,7 @@ describe('LoginComponent', () => {
         ]
       }
     })
-    .compileComponents();
+      .compileComponents();
   }));
 
   beforeEach(() => {

@@ -29,7 +29,7 @@ public class COSEKeyConverter implements AttributeConverter<COSEKey, String> {
 
     private CborConverter cborConverter;
 
-    public COSEKeyConverter(ObjectConverter objectConverter){
+    public COSEKeyConverter(ObjectConverter objectConverter) {
         this.cborConverter = objectConverter.getCborConverter();
     }
 

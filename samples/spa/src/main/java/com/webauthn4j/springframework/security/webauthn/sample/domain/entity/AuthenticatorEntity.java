@@ -111,7 +111,7 @@ public class AuthenticatorEntity implements Authenticator {
         return transports;
     }
 
-    public void setTransports(Set<AuthenticatorTransport> transports){
+    public void setTransports(Set<AuthenticatorTransport> transports) {
         this.transports = transports;
     }
 

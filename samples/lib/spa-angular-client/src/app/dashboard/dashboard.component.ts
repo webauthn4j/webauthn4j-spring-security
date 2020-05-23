@@ -25,7 +25,8 @@ import {DashboardViewModel} from "./dashboard.view-model";
 })
 export class DashboardComponent implements OnInit {
 
-  constructor(private profileService: ProfileService) { }
+  constructor(private profileService: ProfileService) {
+  }
 
   dashboard: DashboardViewModel = {
     firstName: "",
@@ -33,7 +34,7 @@ export class DashboardComponent implements OnInit {
   };
 
   ngOnInit() {
-    this.profileService.load().subscribe((user)=>{
+    this.profileService.load().subscribe((user) => {
       this.dashboard.firstName = user.firstName;
       this.dashboard.lastName = user.lastName;
     });

@@ -30,7 +30,7 @@ export class LoginComponent implements OnInit {
 
   constructor(private authService: AuthService, private router: Router) {
     router.events.subscribe(_ => {
-      this.authService.getAuthenticationStatus().subscribe( authStatus =>{
+      this.authService.getAuthenticationStatus().subscribe(authStatus => {
         this.authStatus = authStatus;
       });
     });
@@ -38,7 +38,6 @@ export class LoginComponent implements OnInit {
 
   ngOnInit() {
   }
-
 
 
 }

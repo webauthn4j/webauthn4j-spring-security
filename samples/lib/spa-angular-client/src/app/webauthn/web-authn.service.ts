@@ -37,7 +37,8 @@ export class WebAuthnService {
 
   private _optionsUrl: string = "/webauthn/options";
 
-  constructor(private httpClient: HttpClient) {}
+  constructor(private httpClient: HttpClient) {
+  }
 
   createCredential(
     webAuthnCredentialCreationOptions: WebAuthn4NgCredentialCreationOptions
@@ -49,23 +50,20 @@ export class WebAuthnService {
     webAuthnCredentialCreationOptions: WebAuthn4NgCredentialCreationOptions, serverOptions?: ServerOptions
   ): Promise<Credential> {
     let serverOptionsPromise: Promise<ServerOptions>;
-    if(serverOptions === undefined){
+    if (serverOptions === undefined) {
       serverOptionsPromise = this.fetchServerOptions().toPromise()
-    }
-    else {
+    } else {
       serverOptionsPromise = Promise.resolve(serverOptions);
     }
 
     return serverOptionsPromise.then(serverOptions => {
 
       let timeout: number;
-      if(typeof webAuthnCredentialCreationOptions.timeout != "undefined" && webAuthnCredentialCreationOptions.timeout != null){
+      if (typeof webAuthnCredentialCreationOptions.timeout != "undefined" && webAuthnCredentialCreationOptions.timeout != null) {
         timeout = webAuthnCredentialCreationOptions.timeout;
-      }
-      else if(typeof serverOptions.registrationTimeout != "undefined" && serverOptions.registrationTimeout != null){
+      } else if (typeof serverOptions.registrationTimeout != "undefined" && serverOptions.registrationTimeout != null) {
         timeout = serverOptions.registrationTimeout;
-      }
-      else {
+      } else {
         timeout = undefined;
       }
 
@@ -99,23 +97,20 @@ export class WebAuthnService {
     webAuthnCredentialRequestOptions: WebAuthn4NgCredentialRequestOptions, serverOptions?: ServerOptions
   ): Promise<Credential> {
     let serverOptionsPromise: Promise<ServerOptions>;
-    if(serverOptions === undefined){
+    if (serverOptions === undefined) {
       serverOptionsPromise = this.fetchServerOptions().toPromise();
-    }
-    else {
+    } else {
       serverOptionsPromise = Promise.resolve(serverOptions);
     }
 
     return serverOptionsPromise.then(serverOptions => {
 
       let timeout: number;
-      if(typeof webAuthnCredentialRequestOptions.timeout != "undefined" && webAuthnCredentialRequestOptions.timeout != null){
+      if (typeof webAuthnCredentialRequestOptions.timeout != "undefined" && webAuthnCredentialRequestOptions.timeout != null) {
         timeout = webAuthnCredentialRequestOptions.timeout;
-      }
-      else if(typeof serverOptions.authenticationTimeout != "undefined" && serverOptions.authenticationTimeout != null){
+      } else if (typeof serverOptions.authenticationTimeout != "undefined" && serverOptions.authenticationTimeout != null) {
         timeout = serverOptions.authenticationTimeout;
-      }
-      else {
+      } else {
         timeout = undefined;
       }
 
@@ -137,7 +132,7 @@ export class WebAuthnService {
   }
 
 
-  fetchServerOptions(): Observable<ServerOptions>{
+  fetchServerOptions(): Observable<ServerOptions> {
     return this.httpClient.get<OptionsResponse>(this._optionsUrl).pipe(map<OptionsResponse, ServerOptions>(response => {
       return {
         relyingParty: response.relyingParty,
@@ -165,13 +160,13 @@ export class WebAuthnService {
     this._optionsUrl = value;
   }
 
-  static isWebAuthnAvailable(): boolean{
+  static isWebAuthnAvailable(): boolean {
     let untypedWindow: any = window;
     return navigator.credentials && untypedWindow.PublicKeyCredential;
   }
 
-  static isResidentKeyLoginAvailable(): boolean{
+  static isResidentKeyLoginAvailable(): boolean {
     return WebAuthnService.isWebAuthnAvailable() &&
-      this.bowser.satisfies({windows: { chrome: '>118.01.1322' } });
+      this.bowser.satisfies({windows: {chrome: '>118.01.1322'}});
   }
 }

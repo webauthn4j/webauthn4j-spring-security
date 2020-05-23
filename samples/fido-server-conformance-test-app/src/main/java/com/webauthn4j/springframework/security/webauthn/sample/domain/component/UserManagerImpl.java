@@ -18,9 +18,6 @@ package com.webauthn4j.springframework.security.webauthn.sample.domain.component
 
 import com.webauthn4j.authenticator.Authenticator;
 import com.webauthn4j.springframework.security.webauthn.exception.CredentialIdNotFoundException;
-import com.webauthn4j.springframework.security.webauthn.userdetails.WebAuthnUserDetails;
-import com.webauthn4j.springframework.security.webauthn.userdetails.WebAuthnUserDetailsService;
-import com.webauthn4j.util.Base64UrlUtil;
 import com.webauthn4j.springframework.security.webauthn.sample.domain.constant.MessageCodes;
 import com.webauthn4j.springframework.security.webauthn.sample.domain.entity.AuthenticatorEntity;
 import com.webauthn4j.springframework.security.webauthn.sample.domain.entity.UserEntity;
@@ -28,6 +25,9 @@ import com.webauthn4j.springframework.security.webauthn.sample.domain.exception.
 import com.webauthn4j.springframework.security.webauthn.sample.domain.exception.WebAuthnSampleEntityNotFoundException;
 import com.webauthn4j.springframework.security.webauthn.sample.domain.repository.AuthenticatorEntityRepository;
 import com.webauthn4j.springframework.security.webauthn.sample.domain.repository.UserEntityRepository;
+import com.webauthn4j.springframework.security.webauthn.userdetails.WebAuthnUserDetails;
+import com.webauthn4j.springframework.security.webauthn.userdetails.WebAuthnUserDetailsService;
+import com.webauthn4j.util.Base64UrlUtil;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.AccessDeniedException;

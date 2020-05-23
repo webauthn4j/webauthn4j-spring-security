@@ -18,13 +18,13 @@ package com.webauthn4j.springframework.security.webauthn.sample.domain.component
 
 import com.webauthn4j.springframework.security.webauthn.sample.domain.constant.DomainTypeTokens;
 import com.webauthn4j.springframework.security.webauthn.sample.domain.constant.MessageCodes;
-import com.webauthn4j.springframework.security.webauthn.sample.domain.repository.UserEntityRepository;
 import com.webauthn4j.springframework.security.webauthn.sample.domain.entity.AuthorityEntity;
 import com.webauthn4j.springframework.security.webauthn.sample.domain.entity.GroupEntity;
 import com.webauthn4j.springframework.security.webauthn.sample.domain.entity.UserEntity;
 import com.webauthn4j.springframework.security.webauthn.sample.domain.exception.WebAuthnSampleEntityNotFoundException;
 import com.webauthn4j.springframework.security.webauthn.sample.domain.repository.AuthorityEntityRepository;
 import com.webauthn4j.springframework.security.webauthn.sample.domain.repository.GroupEntityRepository;
+import com.webauthn4j.springframework.security.webauthn.sample.domain.repository.UserEntityRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;

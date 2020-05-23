@@ -30,7 +30,7 @@ public class AttestationStatementConverter implements AttributeConverter<Attesta
 
     private CborConverter cborConverter;
 
-    public AttestationStatementConverter(ObjectConverter objectConverter){
+    public AttestationStatementConverter(ObjectConverter objectConverter) {
         this.cborConverter = objectConverter.getCborConverter();
     }
 

@@ -27,15 +27,15 @@ public class PasswordLoginComponent {
         this.webDriver = webDriver;
     }
 
-    public void navigate(){
+    public void navigate() {
         webDriver.navigate().to("http://localhost:8080/angular/login");
     }
 
-    public void setUsername(String value){
+    public void setUsername(String value) {
         webDriver.findElement(By.id("username")).sendKeys(value);
     }
 
-    public void setPassword(String value){
+    public void setPassword(String value) {
         webDriver.findElement(By.id("password")).sendKeys(value);
     }
 

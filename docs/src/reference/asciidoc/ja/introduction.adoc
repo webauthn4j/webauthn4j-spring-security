@@ -2,16 +2,11 @@
 
 === Web Authenticationとは
 
-Web Authenticationは、W3Cで仕様策定が進められている、Webアプリケーションの新しいセキュアな認証方式仕様です。
-ローカル認証や公開鍵認証、Origin別の鍵管理を組み合わせることで、フィッシングなど認証プロセスに対する攻撃に対して堅固な認証を実現しています。
-主要ブラウザでの実装が進みつつあり、セキュリティ、利便性を重視するユーザーに対して優れた選択肢を提供します。
-当初はFIDO AllianceでFIDO 2.0: Web API for accessing FIDO 2.0 credentialsとして仕様策定が進められていましたが、
-現在はW3Cに移管され、仕様策定が行われています。
+Web Authenticationは、W3Cで仕様策定が進められている、Webアプリケーションの新しいセキュアな認証方式仕様です。 ローカル認証や公開鍵認証、Origin別の鍵管理を組み合わせることで、フィッシングなど認証プロセスに対する攻撃に対して堅固な認証を実現しています。 主要ブラウザでの実装が進みつつあり、セキュリティ、利便性を重視するユーザーに対して優れた選択肢を提供します。 当初はFIDO AllianceでFIDO 2.0: Web API for accessing FIDO 2.0 credentialsとして仕様策定が進められていましたが、 現在はW3Cに移管され、仕様策定が行われています。
 
 === WebAuthn4J Spring Securityとは
 
-Spring Securityで保護されたWebアプリケーションに対して、Web Authentication仕様に基づく認証機能を提供するための
-Spring Security拡張です。
+Spring Securityで保護されたWebアプリケーションに対して、Web Authentication仕様に基づく認証機能を提供するための Spring Security拡張です。
 
 === 要件
 
@@ -33,21 +28,16 @@ WebAuthn4J Spring Securityの動作環境は、以下の要件を満たす必要
 
 ===== SecureContext
 
-Web Authentication仕様では、動作環境がSecureContextであることを要求しています。
-これは、ユーザーがサイトに接続する際、HTTPS接続でなければならないことを意味します。HTTP接続環境下では、ブラウザはWebAuthnに関連した要求を拒否するため、利用できません。
-但し、 `localhost` では例外的にHTTP接続が認められています。SecureContextについて詳しくは https://developer.mozilla.org/ja/docs/Web/Security/Secure_Contexts[MDN] を参照ください。
+Web Authentication仕様では、動作環境がSecureContextであることを要求しています。 これは、ユーザーがサイトに接続する際、HTTPS接続でなければならないことを意味します。HTTP接続環境下では、ブラウザはWebAuthnに関連した要求を拒否するため、利用できません。 但し、 `localhost` では例外的にHTTP接続が認められています。SecureContextについて詳しくは https://developer.mozilla.org/ja/docs/Web/Security/Secure_Contexts[MDN] を参照ください。
 
 ===== ブラウザ
 
-2018年12月現在、デスクトップ版Google Chrome 70以降およびデスクトップ版Mozilla Firefox 60以降でWebAuthnは利用可能です。
-但し、認証デバイスのサポートはFIDO-U2Fの認証トークンに限定されており、指紋認証などによるユーザー検証機能がついた
-認証デバイスはサポートしていないため、パスワードレス認証は利用できません。
-Microsoft Edgeでは、Windows 10 October 2018 Update以降でWebAuthnが利用可能です。EdgeではFIDO-U2Fの認証トークンだけでなく、
-Windows Helloを認証デバイスとして使用できるため、パスワードレス認証をサポートしています。
+2018年12月現在、デスクトップ版Google Chrome 70以降およびデスクトップ版Mozilla Firefox 60以降でWebAuthnは利用可能です。 但し、認証デバイスのサポートはFIDO-U2Fの認証トークンに限定されており、指紋認証などによるユーザー検証機能がついた 認証デバイスはサポートしていないため、パスワードレス認証は利用できません。 Microsoft Edgeでは、Windows 10 October 2018 Update以降でWebAuthnが利用可能です。EdgeではFIDO-U2Fの認証トークンだけでなく、 Windows Helloを認証デバイスとして使用できるため、パスワードレス認証をサポートしています。
 
 === ソースコード
 
 ソースコードは https://github.com/webauthn4j/webauthn4j-spring-security[Github] で管理されています。
+
 [source,bash]
 ----
 git clone https://github.com/webauthn4j/webauthn4j-spring-security
@@ -55,8 +45,7 @@ git clone https://github.com/webauthn4j/webauthn4j-spring-security
 
 === ライセンス
 
-WebAuthn4J Spring Securityは http://www.apache.org/licenses/LICENSE-2.0.html[Apache 2.0 license] ライセンスの
-オープンソースソフトウェアです。
+WebAuthn4J Spring Securityは http://www.apache.org/licenses/LICENSE-2.0.html[Apache 2.0 license] ライセンスの オープンソースソフトウェアです。
 
 === 関連プロジェクト
 

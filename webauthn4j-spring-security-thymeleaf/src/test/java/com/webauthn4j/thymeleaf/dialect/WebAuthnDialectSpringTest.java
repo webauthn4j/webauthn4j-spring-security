@@ -56,7 +56,7 @@ public class WebAuthnDialectSpringTest {
         assertThat(executor.getReporter().isAllOK()).isTrue();
     }
 
-    public static class ChallengeRepositoryMock implements ChallengeRepository{
+    public static class ChallengeRepositoryMock implements ChallengeRepository {
 
         @Override
         public Challenge generateChallenge() {
@@ -74,7 +74,7 @@ public class WebAuthnDialectSpringTest {
         }
     }
 
-    public static class LoadChallengeNullChallengeRepositoryMock implements ChallengeRepository{
+    public static class LoadChallengeNullChallengeRepositoryMock implements ChallengeRepository {
 
         @Override
         public Challenge generateChallenge() {

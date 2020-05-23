@@ -111,7 +111,7 @@ public interface GroupManager {
     /**
      * Assigns a new authorityEntity to a group.
      *
-     * @param groupId   the group to assign a new authorityEntity
+     * @param groupId         the group to assign a new authorityEntity
      * @param authorityEntity the authorityEntity to be assigned
      */
     void addGroupAuthority(int groupId, AuthorityEntity authorityEntity);
@@ -119,7 +119,7 @@ public interface GroupManager {
     /**
      * Deletes an authorityEntity from those assigned to a group
      *
-     * @param groupId   the group
+     * @param groupId         the group
      * @param authorityEntity the authorityEntity to be removed
      */
     void removeGroupAuthority(int groupId, AuthorityEntity authorityEntity);

@@ -26,24 +26,24 @@ describe('AuthenticatorDialogComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ AuthenticatorDialogComponent ],
+      declarations: [AuthenticatorDialogComponent],
       imports: [
         NgbModalModule,
         FormsModule
       ]
     }).overrideComponent(AuthenticatorDialogComponent, {
-      set:{
+      set: {
         providers: [
           {
             provide: NgbActiveModal,
-            useFactory: ()=>{
+            useFactory: () => {
               return new NgbActiveModal();
             }
           }
         ]
       }
     })
-    .compileComponents();
+      .compileComponents();
   }));
 
   beforeEach(() => {

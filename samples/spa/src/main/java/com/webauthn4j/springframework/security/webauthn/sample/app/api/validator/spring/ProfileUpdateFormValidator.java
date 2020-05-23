@@ -16,10 +16,10 @@
 
 package com.webauthn4j.springframework.security.webauthn.sample.app.api.validator.spring;
 
-import com.webauthn4j.springframework.security.webauthn.sample.app.api.validator.AuthenticatorFormValidator;
-import com.webauthn4j.validator.exception.ValidationException;
 import com.webauthn4j.springframework.security.webauthn.sample.app.api.AuthenticatorForm;
 import com.webauthn4j.springframework.security.webauthn.sample.app.api.ProfileUpdateForm;
+import com.webauthn4j.springframework.security.webauthn.sample.app.api.validator.AuthenticatorFormValidator;
+import com.webauthn4j.validator.exception.ValidationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
@@ -48,20 +48,18 @@ public class ProfileUpdateFormValidator implements Validator {
     public void validate(Object target, Errors errors) {
         ProfileUpdateForm form = (ProfileUpdateForm) target;
 
-        if(form.getAuthenticators() == null || form.getAuthenticators().isEmpty()) {
+        if (form.getAuthenticators() == null || form.getAuthenticators().isEmpty()) {
 
             if (!form.isSingleFactorAuthenticationAllowed()) {
                 errors.rejectValue("authenticators",
                         "e.ProfileUpdateFormValidator.noAuthenticator",
                         "To disable password authentication, at least one authenticator must be registered.");
             }
-        }
-        else{
-            for(AuthenticatorForm authenticator : form.getAuthenticators()){
-                try{
+        } else {
+            for (AuthenticatorForm authenticator : form.getAuthenticators()) {
+                try {
                     authenticatorFormValidator.validate(request, authenticator, errors);
-                }
-                catch (ValidationException exception){
+                } catch (ValidationException exception) {
                     errors.rejectValue("authenticators", "e.ProfileUpdateFormValidator.invalidAuthenticator", "AuthenticatorEntity is invalid.");
                 }
             }

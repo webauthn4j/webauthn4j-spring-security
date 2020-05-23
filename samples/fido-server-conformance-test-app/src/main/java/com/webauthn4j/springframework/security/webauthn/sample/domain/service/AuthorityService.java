@@ -16,10 +16,10 @@
 
 package com.webauthn4j.springframework.security.webauthn.sample.domain.service;
 
+import com.webauthn4j.springframework.security.webauthn.sample.domain.dto.AuthorityUpdateDto;
 import com.webauthn4j.springframework.security.webauthn.sample.domain.entity.AuthorityEntity;
 import com.webauthn4j.springframework.security.webauthn.sample.domain.entity.GroupEntity;
 import com.webauthn4j.springframework.security.webauthn.sample.domain.entity.UserEntity;
-import com.webauthn4j.springframework.security.webauthn.sample.domain.dto.AuthorityUpdateDto;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 

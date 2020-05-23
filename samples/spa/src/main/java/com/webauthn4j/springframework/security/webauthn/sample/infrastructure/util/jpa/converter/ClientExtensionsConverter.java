@@ -39,6 +39,7 @@ public class ClientExtensionsConverter implements AttributeConverter<Map<String,
 
     @Override
     public Map<String, RegistrationExtensionClientOutput<?>> convertToEntityAttribute(String dbData) {
-        return jsonConverter.readValue(dbData, new TypeReference<Map<String, RegistrationExtensionClientOutput<?>>>(){});
+        return jsonConverter.readValue(dbData, new TypeReference<Map<String, RegistrationExtensionClientOutput<?>>>() {
+        });
     }
 }

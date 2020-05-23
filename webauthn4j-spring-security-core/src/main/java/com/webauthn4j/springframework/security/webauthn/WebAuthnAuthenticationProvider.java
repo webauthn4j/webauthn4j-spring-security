@@ -110,7 +110,7 @@ public class WebAuthnAuthenticationProvider implements AuthenticationProvider {
         Authenticator authenticator = user.getAuthenticators().stream()
                 .filter(item -> Arrays.equals(item.getAttestedCredentialData().getCredentialId(), credentialId))
                 .findFirst()
-                .orElseThrow(()-> new IllegalStateException("credentialId doesn't match."));
+                .orElseThrow(() -> new IllegalStateException("credentialId doesn't match."));
 
         preAuthenticationChecks.check(user);
         doAuthenticate(authenticationToken, authenticator, user);

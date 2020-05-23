@@ -38,15 +38,15 @@ describe('AuthenticatorLoginComponent', () => {
         NgbAlertModule,
         FormsModule,
         RouterTestingModule.withRoutes([
-          { path: 'profile', component: ProfileComponent },
+          {path: 'profile', component: ProfileComponent},
         ])
       ]
     }).overrideComponent(AuthenticatorLoginComponent, {
-      set:{
+      set: {
         providers: [
           {
             provide: AuthService,
-            useFactory: ()=>{
+            useFactory: () => {
               let authServiceMock = new AuthService(null, null);
               spyOn(authServiceMock, "loginWithPublicKeyCredential").and.returnValue(of(""));
               spyOn(authServiceMock, "getAuthenticationStatus").and.returnValue(of("NOT_AUTHENTICATED"));
@@ -56,7 +56,7 @@ describe('AuthenticatorLoginComponent', () => {
         ]
       }
     })
-    .compileComponents();
+      .compileComponents();
   }));
 
   beforeEach(() => {
