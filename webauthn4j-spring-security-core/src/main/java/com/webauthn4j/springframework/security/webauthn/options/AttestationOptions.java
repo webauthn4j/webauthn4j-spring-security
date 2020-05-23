@@ -22,6 +22,7 @@ import com.webauthn4j.data.PublicKeyCredentialRpEntity;
 import com.webauthn4j.data.PublicKeyCredentialUserEntity;
 import com.webauthn4j.data.client.challenge.Challenge;
 import com.webauthn4j.data.extension.client.AuthenticationExtensionsClientInputs;
+import com.webauthn4j.data.extension.client.RegistrationExtensionClientInput;
 import com.webauthn4j.springframework.security.webauthn.endpoint.WebAuthnPublicKeyCredentialUserEntity;
 import com.webauthn4j.util.CollectionUtil;
 
@@ -44,7 +45,7 @@ public class AttestationOptions implements Serializable {
     private List<PublicKeyCredentialParameters> pubKeyCredParams;
     private Long registrationTimeout;
     private List<String> credentials;
-    private AuthenticationExtensionsClientInputs registrationExtensions;
+    private AuthenticationExtensionsClientInputs<RegistrationExtensionClientInput<?>> registrationExtensions;
 
     // ~ Constructors
     // ===================================================================================================
@@ -56,7 +57,7 @@ public class AttestationOptions implements Serializable {
             List<PublicKeyCredentialParameters> pubKeyCredParams,
             Long registrationTimeout,
             List<String> credentials,
-            AuthenticationExtensionsClientInputs registrationExtensions) {
+            AuthenticationExtensionsClientInputs<RegistrationExtensionClientInput<?>> registrationExtensions) {
         this.relyingParty = relyingParty;
         this.user = user;
         this.challenge = challenge;
@@ -106,7 +107,7 @@ public class AttestationOptions implements Serializable {
         return credentials;
     }
 
-    public AuthenticationExtensionsClientInputs getRegistrationExtensions() {
+    public AuthenticationExtensionsClientInputs<RegistrationExtensionClientInput<?>> getRegistrationExtensions() {
         return registrationExtensions;
     }
 

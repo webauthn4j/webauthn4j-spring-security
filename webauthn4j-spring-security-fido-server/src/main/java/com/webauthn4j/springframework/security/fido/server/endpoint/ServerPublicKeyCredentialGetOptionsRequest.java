@@ -17,6 +17,7 @@
 package com.webauthn4j.springframework.security.fido.server.endpoint;
 
 import com.webauthn4j.data.UserVerificationRequirement;
+import com.webauthn4j.data.extension.client.AuthenticationExtensionClientInput;
 import com.webauthn4j.data.extension.client.AuthenticationExtensionsClientInputs;
 
 import java.util.Objects;
@@ -24,9 +25,9 @@ import java.util.Objects;
 public class ServerPublicKeyCredentialGetOptionsRequest implements ServerRequest {
     private String username;
     private UserVerificationRequirement userVerification;
-    private AuthenticationExtensionsClientInputs extensions;
+    private AuthenticationExtensionsClientInputs<AuthenticationExtensionClientInput<?>> extensions;
 
-    public ServerPublicKeyCredentialGetOptionsRequest(String username, UserVerificationRequirement userVerification, AuthenticationExtensionsClientInputs extensions) {
+    public ServerPublicKeyCredentialGetOptionsRequest(String username, UserVerificationRequirement userVerification, AuthenticationExtensionsClientInputs<AuthenticationExtensionClientInput<?>> extensions) {
         this.username = username;
         this.userVerification = userVerification;
         this.extensions = extensions;
@@ -54,7 +55,7 @@ public class ServerPublicKeyCredentialGetOptionsRequest implements ServerRequest
         return userVerification;
     }
 
-    public AuthenticationExtensionsClientInputs getExtensions() {
+    public AuthenticationExtensionsClientInputs<AuthenticationExtensionClientInput<?>> getExtensions() {
         return extensions;
     }
 

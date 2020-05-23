@@ -24,7 +24,7 @@ import com.webauthn4j.data.extension.client.RegistrationExtensionClientOutput;
 import javax.persistence.AttributeConverter;
 import java.util.Map;
 
-public class ClientExtensionsConverter implements AttributeConverter<Map<String, RegistrationExtensionClientOutput>, String> {
+public class ClientExtensionsConverter implements AttributeConverter<Map<String, RegistrationExtensionClientOutput<?>>, String> {
 
     private JsonConverter jsonConverter;
 
@@ -33,12 +33,12 @@ public class ClientExtensionsConverter implements AttributeConverter<Map<String,
     }
 
     @Override
-    public String convertToDatabaseColumn(Map<String, RegistrationExtensionClientOutput> attribute) {
+    public String convertToDatabaseColumn(Map<String, RegistrationExtensionClientOutput<?>> attribute) {
         return jsonConverter.writeValueAsString(attribute);
     }
 
     @Override
-    public Map<String, RegistrationExtensionClientOutput> convertToEntityAttribute(String dbData) {
-        return jsonConverter.readValue(dbData, new TypeReference<Map<String, RegistrationExtensionClientOutput>>(){});
+    public Map<String, RegistrationExtensionClientOutput<?>> convertToEntityAttribute(String dbData) {
+        return jsonConverter.readValue(dbData, new TypeReference<Map<String, RegistrationExtensionClientOutput<?>>>(){});
     }
 }

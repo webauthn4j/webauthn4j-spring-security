@@ -16,6 +16,7 @@
 
 package com.webauthn4j.springframework.security.fido.server.util;
 
+import com.webauthn4j.springframework.security.fido.server.endpoint.ServerAuthenticatorResponse;
 import com.webauthn4j.springframework.security.fido.server.endpoint.ServerPublicKeyCredential;
 import com.webauthn4j.springframework.security.webauthn.exception.ConstraintViolationException;
 
@@ -24,7 +25,7 @@ public class BeanAssertUtil {
     private BeanAssertUtil() {
     }
 
-    public static void validate(ServerPublicKeyCredential serverPublicKeyCredential) {
+    public static <T extends ServerAuthenticatorResponse> void validate(ServerPublicKeyCredential<T> serverPublicKeyCredential) {
 
         if (serverPublicKeyCredential == null) {
             throw new ConstraintViolationException("serverPublicKeyCredential must not be null");

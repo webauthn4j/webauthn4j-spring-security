@@ -21,6 +21,7 @@ import com.webauthn4j.data.attestation.AttestationObject;
 import com.webauthn4j.data.client.ClientDataType;
 import com.webauthn4j.data.client.CollectedClientData;
 import com.webauthn4j.data.extension.client.AuthenticationExtensionsClientOutputs;
+import com.webauthn4j.data.extension.client.RegistrationExtensionClientOutput;
 import com.webauthn4j.test.TestDataUtil;
 import org.junit.Test;
 
@@ -32,7 +33,7 @@ public class WebAuthnRegistrationRequestValidationResponseTest {
     public void equals_hashCode_test() {
         CollectedClientData clientData = TestDataUtil.createClientData(ClientDataType.CREATE);
         AttestationObject attestationObject = TestDataUtil.createAttestationObjectWithFIDOU2FAttestationStatement();
-        AuthenticationExtensionsClientOutputs clientExtensions = new AuthenticationExtensionsClientOutputs();
+        AuthenticationExtensionsClientOutputs<RegistrationExtensionClientOutput<?>> clientExtensions = new AuthenticationExtensionsClientOutputs<>();
         WebAuthnRegistrationRequestValidationResponse instanceA =
                 new WebAuthnRegistrationRequestValidationResponse(clientData, attestationObject, clientExtensions);
         WebAuthnRegistrationRequestValidationResponse instanceB =
@@ -45,7 +46,7 @@ public class WebAuthnRegistrationRequestValidationResponseTest {
     public void getter_test() {
         CollectedClientData clientData = TestDataUtil.createClientData(ClientDataType.CREATE);
         AttestationObject attestationObject = TestDataUtil.createAttestationObjectWithFIDOU2FAttestationStatement();
-        AuthenticationExtensionsClientOutputs clientExtensions = new AuthenticationExtensionsClientOutputs();
+        AuthenticationExtensionsClientOutputs<RegistrationExtensionClientOutput<?>> clientExtensions = new AuthenticationExtensionsClientOutputs<>();
         WebAuthnRegistrationRequestValidationResponse instance =
                 new WebAuthnRegistrationRequestValidationResponse(clientData, attestationObject, clientExtensions);
 

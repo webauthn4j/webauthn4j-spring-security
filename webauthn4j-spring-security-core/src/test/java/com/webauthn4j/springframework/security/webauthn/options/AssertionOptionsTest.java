@@ -18,6 +18,7 @@ package com.webauthn4j.springframework.security.webauthn.options;
 
 import com.webauthn4j.data.client.challenge.Challenge;
 import com.webauthn4j.data.client.challenge.DefaultChallenge;
+import com.webauthn4j.data.extension.client.AuthenticationExtensionClientInput;
 import com.webauthn4j.data.extension.client.AuthenticationExtensionsClientInputs;
 import com.webauthn4j.springframework.security.webauthn.endpoint.Parameters;
 import org.junit.Test;
@@ -35,7 +36,7 @@ public class AssertionOptionsTest {
         Long authenticationTimeout = 1000L;
         String rpId = "localhost";
         List<String> credentialIds = Collections.singletonList("credentialId");
-        AuthenticationExtensionsClientInputs authenticationExtensionsClientInputs = new AuthenticationExtensionsClientInputs();
+        AuthenticationExtensionsClientInputs<AuthenticationExtensionClientInput<?>> authenticationExtensionsClientInputs = new AuthenticationExtensionsClientInputs<>();
         Parameters parameters = new Parameters(
                 "username",
                 "password",
@@ -57,7 +58,7 @@ public class AssertionOptionsTest {
         Long authenticationTimeout = 1000L;
         String rpId = "localhost";
         List<String> credentialIds = Collections.singletonList("credentialId");
-        AuthenticationExtensionsClientInputs authenticationExtensionsClientInputs = new AuthenticationExtensionsClientInputs();
+        AuthenticationExtensionsClientInputs<AuthenticationExtensionClientInput<?>> authenticationExtensionsClientInputs = new AuthenticationExtensionsClientInputs<>();
         Parameters parameters = new Parameters(
                 "username",
                 "password",

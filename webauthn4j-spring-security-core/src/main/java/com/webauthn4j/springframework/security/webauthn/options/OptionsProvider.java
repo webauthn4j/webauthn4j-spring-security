@@ -145,13 +145,13 @@ public interface OptionsProvider {
     void setAuthenticationTimeout(Long authenticationTimeout);
 
 
-    AuthenticationExtensionsClientInputs<RegistrationExtensionClientInput> getRegistrationExtensions();
+    AuthenticationExtensionsClientInputs<RegistrationExtensionClientInput<?>> getRegistrationExtensions();
 
-    void setRegistrationExtensions(AuthenticationExtensionsClientInputs<RegistrationExtensionClientInput> registrationExtensions);
+    void setRegistrationExtensions(AuthenticationExtensionsClientInputs<RegistrationExtensionClientInput<?>> registrationExtensions);
 
-    AuthenticationExtensionsClientInputs<AuthenticationExtensionClientInput> getAuthenticationExtensions();
+    AuthenticationExtensionsClientInputs<AuthenticationExtensionClientInput<?>> getAuthenticationExtensions();
 
-    void setAuthenticationExtensions(AuthenticationExtensionsClientInputs<AuthenticationExtensionClientInput> authenticationExtensions);
+    void setAuthenticationExtensions(AuthenticationExtensionsClientInputs<AuthenticationExtensionClientInput<?>> authenticationExtensions);
 
 
     String getUsernameParameter();

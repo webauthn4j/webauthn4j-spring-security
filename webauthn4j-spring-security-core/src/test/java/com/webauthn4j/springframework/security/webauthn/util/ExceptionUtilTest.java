@@ -53,7 +53,7 @@ public class ExceptionUtilTest {
     @Test
     public void wrapWithAuthenticationException_test() {
 
-        Map<WebAuthnException, Class> map = new HashMap<>();
+        Map<WebAuthnException, Class<?>> map = new HashMap<>();
         map.put(new com.webauthn4j.validator.exception.BadAaguidException("dummy"), BadAaguidException.class);
         map.put(new com.webauthn4j.validator.exception.BadAlgorithmException("dummy"), BadAlgorithmException.class);
         map.put(new com.webauthn4j.validator.exception.BadAttestationStatementException("dummy"), BadAttestationStatementException.class);
@@ -79,7 +79,7 @@ public class ExceptionUtilTest {
         map.put(new com.webauthn4j.converter.exception.DataConversionException("dummy"), DataConversionException.class);
         map.put(new com.webauthn4j.util.exception.WebAuthnException("dummy"), AuthenticationServiceException.class);
 
-        for (Map.Entry<WebAuthnException, Class> entry : map.entrySet()) {
+        for (Map.Entry<WebAuthnException, Class<?>> entry : map.entrySet()) {
             assertThat(ExceptionUtil.wrapWithAuthenticationException(entry.getKey())).isInstanceOf(entry.getValue());
         }
     }

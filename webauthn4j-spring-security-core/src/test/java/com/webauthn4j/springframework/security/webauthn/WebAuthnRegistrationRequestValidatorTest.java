@@ -23,6 +23,7 @@ import com.webauthn4j.data.RegistrationRequest;
 import com.webauthn4j.data.attestation.AttestationObject;
 import com.webauthn4j.data.client.CollectedClientData;
 import com.webauthn4j.data.extension.client.AuthenticationExtensionsClientOutputs;
+import com.webauthn4j.data.extension.client.RegistrationExtensionClientOutput;
 import com.webauthn4j.server.ServerProperty;
 import com.webauthn4j.springframework.security.webauthn.exception.BadAttestationStatementException;
 import com.webauthn4j.springframework.security.webauthn.server.ServerPropertyProvider;
@@ -68,7 +69,7 @@ public class WebAuthnRegistrationRequestValidatorTest {
 
         CollectedClientData collectedClientData = mock(CollectedClientData.class);
         AttestationObject attestationObject = mock(AttestationObject.class);
-        AuthenticationExtensionsClientOutputs clientExtensionOutputs = new AuthenticationExtensionsClientOutputs();
+        AuthenticationExtensionsClientOutputs<RegistrationExtensionClientOutput<?>> clientExtensionOutputs = new AuthenticationExtensionsClientOutputs<>();
         when(webAuthnManager.validate(any(RegistrationRequest.class), any(RegistrationParameters.class))).thenReturn(
                 new RegistrationData(attestationObject, null, collectedClientData, null, clientExtensionOutputs, null));
 
@@ -107,7 +108,7 @@ public class WebAuthnRegistrationRequestValidatorTest {
 
         CollectedClientData collectedClientData = mock(CollectedClientData.class);
         AttestationObject attestationObject = mock(AttestationObject.class);
-        AuthenticationExtensionsClientOutputs clientExtensionOutputs = new AuthenticationExtensionsClientOutputs();
+        AuthenticationExtensionsClientOutputs<RegistrationExtensionClientOutput<?>> clientExtensionOutputs = new AuthenticationExtensionsClientOutputs<>();
         when(webAuthnManager.validate(any(RegistrationRequest.class), any(RegistrationParameters.class))).thenReturn(
                 new RegistrationData(attestationObject, null, collectedClientData, null, clientExtensionOutputs, null));
 
