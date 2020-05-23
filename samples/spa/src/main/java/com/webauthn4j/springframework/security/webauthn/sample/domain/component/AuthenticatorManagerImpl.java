@@ -28,9 +28,9 @@ import org.springframework.transaction.annotation.Transactional;
 @Component
 public class AuthenticatorManagerImpl implements AuthenticatorManager {
 
-    private Logger logger = LoggerFactory.getLogger(AuthenticatorManagerImpl.class);
+    private final Logger logger = LoggerFactory.getLogger(AuthenticatorManagerImpl.class);
 
-    private AuthenticatorEntityRepository authenticatorEntityRepository;
+    private final AuthenticatorEntityRepository authenticatorEntityRepository;
 
     public AuthenticatorManagerImpl(AuthenticatorEntityRepository authenticatorEntityRepository) {
         this.authenticatorEntityRepository = authenticatorEntityRepository;

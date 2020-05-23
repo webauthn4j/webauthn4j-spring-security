@@ -31,7 +31,7 @@ import java.io.IOException;
 @JsonComponent
 public class CollectedClientDataDeserializer extends StdDeserializer<CollectedClientDataForm> {
 
-    private Base64UrlStringToCollectedClientDataConverter base64UrlStringToCollectedClientDataConverter;
+    private final Base64UrlStringToCollectedClientDataConverter base64UrlStringToCollectedClientDataConverter;
 
     public CollectedClientDataDeserializer(Base64UrlStringToCollectedClientDataConverter base64UrlStringToCollectedClientDataConverter) {
         super(CollectedClientDataForm.class);

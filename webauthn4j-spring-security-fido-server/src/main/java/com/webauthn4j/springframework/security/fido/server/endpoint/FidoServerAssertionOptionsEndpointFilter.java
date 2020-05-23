@@ -47,7 +47,7 @@ public class FidoServerAssertionOptionsEndpointFilter extends ServerEndpointFilt
     //~ Instance fields
     // ================================================================================================
 
-    private OptionsProvider optionsProvider;
+    private final OptionsProvider optionsProvider;
 
     public FidoServerAssertionOptionsEndpointFilter(ObjectConverter objectConverter, OptionsProvider optionsProvider) {
         super(FILTER_URL, objectConverter);

@@ -34,12 +34,12 @@ public class AssertionOptions implements Serializable {
     // ~ Instance fields
     // ================================================================================================
 
-    private Challenge challenge;
-    private Long authenticationTimeout;
-    private String rpId;
-    private List<String> credentials;
-    private AuthenticationExtensionsClientInputs<AuthenticationExtensionClientInput<?>> authenticationExtensions;
-    private Parameters parameters;
+    private final Challenge challenge;
+    private final Long authenticationTimeout;
+    private final String rpId;
+    private final List<String> credentials;
+    private final AuthenticationExtensionsClientInputs<AuthenticationExtensionClientInput<?>> authenticationExtensions;
+    private final Parameters parameters;
 
     // ~ Constructors
     // ===================================================================================================

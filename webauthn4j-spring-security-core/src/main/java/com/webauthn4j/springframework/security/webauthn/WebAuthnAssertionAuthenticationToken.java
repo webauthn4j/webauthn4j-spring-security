@@ -21,6 +21,8 @@ import org.springframework.security.authentication.AbstractAuthenticationToken;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 
+import java.util.Objects;
+
 /**
  * An {@link Authentication} implementation for representing WebAuthn assertion like
  * {@link UsernamePasswordAuthenticationToken} for password authentication
@@ -105,7 +107,7 @@ public class WebAuthnAssertionAuthenticationToken extends AbstractAuthentication
 
         WebAuthnAssertionAuthenticationToken that = (WebAuthnAssertionAuthenticationToken) o;
 
-        return credentials != null ? credentials.equals(that.credentials) : that.credentials == null;
+        return Objects.equals(credentials, that.credentials);
     }
 
     /**

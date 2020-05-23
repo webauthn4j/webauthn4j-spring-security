@@ -21,7 +21,7 @@ import org.openqa.selenium.WebDriver;
 
 public class AuthenticatorLoginComponent {
 
-    private WebDriver webDriver;
+    private final WebDriver webDriver;
 
     public AuthenticatorLoginComponent(WebDriver webDriver) {
         this.webDriver = webDriver;

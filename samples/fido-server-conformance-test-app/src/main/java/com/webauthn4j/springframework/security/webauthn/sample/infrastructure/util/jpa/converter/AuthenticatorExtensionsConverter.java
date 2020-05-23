@@ -27,7 +27,7 @@ import java.util.Map;
 
 public class AuthenticatorExtensionsConverter implements AttributeConverter<Map<String, RegistrationExtensionAuthenticatorOutput<?>>, String> {
 
-    private CborConverter cborConverter;
+    private final CborConverter cborConverter;
 
     public AuthenticatorExtensionsConverter(ObjectConverter objectConverter) {
         this.cborConverter = objectConverter.getCborConverter();

@@ -44,7 +44,6 @@ import org.springframework.security.core.userdetails.UserDetailsChecker;
 import java.util.Collections;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 /**
@@ -52,11 +51,11 @@ import static org.mockito.Mockito.*;
  */
 public class WebAuthnAuthenticationProviderTest {
 
-    private WebAuthnUserDetailsService userDetailsService = mock(WebAuthnUserDetailsService.class);
+    private final WebAuthnUserDetailsService userDetailsService = mock(WebAuthnUserDetailsService.class);
 
-    private WebAuthnAuthenticatorService authenticatorService = mock(WebAuthnAuthenticatorService.class);
+    private final WebAuthnAuthenticatorService authenticatorService = mock(WebAuthnAuthenticatorService.class);
 
-    private WebAuthnManager webAuthnManager = mock(WebAuthnManager.class);
+    private final WebAuthnManager webAuthnManager = mock(WebAuthnManager.class);
 
     private WebAuthnAuthenticationProvider authenticationProvider
             = new WebAuthnAuthenticationProvider(userDetailsService, authenticatorService, webAuthnManager);

@@ -76,6 +76,6 @@ public class UserAppServiceImpl implements UserAppService {
     @Transactional
     @Override
     public void delete(int id) {
-        delete(id);
+        userService.delete(id);
     }
 }

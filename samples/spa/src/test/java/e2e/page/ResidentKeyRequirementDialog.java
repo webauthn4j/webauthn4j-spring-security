@@ -21,7 +21,7 @@ import org.openqa.selenium.WebDriver;
 
 public class ResidentKeyRequirementDialog {
 
-    private WebDriver webDriver;
+    private final WebDriver webDriver;
 
     public ResidentKeyRequirementDialog(WebDriver webDriver) {
         this.webDriver = webDriver;

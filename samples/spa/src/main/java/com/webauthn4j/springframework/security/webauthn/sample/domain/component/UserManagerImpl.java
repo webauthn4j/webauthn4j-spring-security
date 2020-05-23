@@ -46,10 +46,10 @@ import java.util.Arrays;
 @Transactional
 public class UserManagerImpl implements UserManager, WebAuthnUserDetailsService {
 
-    private ModelMapper modelMapper;
+    private final ModelMapper modelMapper;
 
-    private UserEntityRepository userEntityRepository;
-    private AuthenticatorEntityRepository authenticatorEntityRepository;
+    private final UserEntityRepository userEntityRepository;
+    private final AuthenticatorEntityRepository authenticatorEntityRepository;
 
     @Autowired
     public UserManagerImpl(ModelMapper mapper, UserEntityRepository userEntityRepository, AuthenticatorEntityRepository authenticatorEntityRepository) {

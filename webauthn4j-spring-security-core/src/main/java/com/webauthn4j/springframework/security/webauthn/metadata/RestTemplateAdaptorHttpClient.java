@@ -25,7 +25,7 @@ import org.springframework.web.client.RestTemplate;
  */
 public class RestTemplateAdaptorHttpClient implements HttpClient {
 
-    private RestTemplate restTemplate;
+    private final RestTemplate restTemplate;
 
     public RestTemplateAdaptorHttpClient(RestTemplate restTemplate) {
         Assert.notNull(restTemplate, "restTemplate must not be null");

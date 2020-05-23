@@ -28,7 +28,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 public class ServerEndpointFilterUtilTest {
 
-    private ServerEndpointFilterUtil target = new ServerEndpointFilterUtil(new ObjectConverter());
+    private final ServerEndpointFilterUtil target = new ServerEndpointFilterUtil(new ObjectConverter());
 
     @Test
     public void writeErrorResponse_with_RuntimeException_test() throws IOException {

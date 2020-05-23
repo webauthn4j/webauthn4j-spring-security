@@ -31,7 +31,7 @@ public class AttestationStatementSerializationContainer {
             include = JsonTypeInfo.As.EXTERNAL_PROPERTY,
             property = "fmt"
     )
-    private AttestationStatement attestationStatement;
+    private final AttestationStatement attestationStatement;
 
     @JsonCreator
     public AttestationStatementSerializationContainer(@JsonProperty("attStmt") AttestationStatement attestationStatement) {

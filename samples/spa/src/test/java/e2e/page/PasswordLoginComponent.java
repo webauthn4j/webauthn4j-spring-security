@@ -21,7 +21,7 @@ import org.openqa.selenium.WebDriver;
 
 public class PasswordLoginComponent {
 
-    private WebDriver webDriver;
+    private final WebDriver webDriver;
 
     public PasswordLoginComponent(WebDriver webDriver) {
         this.webDriver = webDriver;

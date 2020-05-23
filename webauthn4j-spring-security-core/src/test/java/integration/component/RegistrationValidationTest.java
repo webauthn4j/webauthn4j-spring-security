@@ -46,13 +46,13 @@ import static org.mockito.Mockito.when;
  */
 public class RegistrationValidationTest {
 
-    String rpId = "example.com";
-    Challenge challenge = new DefaultChallenge();
-    private Origin origin = new Origin("http://localhost");
-    private WebAuthnAuthenticatorAdaptor webAuthnModelAuthenticatorAdaptor = new WebAuthnAuthenticatorAdaptor(new PackedAuthenticator());
-    private ClientPlatform clientPlatform = new ClientPlatform(origin, webAuthnModelAuthenticatorAdaptor);
-    private ServerPropertyProvider serverPropertyProvider = mock(ServerPropertyProvider.class);
-    private WebAuthnRegistrationRequestValidator target = new WebAuthnRegistrationRequestValidator(
+    final String rpId = "example.com";
+    final Challenge challenge = new DefaultChallenge();
+    private final Origin origin = new Origin("http://localhost");
+    private final WebAuthnAuthenticatorAdaptor webAuthnModelAuthenticatorAdaptor = new WebAuthnAuthenticatorAdaptor(new PackedAuthenticator());
+    private final ClientPlatform clientPlatform = new ClientPlatform(origin, webAuthnModelAuthenticatorAdaptor);
+    private final ServerPropertyProvider serverPropertyProvider = mock(ServerPropertyProvider.class);
+    private final WebAuthnRegistrationRequestValidator target = new WebAuthnRegistrationRequestValidator(
             WebAuthnManager.createNonStrictWebAuthnManager(), serverPropertyProvider
     );
 

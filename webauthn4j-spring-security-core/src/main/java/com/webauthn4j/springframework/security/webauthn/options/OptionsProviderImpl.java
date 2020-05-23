@@ -66,8 +66,8 @@ public class OptionsProviderImpl implements OptionsProvider {
     private String signatureParameter = WebAuthnProcessingFilter.SPRING_SECURITY_FORM_SIGNATURE_KEY;
     private String clientExtensionsJSONParameter = WebAuthnProcessingFilter.SPRING_SECURITY_FORM_CLIENT_EXTENSIONS_JSON_KEY;
 
-    private WebAuthnUserDetailsService userDetailsService;
-    private ChallengeRepository challengeRepository;
+    private final WebAuthnUserDetailsService userDetailsService;
+    private final ChallengeRepository challengeRepository;
 
     // ~ Constructors
     // ===================================================================================================

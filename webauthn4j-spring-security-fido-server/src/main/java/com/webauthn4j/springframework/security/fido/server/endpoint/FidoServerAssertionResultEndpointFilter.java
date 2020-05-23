@@ -50,14 +50,14 @@ public class FidoServerAssertionResultEndpointFilter extends AbstractAuthenticat
      */
     public static final String FILTER_URL = "/webauthn/assertion/result";
 
-    private JsonConverter jsonConverter;
-    private ServerPropertyProvider serverPropertyProvider;
-    private ServerPublicKeyCredentialValidator<ServerAuthenticatorAssertionResponse> serverPublicKeyCredentialValidator;
-    private TypeReference<ServerPublicKeyCredential<ServerAuthenticatorAssertionResponse>> credentialTypeRef
+    private final JsonConverter jsonConverter;
+    private final ServerPropertyProvider serverPropertyProvider;
+    private final ServerPublicKeyCredentialValidator<ServerAuthenticatorAssertionResponse> serverPublicKeyCredentialValidator;
+    private final TypeReference<ServerPublicKeyCredential<ServerAuthenticatorAssertionResponse>> credentialTypeRef
             = new TypeReference<ServerPublicKeyCredential<ServerAuthenticatorAssertionResponse>>() {
     };
-    private CollectedClientDataConverter collectedClientDataConverter;
-    private ServerEndpointFilterUtil serverEndpointFilterUtil;
+    private final CollectedClientDataConverter collectedClientDataConverter;
+    private final ServerEndpointFilterUtil serverEndpointFilterUtil;
 
     private List<String> expectedAuthenticationExtensionIds = Collections.emptyList();
 

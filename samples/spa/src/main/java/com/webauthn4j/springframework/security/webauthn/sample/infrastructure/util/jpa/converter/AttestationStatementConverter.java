@@ -28,7 +28,7 @@ import javax.persistence.AttributeConverter;
  */
 public class AttestationStatementConverter implements AttributeConverter<AttestationStatement, String> {
 
-    private CborConverter cborConverter;
+    private final CborConverter cborConverter;
 
     public AttestationStatementConverter(ObjectConverter objectConverter) {
         this.cborConverter = objectConverter.getCborConverter();

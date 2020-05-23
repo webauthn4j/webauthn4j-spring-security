@@ -23,9 +23,9 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 public class SignupComponent {
 
-    private WebDriver webDriver;
-    private WebDriverWait wait;
-    private ResidentKeyRequirementDialog residentKeyRequirementDialog;
+    private final WebDriver webDriver;
+    private final WebDriverWait wait;
+    private final ResidentKeyRequirementDialog residentKeyRequirementDialog;
 
     public SignupComponent(WebDriver webDriver) {
         this.webDriver = webDriver;

@@ -205,7 +205,7 @@ public class WebAuthnConfigurer<H extends HttpSecurityBuilder<H>> extends Abstra
      */
     public class PublicKeyCredParamsConfig {
 
-        private List<PublicKeyCredentialParameters> publicKeyCredentialParameters = new ArrayList<>();
+        private final List<PublicKeyCredentialParameters> publicKeyCredentialParameters = new ArrayList<>();
 
         private PublicKeyCredParamsConfig() {
         }
@@ -241,7 +241,7 @@ public class WebAuthnConfigurer<H extends HttpSecurityBuilder<H>> extends Abstra
      */
     public class ExtensionsClientInputsConfig<T extends ExtensionClientInput<?>> {
 
-        private Map<String, T> extensionsClientInputs = new HashMap<>();
+        private final Map<String, T> extensionsClientInputs = new HashMap<>();
 
         private ExtensionsClientInputsConfig() {
         }

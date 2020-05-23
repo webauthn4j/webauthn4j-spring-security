@@ -33,9 +33,9 @@ public class WebAuthnPublicKeyCredentialDescriptor implements Serializable {
     // ================================================================================================
 
     @JsonProperty
-    private PublicKeyCredentialType type;
+    private final PublicKeyCredentialType type;
     @JsonProperty
-    private String id;
+    private final String id;
 
     // ~ Constructor
     // ========================================================================================================

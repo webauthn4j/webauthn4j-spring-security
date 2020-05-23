@@ -33,7 +33,7 @@ public class ProfileCreateFormValidator implements Validator {
     @Autowired
     private HttpServletRequest request;
 
-    private AuthenticatorFormValidator authenticatorFormValidator;
+    private final AuthenticatorFormValidator authenticatorFormValidator;
 
     public ProfileCreateFormValidator(AuthenticatorFormValidator authenticatorFormValidator) {
         this.authenticatorFormValidator = authenticatorFormValidator;

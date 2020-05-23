@@ -18,8 +18,8 @@ package com.webauthn4j.springframework.security.fido.server.endpoint;
 
 public abstract class ServerResponseBase implements ServerResponse {
 
-    private Status status;
-    private String errorMessage;
+    private final Status status;
+    private final String errorMessage;
 
     public ServerResponseBase(Status status, String errorMessage) {
         this.status = status;

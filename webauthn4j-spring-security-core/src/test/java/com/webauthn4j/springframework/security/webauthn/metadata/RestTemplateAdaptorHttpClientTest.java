@@ -20,7 +20,6 @@ package com.webauthn4j.springframework.security.webauthn.metadata;
 import org.junit.Test;
 import org.springframework.web.client.RestTemplate;
 
-import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.*;
 
 public class RestTemplateAdaptorHttpClientTest {

@@ -24,7 +24,7 @@ import java.util.Objects;
 
 public class ServerPublicKeyCredentialGetOptionsRequest implements ServerRequest {
     private String username;
-    private UserVerificationRequirement userVerification;
+    private final UserVerificationRequirement userVerification;
     private AuthenticationExtensionsClientInputs<AuthenticationExtensionClientInput<?>> extensions;
 
     public ServerPublicKeyCredentialGetOptionsRequest(String username, UserVerificationRequirement userVerification, AuthenticationExtensionsClientInputs<AuthenticationExtensionClientInput<?>> extensions) {

@@ -31,9 +31,9 @@ import static org.mockito.Mockito.when;
 
 public class ServerPropertyProviderImplTest {
 
-    private ChallengeRepository challengeRepository = mock(ChallengeRepository.class);
-    private OptionsProvider optionsProvider = mock(OptionsProvider.class);
-    private ServerPropertyProviderImpl target = new ServerPropertyProviderImpl(optionsProvider, challengeRepository);
+    private final ChallengeRepository challengeRepository = mock(ChallengeRepository.class);
+    private final OptionsProvider optionsProvider = mock(OptionsProvider.class);
+    private final ServerPropertyProviderImpl target = new ServerPropertyProviderImpl(optionsProvider, challengeRepository);
 
     @Test
     public void provide_test() {

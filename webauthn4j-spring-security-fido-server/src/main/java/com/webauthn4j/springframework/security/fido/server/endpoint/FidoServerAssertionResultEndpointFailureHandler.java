@@ -26,7 +26,7 @@ import java.io.IOException;
 
 public class FidoServerAssertionResultEndpointFailureHandler implements AuthenticationFailureHandler {
 
-    private ServerEndpointFilterUtil serverEndpointFilterUtil;
+    private final ServerEndpointFilterUtil serverEndpointFilterUtil;
 
     public FidoServerAssertionResultEndpointFailureHandler(ObjectConverter objectConverter) {
         this.serverEndpointFilterUtil = new ServerEndpointFilterUtil(objectConverter);

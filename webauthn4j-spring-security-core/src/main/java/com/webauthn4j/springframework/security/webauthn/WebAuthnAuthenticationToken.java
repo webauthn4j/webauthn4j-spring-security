@@ -23,6 +23,7 @@ import org.springframework.security.core.GrantedAuthority;
 
 import java.io.Serializable;
 import java.util.Collection;
+import java.util.Objects;
 
 /**
  * An {@link Authentication} implementation that is designed for Web Authentication specification.
@@ -31,8 +32,8 @@ public class WebAuthnAuthenticationToken extends AbstractAuthenticationToken {
 
     //~ Instance fields
     // ================================================================================================
-    private Serializable principal;
-    private WebAuthnAuthenticationRequest credentials;
+    private final Serializable principal;
+    private final WebAuthnAuthenticationRequest credentials;
 
     // ~ Constructor
     // ========================================================================================================
@@ -81,8 +82,8 @@ public class WebAuthnAuthenticationToken extends AbstractAuthenticationToken {
 
         WebAuthnAuthenticationToken that = (WebAuthnAuthenticationToken) o;
 
-        if (principal != null ? !principal.equals(that.principal) : that.principal != null) return false;
-        return credentials != null ? credentials.equals(that.credentials) : that.credentials == null;
+        if (!Objects.equals(principal, that.principal)) return false;
+        return Objects.equals(credentials, that.credentials);
     }
 
     /**

@@ -23,7 +23,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 public class ChallengeAttrProcessorTest {
 
-    private ChallengeAttrProcessor target = new ChallengeAttrProcessor("prefix", 10000);
+    private final ChallengeAttrProcessor target = new ChallengeAttrProcessor("prefix", 10000);
 
     @Test
     public void test() {

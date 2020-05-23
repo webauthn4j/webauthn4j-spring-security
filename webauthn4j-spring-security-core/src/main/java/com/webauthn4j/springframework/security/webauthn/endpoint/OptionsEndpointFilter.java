@@ -66,11 +66,11 @@ public class OptionsEndpointFilter extends GenericFilterBean {
      */
     protected String filterProcessesUrl = FILTER_URL;
     protected MessageSourceAccessor messages = SpringSecurityMessageSource.getAccessor();
-    protected JsonConverter jsonConverter;
+    protected final JsonConverter jsonConverter;
 
     private AuthenticationTrustResolver trustResolver;
 
-    private OptionsProvider optionsProvider;
+    private final OptionsProvider optionsProvider;
 
     // ~ Constructors
     // ===================================================================================================

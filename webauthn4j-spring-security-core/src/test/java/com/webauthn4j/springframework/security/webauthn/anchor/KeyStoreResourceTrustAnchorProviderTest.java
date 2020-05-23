@@ -77,8 +77,6 @@ public class KeyStoreResourceTrustAnchorProviderTest {
         target.setKeyStore(resource);
         target.setPassword("password");
 
-        assertThatCode(() -> {
-            target.afterPropertiesSet();
-        }).doesNotThrowAnyException();
+        assertThatCode(() -> target.afterPropertiesSet()).doesNotThrowAnyException();
     }
 }

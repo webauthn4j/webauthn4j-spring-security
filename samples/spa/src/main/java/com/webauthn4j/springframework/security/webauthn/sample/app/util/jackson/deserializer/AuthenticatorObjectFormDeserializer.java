@@ -31,7 +31,7 @@ import java.io.IOException;
 @JsonComponent
 public class AuthenticatorObjectFormDeserializer extends StdDeserializer<AttestationObjectForm> {
 
-    private Base64UrlStringToAttestationObjectConverter base64UrlStringToAttestationObjectConverter;
+    private final Base64UrlStringToAttestationObjectConverter base64UrlStringToAttestationObjectConverter;
 
     public AuthenticatorObjectFormDeserializer(Base64UrlStringToAttestationObjectConverter base64UrlStringToAttestationObjectConverter) {
         super(AttestationObjectForm.class);

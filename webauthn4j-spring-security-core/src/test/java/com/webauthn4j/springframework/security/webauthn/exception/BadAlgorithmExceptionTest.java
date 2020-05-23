@@ -23,7 +23,7 @@ import static org.assertj.core.api.Assertions.assertThatCode;
 @SuppressWarnings("ThrowableNotThrown")
 public class BadAlgorithmExceptionTest {
 
-    private RuntimeException cause = new RuntimeException();
+    private final RuntimeException cause = new RuntimeException();
 
     @Test
     public void test() {

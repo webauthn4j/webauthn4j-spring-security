@@ -53,15 +53,15 @@ public class WebAuthnAuthenticationProvider implements AuthenticationProvider {
 
     protected final Log logger = LogFactory.getLog(getClass());
 
-    protected MessageSourceAccessor messages = SpringSecurityWebAuthnMessageSource.getAccessor();
+    protected final MessageSourceAccessor messages = SpringSecurityWebAuthnMessageSource.getAccessor();
     private WebAuthnUserDetailsService userDetailsService;
-    private WebAuthnAuthenticatorService authenticatorService;
-    private WebAuthnManager webAuthnManager;
+    private final WebAuthnAuthenticatorService authenticatorService;
+    private final WebAuthnManager webAuthnManager;
     private boolean forcePrincipalAsString = false;
     private boolean hideCredentialIdNotFoundExceptions = true;
     private UserDetailsChecker preAuthenticationChecks = new DefaultPreAuthenticationChecks();
     private UserDetailsChecker postAuthenticationChecks = new DefaultPostAuthenticationChecks();
-    private GrantedAuthoritiesMapper authoritiesMapper = new NullAuthoritiesMapper();
+    private final GrantedAuthoritiesMapper authoritiesMapper = new NullAuthoritiesMapper();
 
     // ~ Constructor
     // ========================================================================================================
