@@ -55,8 +55,8 @@ public class OptionsProviderImpl implements OptionsProvider {
     private List<PublicKeyCredentialParameters> pubKeyCredParams = new ArrayList<>();
     private Long registrationTimeout = null;
     private Long authenticationTimeout = null;
-    private AuthenticationExtensionsClientInputs<RegistrationExtensionClientInput> registrationExtensions = new AuthenticationExtensionsClientInputs<>();
-    private AuthenticationExtensionsClientInputs<AuthenticationExtensionClientInput> authenticationExtensions = new AuthenticationExtensionsClientInputs<>();
+    private AuthenticationExtensionsClientInputs<RegistrationExtensionClientInput<?>> registrationExtensions = new AuthenticationExtensionsClientInputs<>();
+    private AuthenticationExtensionsClientInputs<AuthenticationExtensionClientInput<?>> authenticationExtensions = new AuthenticationExtensionsClientInputs<>();
 
     private String usernameParameter = UsernamePasswordAuthenticationFilter.SPRING_SECURITY_FORM_USERNAME_KEY;
     private String passwordParameter = UsernamePasswordAuthenticationFilter.SPRING_SECURITY_FORM_PASSWORD_KEY;
@@ -216,19 +216,19 @@ public class OptionsProviderImpl implements OptionsProvider {
         this.authenticationTimeout = authenticationTimeout;
     }
 
-    public AuthenticationExtensionsClientInputs<RegistrationExtensionClientInput> getRegistrationExtensions() {
+    public AuthenticationExtensionsClientInputs<RegistrationExtensionClientInput<?>> getRegistrationExtensions() {
         return registrationExtensions;
     }
 
-    public void setRegistrationExtensions(AuthenticationExtensionsClientInputs<RegistrationExtensionClientInput> registrationExtensions) {
+    public void setRegistrationExtensions(AuthenticationExtensionsClientInputs<RegistrationExtensionClientInput<?>> registrationExtensions) {
         this.registrationExtensions = registrationExtensions;
     }
 
-    public AuthenticationExtensionsClientInputs<AuthenticationExtensionClientInput> getAuthenticationExtensions() {
+    public AuthenticationExtensionsClientInputs<AuthenticationExtensionClientInput<?>> getAuthenticationExtensions() {
         return authenticationExtensions;
     }
 
-    public void setAuthenticationExtensions(AuthenticationExtensionsClientInputs<AuthenticationExtensionClientInput> authenticationExtensions) {
+    public void setAuthenticationExtensions(AuthenticationExtensionsClientInputs<AuthenticationExtensionClientInput<?>> authenticationExtensions) {
         this.authenticationExtensions = authenticationExtensions;
     }
 

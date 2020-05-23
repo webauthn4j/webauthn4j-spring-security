@@ -19,7 +19,9 @@ package com.webauthn4j.springframework.security.webauthn.endpoint;
 import com.webauthn4j.data.PublicKeyCredentialParameters;
 import com.webauthn4j.data.PublicKeyCredentialRpEntity;
 import com.webauthn4j.data.client.challenge.Challenge;
+import com.webauthn4j.data.extension.client.AuthenticationExtensionClientInput;
 import com.webauthn4j.data.extension.client.AuthenticationExtensionsClientInputs;
+import com.webauthn4j.data.extension.client.RegistrationExtensionClientInput;
 import com.webauthn4j.util.CollectionUtil;
 
 import java.util.List;
@@ -38,8 +40,8 @@ public class OptionsResponse implements Response {
     private Long registrationTimeout;
     private Long authenticationTimeout;
     private List<WebAuthnPublicKeyCredentialDescriptor> credentials;
-    private AuthenticationExtensionsClientInputs registrationExtensions;
-    private AuthenticationExtensionsClientInputs authenticationExtensions;
+    private AuthenticationExtensionsClientInputs<RegistrationExtensionClientInput<?>> registrationExtensions;
+    private AuthenticationExtensionsClientInputs<AuthenticationExtensionClientInput<?>> authenticationExtensions;
     private Parameters parameters;
 
     // ~ Constructors
@@ -54,8 +56,8 @@ public class OptionsResponse implements Response {
             Long registrationTimeout,
             Long authenticationTimeout,
             List<WebAuthnPublicKeyCredentialDescriptor> credentials,
-            AuthenticationExtensionsClientInputs registrationExtensions,
-            AuthenticationExtensionsClientInputs authenticationExtensions,
+            AuthenticationExtensionsClientInputs<RegistrationExtensionClientInput<?>> registrationExtensions,
+            AuthenticationExtensionsClientInputs<AuthenticationExtensionClientInput<?>> authenticationExtensions,
             Parameters parameters) {
         super();
 
@@ -103,11 +105,11 @@ public class OptionsResponse implements Response {
         return this.credentials;
     }
 
-    public AuthenticationExtensionsClientInputs getRegistrationExtensions() {
+    public AuthenticationExtensionsClientInputs<RegistrationExtensionClientInput<?>> getRegistrationExtensions() {
         return this.registrationExtensions;
     }
 
-    public AuthenticationExtensionsClientInputs getAuthenticationExtensions() {
+    public AuthenticationExtensionsClientInputs<AuthenticationExtensionClientInput<?>> getAuthenticationExtensions() {
         return this.authenticationExtensions;
     }
 

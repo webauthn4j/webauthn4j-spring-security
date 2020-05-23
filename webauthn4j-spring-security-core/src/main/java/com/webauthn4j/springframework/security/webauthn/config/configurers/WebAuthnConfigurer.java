@@ -51,9 +51,9 @@ import java.util.Map;
 public class WebAuthnConfigurer<H extends HttpSecurityBuilder<H>> extends AbstractHttpConfigurer<WebAuthnConfigurer<H>, H> {
 
     private final WebAuthnConfigurer<H>.PublicKeyCredParamsConfig publicKeyCredParamsConfig = new WebAuthnConfigurer<H>.PublicKeyCredParamsConfig();
-    private final ExtensionsClientInputsConfig<RegistrationExtensionClientInput> registrationExtensions
+    private final ExtensionsClientInputsConfig<RegistrationExtensionClientInput<?>> registrationExtensions
             = new ExtensionsClientInputsConfig<>();
-    private final ExtensionsClientInputsConfig<AuthenticationExtensionClientInput> authenticationExtensions
+    private final ExtensionsClientInputsConfig<AuthenticationExtensionClientInput<?>> authenticationExtensions
             = new ExtensionsClientInputsConfig<>();
     private OptionsProvider optionsProvider;
     private String rpId = null;
@@ -187,7 +187,7 @@ public class WebAuthnConfigurer<H extends HttpSecurityBuilder<H>> extends Abstra
      *
      * @return the {@link ExtensionsClientInputsConfig}
      */
-    public WebAuthnConfigurer<H>.ExtensionsClientInputsConfig<RegistrationExtensionClientInput> registrationExtensions() {
+    public WebAuthnConfigurer<H>.ExtensionsClientInputsConfig<RegistrationExtensionClientInput<?>> registrationExtensions() {
         return this.registrationExtensions;
     }
 
@@ -196,7 +196,7 @@ public class WebAuthnConfigurer<H extends HttpSecurityBuilder<H>> extends Abstra
      *
      * @return the {@link ExtensionsClientInputsConfig}
      */
-    public WebAuthnConfigurer<H>.ExtensionsClientInputsConfig<AuthenticationExtensionClientInput> authenticationExtensions() {
+    public WebAuthnConfigurer<H>.ExtensionsClientInputsConfig<AuthenticationExtensionClientInput<?>> authenticationExtensions() {
         return this.authenticationExtensions;
     }
 
@@ -239,7 +239,7 @@ public class WebAuthnConfigurer<H extends HttpSecurityBuilder<H>> extends Abstra
     /**
      * Configuration options for AuthenticationExtensionsClientInputs
      */
-    public class ExtensionsClientInputsConfig<T extends ExtensionClientInput> {
+    public class ExtensionsClientInputsConfig<T extends ExtensionClientInput<?>> {
 
         private Map<String, T> extensionsClientInputs = new HashMap<>();
 

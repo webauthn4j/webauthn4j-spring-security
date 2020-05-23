@@ -17,6 +17,7 @@
 package com.webauthn4j.springframework.security.webauthn.options;
 
 import com.webauthn4j.data.client.challenge.Challenge;
+import com.webauthn4j.data.extension.client.AuthenticationExtensionClientInput;
 import com.webauthn4j.data.extension.client.AuthenticationExtensionsClientInputs;
 import com.webauthn4j.springframework.security.webauthn.endpoint.Parameters;
 import com.webauthn4j.util.CollectionUtil;
@@ -37,7 +38,7 @@ public class AssertionOptions implements Serializable {
     private Long authenticationTimeout;
     private String rpId;
     private List<String> credentials;
-    private AuthenticationExtensionsClientInputs authenticationExtensions;
+    private AuthenticationExtensionsClientInputs<AuthenticationExtensionClientInput<?>> authenticationExtensions;
     private Parameters parameters;
 
     // ~ Constructors
@@ -48,7 +49,7 @@ public class AssertionOptions implements Serializable {
             Long authenticationTimeout,
             String rpId,
             List<String> credentials,
-            AuthenticationExtensionsClientInputs authenticationExtensions,
+            AuthenticationExtensionsClientInputs<AuthenticationExtensionClientInput<?>> authenticationExtensions,
             Parameters parameters) {
         this.challenge = challenge;
         this.authenticationTimeout = authenticationTimeout;
@@ -77,7 +78,7 @@ public class AssertionOptions implements Serializable {
         return credentials;
     }
 
-    public AuthenticationExtensionsClientInputs getAuthenticationExtensions() {
+    public AuthenticationExtensionsClientInputs<AuthenticationExtensionClientInput<?>> getAuthenticationExtensions() {
         return authenticationExtensions;
     }
 

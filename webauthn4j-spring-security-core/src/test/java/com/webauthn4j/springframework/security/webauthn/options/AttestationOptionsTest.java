@@ -23,6 +23,7 @@ import com.webauthn4j.data.attestation.statement.COSEAlgorithmIdentifier;
 import com.webauthn4j.data.client.challenge.Challenge;
 import com.webauthn4j.data.client.challenge.DefaultChallenge;
 import com.webauthn4j.data.extension.client.AuthenticationExtensionsClientInputs;
+import com.webauthn4j.data.extension.client.RegistrationExtensionClientInput;
 import com.webauthn4j.springframework.security.webauthn.endpoint.WebAuthnPublicKeyCredentialUserEntity;
 import com.webauthn4j.util.Base64UrlUtil;
 import org.junit.Test;
@@ -42,7 +43,7 @@ public class AttestationOptionsTest {
         List<PublicKeyCredentialParameters> pubKeyCredParams = Collections.singletonList(new PublicKeyCredentialParameters(PublicKeyCredentialType.PUBLIC_KEY, COSEAlgorithmIdentifier.ES256));
         Long registrationTimeout = 1000L;
         List<String> credentialIds = Collections.singletonList("credentialId");
-        AuthenticationExtensionsClientInputs authenticationExtensionsClientInputs = new AuthenticationExtensionsClientInputs();
+        AuthenticationExtensionsClientInputs<RegistrationExtensionClientInput<?>> authenticationExtensionsClientInputs = new AuthenticationExtensionsClientInputs<>();
         AttestationOptions instanceA = new AttestationOptions(rpEntity, userEntity, challenge, pubKeyCredParams, registrationTimeout, credentialIds, authenticationExtensionsClientInputs);
         AttestationOptions instanceB = new AttestationOptions(rpEntity, userEntity, challenge, pubKeyCredParams, registrationTimeout, credentialIds, authenticationExtensionsClientInputs);
 

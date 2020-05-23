@@ -19,6 +19,7 @@ package com.webauthn4j.springframework.security.webauthn;
 import com.webauthn4j.data.attestation.AttestationObject;
 import com.webauthn4j.data.client.CollectedClientData;
 import com.webauthn4j.data.extension.client.AuthenticationExtensionsClientOutputs;
+import com.webauthn4j.data.extension.client.RegistrationExtensionClientOutput;
 
 import java.util.Objects;
 
@@ -29,12 +30,12 @@ public class WebAuthnRegistrationRequestValidationResponse {
 
     private CollectedClientData collectedClientData;
     private AttestationObject attestationObject;
-    private AuthenticationExtensionsClientOutputs registrationExtensionsClientOutputs;
+    private AuthenticationExtensionsClientOutputs<RegistrationExtensionClientOutput<?>> registrationExtensionsClientOutputs;
 
     // ~ Constructors
     // ===================================================================================================
 
-    public WebAuthnRegistrationRequestValidationResponse(CollectedClientData collectedClientData, AttestationObject attestationObject, AuthenticationExtensionsClientOutputs registrationExtensionsClientOutputs) {
+    public WebAuthnRegistrationRequestValidationResponse(CollectedClientData collectedClientData, AttestationObject attestationObject, AuthenticationExtensionsClientOutputs<RegistrationExtensionClientOutput<?>> registrationExtensionsClientOutputs) {
         this.collectedClientData = collectedClientData;
         this.attestationObject = attestationObject;
         this.registrationExtensionsClientOutputs = registrationExtensionsClientOutputs;
@@ -51,7 +52,7 @@ public class WebAuthnRegistrationRequestValidationResponse {
         return attestationObject;
     }
 
-    public AuthenticationExtensionsClientOutputs getRegistrationExtensionsClientOutputs() {
+    public AuthenticationExtensionsClientOutputs<RegistrationExtensionClientOutput<?>> getRegistrationExtensionsClientOutputs() {
         return registrationExtensionsClientOutputs;
     }
 

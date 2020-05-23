@@ -186,7 +186,7 @@ configure(allJavaProjects){
         maven { url "https://oss.jfrog.org/artifactory/libs-snapshot" }
     }
 
-    def webauthn4jVersion = '0.11.1.RELEASE'
+    def webauthn4jVersion = '0.12.0-SNAPSHOT'
     def springSecurityVersion = '5.3.2.RELEASE'
     def springBootVersion = '2.3.0.RELEASE'
     def terasolunaVersion = '5.5.1.RELEASE'
@@ -203,20 +203,20 @@ configure(allJavaProjects){
         implementation platform("org.springframework.security:spring-security-bom:${springSecurityVersion}")
 
         // Independent libraries
-        implementation platform("com.webauthn4j:webauthn4j-util:$webauthn4jVersion")
-        implementation platform("com.webauthn4j:webauthn4j-core:$webauthn4jVersion")
-        implementation platform("com.webauthn4j:webauthn4j-metadata:$webauthn4jVersion")
-        implementation platform("com.webauthn4j:webauthn4j-test:$webauthn4jVersion")
+        implementation ("com.webauthn4j:webauthn4j-util:$webauthn4jVersion")
+        implementation ("com.webauthn4j:webauthn4j-core:$webauthn4jVersion")
+        implementation ("com.webauthn4j:webauthn4j-metadata:$webauthn4jVersion")
+        implementation ("com.webauthn4j:webauthn4j-test:$webauthn4jVersion")
 
         // Independent libraries for Sample applications
-        implementation platform("org.terasoluna.gfw:terasoluna-gfw-common:$terasolunaVersion")
-        implementation platform("org.terasoluna.gfw:terasoluna-gfw-web:$terasolunaVersion")
-        implementation platform("org.thymeleaf:thymeleaf-testing:$thymeleafVersion")
-        implementation platform("org.modelmapper:modelmapper:$modelMapperVersion")
-        implementation platform("org.lazyluke:log4jdbc-remix:$log4jdbcVersion")
-        implementation platform("org.dbunit:dbunit:$dbunitVersion")
-        implementation platform("com.github.springtestdbunit:spring-test-dbunit:$springTestDbunitVersion")
-        implementation platform("io.github.bonigarcia:webdrivermanager:$webDriverManagerVersion")
+        implementation ("org.terasoluna.gfw:terasoluna-gfw-common:$terasolunaVersion")
+        implementation ("org.terasoluna.gfw:terasoluna-gfw-web:$terasolunaVersion")
+        implementation ("org.thymeleaf:thymeleaf-testing:$thymeleafVersion")
+        implementation ("org.modelmapper:modelmapper:$modelMapperVersion")
+        implementation ("org.lazyluke:log4jdbc-remix:$log4jdbcVersion")
+        implementation ("org.dbunit:dbunit:$dbunitVersion")
+        implementation ("com.github.springtestdbunit:spring-test-dbunit:$springTestDbunitVersion")
+        implementation ("io.github.bonigarcia:webdrivermanager:$webDriverManagerVersion")
     }
 
     check.dependsOn dependencyCheckAnalyze
@@ -254,8 +254,10 @@ asciidoctor {
 sonarqube {
     properties {
         property 'sonar.projectKey', 'webauthn4j-spring-security'
-        property 'sonar.issue.ignore.multicriteria', 'e1'
+        property 'sonar.issue.ignore.multicriteria', 'e1,e2'
         property 'sonar.issue.ignore.multicriteria.e1.ruleKey', 'java:S110'
         property 'sonar.issue.ignore.multicriteria.e1.resourceKey', '**/*.java'
+        property 'sonar.issue.ignore.multicriteria.e2.ruleKey', 'java:S1452'
+        property 'sonar.issue.ignore.multicriteria.e2.resourceKey', '**/*.java'
     }
 }

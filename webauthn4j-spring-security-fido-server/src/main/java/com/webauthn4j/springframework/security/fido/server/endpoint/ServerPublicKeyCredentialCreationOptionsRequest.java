@@ -19,6 +19,7 @@ package com.webauthn4j.springframework.security.fido.server.endpoint;
 import com.webauthn4j.data.AttestationConveyancePreference;
 import com.webauthn4j.data.AuthenticatorSelectionCriteria;
 import com.webauthn4j.data.extension.client.AuthenticationExtensionsClientInputs;
+import com.webauthn4j.data.extension.client.RegistrationExtensionClientInput;
 
 import java.util.Objects;
 
@@ -28,14 +29,14 @@ public class ServerPublicKeyCredentialCreationOptionsRequest implements ServerRe
     private String displayName;
     private AuthenticatorSelectionCriteria authenticatorSelection;
     private AttestationConveyancePreference attestation;
-    private AuthenticationExtensionsClientInputs extensions;
+    private AuthenticationExtensionsClientInputs<RegistrationExtensionClientInput<?>> extensions;
 
     public ServerPublicKeyCredentialCreationOptionsRequest(
             String username,
             String displayName,
             AuthenticatorSelectionCriteria authenticatorSelection,
             AttestationConveyancePreference attestation,
-            AuthenticationExtensionsClientInputs extensions) {
+            AuthenticationExtensionsClientInputs<RegistrationExtensionClientInput<?>> extensions) {
 
         this.username = username;
         this.displayName = displayName;
@@ -63,7 +64,7 @@ public class ServerPublicKeyCredentialCreationOptionsRequest implements ServerRe
         return attestation;
     }
 
-    public AuthenticationExtensionsClientInputs getExtensions() {
+    public AuthenticationExtensionsClientInputs<RegistrationExtensionClientInput<?>> getExtensions() {
         return extensions;
     }
 

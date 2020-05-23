@@ -21,6 +21,7 @@ import com.webauthn4j.data.AuthenticatorSelectionCriteria;
 import com.webauthn4j.data.PublicKeyCredentialParameters;
 import com.webauthn4j.data.PublicKeyCredentialRpEntity;
 import com.webauthn4j.data.extension.client.AuthenticationExtensionsClientInputs;
+import com.webauthn4j.data.extension.client.RegistrationExtensionClientInput;
 
 import java.util.List;
 
@@ -34,7 +35,7 @@ public class ServerPublicKeyCredentialCreationOptionsResponse extends ServerResp
     private List<ServerPublicKeyCredentialDescriptor> excludeCredentials;
     private AuthenticatorSelectionCriteria authenticatorSelection;
     private AttestationConveyancePreference attestation;
-    private AuthenticationExtensionsClientInputs extensions;
+    private AuthenticationExtensionsClientInputs<RegistrationExtensionClientInput<?>> extensions;
 
     @SuppressWarnings("squid:S00107")
     public ServerPublicKeyCredentialCreationOptionsResponse(
@@ -46,7 +47,7 @@ public class ServerPublicKeyCredentialCreationOptionsResponse extends ServerResp
             List<ServerPublicKeyCredentialDescriptor> excludeCredentials,
             AuthenticatorSelectionCriteria authenticatorSelection,
             AttestationConveyancePreference attestation,
-            AuthenticationExtensionsClientInputs extensions) {
+            AuthenticationExtensionsClientInputs<RegistrationExtensionClientInput<?>> extensions) {
         super();
 
         this.rp = rp;
@@ -95,7 +96,7 @@ public class ServerPublicKeyCredentialCreationOptionsResponse extends ServerResp
         return attestation;
     }
 
-    public AuthenticationExtensionsClientInputs getExtensions() {
+    public AuthenticationExtensionsClientInputs<RegistrationExtensionClientInput<?>> getExtensions() {
         return extensions;
     }
 }
