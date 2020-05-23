@@ -150,12 +150,10 @@ public class UserEntity implements WebAuthnUserDetails {
         this.locked = locked;
     }
 
-    @Override
     public boolean isSingleFactorAuthenticationAllowed() {
         return singleFactorAuthenticationAllowed;
     }
 
-    @Override
     public void setSingleFactorAuthenticationAllowed(boolean singleFactorAuthenticationAllowed) {
         this.singleFactorAuthenticationAllowed = singleFactorAuthenticationAllowed;
     }

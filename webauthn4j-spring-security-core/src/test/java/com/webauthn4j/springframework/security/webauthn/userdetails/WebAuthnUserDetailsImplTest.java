@@ -40,9 +40,7 @@ public class WebAuthnUserDetailsImplTest {
                 Collections.singletonList(authenticator),
                 Collections.singletonList(grantedAuthority));
 
-        userDetails.setSingleFactorAuthenticationAllowed(true);
         assertThat(userDetails.getUserHandle()).isEqualTo(new byte[32]);
-        assertThat(userDetails.isSingleFactorAuthenticationAllowed()).isTrue();
         assertThat(userDetails.getAuthenticators()).isEqualTo(Collections.singletonList(authenticator));
     }
 

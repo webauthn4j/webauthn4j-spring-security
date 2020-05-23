@@ -29,9 +29,5 @@ public interface WebAuthnUserDetails extends UserDetails {
     @SuppressWarnings("squid:S1452")
     Collection<? extends Authenticator> getAuthenticators();
 
-    void setSingleFactorAuthenticationAllowed(boolean singleFactorAuthenticationAllowed);
-
-    boolean isSingleFactorAuthenticationAllowed();
-
     byte[] getUserHandle();
 }
