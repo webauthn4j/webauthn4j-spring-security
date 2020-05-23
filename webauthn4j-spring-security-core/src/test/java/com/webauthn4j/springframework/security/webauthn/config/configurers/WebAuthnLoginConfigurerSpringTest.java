@@ -21,8 +21,8 @@ import com.webauthn4j.converter.util.ObjectConverter;
 import com.webauthn4j.data.PublicKeyCredentialType;
 import com.webauthn4j.data.attestation.statement.COSEAlgorithmIdentifier;
 import com.webauthn4j.data.client.challenge.DefaultChallenge;
+import com.webauthn4j.data.extension.client.CredentialPropertiesExtensionClientInput;
 import com.webauthn4j.data.extension.client.FIDOAppIDExtensionClientInput;
-import com.webauthn4j.data.extension.client.SupportedExtensionsExtensionClientInput;
 import com.webauthn4j.springframework.security.webauthn.WebAuthnProcessingFilter;
 import com.webauthn4j.springframework.security.webauthn.challenge.ChallengeRepository;
 import com.webauthn4j.springframework.security.webauthn.endpoint.OptionsEndpointFilter;
@@ -176,7 +176,7 @@ public class WebAuthnLoginConfigurerSpringTest {
                     .registrationTimeout(10000L)
                     .authenticationTimeout(20000L)
                     .registrationExtensions()
-                    .addExtension(new SupportedExtensionsExtensionClientInput(true))
+                    .addExtension(new CredentialPropertiesExtensionClientInput(true))
                     .and()
                     .authenticationExtensions()
                     .addExtension(new FIDOAppIDExtensionClientInput(""))
