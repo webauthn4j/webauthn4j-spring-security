@@ -186,7 +186,7 @@ public class FidoServerConfigurer<H extends HttpSecurityBuilder<H>> extends Abst
          */
         public class ExpectedRegistrationExtensionIdsConfig {
 
-            private List<String> expectedAuthenticationExtensionIds = new ArrayList<>();
+            private final List<String> expectedAuthenticationExtensionIds = new ArrayList<>();
 
             private ExpectedRegistrationExtensionIdsConfig() {
             }
@@ -299,7 +299,7 @@ public class FidoServerConfigurer<H extends HttpSecurityBuilder<H>> extends Abst
          */
         public class ExpectedAuthenticationExtensionIdsConfig {
 
-            private List<String> expectedAuthenticationExtensionIds = new ArrayList<>();
+            private final List<String> expectedAuthenticationExtensionIds = new ArrayList<>();
 
             private ExpectedAuthenticationExtensionIdsConfig() {
             }
@@ -330,7 +330,7 @@ public class FidoServerConfigurer<H extends HttpSecurityBuilder<H>> extends Abst
 
     public abstract class AbstractServerEndpointConfig<F extends ServerEndpointFilterBase> {
 
-        private Class<F> filterClass;
+        private final Class<F> filterClass;
         private String filterProcessingUrl = null;
 
         AbstractServerEndpointConfig(Class<F> filterClass) {

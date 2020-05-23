@@ -30,7 +30,7 @@ import static org.assertj.core.api.Assertions.assertThat;
  */
 public class HttpSessionChallengeRepositoryTest {
 
-    private HttpSessionChallengeRepository target = new HttpSessionChallengeRepository();
+    private final HttpSessionChallengeRepository target = new HttpSessionChallengeRepository();
 
     @Test
     public void generateChallenge_test() {

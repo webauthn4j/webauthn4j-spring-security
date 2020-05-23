@@ -43,14 +43,14 @@ public class FidoServerAttestationResultEndpointFilter extends ServerEndpointFil
      */
     public static final String FILTER_URL = "/webauthn/attestation/result";
 
-    private WebAuthnUserDetailsService webAuthnUserDetailsService;
-    private AttestationObjectConverter attestationObjectConverter;
-    private CollectedClientDataConverter collectedClientDataConverter;
-    private WebAuthnRegistrationRequestValidator webAuthnRegistrationRequestValidator;
-    private ServerPublicKeyCredentialValidator<ServerAuthenticatorAttestationResponse> serverPublicKeyCredentialValidator;
+    private final WebAuthnUserDetailsService webAuthnUserDetailsService;
+    private final AttestationObjectConverter attestationObjectConverter;
+    private final CollectedClientDataConverter collectedClientDataConverter;
+    private final WebAuthnRegistrationRequestValidator webAuthnRegistrationRequestValidator;
+    private final ServerPublicKeyCredentialValidator<ServerAuthenticatorAttestationResponse> serverPublicKeyCredentialValidator;
 
     private UsernameNotFoundHandler usernameNotFoundHandler = new DefaultUsernameNotFoundHandler();
-    private TypeReference<ServerPublicKeyCredential<ServerAuthenticatorAttestationResponse>> credentialTypeRef
+    private final TypeReference<ServerPublicKeyCredential<ServerAuthenticatorAttestationResponse>> credentialTypeRef
             = new TypeReference<ServerPublicKeyCredential<ServerAuthenticatorAttestationResponse>>() {
     };
 
@@ -126,7 +126,7 @@ public class FidoServerAttestationResultEndpointFilter extends ServerEndpointFil
         this.usernameNotFoundHandler = usernameNotFoundHandler;
     }
 
-    private class DefaultUsernameNotFoundHandler implements UsernameNotFoundHandler {
+    private static class DefaultUsernameNotFoundHandler implements UsernameNotFoundHandler {
         @Override
         public void onUsernameNotFound(String loginUsername) {
             throw new UsernameNotFoundException("Username not found");

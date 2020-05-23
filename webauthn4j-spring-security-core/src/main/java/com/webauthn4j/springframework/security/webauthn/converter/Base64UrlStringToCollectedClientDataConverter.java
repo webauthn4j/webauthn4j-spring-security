@@ -28,7 +28,7 @@ public class Base64UrlStringToCollectedClientDataConverter implements Converter<
 
     //~ Instance fields
     // ================================================================================================
-    private CollectedClientDataConverter converter;
+    private final CollectedClientDataConverter converter;
 
     // ~ Constructor
     // ========================================================================================================

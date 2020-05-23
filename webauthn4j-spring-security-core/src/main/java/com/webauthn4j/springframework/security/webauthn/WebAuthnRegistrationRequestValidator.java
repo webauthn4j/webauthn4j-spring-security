@@ -36,8 +36,8 @@ public class WebAuthnRegistrationRequestValidator {
 
     // ~ Instance fields
     // ================================================================================================
-    private WebAuthnManager webAuthnManager;
-    private ServerPropertyProvider serverPropertyProvider;
+    private final WebAuthnManager webAuthnManager;
+    private final ServerPropertyProvider serverPropertyProvider;
 
     private List<String> expectedRegistrationExtensionIds;
 

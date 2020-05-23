@@ -49,7 +49,7 @@ public class FidoServerAttestationOptionsEndpointFilter extends ServerEndpointFi
     //~ Instance fields
     // ================================================================================================
 
-    private OptionsProvider optionsProvider;
+    private final OptionsProvider optionsProvider;
 
     public FidoServerAttestationOptionsEndpointFilter(ObjectConverter objectConverter, OptionsProvider optionsProvider) {
         super(FILTER_URL, objectConverter);

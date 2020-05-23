@@ -28,7 +28,7 @@ public class Base64UrlStringToAttestationObjectConverter implements Converter<St
 
     //~ Instance fields
     // ================================================================================================
-    private AttestationObjectConverter converter;
+    private final AttestationObjectConverter converter;
 
     // ~ Constructor
     // ========================================================================================================

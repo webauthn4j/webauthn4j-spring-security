@@ -21,8 +21,8 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 public class ProfileComponent {
 
-    private WebDriver webDriver;
-    private WebDriverWait wait;
+    private final WebDriver webDriver;
+    private final WebDriverWait wait;
 
 
     public ProfileComponent(WebDriver webDriver) {

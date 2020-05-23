@@ -33,8 +33,8 @@ public class ServerPropertyProviderImpl implements ServerPropertyProvider {
 
     //~ Instance fields
     // ================================================================================================
-    private OptionsProvider optionsProvider;
-    private ChallengeRepository challengeRepository;
+    private final OptionsProvider optionsProvider;
+    private final ChallengeRepository challengeRepository;
 
     public ServerPropertyProviderImpl(OptionsProvider optionsProvider, ChallengeRepository challengeRepository) {
 

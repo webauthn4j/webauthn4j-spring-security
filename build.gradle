@@ -176,7 +176,7 @@ configure(allJavaProjects) {
     sourceCompatibility = 1.8
 
     tasks.withType(JavaCompile) {
-        //options.compilerArgs << "-Xlint:unchecked" //FIXME
+        options.compilerArgs << "-Xlint:unchecked"
         options.compilerArgs << "-Xlint:deprecation"
         options.compilerArgs << "-Werror"
     }

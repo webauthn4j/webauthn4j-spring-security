@@ -55,7 +55,7 @@ public class JsonFileResourceMetadataStatementsProviderSpringTest {
     @Configuration
     public static class Config {
 
-        private ObjectConverter objectConverter;
+        private final ObjectConverter objectConverter;
 
         public Config() {
             ObjectMapper jsonMapper = new ObjectMapper();

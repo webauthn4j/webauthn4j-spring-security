@@ -43,7 +43,7 @@ public class JsonFileResourceMetadataStatementsProvider implements MetadataState
     // ~ Instance fields
     // ================================================================================================
 
-    private JsonConverter jsonConverter;
+    private final JsonConverter jsonConverter;
     private List<Resource> resources;
     private Map<AAGUID, Set<MetadataStatement>> cachedMetadataItems;
 

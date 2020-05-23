@@ -57,7 +57,7 @@ public class WebAuthnProcessingFilterTest {
     @Spy
     private WebAuthnProcessingFilter target;
 
-    private ArgumentCaptor<Authentication> captor = ArgumentCaptor.forClass(Authentication.class);
+    private final ArgumentCaptor<Authentication> captor = ArgumentCaptor.forClass(Authentication.class);
 
     @Before
     public void setup() {

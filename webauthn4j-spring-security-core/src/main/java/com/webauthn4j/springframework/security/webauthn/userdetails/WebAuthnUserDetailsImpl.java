@@ -33,8 +33,8 @@ public class WebAuthnUserDetailsImpl extends User implements WebAuthnUserDetails
     // ~ Instance fields
     // ================================================================================================
     private boolean singleFactorAuthenticationAllowed = false;
-    private byte[] userHandle;
-    private List<Authenticator> authenticators;
+    private final byte[] userHandle;
+    private final List<Authenticator> authenticators;
 
     public WebAuthnUserDetailsImpl(byte[] userHandle, String username, String password, List<Authenticator> authenticators,
                                    Collection<? extends GrantedAuthority> authorities) {

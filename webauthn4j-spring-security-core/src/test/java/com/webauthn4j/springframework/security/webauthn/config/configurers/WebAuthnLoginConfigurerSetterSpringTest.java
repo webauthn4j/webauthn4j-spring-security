@@ -47,8 +47,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import java.util.Collection;
 import java.util.Collections;
 
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
 
 @RunWith(SpringRunner.class)
@@ -65,6 +63,7 @@ public class WebAuthnLoginConfigurerSetterSpringTest {
     @Autowired
     private ServerPropertyProvider serverPropertyProvider;
 
+    @SuppressWarnings({"unchecked"})
     @Before
     public void setup() {
         WebAuthnUserDetails mockUserDetails = mock(WebAuthnUserDetails.class);
@@ -78,7 +77,6 @@ public class WebAuthnLoginConfigurerSetterSpringTest {
     @Test
     public void configured_filter_test() {
         WebAuthnProcessingFilter webAuthnProcessingFilter = (WebAuthnProcessingFilter) springSecurityFilterChain.getFilterChains().get(0).getFilters().stream().filter(item -> item instanceof WebAuthnProcessingFilter).findFirst().orElse(null);
-        ;
         Assertions.assertThat(webAuthnProcessingFilter.getServerPropertyProvider()).isEqualTo(serverPropertyProvider);
     }
 

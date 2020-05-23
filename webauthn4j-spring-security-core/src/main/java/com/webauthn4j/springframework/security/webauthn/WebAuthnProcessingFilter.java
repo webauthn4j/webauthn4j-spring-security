@@ -68,7 +68,7 @@ public class WebAuthnProcessingFilter extends UsernamePasswordAuthenticationFilt
 
     //~ Instance fields
     // ================================================================================================
-    private List<GrantedAuthority> authorities;
+    private final List<GrantedAuthority> authorities;
 
     private String credentialIdParameter = SPRING_SECURITY_FORM_CREDENTIAL_ID_KEY;
     private String clientDataJSONParameter = SPRING_SECURITY_FORM_CLIENT_DATA_JSON_KEY;

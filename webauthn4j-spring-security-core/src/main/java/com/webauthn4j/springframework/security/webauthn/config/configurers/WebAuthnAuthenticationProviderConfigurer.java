@@ -40,9 +40,9 @@ public class WebAuthnAuthenticationProviderConfigurer<
 
     //~ Instance fields
     // ================================================================================================
-    private U userDetailsService;
-    private A authenticatorService;
-    private V webAuthnManager;
+    private final U userDetailsService;
+    private final A authenticatorService;
+    private final V webAuthnManager;
 
     /**
      * Constructor

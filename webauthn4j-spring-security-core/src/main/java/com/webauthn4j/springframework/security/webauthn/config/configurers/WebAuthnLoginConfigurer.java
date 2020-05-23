@@ -421,7 +421,7 @@ public final class WebAuthnLoginConfigurer<H extends HttpSecurityBuilder<H>> ext
      */
     public class ExpectedAuthenticationExtensionIdsConfig {
 
-        private List<String> expectedAuthenticationExtensionIds = new ArrayList<>();
+        private final List<String> expectedAuthenticationExtensionIds = new ArrayList<>();
 
         private ExpectedAuthenticationExtensionIdsConfig() {
         }

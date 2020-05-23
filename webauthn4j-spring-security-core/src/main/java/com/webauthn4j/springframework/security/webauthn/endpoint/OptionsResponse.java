@@ -33,16 +33,16 @@ public class OptionsResponse implements Response {
 
     // ~ Instance fields
     // ================================================================================================
-    private PublicKeyCredentialRpEntity relyingParty;
-    private WebAuthnPublicKeyCredentialUserEntity user;
-    private Challenge challenge;
-    private List<PublicKeyCredentialParameters> pubKeyCredParams;
-    private Long registrationTimeout;
-    private Long authenticationTimeout;
-    private List<WebAuthnPublicKeyCredentialDescriptor> credentials;
-    private AuthenticationExtensionsClientInputs<RegistrationExtensionClientInput<?>> registrationExtensions;
-    private AuthenticationExtensionsClientInputs<AuthenticationExtensionClientInput<?>> authenticationExtensions;
-    private Parameters parameters;
+    private final PublicKeyCredentialRpEntity relyingParty;
+    private final WebAuthnPublicKeyCredentialUserEntity user;
+    private final Challenge challenge;
+    private final List<PublicKeyCredentialParameters> pubKeyCredParams;
+    private final Long registrationTimeout;
+    private final Long authenticationTimeout;
+    private final List<WebAuthnPublicKeyCredentialDescriptor> credentials;
+    private final AuthenticationExtensionsClientInputs<RegistrationExtensionClientInput<?>> registrationExtensions;
+    private final AuthenticationExtensionsClientInputs<AuthenticationExtensionClientInput<?>> authenticationExtensions;
+    private final Parameters parameters;
 
     // ~ Constructors
     // ===================================================================================================

@@ -31,8 +31,8 @@ public class WebAuthnPublicKeyCredentialUserEntity implements Serializable {
     // ~ Instance fields
     // ================================================================================================
 
-    private String userHandle;
-    private String username;
+    private final String userHandle;
+    private final String username;
 
     // ~ Constructor
     // ========================================================================================================

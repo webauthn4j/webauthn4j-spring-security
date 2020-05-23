@@ -33,9 +33,9 @@ import static org.mockito.Mockito.when;
 
 public class JsonFileResourceMetadataStatementsProviderTest {
 
-    private ObjectConverter objectConverter = new ObjectConverter();
+    private final ObjectConverter objectConverter = new ObjectConverter();
 
-    private JsonFileResourceMetadataStatementsProvider target = new JsonFileResourceMetadataStatementsProvider(objectConverter);
+    private final JsonFileResourceMetadataStatementsProvider target = new JsonFileResourceMetadataStatementsProvider(objectConverter);
 
     @Test(expected = IllegalArgumentException.class)
     public void resources_not_configured_test() {

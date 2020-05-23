@@ -26,7 +26,7 @@ import java.util.Map;
 
 public class ClientExtensionsConverter implements AttributeConverter<Map<String, RegistrationExtensionClientOutput<?>>, String> {
 
-    private JsonConverter jsonConverter;
+    private final JsonConverter jsonConverter;
 
     public ClientExtensionsConverter(ObjectConverter objectConverter) {
         this.jsonConverter = objectConverter.getJsonConverter();

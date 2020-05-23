@@ -22,8 +22,8 @@ package com.webauthn4j.springframework.security.webauthn.sample.domain.constant;
 @SuppressWarnings("squid:S2068")
 public class MessageCodes {
 
-    public class Error {
-        public class User {
+    public static class Error {
+        public static class User {
             public static final String USER_NOT_FOUND = "e.user.user_not_found";
             public static final String EMAIL_ADDRESS_IS_ALREADY_USED = "e.user.email_address_is_already_used";
             public static final String BAD_CHALLENGE = "e.user.bad_challenge";
@@ -32,21 +32,21 @@ public class MessageCodes {
             }
         }
 
-        public class Group {
+        public static class Group {
             public static final String GROUP_NOT_FOUND = "e.group.group_not_found";
 
             private Group() {
             }
         }
 
-        public class Authority {
+        public static class Authority {
             public static final String AUTHORITY_NOT_FOUND = "e.authority.authority_not_found";
 
             private Authority() {
             }
         }
 
-        public class Authenticator {
+        public static class Authenticator {
             public static final String AUTHENTICATOR_NOT_FOUND = "e.authenticator.authenticator_not_found";
 
             private Authenticator() {

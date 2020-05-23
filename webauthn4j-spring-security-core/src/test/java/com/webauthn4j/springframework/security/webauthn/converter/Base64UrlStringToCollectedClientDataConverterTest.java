@@ -27,7 +27,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 public class Base64UrlStringToCollectedClientDataConverterTest {
 
-    private ObjectConverter objectConverter = new ObjectConverter();
+    private final ObjectConverter objectConverter = new ObjectConverter();
 
     @Test
     public void convert_test() {

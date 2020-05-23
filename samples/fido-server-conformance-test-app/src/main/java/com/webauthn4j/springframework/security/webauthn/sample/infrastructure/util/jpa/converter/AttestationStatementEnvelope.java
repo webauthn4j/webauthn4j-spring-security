@@ -31,7 +31,7 @@ public class AttestationStatementEnvelope {
             include = JsonTypeInfo.As.EXTERNAL_PROPERTY,
             property = "fmt"
     )
-    private AttestationStatement attestationStatement;
+    private final AttestationStatement attestationStatement;
 
     @JsonCreator
     public AttestationStatementEnvelope(@JsonProperty("attStmt") AttestationStatement attestationStatement) {

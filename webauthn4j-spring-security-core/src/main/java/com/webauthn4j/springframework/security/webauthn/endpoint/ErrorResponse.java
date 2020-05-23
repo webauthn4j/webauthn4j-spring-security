@@ -26,7 +26,7 @@ public class ErrorResponse implements Response {
     // ~ Instance fields
     // ================================================================================================
 
-    private String errorMessage;
+    private final String errorMessage;
 
     // ~ Constructor
     // ========================================================================================================

@@ -27,13 +27,13 @@ public class Parameters implements Serializable {
     // ~ Instance fields
     // ================================================================================================
 
-    private String username;
-    private String password;
-    private String credentialId;
-    private String clientDataJSON;
-    private String authenticatorData;
-    private String signature;
-    private String clientExtensionsJSON;
+    private final String username;
+    private final String password;
+    private final String credentialId;
+    private final String clientDataJSON;
+    private final String authenticatorData;
+    private final String signature;
+    private final String clientExtensionsJSON;
 
     // ~ Constructor
     // ========================================================================================================

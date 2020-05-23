@@ -28,9 +28,9 @@ public class WebAuthnRegistrationRequestValidationResponse {
     // ~ Instance fields
     // ================================================================================================
 
-    private CollectedClientData collectedClientData;
-    private AttestationObject attestationObject;
-    private AuthenticationExtensionsClientOutputs<RegistrationExtensionClientOutput<?>> registrationExtensionsClientOutputs;
+    private final CollectedClientData collectedClientData;
+    private final AttestationObject attestationObject;
+    private final AuthenticationExtensionsClientOutputs<RegistrationExtensionClientOutput<?>> registrationExtensionsClientOutputs;
 
     // ~ Constructors
     // ===================================================================================================

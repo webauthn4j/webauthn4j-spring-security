@@ -29,7 +29,7 @@ import java.util.Locale;
  */
 public class CollectedClientDataFormFormatter implements Formatter<CollectedClientDataForm> {
 
-    private Base64UrlStringToCollectedClientDataConverter base64UrlStringToCollectedClientDataConverter;
+    private final Base64UrlStringToCollectedClientDataConverter base64UrlStringToCollectedClientDataConverter;
 
     public CollectedClientDataFormFormatter(Base64UrlStringToCollectedClientDataConverter base64UrlStringToCollectedClientDataConverter) {
         this.base64UrlStringToCollectedClientDataConverter = base64UrlStringToCollectedClientDataConverter;

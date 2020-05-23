@@ -39,13 +39,13 @@ public class AttestationOptions implements Serializable {
     // ~ Instance fields
     // ================================================================================================
 
-    private PublicKeyCredentialRpEntity relyingParty;
-    private WebAuthnPublicKeyCredentialUserEntity user;
-    private Challenge challenge;
-    private List<PublicKeyCredentialParameters> pubKeyCredParams;
-    private Long registrationTimeout;
-    private List<String> credentials;
-    private AuthenticationExtensionsClientInputs<RegistrationExtensionClientInput<?>> registrationExtensions;
+    private final PublicKeyCredentialRpEntity relyingParty;
+    private final WebAuthnPublicKeyCredentialUserEntity user;
+    private final Challenge challenge;
+    private final List<PublicKeyCredentialParameters> pubKeyCredParams;
+    private final Long registrationTimeout;
+    private final List<String> credentials;
+    private final AuthenticationExtensionsClientInputs<RegistrationExtensionClientInput<?>> registrationExtensions;
 
     // ~ Constructors
     // ===================================================================================================

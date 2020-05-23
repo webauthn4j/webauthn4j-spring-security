@@ -29,7 +29,7 @@ public class AuthenticatorFormValidator {
 
     private static final String NOT_NULL = "not.null";
 
-    private WebAuthnRegistrationRequestValidator webAuthnRegistrationRequestValidator;
+    private final WebAuthnRegistrationRequestValidator webAuthnRegistrationRequestValidator;
 
     public AuthenticatorFormValidator(WebAuthnRegistrationRequestValidator webAuthnRegistrationRequestValidator) {
         this.webAuthnRegistrationRequestValidator = webAuthnRegistrationRequestValidator;

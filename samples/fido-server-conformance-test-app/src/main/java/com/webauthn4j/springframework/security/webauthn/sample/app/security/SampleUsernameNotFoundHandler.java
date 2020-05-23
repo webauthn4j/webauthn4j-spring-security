@@ -24,7 +24,7 @@ import java.util.Collections;
 
 public class SampleUsernameNotFoundHandler implements UsernameNotFoundHandler {
 
-    private UserManager userManager;
+    private final UserManager userManager;
 
     public SampleUsernameNotFoundHandler(UserManager userManager) {
         this.userManager = userManager;

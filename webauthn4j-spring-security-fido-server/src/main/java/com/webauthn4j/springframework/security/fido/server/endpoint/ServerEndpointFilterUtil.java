@@ -34,8 +34,8 @@ class ServerEndpointFilterUtil {
 
     protected final Log logger = LogFactory.getLog(getClass());
 
-    private JsonConverter jsonConverter;
-    private CborConverter cborConverter;
+    private final JsonConverter jsonConverter;
+    private final CborConverter cborConverter;
 
     ServerEndpointFilterUtil(ObjectConverter objectConverter) {
         this.jsonConverter = objectConverter.getJsonConverter();
