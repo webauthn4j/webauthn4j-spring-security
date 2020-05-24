@@ -47,9 +47,9 @@ apply plugin: 'org.asciidoctor.convert'
 group 'com.webauthn4j'
 version "${webAuthn4JSpringSecurityVersion}"
 
-def sampleAppProjects = subprojects.findAll { ["fido-server-conformance-test-app", "spa", "spa-angular-client"].contains(it.name) };
-def webAuthn4JSpringSecurityLibraryProjects = subprojects.findAll { it.name.startsWith('webauthn4j-spring-security') }; ;
-def allJavaProjects = new HashSet();
+def sampleAppProjects = subprojects.findAll { ["fido-server-conformance-test-app", "spa", "spa-angular-client"].contains(it.name) }
+def webAuthn4JSpringSecurityLibraryProjects = subprojects.findAll { it.name.startsWith('webauthn4j-spring-security') }
+def allJavaProjects = new HashSet()
 allJavaProjects.addAll(webAuthn4JSpringSecurityLibraryProjects);
 allJavaProjects.addAll(sampleAppProjects);
 
@@ -198,25 +198,27 @@ configure(allJavaProjects) {
     def webDriverManagerVersion = '3.8.1'
 
     dependencies {
+        constraints {
+            // Independent libraries
+            implementation("com.webauthn4j:webauthn4j-util:$webauthn4jVersion")
+            implementation("com.webauthn4j:webauthn4j-core:$webauthn4jVersion")
+            implementation("com.webauthn4j:webauthn4j-metadata:$webauthn4jVersion")
+            implementation("com.webauthn4j:webauthn4j-test:$webauthn4jVersion")
+
+            // Independent libraries for Sample applications
+            implementation("org.terasoluna.gfw:terasoluna-gfw-common:$terasolunaVersion")
+            implementation("org.terasoluna.gfw:terasoluna-gfw-web:$terasolunaVersion")
+            implementation("org.thymeleaf:thymeleaf-testing:$thymeleafVersion")
+            implementation("org.modelmapper:modelmapper:$modelMapperVersion")
+            implementation("org.lazyluke:log4jdbc-remix:$log4jdbcVersion")
+            implementation("org.dbunit:dbunit:$dbunitVersion")
+            implementation("com.github.springtestdbunit:spring-test-dbunit:$springTestDbunitVersion")
+            implementation("io.github.bonigarcia:webdrivermanager:$webDriverManagerVersion")
+        }
         // BOM
         implementation platform("org.springframework.boot:spring-boot-dependencies:${springBootVersion}")
         implementation platform("org.springframework.security:spring-security-bom:${springSecurityVersion}")
 
-        // Independent libraries
-        implementation("com.webauthn4j:webauthn4j-util:$webauthn4jVersion")
-        implementation("com.webauthn4j:webauthn4j-core:$webauthn4jVersion")
-        implementation("com.webauthn4j:webauthn4j-metadata:$webauthn4jVersion")
-        implementation("com.webauthn4j:webauthn4j-test:$webauthn4jVersion")
-
-        // Independent libraries for Sample applications
-        implementation("org.terasoluna.gfw:terasoluna-gfw-common:$terasolunaVersion")
-        implementation("org.terasoluna.gfw:terasoluna-gfw-web:$terasolunaVersion")
-        implementation("org.thymeleaf:thymeleaf-testing:$thymeleafVersion")
-        implementation("org.modelmapper:modelmapper:$modelMapperVersion")
-        implementation("org.lazyluke:log4jdbc-remix:$log4jdbcVersion")
-        implementation("org.dbunit:dbunit:$dbunitVersion")
-        implementation("com.github.springtestdbunit:spring-test-dbunit:$springTestDbunitVersion")
-        implementation("io.github.bonigarcia:webdrivermanager:$webDriverManagerVersion")
     }
 
     check.dependsOn dependencyCheckAnalyze
