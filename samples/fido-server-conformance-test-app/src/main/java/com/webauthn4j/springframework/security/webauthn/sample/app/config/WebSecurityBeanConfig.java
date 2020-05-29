@@ -48,7 +48,6 @@ import com.webauthn4j.validator.attestation.statement.tpm.TPMAttestationStatemen
 import com.webauthn4j.validator.attestation.statement.u2f.FIDOU2FAttestationStatementValidator;
 import com.webauthn4j.validator.attestation.trustworthiness.certpath.CertPathTrustworthinessValidator;
 import com.webauthn4j.validator.attestation.trustworthiness.certpath.TrustAnchorCertPathTrustworthinessValidator;
-import com.webauthn4j.validator.attestation.trustworthiness.ecdaa.DefaultECDAATrustworthinessValidator;
 import com.webauthn4j.validator.attestation.trustworthiness.self.DefaultSelfAttestationTrustworthinessValidator;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -127,7 +126,6 @@ public class WebSecurityBeanConfig {
                         new NoneAttestationStatementValidator()
                 ),
                 certPathTrustworthinessValidator,
-                new DefaultECDAATrustworthinessValidator(),
                 new DefaultSelfAttestationTrustworthinessValidator(),
                 objectConverter
         );
