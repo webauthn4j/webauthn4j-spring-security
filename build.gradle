@@ -186,7 +186,7 @@ configure(allJavaProjects) {
         maven { url "https://oss.jfrog.org/artifactory/libs-snapshot" }
     }
 
-    def webauthn4jVersion = '0.12.1-SNAPSHOT'
+    def webauthn4jVersion = '0.12.0-SNAPSHOT'
     def springSecurityVersion = '5.3.3.RELEASE'
     def springBootVersion = '2.3.0.RELEASE'
     def terasolunaVersion = '5.5.1.RELEASE'
