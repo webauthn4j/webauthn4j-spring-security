@@ -19,6 +19,8 @@ package e2e.page;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
+import java.time.Duration;
+
 public class ProfileComponent {
 
     private final WebDriver webDriver;
@@ -27,7 +29,7 @@ public class ProfileComponent {
 
     public ProfileComponent(WebDriver webDriver) {
         this.webDriver = webDriver;
-        this.wait = new WebDriverWait(webDriver, 50);
+        this.wait = new WebDriverWait(webDriver, Duration.ofSeconds(50));
     }
 
 }
