@@ -221,8 +221,6 @@ configure(allJavaProjects) {
 
     }
 
-    check.dependsOn dependencyCheckAnalyze
-
 }
 
 asciidoctorj {
