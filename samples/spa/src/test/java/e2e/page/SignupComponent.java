@@ -21,6 +21,8 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
+import java.time.Duration;
+
 public class SignupComponent {
 
     private final WebDriver webDriver;
@@ -29,7 +31,7 @@ public class SignupComponent {
 
     public SignupComponent(WebDriver webDriver) {
         this.webDriver = webDriver;
-        this.wait = new WebDriverWait(webDriver, 5);
+        this.wait = new WebDriverWait(webDriver, Duration.ofSeconds(5));
         this.residentKeyRequirementDialog = new ResidentKeyRequirementDialog(webDriver);
     }
 

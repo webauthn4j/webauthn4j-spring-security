@@ -32,9 +32,12 @@ import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
+import org.openqa.selenium.virtualauthenticator.HasVirtualAuthenticator;
+import org.openqa.selenium.virtualauthenticator.VirtualAuthenticatorOptions;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.time.Duration;
 import java.util.concurrent.TimeUnit;
 
 @RunWith(SpringRunner.class)
@@ -52,10 +55,9 @@ public class RegistrationAndAuthenticationE2ETest {
     @Before
     public void setupTest() {
         ChromeOptions chromeOptions = new ChromeOptions();
-        chromeOptions.addArguments("--enable-web-authentication-testing-api");
         chromeOptions.setHeadless(true);
         driver = new ChromeDriver(chromeOptions);
-        wait = new WebDriverWait(driver, 5);
+        wait = new WebDriverWait(driver, Duration.ofSeconds(5));
         driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
     }
 
@@ -68,6 +70,10 @@ public class RegistrationAndAuthenticationE2ETest {
 
     @Test
     public void test() {
+
+        VirtualAuthenticatorOptions options = new VirtualAuthenticatorOptions();
+        ((HasVirtualAuthenticator) driver).addVirtualAuthenticator(options);
+
         // Registration
         SignupComponent signupComponent = new SignupComponent(driver);
         signupComponent.navigate();
