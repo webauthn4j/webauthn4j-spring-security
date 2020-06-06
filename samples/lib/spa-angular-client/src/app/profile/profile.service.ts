@@ -68,7 +68,7 @@ export class ProfileService implements OnInit {
       authenticatorSelection: {
         requireResidentKey: requireResidentKey
       },
-      attestation: "direct"
+      attestation: "none"
     });
   }
 
