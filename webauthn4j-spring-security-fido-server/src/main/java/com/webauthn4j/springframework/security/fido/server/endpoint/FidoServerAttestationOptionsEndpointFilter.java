@@ -21,8 +21,8 @@ import com.webauthn4j.data.client.challenge.Challenge;
 import com.webauthn4j.data.client.challenge.DefaultChallenge;
 import com.webauthn4j.data.extension.client.AuthenticationExtensionsClientInputs;
 import com.webauthn4j.data.extension.client.RegistrationExtensionClientInput;
-import com.webauthn4j.springframework.security.webauthn.options.AttestationOptions;
-import com.webauthn4j.springframework.security.webauthn.options.OptionsProvider;
+import com.webauthn4j.springframework.security.options.AttestationOptions;
+import com.webauthn4j.springframework.security.options.OptionsProvider;
 import com.webauthn4j.util.Base64UrlUtil;
 import org.springframework.util.Assert;
 

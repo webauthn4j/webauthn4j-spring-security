@@ -16,16 +16,17 @@
 
 package com.webauthn4j.springframework.security.webauthn.sample.domain.entity;
 
-import com.webauthn4j.authenticator.Authenticator;
 import com.webauthn4j.data.AuthenticatorTransport;
 import com.webauthn4j.data.attestation.authenticator.AttestedCredentialData;
 import com.webauthn4j.data.attestation.statement.AttestationStatement;
 import com.webauthn4j.data.extension.authenticator.RegistrationExtensionAuthenticatorOutput;
 import com.webauthn4j.data.extension.client.RegistrationExtensionClientOutput;
+import com.webauthn4j.springframework.security.authenticator.WebAuthnAuthenticator;
 import com.webauthn4j.springframework.security.webauthn.sample.infrastructure.util.jpa.converter.AttestationStatementConverter;
 import com.webauthn4j.springframework.security.webauthn.sample.infrastructure.util.jpa.converter.AuthenticatorExtensionsConverter;
 import com.webauthn4j.springframework.security.webauthn.sample.infrastructure.util.jpa.converter.AuthenticatorTransportConverter;
 import com.webauthn4j.springframework.security.webauthn.sample.infrastructure.util.jpa.converter.ClientExtensionsConverter;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
 import java.util.Map;
@@ -36,7 +37,7 @@ import java.util.Set;
  */
 @Entity
 @Table(name = "m_authenticator")
-public class AuthenticatorEntity implements Authenticator {
+public class AuthenticatorEntity implements WebAuthnAuthenticator {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -88,6 +89,11 @@ public class AuthenticatorEntity implements Authenticator {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    @Override
+    public UserDetails getUserPrincipal() {
+        return getUser();
     }
 
     public UserEntity getUser() {

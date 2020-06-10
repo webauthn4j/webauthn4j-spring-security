@@ -16,7 +16,7 @@
 
 package com.webauthn4j.springframework.security.webauthn.sample.app.api;
 
-import com.webauthn4j.springframework.security.webauthn.WebAuthnAuthenticationToken;
+import com.webauthn4j.springframework.security.WebAuthnAuthenticationToken;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationTrustResolver;
 import org.springframework.security.core.Authentication;

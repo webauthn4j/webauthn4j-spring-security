@@ -17,7 +17,6 @@
 package com.webauthn4j.springframework.security.webauthn.sample.domain.component;
 
 import com.webauthn4j.authenticator.Authenticator;
-import com.webauthn4j.springframework.security.webauthn.exception.CredentialIdNotFoundException;
 import com.webauthn4j.springframework.security.webauthn.sample.domain.constant.MessageCodes;
 import com.webauthn4j.springframework.security.webauthn.sample.domain.entity.AuthenticatorEntity;
 import com.webauthn4j.springframework.security.webauthn.sample.domain.entity.UserEntity;
@@ -25,13 +24,11 @@ import com.webauthn4j.springframework.security.webauthn.sample.domain.exception.
 import com.webauthn4j.springframework.security.webauthn.sample.domain.exception.WebAuthnSampleEntityNotFoundException;
 import com.webauthn4j.springframework.security.webauthn.sample.domain.repository.AuthenticatorEntityRepository;
 import com.webauthn4j.springframework.security.webauthn.sample.domain.repository.UserEntityRepository;
-import com.webauthn4j.springframework.security.webauthn.userdetails.WebAuthnUserDetails;
-import com.webauthn4j.springframework.security.webauthn.userdetails.WebAuthnUserDetailsService;
-import com.webauthn4j.util.Base64UrlUtil;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -44,7 +41,7 @@ import java.util.Arrays;
  */
 @Component
 @Transactional
-public class UserManagerImpl implements UserManager, WebAuthnUserDetailsService {
+public class UserManagerImpl implements UserManager {
 
     private final ModelMapper modelMapper;
 
@@ -71,16 +68,9 @@ public class UserManagerImpl implements UserManager, WebAuthnUserDetailsService 
      * {@inheritDoc}
      */
     @Override
-    public WebAuthnUserDetails loadUserByUsername(String username) {
+    public UserDetails loadUserByUsername(String username) {
         return userEntityRepository.findOneByEmailAddress(username)
                 .orElseThrow(() -> new UsernameNotFoundException(String.format("UserEntity with username'%s' is not found.", username)));
-    }
-
-    @Override
-    public WebAuthnUserDetails loadUserByCredentialId(byte[] credentialId) {
-        AuthenticatorEntity authenticatorEntity = authenticatorEntityRepository.findOneByCredentialId(credentialId)
-                .orElseThrow(() -> new CredentialIdNotFoundException(String.format("AuthenticatorEntity with credentialId'%s' is not found.", Base64UrlUtil.encodeToString(credentialId))));
-        return authenticatorEntity.getUser();
     }
 
     /**
@@ -160,7 +150,6 @@ public class UserManagerImpl implements UserManager, WebAuthnUserDetailsService 
     }
 
 
-    @Override
     public void addAuthenticator(String username, Authenticator authenticator) {
         UserEntity userEntity = userEntityRepository.findOneByEmailAddress(username)
                 .orElseThrow(() -> new WebAuthnSampleEntityNotFoundException(ResultMessages.error().add(MessageCodes.Error.User.USER_NOT_FOUND)));
@@ -169,7 +158,6 @@ public class UserManagerImpl implements UserManager, WebAuthnUserDetailsService 
         userEntity.getAuthenticators().add(authenticatorEntity);
     }
 
-    @Override
     public void removeAuthenticator(String username, Authenticator authenticator) {
         UserEntity userEntity = userEntityRepository.findOneByEmailAddress(username)
                 .orElseThrow(() -> new WebAuthnSampleEntityNotFoundException(ResultMessages.error().add(MessageCodes.Error.User.USER_NOT_FOUND)));
@@ -179,7 +167,6 @@ public class UserManagerImpl implements UserManager, WebAuthnUserDetailsService 
         }
     }
 
-    @Override
     public void removeAuthenticator(String username, byte[] credentialId) {
         UserEntity userEntity = userEntityRepository.findOneByEmailAddress(username)
                 .orElseThrow(() -> new WebAuthnSampleEntityNotFoundException(ResultMessages.error().add(MessageCodes.Error.User.USER_NOT_FOUND)));

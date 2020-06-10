@@ -24,9 +24,10 @@ import com.webauthn4j.data.UserVerificationRequirement;
 import com.webauthn4j.data.client.CollectedClientData;
 import com.webauthn4j.server.ServerProperty;
 import com.webauthn4j.springframework.security.fido.server.validator.ServerPublicKeyCredentialValidator;
-import com.webauthn4j.springframework.security.webauthn.WebAuthnAssertionAuthenticationToken;
-import com.webauthn4j.springframework.security.webauthn.request.WebAuthnAuthenticationRequest;
-import com.webauthn4j.springframework.security.webauthn.server.ServerPropertyProvider;
+import com.webauthn4j.springframework.security.WebAuthnAssertionAuthenticationToken;
+import com.webauthn4j.springframework.security.WebAuthnAuthenticationParameters;
+import com.webauthn4j.springframework.security.WebAuthnAuthenticationRequest;
+import com.webauthn4j.springframework.security.server.ServerPropertyProvider;
 import com.webauthn4j.util.Base64UrlUtil;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.core.Authentication;
@@ -123,16 +124,19 @@ public class FidoServerAssertionResultEndpointFilter extends AbstractAuthenticat
                 Base64UrlUtil.decode(assertionResponse.getClientDataJSON()),
                 Base64UrlUtil.decode(assertionResponse.getAuthenticatorData()),
                 Base64UrlUtil.decode(assertionResponse.getSignature()),
-                credential.getClientExtensionResults(),
+                credential.getClientExtensionResults()
+        );
+        WebAuthnAuthenticationParameters webAuthnAuthenticationParameters = new WebAuthnAuthenticationParameters(
                 serverProperty,
                 userVerificationRequirement == UserVerificationRequirement.REQUIRED,
-                false,
+                true,
                 expectedAuthenticationExtensionIds
         );
 
-        WebAuthnAssertionAuthenticationToken authRequest = new WebAuthnAssertionAuthenticationToken(webAuthnAuthenticationRequest);
-        setDetails(request, authRequest);
-        return this.getAuthenticationManager().authenticate(authRequest);
+        WebAuthnAssertionAuthenticationToken webAuthnAssertionAuthenticationToken =
+                new WebAuthnAssertionAuthenticationToken(webAuthnAuthenticationRequest, webAuthnAuthenticationParameters, Collections.emptyList());
+        setDetails(request, webAuthnAssertionAuthenticationToken);
+        return this.getAuthenticationManager().authenticate(webAuthnAssertionAuthenticationToken);
     }
 
     protected void setDetails(HttpServletRequest request, WebAuthnAssertionAuthenticationToken authRequest) {

@@ -16,9 +16,9 @@
 
 package com.webauthn4j.springframework.security.webauthn.sample.domain.entity;
 
-import com.webauthn4j.springframework.security.webauthn.userdetails.WebAuthnUserDetails;
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
 import java.util.List;
@@ -28,7 +28,7 @@ import java.util.List;
  */
 @Entity
 @Table(name = "m_user")
-public class UserEntity implements WebAuthnUserDetails {
+public class UserEntity implements UserDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -125,7 +125,6 @@ public class UserEntity implements WebAuthnUserDetails {
         this.authorities = authorities;
     }
 
-    @Override
     public List<AuthenticatorEntity> getAuthenticators() {
         return authenticators;
     }
@@ -150,12 +149,10 @@ public class UserEntity implements WebAuthnUserDetails {
         this.locked = locked;
     }
 
-    @Override
     public boolean isSingleFactorAuthenticationAllowed() {
         return singleFactorAuthenticationAllowed;
     }
 
-    @Override
     public void setSingleFactorAuthenticationAllowed(boolean singleFactorAuthenticationAllowed) {
         this.singleFactorAuthenticationAllowed = singleFactorAuthenticationAllowed;
     }

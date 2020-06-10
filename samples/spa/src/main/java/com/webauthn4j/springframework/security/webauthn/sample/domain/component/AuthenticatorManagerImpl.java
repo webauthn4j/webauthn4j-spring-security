@@ -16,13 +16,17 @@
 
 package com.webauthn4j.springframework.security.webauthn.sample.domain.component;
 
-import com.webauthn4j.springframework.security.webauthn.exception.CredentialIdNotFoundException;
+import com.webauthn4j.springframework.security.authenticator.WebAuthnAuthenticator;
+import com.webauthn4j.springframework.security.exception.CredentialIdNotFoundException;
 import com.webauthn4j.springframework.security.webauthn.sample.domain.entity.AuthenticatorEntity;
 import com.webauthn4j.springframework.security.webauthn.sample.domain.repository.AuthenticatorEntityRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Transactional
 @Component
@@ -41,6 +45,17 @@ public class AuthenticatorManagerImpl implements AuthenticatorManager {
         AuthenticatorEntity authenticatorEntity = authenticatorEntityRepository.findOneByCredentialId(credentialId)
                 .orElseThrow(() -> new CredentialIdNotFoundException("AuthenticatorEntity not found"));
         authenticatorEntity.setCounter(counter);
+    }
+
+    @Override
+    public WebAuthnAuthenticator loadAuthenticatorByCredentialId(byte[] credentialId) {
+        return authenticatorEntityRepository.findOneByCredentialId(credentialId)
+                .orElseThrow(() -> new CredentialIdNotFoundException("AuthenticatorEntity not found"));
+    }
+
+    @Override
+    public List<WebAuthnAuthenticator> loadAuthenticatorsByPrincipal(Object principal) {
+        return new ArrayList<>(authenticatorEntityRepository.findAllByEmailAddress((String) principal));
     }
 
 }

@@ -18,16 +18,17 @@ package com.webauthn4j.springframework.security.fido.server.config.configurer;
 
 import com.webauthn4j.converter.util.ObjectConverter;
 import com.webauthn4j.springframework.security.fido.server.endpoint.*;
-import com.webauthn4j.springframework.security.webauthn.WebAuthnRegistrationRequestValidator;
-import com.webauthn4j.springframework.security.webauthn.config.configurers.WebAuthnConfigurerUtil;
-import com.webauthn4j.springframework.security.webauthn.options.OptionsProvider;
-import com.webauthn4j.springframework.security.webauthn.server.ServerPropertyProvider;
-import com.webauthn4j.springframework.security.webauthn.userdetails.WebAuthnUserDetailsService;
+import com.webauthn4j.springframework.security.WebAuthnRegistrationRequestValidator;
+import com.webauthn4j.springframework.security.authenticator.WebAuthnAuthenticatorManager;
+import com.webauthn4j.springframework.security.config.configurers.internal.WebAuthnConfigurerUtil;
+import com.webauthn4j.springframework.security.options.OptionsProvider;
+import com.webauthn4j.springframework.security.server.ServerPropertyProvider;
 import org.springframework.context.ApplicationContext;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.web.HttpSecurityBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.session.SessionManagementFilter;
 import org.springframework.util.Assert;
@@ -114,7 +115,8 @@ public class FidoServerConfigurer<H extends HttpSecurityBuilder<H>> extends Abst
 
         private final ExpectedRegistrationExtensionIdsConfig
                 expectedRegistrationExtensionIdsConfig = new ExpectedRegistrationExtensionIdsConfig();
-        private WebAuthnUserDetailsService webAuthnUserDetailsService;
+        private UserDetailsService userDetailsService;
+        private WebAuthnAuthenticatorManager webAuthnAuthenticatorManager;
         private WebAuthnRegistrationRequestValidator webAuthnRegistrationRequestValidator;
         private UsernameNotFoundHandler usernameNotFoundHandler;
         private List<String> expectedRegistrationExtensionIds = Collections.emptyList();
@@ -126,10 +128,13 @@ public class FidoServerConfigurer<H extends HttpSecurityBuilder<H>> extends Abst
         @Override
         void configure(H http) {
             super.configure(http);
-            if (webAuthnUserDetailsService == null) {
-                webAuthnUserDetailsService = WebAuthnConfigurerUtil.getWebAuthnUserDetailsService(http);
+            if(userDetailsService == null){
+                userDetailsService = WebAuthnConfigurerUtil.getUserDetailsService(http);
             }
-            http.setSharedObject(WebAuthnUserDetailsService.class, webAuthnUserDetailsService);
+            if (webAuthnAuthenticatorManager == null) {
+                webAuthnAuthenticatorManager = WebAuthnConfigurerUtil.getWebAuthnAuthenticatorManager(http);
+            }
+            http.setSharedObject(WebAuthnAuthenticatorManager.class, webAuthnAuthenticatorManager);
             if (webAuthnRegistrationRequestValidator == null) {
                 webAuthnRegistrationRequestValidator = WebAuthnConfigurerUtil.getWebAuthnRegistrationRequestValidator(http);
             }
@@ -152,12 +157,6 @@ public class FidoServerConfigurer<H extends HttpSecurityBuilder<H>> extends Abst
             return this;
         }
 
-        public FidoServerAttestationResultEndpointConfig webAuthnUserDetailsService(WebAuthnUserDetailsService webAuthnUserDetailsService) {
-            Assert.notNull(webAuthnUserDetailsService, "webAuthnUserDetailsService must not be null");
-            this.webAuthnUserDetailsService = webAuthnUserDetailsService;
-            return this;
-        }
-
         public FidoServerAttestationResultEndpointConfig webAuthnRegistrationRequestValidator(WebAuthnRegistrationRequestValidator webAuthnRegistrationRequestValidator) {
             Assert.notNull(webAuthnRegistrationRequestValidator, "webAuthnRegistrationRequestValidator must not be null");
             this.webAuthnRegistrationRequestValidator = webAuthnRegistrationRequestValidator;
@@ -176,7 +175,7 @@ public class FidoServerConfigurer<H extends HttpSecurityBuilder<H>> extends Abst
 
         @Override
         protected FidoServerAttestationResultEndpointFilter createInstance() {
-            FidoServerAttestationResultEndpointFilter filter = new FidoServerAttestationResultEndpointFilter(objectConverter, webAuthnUserDetailsService, webAuthnRegistrationRequestValidator);
+            FidoServerAttestationResultEndpointFilter filter = new FidoServerAttestationResultEndpointFilter(objectConverter, userDetailsService, webAuthnAuthenticatorManager, webAuthnRegistrationRequestValidator);
             filter.setUsernameNotFoundHandler(usernameNotFoundHandler);
             return filter;
         }

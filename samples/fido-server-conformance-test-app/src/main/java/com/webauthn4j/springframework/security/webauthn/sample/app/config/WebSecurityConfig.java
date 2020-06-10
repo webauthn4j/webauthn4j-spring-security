@@ -19,14 +19,13 @@ package com.webauthn4j.springframework.security.webauthn.sample.app.config;
 import com.webauthn4j.WebAuthnManager;
 import com.webauthn4j.data.PublicKeyCredentialType;
 import com.webauthn4j.data.attestation.statement.COSEAlgorithmIdentifier;
-import com.webauthn4j.springframework.security.webauthn.WebAuthnRegistrationRequestValidator;
-import com.webauthn4j.springframework.security.webauthn.authenticator.WebAuthnAuthenticatorService;
-import com.webauthn4j.springframework.security.webauthn.config.configurers.WebAuthnAuthenticationProviderConfigurer;
-import com.webauthn4j.springframework.security.webauthn.config.configurers.WebAuthnConfigurer;
+import com.webauthn4j.springframework.security.WebAuthnRegistrationRequestValidator;
+import com.webauthn4j.springframework.security.authenticator.WebAuthnAuthenticatorService;
+import com.webauthn4j.springframework.security.config.configurers.WebAuthnAuthenticationProviderConfigurer;
+import com.webauthn4j.springframework.security.config.configurers.WebAuthnConfigurer;
 import com.webauthn4j.springframework.security.webauthn.sample.app.security.ExampleExtensionClientInput;
 import com.webauthn4j.springframework.security.webauthn.sample.app.security.SampleUsernameNotFoundHandler;
 import com.webauthn4j.springframework.security.webauthn.sample.domain.component.UserManager;
-import com.webauthn4j.springframework.security.webauthn.userdetails.WebAuthnUserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
@@ -77,9 +76,6 @@ WebSecurityConfig extends WebSecurityConfigurerAdapter {
     private DaoAuthenticationProvider daoAuthenticationProvider;
 
     @Autowired
-    private WebAuthnUserDetailsService userDetailsService;
-
-    @Autowired
     private WebAuthnAuthenticatorService authenticatorService;
 
     @Autowired
@@ -93,7 +89,7 @@ WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     public void configure(AuthenticationManagerBuilder builder) throws Exception {
-        builder.apply(new WebAuthnAuthenticationProviderConfigurer<>(userDetailsService, authenticatorService, webAuthnManager));
+        builder.apply(new WebAuthnAuthenticationProviderConfigurer<>(authenticatorService, webAuthnManager));
     }
 
     @Override
@@ -132,7 +128,6 @@ WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .fidoServerAttestationOptionsEndpoint()
                 .and()
                 .fidoServerAttestationResultEndpointConfig()
-                .webAuthnUserDetailsService(userDetailsService)
                 .webAuthnRegistrationRequestValidator(webAuthnRegistrationRequestValidator)
                 .usernameNotFoundHandler(new SampleUsernameNotFoundHandler(userManager))
                 .and()

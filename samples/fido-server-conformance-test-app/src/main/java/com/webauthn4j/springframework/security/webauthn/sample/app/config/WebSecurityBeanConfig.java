@@ -26,18 +26,18 @@ import com.webauthn4j.anchor.TrustAnchorsResolverImpl;
 import com.webauthn4j.converter.util.ObjectConverter;
 import com.webauthn4j.metadata.*;
 import com.webauthn4j.metadata.converter.jackson.WebAuthnMetadataJSONModule;
-import com.webauthn4j.springframework.security.webauthn.WebAuthnRegistrationRequestValidator;
-import com.webauthn4j.springframework.security.webauthn.challenge.ChallengeRepository;
-import com.webauthn4j.springframework.security.webauthn.challenge.HttpSessionChallengeRepository;
-import com.webauthn4j.springframework.security.webauthn.metadata.JsonFileResourceMetadataStatementsProvider;
-import com.webauthn4j.springframework.security.webauthn.metadata.RestTemplateAdaptorHttpClient;
-import com.webauthn4j.springframework.security.webauthn.options.OptionsProvider;
-import com.webauthn4j.springframework.security.webauthn.options.OptionsProviderImpl;
+import com.webauthn4j.springframework.security.WebAuthnRegistrationRequestValidator;
+import com.webauthn4j.springframework.security.authenticator.WebAuthnAuthenticatorService;
+import com.webauthn4j.springframework.security.challenge.ChallengeRepository;
+import com.webauthn4j.springframework.security.challenge.HttpSessionChallengeRepository;
+import com.webauthn4j.springframework.security.metadata.JsonFileResourceMetadataStatementsProvider;
+import com.webauthn4j.springframework.security.metadata.RestTemplateAdaptorHttpClient;
+import com.webauthn4j.springframework.security.options.OptionsProvider;
+import com.webauthn4j.springframework.security.options.OptionsProviderImpl;
 import com.webauthn4j.springframework.security.webauthn.sample.app.security.ExampleExtensionAuthenticatorOutput;
 import com.webauthn4j.springframework.security.webauthn.sample.app.security.ExampleExtensionClientInput;
-import com.webauthn4j.springframework.security.webauthn.server.ServerPropertyProvider;
-import com.webauthn4j.springframework.security.webauthn.server.ServerPropertyProviderImpl;
-import com.webauthn4j.springframework.security.webauthn.userdetails.WebAuthnUserDetailsService;
+import com.webauthn4j.springframework.security.server.ServerPropertyProvider;
+import com.webauthn4j.springframework.security.server.ServerPropertyProviderImpl;
 import com.webauthn4j.util.Base64Util;
 import com.webauthn4j.util.CertificateUtil;
 import com.webauthn4j.validator.attestation.statement.androidkey.AndroidKeyAttestationStatementValidator;
@@ -100,8 +100,8 @@ public class WebSecurityBeanConfig {
     }
 
     @Bean
-    public OptionsProvider optionsProvider(WebAuthnUserDetailsService webAuthnUserDetailsService, ChallengeRepository challengeRepository) {
-        return new OptionsProviderImpl(webAuthnUserDetailsService, challengeRepository);
+    public OptionsProvider optionsProvider(WebAuthnAuthenticatorService webAuthnAuthenticatorService, ChallengeRepository challengeRepository) {
+        return new OptionsProviderImpl(webAuthnAuthenticatorService, challengeRepository);
     }
 
     @Bean

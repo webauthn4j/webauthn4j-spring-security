@@ -16,7 +16,7 @@
 
 package com.webauthn4j.springframework.security.webauthn.sample.domain.component;
 
-import com.webauthn4j.springframework.security.webauthn.authenticator.WebAuthnAuthenticatorService;
+import com.webauthn4j.springframework.security.authenticator.WebAuthnAuthenticatorManager;
 
-public interface AuthenticatorManager extends WebAuthnAuthenticatorService {
+public interface AuthenticatorManager extends WebAuthnAuthenticatorManager {
 }
