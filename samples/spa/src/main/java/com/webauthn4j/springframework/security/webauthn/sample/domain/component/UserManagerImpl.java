@@ -26,7 +26,6 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -64,7 +63,7 @@ public class UserManagerImpl implements UserManager {
      * {@inheritDoc}
      */
     @Override
-    public UserDetails loadUserByUsername(String username) {
+    public UserEntity loadUserByUsername(String username) {
         return userEntityRepository.findOneByEmailAddress(username)
                 .orElseThrow(() -> new UsernameNotFoundException(String.format("UserEntity with username'%s' is not found.", username)));
     }

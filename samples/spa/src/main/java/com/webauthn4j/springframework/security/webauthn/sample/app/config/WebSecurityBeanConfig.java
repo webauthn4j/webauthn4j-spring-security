@@ -23,6 +23,7 @@ import com.webauthn4j.converter.util.ObjectConverter;
 import com.webauthn4j.metadata.converter.jackson.WebAuthnMetadataJSONModule;
 import com.webauthn4j.springframework.security.WebAuthnRegistrationRequestValidator;
 import com.webauthn4j.springframework.security.WebAuthnSecurityExpression;
+import com.webauthn4j.springframework.security.WebAuthnUserEntityProvider;
 import com.webauthn4j.springframework.security.authenticator.WebAuthnAuthenticatorService;
 import com.webauthn4j.springframework.security.challenge.ChallengeRepository;
 import com.webauthn4j.springframework.security.challenge.HttpSessionChallengeRepository;
@@ -30,6 +31,8 @@ import com.webauthn4j.springframework.security.options.OptionsProvider;
 import com.webauthn4j.springframework.security.options.OptionsProviderImpl;
 import com.webauthn4j.springframework.security.server.ServerPropertyProvider;
 import com.webauthn4j.springframework.security.server.ServerPropertyProviderImpl;
+import com.webauthn4j.springframework.security.webauthn.sample.domain.component.UserManager;
+import com.webauthn4j.springframework.security.webauthn.sample.domain.component.WebAuthnUserEntityProviderImpl;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.access.AccessDeniedException;
@@ -64,13 +67,18 @@ public class WebSecurityBeanConfig {
     }
 
     @Bean
+    public WebAuthnUserEntityProvider webAuthnUserEntityProvider(UserManager userManager){
+        return new WebAuthnUserEntityProviderImpl(userManager);
+    }
+
+    @Bean
     public ChallengeRepository challengeRepository() {
         return new HttpSessionChallengeRepository();
     }
 
     @Bean
-    public OptionsProvider optionsProvider(WebAuthnAuthenticatorService webAuthnAuthenticatorService, ChallengeRepository challengeRepository) {
-        return new OptionsProviderImpl(webAuthnAuthenticatorService, challengeRepository);
+    public OptionsProvider optionsProvider(WebAuthnAuthenticatorService webAuthnAuthenticatorService, WebAuthnUserEntityProvider webAuthnUserEntityProvider, ChallengeRepository challengeRepository) {
+        return new OptionsProviderImpl(webAuthnAuthenticatorService, webAuthnUserEntityProvider, challengeRepository);
     }
 
     @Bean

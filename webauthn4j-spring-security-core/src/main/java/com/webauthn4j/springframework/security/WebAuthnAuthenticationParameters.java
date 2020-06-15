@@ -18,10 +18,11 @@ package com.webauthn4j.springframework.security;
 
 import com.webauthn4j.server.ServerProperty;
 
+import java.io.Serializable;
 import java.util.List;
 import java.util.Objects;
 
-public class WebAuthnAuthenticationParameters {
+public class WebAuthnAuthenticationParameters implements Serializable {
 
     private final ServerProperty serverProperty;
     private final boolean userVerificationRequired;

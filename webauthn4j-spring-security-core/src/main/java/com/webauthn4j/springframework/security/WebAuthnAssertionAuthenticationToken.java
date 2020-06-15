@@ -67,7 +67,7 @@ public class WebAuthnAssertionAuthenticationToken extends AbstractAuthentication
      * @return null
      */
     @Override
-    public byte[] getPrincipal() {
+    public Object getPrincipal() {
         return null;
     }
 

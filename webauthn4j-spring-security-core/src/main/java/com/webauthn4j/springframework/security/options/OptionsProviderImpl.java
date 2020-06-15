@@ -24,6 +24,7 @@ import com.webauthn4j.data.extension.client.AuthenticationExtensionClientInput;
 import com.webauthn4j.data.extension.client.AuthenticationExtensionsClientInputs;
 import com.webauthn4j.data.extension.client.RegistrationExtensionClientInput;
 import com.webauthn4j.springframework.security.WebAuthnProcessingFilter;
+import com.webauthn4j.springframework.security.WebAuthnUserEntityProvider;
 import com.webauthn4j.springframework.security.authenticator.WebAuthnAuthenticator;
 import com.webauthn4j.springframework.security.authenticator.WebAuthnAuthenticatorService;
 import com.webauthn4j.springframework.security.challenge.ChallengeRepository;
@@ -36,6 +37,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.util.Assert;
 
 import javax.servlet.http.HttpServletRequest;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -66,18 +68,25 @@ public class OptionsProviderImpl implements OptionsProvider {
     private String clientExtensionsJSONParameter = WebAuthnProcessingFilter.SPRING_SECURITY_FORM_CLIENT_EXTENSIONS_JSON_KEY;
 
     private final WebAuthnAuthenticatorService authenticatorService;
+    private final WebAuthnUserEntityProvider webAuthnUserEntityProvider;
     private final ChallengeRepository challengeRepository;
 
     // ~ Constructors
     // ===================================================================================================
 
-    public OptionsProviderImpl(WebAuthnAuthenticatorService authenticatorService, ChallengeRepository challengeRepository) {
+    public OptionsProviderImpl(WebAuthnAuthenticatorService authenticatorService, WebAuthnUserEntityProvider webAuthnUserEntityProvider, ChallengeRepository challengeRepository) {
 
         Assert.notNull(authenticatorService, "authenticatorService must not be null");
+        Assert.notNull(webAuthnUserEntityProvider, "webAuthnUserHandleProvider must not be null");
         Assert.notNull(challengeRepository, "challengeRepository must not be null");
 
         this.authenticatorService = authenticatorService;
+        this.webAuthnUserEntityProvider = webAuthnUserEntityProvider;
         this.challengeRepository = challengeRepository;
+    }
+
+    public OptionsProviderImpl(WebAuthnAuthenticatorService authenticatorService, ChallengeRepository challengeRepository) {
+        this(authenticatorService, new DefaultWebAuthnUserEntityProvider(), challengeRepository);
     }
 
 
@@ -94,8 +103,7 @@ public class OptionsProviderImpl implements OptionsProvider {
 
         try {
             authenticators = authenticatorService.loadAuthenticatorsByPrincipal(username);
-            String userHandle = null; //TODO
-            user = new WebAuthnPublicKeyCredentialUserEntity(userHandle, username);
+            user = webAuthnUserEntityProvider.provide(username);
         } catch (UsernameNotFoundException e) {
             authenticators = Collections.emptyList();
             user = null;
@@ -290,6 +298,17 @@ public class OptionsProviderImpl implements OptionsProvider {
     public void setClientExtensionsJSONParameter(String clientExtensionsJSONParameter) {
         Assert.hasText(clientExtensionsJSONParameter, "clientExtensionsJSONParameter must not be empty or null");
         this.clientExtensionsJSONParameter = clientExtensionsJSONParameter;
+    }
+
+    static class DefaultWebAuthnUserEntityProvider implements WebAuthnUserEntityProvider {
+
+        @Override
+        public WebAuthnPublicKeyCredentialUserEntity provide(String username) {
+            return new WebAuthnPublicKeyCredentialUserEntity(
+                    Base64UrlUtil.encodeToString(username.getBytes(StandardCharsets.UTF_8)),
+                    username
+            );
+        }
     }
 
 }
