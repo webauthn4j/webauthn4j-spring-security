@@ -20,15 +20,15 @@ import com.webauthn4j.data.AuthenticatorTransport;
 import com.webauthn4j.data.PublicKeyCredentialType;
 
 import java.io.Serializable;
-import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 
 public class ServerPublicKeyCredentialDescriptor implements Serializable {
     private PublicKeyCredentialType type;
     private String id;
-    private List<AuthenticatorTransport> transports;
+    private Set<AuthenticatorTransport> transports;
 
-    public ServerPublicKeyCredentialDescriptor(PublicKeyCredentialType type, String id, List<AuthenticatorTransport> transports) {
+    public ServerPublicKeyCredentialDescriptor(PublicKeyCredentialType type, String id, Set<AuthenticatorTransport> transports) {
         this.type = type;
         this.id = id;
         this.transports = transports;
@@ -51,7 +51,7 @@ public class ServerPublicKeyCredentialDescriptor implements Serializable {
         return id;
     }
 
-    public List<AuthenticatorTransport> getTransports() {
+    public Set<AuthenticatorTransport> getTransports() {
         return transports;
     }
 

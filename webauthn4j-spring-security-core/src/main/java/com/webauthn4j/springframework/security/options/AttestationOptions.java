@@ -17,13 +17,13 @@
 package com.webauthn4j.springframework.security.options;
 
 
+import com.webauthn4j.data.PublicKeyCredentialDescriptor;
 import com.webauthn4j.data.PublicKeyCredentialParameters;
 import com.webauthn4j.data.PublicKeyCredentialRpEntity;
 import com.webauthn4j.data.PublicKeyCredentialUserEntity;
 import com.webauthn4j.data.client.challenge.Challenge;
 import com.webauthn4j.data.extension.client.AuthenticationExtensionsClientInputs;
 import com.webauthn4j.data.extension.client.RegistrationExtensionClientInput;
-import com.webauthn4j.springframework.security.endpoint.WebAuthnPublicKeyCredentialUserEntity;
 import com.webauthn4j.util.CollectionUtil;
 
 import java.io.Serializable;
@@ -40,11 +40,11 @@ public class AttestationOptions implements Serializable {
     // ================================================================================================
 
     private final PublicKeyCredentialRpEntity relyingParty;
-    private final WebAuthnPublicKeyCredentialUserEntity user;
+    private final PublicKeyCredentialUserEntity user;
     private final Challenge challenge;
     private final List<PublicKeyCredentialParameters> pubKeyCredParams;
     private final Long registrationTimeout;
-    private final List<String> credentials;
+    private final List<PublicKeyCredentialDescriptor> credentials;
     private final AuthenticationExtensionsClientInputs<RegistrationExtensionClientInput<?>> registrationExtensions;
 
     // ~ Constructors
@@ -52,11 +52,11 @@ public class AttestationOptions implements Serializable {
 
     public AttestationOptions(
             PublicKeyCredentialRpEntity relyingParty,
-            WebAuthnPublicKeyCredentialUserEntity user,
+            PublicKeyCredentialUserEntity user,
             Challenge challenge,
             List<PublicKeyCredentialParameters> pubKeyCredParams,
             Long registrationTimeout,
-            List<String> credentials,
+            List<PublicKeyCredentialDescriptor> credentials,
             AuthenticationExtensionsClientInputs<RegistrationExtensionClientInput<?>> registrationExtensions) {
         this.relyingParty = relyingParty;
         this.user = user;
@@ -77,12 +77,10 @@ public class AttestationOptions implements Serializable {
     }
 
     /**
-     * If authenticated, returns {@link WebAuthnPublicKeyCredentialUserEntity}, which is a serialized form of {@link PublicKeyCredentialUserEntity}
-     * Otherwise returns null
-     *
-     * @return {@link WebAuthnPublicKeyCredentialUserEntity}
+     * Return PublicKeyCredentialUserEntity
+     * @return {@link PublicKeyCredentialUserEntity}
      */
-    public WebAuthnPublicKeyCredentialUserEntity getUser() {
+    public PublicKeyCredentialUserEntity getUser() {
         return user;
     }
 
@@ -103,7 +101,7 @@ public class AttestationOptions implements Serializable {
         return registrationTimeout;
     }
 
-    public List<String> getCredentials() {
+    public List<PublicKeyCredentialDescriptor> getCredentials() {
         return credentials;
     }
 

@@ -123,9 +123,9 @@ export class ProfileService implements OnInit {
     if ((<RegisteringAuthenticatorForm>authenticatorForm).clientData && (<RegisteringAuthenticatorForm>authenticatorForm).attestationObject) {
       let registeringAuthenticator: RegisteringAuthenticatorViewModel = {
         name: authenticatorForm.name,
-        credentialId: base64url.decodeBase64url(authenticatorForm.credentialId).buffer,
-        clientData: base64url.decodeBase64url((<RegisteringAuthenticatorForm>authenticatorForm).clientData).buffer,
-        attestationObject: base64url.decodeBase64url((<RegisteringAuthenticatorForm>authenticatorForm).attestationObject).buffer,
+        credentialId: base64url.decodeBase64url(authenticatorForm.credentialId),
+        clientData: base64url.decodeBase64url((<RegisteringAuthenticatorForm>authenticatorForm).clientData),
+        attestationObject: base64url.decodeBase64url((<RegisteringAuthenticatorForm>authenticatorForm).attestationObject),
         clientExtensionsJSON: (<RegisteringAuthenticatorForm>authenticatorForm).clientExtensionsJSON
       };
       return registeringAuthenticator;
@@ -133,7 +133,7 @@ export class ProfileService implements OnInit {
       let existingAuthenticator: ExistingAuthenticatorViewModel = {
         id: (<ExistingAuthenticatorForm>authenticatorForm).id,
         name: authenticatorForm.name,
-        credentialId: base64url.decodeBase64url(authenticatorForm.credentialId).buffer
+        credentialId: base64url.decodeBase64url(authenticatorForm.credentialId)
       };
       return existingAuthenticator;
     } else {
@@ -155,7 +155,7 @@ export class ProfileService implements OnInit {
       let existingAuthenticatorForm: ExistingAuthenticatorForm = {
         id: (<ExistingAuthenticatorViewModel>authenticator).id,
         name: authenticator.name,
-        credentialId: base64url.stringify(authenticator.credentialId)
+        credentialId: base64url.encodeBase64url(authenticator.credentialId)
       };
       return existingAuthenticatorForm;
     } else {

@@ -16,20 +16,16 @@
 
 package com.webauthn4j.springframework.security.endpoint;
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.webauthn4j.springframework.security.converter.jackson.deserializer.ByteArraySerializer;
 
-import org.junit.Test;
+/**
+ * A mix-in for {@link com.webauthn4j.data.PublicKeyCredentialDescriptor} not to fix
+ * how to serialize it.
+ */
+public abstract class PublicKeyCredentialDescriptorMixin {
 
-import static org.assertj.core.api.Assertions.assertThat;
-
-public class WebAuthnPublicKeyCredentialUserEntityTest {
-
-    @Test
-    public void equals_hashCode_test() {
-        WebAuthnPublicKeyCredentialUserEntity instanceA = new WebAuthnPublicKeyCredentialUserEntity("", "john");
-        WebAuthnPublicKeyCredentialUserEntity instanceB = new WebAuthnPublicKeyCredentialUserEntity("", "john");
-
-        assertThat(instanceA).isEqualTo(instanceB);
-        assertThat(instanceA).hasSameHashCodeAs(instanceB);
-    }
+    @JsonSerialize(using = ByteArraySerializer.class)
+    abstract String getId();
 
 }

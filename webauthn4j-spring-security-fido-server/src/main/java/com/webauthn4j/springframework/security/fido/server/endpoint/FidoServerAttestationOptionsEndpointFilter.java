@@ -86,11 +86,11 @@ public class FidoServerAttestationOptionsEndpointFilter extends ServerEndpointFi
         if (attestationOptions.getUser() == null) {
             userHandle = Base64UrlUtil.encodeToString(generateUserHandle());
         } else {
-            userHandle = attestationOptions.getUser().getUserHandle();
+            userHandle = Base64UrlUtil.encodeToString(attestationOptions.getUser().getId());
         }
         ServerPublicKeyCredentialUserEntity user = new ServerPublicKeyCredentialUserEntity(userHandle, username, displayName, null);
         List<ServerPublicKeyCredentialDescriptor> credentials =
-                attestationOptions.getCredentials().stream().map(ServerPublicKeyCredentialDescriptor::new).collect(Collectors.toList());
+                attestationOptions.getCredentials().stream().map(credential -> new ServerPublicKeyCredentialDescriptor(credential.getType(), Base64UrlUtil.encodeToString(credential.getId()), credential.getTransports())).collect(Collectors.toList());
         AuthenticationExtensionsClientInputs<RegistrationExtensionClientInput<?>> authenticationExtensionsClientInputs;
         if (serverRequest.getExtensions() != null) {
             authenticationExtensionsClientInputs = serverRequest.getExtensions();

@@ -16,10 +16,9 @@
 
 package com.webauthn4j.springframework.security.webauthn.sample.domain.component;
 
+import com.webauthn4j.data.PublicKeyCredentialUserEntity;
 import com.webauthn4j.springframework.security.WebAuthnUserEntityProvider;
-import com.webauthn4j.springframework.security.endpoint.WebAuthnPublicKeyCredentialUserEntity;
 import com.webauthn4j.springframework.security.webauthn.sample.domain.entity.UserEntity;
-import com.webauthn4j.util.Base64UrlUtil;
 
 public class WebAuthnUserEntityProviderImpl implements WebAuthnUserEntityProvider {
 
@@ -30,10 +29,11 @@ public class WebAuthnUserEntityProviderImpl implements WebAuthnUserEntityProvide
     }
 
     @Override
-    public WebAuthnPublicKeyCredentialUserEntity provide(String username) {
+    public PublicKeyCredentialUserEntity provide(String username) {
         UserEntity userEntity = userManager.loadUserByUsername(username);
-        return new WebAuthnPublicKeyCredentialUserEntity(
-                Base64UrlUtil.encodeToString(userEntity.getUserHandle()),
+        return new PublicKeyCredentialUserEntity(
+                userEntity.getUserHandle(),
+                userEntity.getUsername(),
                 userEntity.getUsername()
         );
     }

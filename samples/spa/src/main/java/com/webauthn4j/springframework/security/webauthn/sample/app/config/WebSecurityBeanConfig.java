@@ -27,6 +27,7 @@ import com.webauthn4j.springframework.security.WebAuthnUserEntityProvider;
 import com.webauthn4j.springframework.security.authenticator.WebAuthnAuthenticatorService;
 import com.webauthn4j.springframework.security.challenge.ChallengeRepository;
 import com.webauthn4j.springframework.security.challenge.HttpSessionChallengeRepository;
+import com.webauthn4j.springframework.security.converter.jackson.WebAuthn4JSpringSecurityJSONModule;
 import com.webauthn4j.springframework.security.options.OptionsProvider;
 import com.webauthn4j.springframework.security.options.OptionsProviderImpl;
 import com.webauthn4j.springframework.security.server.ServerPropertyProvider;
@@ -102,6 +103,7 @@ public class WebSecurityBeanConfig {
     public ObjectConverter objectConverter() {
         ObjectMapper jsonMapper = new ObjectMapper();
         jsonMapper.registerModule(new WebAuthnMetadataJSONModule());
+        jsonMapper.registerModule(new WebAuthn4JSpringSecurityJSONModule());
         ObjectMapper cborMapper = new ObjectMapper(new CBORFactory());
         return new ObjectConverter(jsonMapper, cborMapper);
     }

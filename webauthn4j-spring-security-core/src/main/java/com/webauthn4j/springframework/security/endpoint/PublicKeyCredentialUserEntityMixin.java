@@ -14,11 +14,17 @@
  * limitations under the License.
  */
 
-package com.webauthn4j.springframework.security;
+package com.webauthn4j.springframework.security.endpoint;
 
-import com.webauthn4j.data.PublicKeyCredentialUserEntity;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.webauthn4j.springframework.security.converter.jackson.deserializer.ByteArraySerializer;
 
-public interface WebAuthnUserEntityProvider {
+/**
+ * A mix-in for {@link com.webauthn4j.data.PublicKeyCredentialUserEntity} not to fix
+ * how to serialize it.
+ */
+public abstract class PublicKeyCredentialUserEntityMixin {
 
-    PublicKeyCredentialUserEntity provide(String username);
+    @JsonSerialize(using = ByteArraySerializer.class)
+    abstract String getId();
 }

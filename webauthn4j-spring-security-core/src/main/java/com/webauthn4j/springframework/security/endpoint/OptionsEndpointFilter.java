@@ -18,6 +18,7 @@ package com.webauthn4j.springframework.security.endpoint;
 
 import com.webauthn4j.converter.util.JsonConverter;
 import com.webauthn4j.converter.util.ObjectConverter;
+import com.webauthn4j.data.PublicKeyCredentialDescriptor;
 import com.webauthn4j.data.PublicKeyCredentialRpEntity;
 import com.webauthn4j.data.client.challenge.Challenge;
 import com.webauthn4j.springframework.security.options.AssertionOptions;
@@ -120,8 +121,6 @@ public class OptionsEndpointFilter extends GenericFilterBean {
         String loginUsername = getLoginUsername();
         AttestationOptions attestationOptions = optionsProvider.getAttestationOptions(request, loginUsername, null);
         AssertionOptions assertionOptions = optionsProvider.getAssertionOptions(request, loginUsername, null);
-        List<WebAuthnPublicKeyCredentialDescriptor> credentials =
-                attestationOptions.getCredentials().stream().map(WebAuthnPublicKeyCredentialDescriptor::new).collect(Collectors.toList());
         return new OptionsResponse(
                 attestationOptions.getRelyingParty(),
                 attestationOptions.getUser(),
@@ -129,7 +128,7 @@ public class OptionsEndpointFilter extends GenericFilterBean {
                 attestationOptions.getPubKeyCredParams(),
                 attestationOptions.getRegistrationTimeout(),
                 assertionOptions.getAuthenticationTimeout(),
-                credentials,
+                attestationOptions.getCredentials(),
                 attestationOptions.getRegistrationExtensions(),
                 assertionOptions.getAuthenticationExtensions(),
                 assertionOptions.getParameters()

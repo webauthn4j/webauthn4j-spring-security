@@ -16,16 +16,12 @@
 
 package com.webauthn4j.springframework.security.options;
 
-import com.webauthn4j.data.PublicKeyCredentialParameters;
-import com.webauthn4j.data.PublicKeyCredentialRpEntity;
-import com.webauthn4j.data.PublicKeyCredentialType;
+import com.webauthn4j.data.*;
 import com.webauthn4j.data.attestation.statement.COSEAlgorithmIdentifier;
 import com.webauthn4j.data.client.challenge.Challenge;
 import com.webauthn4j.data.client.challenge.DefaultChallenge;
 import com.webauthn4j.data.extension.client.AuthenticationExtensionsClientInputs;
 import com.webauthn4j.data.extension.client.RegistrationExtensionClientInput;
-import com.webauthn4j.springframework.security.endpoint.WebAuthnPublicKeyCredentialUserEntity;
-import com.webauthn4j.util.Base64UrlUtil;
 import org.junit.Test;
 
 import java.util.Collections;
@@ -38,14 +34,14 @@ public class AttestationOptionsTest {
     @Test
     public void equals_hashCode_test() {
         PublicKeyCredentialRpEntity rpEntity = new PublicKeyCredentialRpEntity("rpId", "rpName", "rpIcon");
-        WebAuthnPublicKeyCredentialUserEntity userEntity = new WebAuthnPublicKeyCredentialUserEntity(Base64UrlUtil.encodeToString("userHandle".getBytes()), "username");
+        PublicKeyCredentialUserEntity userEntity = new PublicKeyCredentialUserEntity("userHandle".getBytes(), "username", "displayName");
         Challenge challenge = new DefaultChallenge();
         List<PublicKeyCredentialParameters> pubKeyCredParams = Collections.singletonList(new PublicKeyCredentialParameters(PublicKeyCredentialType.PUBLIC_KEY, COSEAlgorithmIdentifier.ES256));
         Long registrationTimeout = 1000L;
-        List<String> credentialIds = Collections.singletonList("credentialId");
+        List<PublicKeyCredentialDescriptor> credentials = Collections.singletonList(new PublicKeyCredentialDescriptor(PublicKeyCredentialType.PUBLIC_KEY, new byte[32], Collections.singleton(AuthenticatorTransport.INTERNAL)));
         AuthenticationExtensionsClientInputs<RegistrationExtensionClientInput<?>> authenticationExtensionsClientInputs = new AuthenticationExtensionsClientInputs<>();
-        AttestationOptions instanceA = new AttestationOptions(rpEntity, userEntity, challenge, pubKeyCredParams, registrationTimeout, credentialIds, authenticationExtensionsClientInputs);
-        AttestationOptions instanceB = new AttestationOptions(rpEntity, userEntity, challenge, pubKeyCredParams, registrationTimeout, credentialIds, authenticationExtensionsClientInputs);
+        AttestationOptions instanceA = new AttestationOptions(rpEntity, userEntity, challenge, pubKeyCredParams, registrationTimeout, credentials, authenticationExtensionsClientInputs);
+        AttestationOptions instanceB = new AttestationOptions(rpEntity, userEntity, challenge, pubKeyCredParams, registrationTimeout, credentials, authenticationExtensionsClientInputs);
 
         assertThat(instanceA).isEqualTo(instanceB);
         assertThat(instanceA).hasSameHashCodeAs(instanceB);

@@ -16,8 +16,10 @@
 
 package com.webauthn4j.springframework.security.endpoint;
 
+import com.webauthn4j.data.PublicKeyCredentialDescriptor;
 import com.webauthn4j.data.PublicKeyCredentialParameters;
 import com.webauthn4j.data.PublicKeyCredentialRpEntity;
+import com.webauthn4j.data.PublicKeyCredentialUserEntity;
 import com.webauthn4j.data.client.challenge.Challenge;
 import com.webauthn4j.data.extension.client.AuthenticationExtensionClientInput;
 import com.webauthn4j.data.extension.client.AuthenticationExtensionsClientInputs;
@@ -34,12 +36,12 @@ public class OptionsResponse implements Response {
     // ~ Instance fields
     // ================================================================================================
     private final PublicKeyCredentialRpEntity relyingParty;
-    private final WebAuthnPublicKeyCredentialUserEntity user;
+    private final PublicKeyCredentialUserEntity user;
     private final Challenge challenge;
     private final List<PublicKeyCredentialParameters> pubKeyCredParams;
     private final Long registrationTimeout;
     private final Long authenticationTimeout;
-    private final List<WebAuthnPublicKeyCredentialDescriptor> credentials;
+    private final List<PublicKeyCredentialDescriptor> credentials;
     private final AuthenticationExtensionsClientInputs<RegistrationExtensionClientInput<?>> registrationExtensions;
     private final AuthenticationExtensionsClientInputs<AuthenticationExtensionClientInput<?>> authenticationExtensions;
     private final Parameters parameters;
@@ -50,12 +52,12 @@ public class OptionsResponse implements Response {
     @SuppressWarnings("squid:S00107")
     public OptionsResponse(
             PublicKeyCredentialRpEntity relyingParty,
-            WebAuthnPublicKeyCredentialUserEntity user,
+            PublicKeyCredentialUserEntity user,
             Challenge challenge,
             List<PublicKeyCredentialParameters> pubKeyCredParams,
             Long registrationTimeout,
             Long authenticationTimeout,
-            List<WebAuthnPublicKeyCredentialDescriptor> credentials,
+            List<PublicKeyCredentialDescriptor> credentials,
             AuthenticationExtensionsClientInputs<RegistrationExtensionClientInput<?>> registrationExtensions,
             AuthenticationExtensionsClientInputs<AuthenticationExtensionClientInput<?>> authenticationExtensions,
             Parameters parameters) {
@@ -81,7 +83,7 @@ public class OptionsResponse implements Response {
         return this.relyingParty;
     }
 
-    public WebAuthnPublicKeyCredentialUserEntity getUser() {
+    public PublicKeyCredentialUserEntity getUser() {
         return this.user;
     }
 
@@ -101,7 +103,7 @@ public class OptionsResponse implements Response {
         return this.authenticationTimeout;
     }
 
-    public List<WebAuthnPublicKeyCredentialDescriptor> getCredentials() {
+    public List<PublicKeyCredentialDescriptor> getCredentials() {
         return this.credentials;
     }
 

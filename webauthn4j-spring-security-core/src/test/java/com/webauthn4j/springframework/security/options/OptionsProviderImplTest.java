@@ -16,7 +16,10 @@
 
 package com.webauthn4j.springframework.security.options;
 
+import com.webauthn4j.data.AuthenticatorTransport;
+import com.webauthn4j.data.PublicKeyCredentialDescriptor;
 import com.webauthn4j.data.PublicKeyCredentialParameters;
+import com.webauthn4j.data.PublicKeyCredentialType;
 import com.webauthn4j.data.client.challenge.Challenge;
 import com.webauthn4j.data.client.challenge.DefaultChallenge;
 import com.webauthn4j.data.extension.client.AuthenticationExtensionsClientInputs;
@@ -30,6 +33,7 @@ import org.springframework.mock.web.MockHttpServletRequest;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
@@ -40,8 +44,10 @@ public class OptionsProviderImplTest {
     public void getAttestationOptions_test() {
         Challenge challenge = new DefaultChallenge();
         byte[] credentialId = new byte[]{0x01, 0x23, 0x45};
+        Set<AuthenticatorTransport> transports = Collections.singleton(AuthenticatorTransport.INTERNAL);
         WebAuthnAuthenticatorService authenticatorService = mock(WebAuthnAuthenticatorService.class);
         WebAuthnAuthenticator authenticator = mock(WebAuthnAuthenticator.class, RETURNS_DEEP_STUBS);
+        when(authenticator.getTransports()).thenReturn(transports);
         List<WebAuthnAuthenticator> authenticators = Collections.singletonList(authenticator);
         ChallengeRepository challengeRepository = mock(ChallengeRepository.class);
 
@@ -61,7 +67,7 @@ public class OptionsProviderImplTest {
         assertThat(attestationOptions.getRelyingParty().getName()).isEqualTo("rpName");
         assertThat(attestationOptions.getRelyingParty().getIcon()).isEqualTo("data://dummy");
         assertThat(attestationOptions.getChallenge()).isEqualTo(challenge);
-        assertThat(attestationOptions.getCredentials()).containsExactly(Base64UrlUtil.encodeToString(credentialId));
+        assertThat(attestationOptions.getCredentials()).containsExactly(new PublicKeyCredentialDescriptor(PublicKeyCredentialType.PUBLIC_KEY, credentialId, transports));
 
     }
 
@@ -69,8 +75,10 @@ public class OptionsProviderImplTest {
     public void getAttestationOptions_with_challenge_test() {
         Challenge challenge = new DefaultChallenge();
         byte[] credentialId = new byte[]{0x01, 0x23, 0x45};
+        Set<AuthenticatorTransport> transport = Collections.singleton(AuthenticatorTransport.INTERNAL);
         WebAuthnAuthenticatorService authenticatorService = mock(WebAuthnAuthenticatorService.class);
         WebAuthnAuthenticator authenticator = mock(WebAuthnAuthenticator.class, RETURNS_DEEP_STUBS);
+        when(authenticator.getTransports()).thenReturn(transport);
         List<WebAuthnAuthenticator> authenticators = Collections.singletonList(authenticator);
         ChallengeRepository challengeRepository = mock(ChallengeRepository.class);
 
@@ -89,7 +97,7 @@ public class OptionsProviderImplTest {
         assertThat(attestationOptions.getRelyingParty().getName()).isEqualTo("rpName");
         assertThat(attestationOptions.getRelyingParty().getIcon()).isEqualTo("data://dummy");
         assertThat(attestationOptions.getChallenge()).isEqualTo(challenge);
-        assertThat(attestationOptions.getCredentials()).containsExactly(Base64UrlUtil.encodeToString(credentialId));
+        assertThat(attestationOptions.getCredentials()).containsExactly(new PublicKeyCredentialDescriptor(PublicKeyCredentialType.PUBLIC_KEY, credentialId, transport));
 
     }
 

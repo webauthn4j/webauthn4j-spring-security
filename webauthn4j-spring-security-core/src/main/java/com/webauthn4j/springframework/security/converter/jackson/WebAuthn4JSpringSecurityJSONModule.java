@@ -14,11 +14,20 @@
  * limitations under the License.
  */
 
-package com.webauthn4j.springframework.security;
+package com.webauthn4j.springframework.security.converter.jackson;
 
-import com.webauthn4j.data.PublicKeyCredentialUserEntity;
+import com.fasterxml.jackson.databind.module.SimpleModule;
+import com.webauthn4j.data.PublicKeyCredentialDescriptor;
+import com.webauthn4j.springframework.security.endpoint.PublicKeyCredentialDescriptorMixin;
 
-public interface WebAuthnUserEntityProvider {
+public class WebAuthn4JSpringSecurityJSONModule extends SimpleModule {
 
-    PublicKeyCredentialUserEntity provide(String username);
+    public WebAuthn4JSpringSecurityJSONModule() {
+        super("WebAuthn4JSpringSecurityJSONModule");
+
+        this.setMixInAnnotation(PublicKeyCredentialDescriptor.class, PublicKeyCredentialDescriptorMixin.class);
+
+
+    }
+
 }

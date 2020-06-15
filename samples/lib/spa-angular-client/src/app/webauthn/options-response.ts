@@ -15,6 +15,7 @@
  */
 
 import {WebAuthnPublicKeyCredentialUserEntity} from "./web-authn-public-key-credential-user-entity";
+import {WebAuthnPublicKeyCredentialDescriptor} from "./web-authn-public-key-credential-descriptor";
 
 export interface OptionsResponse {
   relyingParty: PublicKeyCredentialRpEntity;
@@ -23,10 +24,7 @@ export interface OptionsResponse {
   pubKeyCredParams: PublicKeyCredentialParameters[];
   registrationTimeout?: number,
   authenticationTimeout?: number,
-  credentials: {
-    type: "public-key";
-    id: string;
-  }[];
+  credentials: WebAuthnPublicKeyCredentialDescriptor[];
   parameters: {
     username: string,
     password: string,

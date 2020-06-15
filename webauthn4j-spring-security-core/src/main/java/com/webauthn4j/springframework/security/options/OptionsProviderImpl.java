@@ -16,8 +16,7 @@
 
 package com.webauthn4j.springframework.security.options;
 
-import com.webauthn4j.data.PublicKeyCredentialParameters;
-import com.webauthn4j.data.PublicKeyCredentialRpEntity;
+import com.webauthn4j.data.*;
 import com.webauthn4j.data.client.Origin;
 import com.webauthn4j.data.client.challenge.Challenge;
 import com.webauthn4j.data.extension.client.AuthenticationExtensionClientInput;
@@ -29,7 +28,6 @@ import com.webauthn4j.springframework.security.authenticator.WebAuthnAuthenticat
 import com.webauthn4j.springframework.security.authenticator.WebAuthnAuthenticatorService;
 import com.webauthn4j.springframework.security.challenge.ChallengeRepository;
 import com.webauthn4j.springframework.security.endpoint.Parameters;
-import com.webauthn4j.springframework.security.endpoint.WebAuthnPublicKeyCredentialUserEntity;
 import com.webauthn4j.springframework.security.util.internal.ServletUtil;
 import com.webauthn4j.util.Base64UrlUtil;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -98,7 +96,7 @@ public class OptionsProviderImpl implements OptionsProvider {
      */
     public AttestationOptions getAttestationOptions(HttpServletRequest request, String username, Challenge challenge) {
 
-        WebAuthnPublicKeyCredentialUserEntity user;
+        PublicKeyCredentialUserEntity user;
         Collection<? extends WebAuthnAuthenticator> authenticators;
 
         try {
@@ -109,10 +107,10 @@ public class OptionsProviderImpl implements OptionsProvider {
             user = null;
         }
 
-        List<String> credentials = new ArrayList<>();
+        List<PublicKeyCredentialDescriptor> credentials = new ArrayList<>();
         for (WebAuthnAuthenticator authenticator : authenticators) {
-            String credentialId = Base64UrlUtil.encodeToString(authenticator.getAttestedCredentialData().getCredentialId());
-            credentials.add(credentialId);
+            byte[] credentialId = authenticator.getAttestedCredentialData().getCredentialId();
+            credentials.add(new PublicKeyCredentialDescriptor(PublicKeyCredentialType.PUBLIC_KEY, credentialId, authenticator.getTransports()));
         }
 
         PublicKeyCredentialRpEntity relyingParty = new PublicKeyCredentialRpEntity(getEffectiveRpId(request), rpName, rpIcon);
@@ -303,9 +301,10 @@ public class OptionsProviderImpl implements OptionsProvider {
     static class DefaultWebAuthnUserEntityProvider implements WebAuthnUserEntityProvider {
 
         @Override
-        public WebAuthnPublicKeyCredentialUserEntity provide(String username) {
-            return new WebAuthnPublicKeyCredentialUserEntity(
-                    Base64UrlUtil.encodeToString(username.getBytes(StandardCharsets.UTF_8)),
+        public PublicKeyCredentialUserEntity provide(String username) {
+            return new PublicKeyCredentialUserEntity(
+                    username.getBytes(StandardCharsets.UTF_8),
+                    username,
                     username
             );
         }
