@@ -16,8 +16,10 @@
 
 package com.webauthn4j.springframework.security.endpoint;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.webauthn4j.springframework.security.converter.jackson.deserializer.ByteArraySerializer;
+import com.webauthn4j.springframework.security.converter.jackson.serializer.ByteArrayDeserializer;
 
 /**
  * A mix-in for {@link com.webauthn4j.data.PublicKeyCredentialDescriptor} not to fix
@@ -26,6 +28,7 @@ import com.webauthn4j.springframework.security.converter.jackson.deserializer.By
 public abstract class PublicKeyCredentialDescriptorMixin {
 
     @JsonSerialize(using = ByteArraySerializer.class)
+    @JsonDeserialize(using = ByteArrayDeserializer.class)
     abstract String getId();
 
 }
