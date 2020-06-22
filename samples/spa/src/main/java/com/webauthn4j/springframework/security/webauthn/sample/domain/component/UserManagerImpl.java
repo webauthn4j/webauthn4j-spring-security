@@ -16,7 +16,6 @@
 
 package com.webauthn4j.springframework.security.webauthn.sample.domain.component;
 
-import com.webauthn4j.springframework.security.webauthn.sample.domain.constant.MessageCodes;
 import com.webauthn4j.springframework.security.webauthn.sample.domain.entity.UserEntity;
 import com.webauthn4j.springframework.security.webauthn.sample.domain.exception.WebAuthnSampleBusinessException;
 import com.webauthn4j.springframework.security.webauthn.sample.domain.exception.WebAuthnSampleEntityNotFoundException;
@@ -29,8 +28,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
-import org.terasoluna.gfw.common.message.ResultMessages;
-
 /**
  * {@inheritDoc}
  */
@@ -56,7 +53,7 @@ public class UserManagerImpl implements UserManager {
     @Override
     public UserEntity findById(int id) {
         return userEntityRepository.findById(id)
-                .orElseThrow(() -> new WebAuthnSampleEntityNotFoundException(ResultMessages.error().add(MessageCodes.Error.User.USER_NOT_FOUND)));
+                .orElseThrow(() -> new WebAuthnSampleEntityNotFoundException("User not found"));
     }
 
     /**
@@ -74,7 +71,7 @@ public class UserManagerImpl implements UserManager {
     @Override
     public UserEntity createUser(UserEntity user) {
         userEntityRepository.findOneByEmailAddress(user.getEmailAddress()).ifPresent((retrievedUserEntity) -> {
-            throw new WebAuthnSampleBusinessException(ResultMessages.error().add(MessageCodes.Error.User.EMAIL_ADDRESS_IS_ALREADY_USED));
+            throw new WebAuthnSampleBusinessException("Email address is already used.");
         });
         return userEntityRepository.save(user);
     }
@@ -86,7 +83,7 @@ public class UserManagerImpl implements UserManager {
     public void updateUser(UserEntity user) {
 
         UserEntity userEntity = userEntityRepository.findById(user.getId())
-                .orElseThrow(() -> new WebAuthnSampleEntityNotFoundException(ResultMessages.error().add(MessageCodes.Error.User.USER_NOT_FOUND)));
+                .orElseThrow(() -> new WebAuthnSampleEntityNotFoundException("User not found"));
         userEntityRepository.save(userEntity);
     }
 
@@ -106,7 +103,7 @@ public class UserManagerImpl implements UserManager {
     @Override
     public void deleteUser(int id) {
         userEntityRepository.findById(id)
-                .orElseThrow(() -> new WebAuthnSampleEntityNotFoundException(ResultMessages.error().add(MessageCodes.Error.User.USER_NOT_FOUND)));
+                .orElseThrow(() -> new WebAuthnSampleEntityNotFoundException("User not found"));
         userEntityRepository.deleteById(id);
     }
 
