@@ -19,10 +19,7 @@ package com.webauthn4j.springframework.security.config.configurers;
 import com.webauthn4j.data.PublicKeyCredentialParameters;
 import com.webauthn4j.data.PublicKeyCredentialType;
 import com.webauthn4j.data.attestation.statement.COSEAlgorithmIdentifier;
-import com.webauthn4j.data.extension.client.AuthenticationExtensionClientInput;
 import com.webauthn4j.data.extension.client.AuthenticationExtensionsClientInputs;
-import com.webauthn4j.data.extension.client.ExtensionClientInput;
-import com.webauthn4j.data.extension.client.RegistrationExtensionClientInput;
 import com.webauthn4j.springframework.security.config.configurers.internal.WebAuthnConfigurerUtil;
 import com.webauthn4j.springframework.security.options.OptionsProvider;
 import org.springframework.security.config.annotation.web.HttpSecurityBuilder;
@@ -30,10 +27,9 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.util.Assert;
 
+import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * An {@link AbstractHttpConfigurer} that provides support for the
@@ -51,10 +47,8 @@ import java.util.Map;
 public class WebAuthnConfigurer<H extends HttpSecurityBuilder<H>> extends AbstractHttpConfigurer<WebAuthnConfigurer<H>, H> {
 
     private final WebAuthnConfigurer<H>.PublicKeyCredParamsConfig publicKeyCredParamsConfig = new WebAuthnConfigurer<H>.PublicKeyCredParamsConfig();
-    private final ExtensionsClientInputsConfig<RegistrationExtensionClientInput<?>> registrationExtensions
-            = new ExtensionsClientInputsConfig<>();
-    private final ExtensionsClientInputsConfig<AuthenticationExtensionClientInput<?>> authenticationExtensions
-            = new ExtensionsClientInputsConfig<>();
+    private final RegistrationExtensionsClientInputsConfig registrationExtensions = new RegistrationExtensionsClientInputsConfig();
+    private final AuthenticationExtensionsClientInputsConfig authenticationExtensions = new AuthenticationExtensionsClientInputsConfig();
     private OptionsProvider optionsProvider;
     private String rpId = null;
     private String rpName = null;
@@ -111,8 +105,8 @@ public class WebAuthnConfigurer<H extends HttpSecurityBuilder<H>> extends Abstra
         if (authenticationTimeout != null) {
             optionsProvider.setAuthenticationTimeout(authenticationTimeout);
         }
-        optionsProvider.setRegistrationExtensions(new AuthenticationExtensionsClientInputs<>(registrationExtensions.extensionsClientInputs));
-        optionsProvider.setAuthenticationExtensions(new AuthenticationExtensionsClientInputs<>(authenticationExtensions.extensionsClientInputs));
+        optionsProvider.setRegistrationExtensions(registrationExtensions.builder.build());
+        optionsProvider.setAuthenticationExtensions(authenticationExtensions.builder.build());
     }
 
     /**
@@ -183,20 +177,20 @@ public class WebAuthnConfigurer<H extends HttpSecurityBuilder<H>> extends Abstra
     }
 
     /**
-     * Returns the {@link ExtensionsClientInputsConfig} for configuring registration extensions
+     * Returns the {@link RegistrationExtensionsClientInputsConfig} for configuring registration extensions
      *
-     * @return the {@link ExtensionsClientInputsConfig}
+     * @return the {@link RegistrationExtensionsClientInputsConfig}
      */
-    public WebAuthnConfigurer<H>.ExtensionsClientInputsConfig<RegistrationExtensionClientInput<?>> registrationExtensions() {
+    public WebAuthnConfigurer<H>.RegistrationExtensionsClientInputsConfig registrationExtensions() {
         return this.registrationExtensions;
     }
 
     /**
-     * Returns the {@link ExtensionsClientInputsConfig} for configuring authentication extensions
+     * Returns the {@link AuthenticationExtensionsClientInputsConfig} for configuring authentication extensions
      *
-     * @return the {@link ExtensionsClientInputsConfig}
+     * @return the {@link AuthenticationExtensionsClientInputsConfig}
      */
-    public WebAuthnConfigurer<H>.ExtensionsClientInputsConfig<AuthenticationExtensionClientInput<?>> authenticationExtensions() {
+    public WebAuthnConfigurer<H>.AuthenticationExtensionsClientInputsConfig authenticationExtensions() {
         return this.authenticationExtensions;
     }
 
@@ -239,22 +233,48 @@ public class WebAuthnConfigurer<H extends HttpSecurityBuilder<H>> extends Abstra
     /**
      * Configuration options for AuthenticationExtensionsClientInputs
      */
-    public class ExtensionsClientInputsConfig<T extends ExtensionClientInput<?>> {
+    public class RegistrationExtensionsClientInputsConfig {
 
-        private final Map<String, T> extensionsClientInputs = new HashMap<>();
+        private final AuthenticationExtensionsClientInputs.BuilderForRegistration builder = new AuthenticationExtensionsClientInputs.BuilderForRegistration();
 
-        private ExtensionsClientInputsConfig() {
+        private RegistrationExtensionsClientInputsConfig() {
         }
 
         /**
-         * Add AuthenticationExtensionClientInput
+         * Configure uvm extension
          *
-         * @param extensionClientInput the T
-         * @return the {@link ExtensionsClientInputsConfig}
+         * @param uvm flag to enable uvm extension
+         * @return the {@link RegistrationExtensionsClientInputsConfig}
          */
-        public ExtensionsClientInputsConfig<T> addExtension(T extensionClientInput) {
-            Assert.notNull(extensionClientInput, "extensionClientInput must not be null");
-            extensionsClientInputs.put(extensionClientInput.getIdentifier(), extensionClientInput);
+        public RegistrationExtensionsClientInputsConfig uvm(Boolean uvm) {
+            Assert.notNull(uvm, "uvm must not be null");
+            builder.setUvm(uvm);
+            return this;
+        }
+
+        /**
+         * Configure credProps extension
+         *
+         * @param credProps flag to enable uvm extension
+         * @return the {@link RegistrationExtensionsClientInputsConfig}
+         */
+        public RegistrationExtensionsClientInputsConfig credProps(Boolean credProps){
+            Assert.notNull(credProps, "credProps must not be null");
+            builder.setCredProps(credProps);
+            return this;
+        }
+
+        /**
+         * Add custom entry
+         *
+         * @param key key
+         * @param value value
+         * @return the {@link RegistrationExtensionsClientInputsConfig}
+         */
+        public RegistrationExtensionsClientInputsConfig entry(String key, Serializable value) {
+            Assert.notNull(key, "key must not be null");
+            Assert.notNull(value, "value must not be null");
+            builder.set(key, value);
             return this;
         }
 
@@ -267,4 +287,75 @@ public class WebAuthnConfigurer<H extends HttpSecurityBuilder<H>> extends Abstra
             return WebAuthnConfigurer.this;
         }
     }
+
+    /**
+     * Configuration options for AuthenticationExtensionsClientInputs
+     */
+    public class AuthenticationExtensionsClientInputsConfig {
+
+        private final AuthenticationExtensionsClientInputs.BuilderForAuthentication builder = new AuthenticationExtensionsClientInputs.BuilderForAuthentication();
+
+        private AuthenticationExtensionsClientInputsConfig() {
+        }
+
+        /**
+         * Configure appid extension
+         *
+         * @param appid appid
+         * @return the {@link AuthenticationExtensionsClientInputsConfig}
+         */
+        public AuthenticationExtensionsClientInputsConfig appid(String appid) {
+            Assert.notNull(appid, "appid must not be null");
+            builder.setAppid(appid);
+            return this;
+        }
+
+        /**
+         * Configure appidExclude extension
+         *
+         * @param appidExclude appid
+         * @return the {@link AuthenticationExtensionsClientInputsConfig}
+         */
+        public AuthenticationExtensionsClientInputsConfig appidExclude(String appidExclude) {
+            Assert.notNull(appidExclude, "appidExclude must not be null");
+            builder.setAppidExclude(appidExclude);
+            return this;
+        }
+
+        /**
+         * Configure uvm extension
+         *
+         * @param uvm flag to enable uvm extension
+         * @return the {@link AuthenticationExtensionsClientInputsConfig}
+         */
+        public AuthenticationExtensionsClientInputsConfig uvm(Boolean uvm) {
+            Assert.notNull(uvm, "uvm must not be null");
+            builder.setUvm(uvm);
+            return this;
+        }
+
+        /**
+         * Add custom entry
+         *
+         * @param key key
+         * @param value value
+         * @return the {@link AuthenticationExtensionsClientInputsConfig}
+         */
+        public AuthenticationExtensionsClientInputsConfig entry(String key, Serializable value) {
+            Assert.notNull(key, "key must not be null");
+            Assert.notNull(value, "value must not be null");
+            builder.set(key, value);
+            return this;
+        }
+
+        /**
+         * Returns the {@link WebAuthnConfigurer} for further configuration.
+         *
+         * @return the {@link WebAuthnConfigurer}
+         */
+        public WebAuthnConfigurer<H> and() {
+            return WebAuthnConfigurer.this;
+        }
+    }
+
 }

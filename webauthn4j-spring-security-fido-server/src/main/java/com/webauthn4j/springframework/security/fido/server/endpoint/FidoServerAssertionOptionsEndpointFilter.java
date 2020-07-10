@@ -81,7 +81,7 @@ public class FidoServerAssertionOptionsEndpointFilter extends ServerEndpointFilt
         Challenge challenge = serverEndpointFilterUtil.encodeUserVerification(new DefaultChallenge(), serverRequest.getUserVerification());
         AssertionOptions options = optionsProvider.getAssertionOptions(request, username, challenge);
         List<ServerPublicKeyCredentialDescriptor> credentials = options.getCredentials().stream().map(ServerPublicKeyCredentialDescriptor::new).collect(Collectors.toList());
-        AuthenticationExtensionsClientInputs<AuthenticationExtensionClientInput<?>> authenticationExtensionsClientInputs;
+        AuthenticationExtensionsClientInputs<AuthenticationExtensionClientInput> authenticationExtensionsClientInputs;
         if (serverRequest.getExtensions() != null) {
             authenticationExtensionsClientInputs = serverRequest.getExtensions();
         } else {

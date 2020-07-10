@@ -25,7 +25,7 @@ import com.webauthn4j.util.Base64UrlUtil;
 import javax.persistence.AttributeConverter;
 import java.util.Map;
 
-public class AuthenticatorExtensionsConverter implements AttributeConverter<Map<String, RegistrationExtensionAuthenticatorOutput<?>>, String> {
+public class AuthenticatorExtensionsConverter implements AttributeConverter<Map<String, RegistrationExtensionAuthenticatorOutput>, String> {
 
     private final CborConverter cborConverter;
 
@@ -34,13 +34,13 @@ public class AuthenticatorExtensionsConverter implements AttributeConverter<Map<
     }
 
     @Override
-    public String convertToDatabaseColumn(Map<String, RegistrationExtensionAuthenticatorOutput<?>> attribute) {
+    public String convertToDatabaseColumn(Map<String, RegistrationExtensionAuthenticatorOutput> attribute) {
         return Base64UrlUtil.encodeToString(cborConverter.writeValueAsBytes(attribute));
     }
 
     @Override
-    public Map<String, RegistrationExtensionAuthenticatorOutput<?>> convertToEntityAttribute(String dbData) {
-        return cborConverter.readValue(Base64UrlUtil.decode(dbData), new TypeReference<Map<String, RegistrationExtensionAuthenticatorOutput<?>>>() {
+    public Map<String, RegistrationExtensionAuthenticatorOutput> convertToEntityAttribute(String dbData) {
+        return cborConverter.readValue(Base64UrlUtil.decode(dbData), new TypeReference<Map<String, RegistrationExtensionAuthenticatorOutput>>() {
         });
     }
 }

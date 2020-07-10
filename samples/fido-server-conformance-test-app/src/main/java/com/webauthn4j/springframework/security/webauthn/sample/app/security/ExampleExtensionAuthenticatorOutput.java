@@ -16,12 +16,13 @@
 
 package com.webauthn4j.springframework.security.webauthn.sample.app.security;
 
-import com.webauthn4j.data.extension.AbstractExtensionOutput;
+import com.webauthn4j.data.extension.SingleValueExtensionOutputBase;
 import com.webauthn4j.data.extension.authenticator.AuthenticationExtensionAuthenticatorOutput;
+import com.webauthn4j.validator.exception.ConstraintViolationException;
 
 import java.io.Serializable;
 
-public class ExampleExtensionAuthenticatorOutput extends AbstractExtensionOutput<Serializable> implements AuthenticationExtensionAuthenticatorOutput<Serializable> {
+public class ExampleExtensionAuthenticatorOutput extends SingleValueExtensionOutputBase<Serializable> implements AuthenticationExtensionAuthenticatorOutput {
 
     public static final String ID = "example.extension";
 
@@ -36,5 +37,12 @@ public class ExampleExtensionAuthenticatorOutput extends AbstractExtensionOutput
     @Override
     public String getIdentifier() {
         return ID;
+    }
+
+    @Override
+    public void validate() {
+        if(getValue() == null){
+            throw new ConstraintViolationException("value must not be null");
+        }
     }
 }

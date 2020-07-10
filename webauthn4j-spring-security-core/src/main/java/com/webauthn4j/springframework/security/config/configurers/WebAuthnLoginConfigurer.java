@@ -127,7 +127,7 @@ public final class WebAuthnLoginConfigurer<H extends HttpSecurityBuilder<H>> ext
 
         this.optionsEndpointConfig.configure(http);
         if (expectedAuthenticationExtensionIdsConfig.expectedAuthenticationExtensionIds.isEmpty()) {
-            this.getAuthenticationFilter().setExpectedAuthenticationExtensionIds(new ArrayList<>(optionsProvider.getAuthenticationExtensions().keySet()));
+            this.getAuthenticationFilter().setExpectedAuthenticationExtensionIds(new ArrayList<>(optionsProvider.getAuthenticationExtensions().getKeys()));
         } else {
             this.getAuthenticationFilter().setExpectedAuthenticationExtensionIds(expectedAuthenticationExtensionIdsConfig.expectedAuthenticationExtensionIds);
         }

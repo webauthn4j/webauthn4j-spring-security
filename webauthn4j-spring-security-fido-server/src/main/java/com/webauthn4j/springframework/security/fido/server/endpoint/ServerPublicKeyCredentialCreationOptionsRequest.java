@@ -29,14 +29,14 @@ public class ServerPublicKeyCredentialCreationOptionsRequest implements ServerRe
     private String displayName;
     private AuthenticatorSelectionCriteria authenticatorSelection;
     private AttestationConveyancePreference attestation;
-    private AuthenticationExtensionsClientInputs<RegistrationExtensionClientInput<?>> extensions;
+    private AuthenticationExtensionsClientInputs<RegistrationExtensionClientInput> extensions;
 
     public ServerPublicKeyCredentialCreationOptionsRequest(
             String username,
             String displayName,
             AuthenticatorSelectionCriteria authenticatorSelection,
             AttestationConveyancePreference attestation,
-            AuthenticationExtensionsClientInputs<RegistrationExtensionClientInput<?>> extensions) {
+            AuthenticationExtensionsClientInputs<RegistrationExtensionClientInput> extensions) {
 
         this.username = username;
         this.displayName = displayName;
@@ -64,7 +64,7 @@ public class ServerPublicKeyCredentialCreationOptionsRequest implements ServerRe
         return attestation;
     }
 
-    public AuthenticationExtensionsClientInputs<RegistrationExtensionClientInput<?>> getExtensions() {
+    public AuthenticationExtensionsClientInputs<RegistrationExtensionClientInput> getExtensions() {
         return extensions;
     }
 

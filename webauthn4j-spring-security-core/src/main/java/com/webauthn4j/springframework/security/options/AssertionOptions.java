@@ -38,7 +38,7 @@ public class AssertionOptions implements Serializable {
     private final Long authenticationTimeout;
     private final String rpId;
     private final List<String> credentials;
-    private final AuthenticationExtensionsClientInputs<AuthenticationExtensionClientInput<?>> authenticationExtensions;
+    private final AuthenticationExtensionsClientInputs<AuthenticationExtensionClientInput> authenticationExtensions;
     private final Parameters parameters;
 
     // ~ Constructors
@@ -49,7 +49,7 @@ public class AssertionOptions implements Serializable {
             Long authenticationTimeout,
             String rpId,
             List<String> credentials,
-            AuthenticationExtensionsClientInputs<AuthenticationExtensionClientInput<?>> authenticationExtensions,
+            AuthenticationExtensionsClientInputs<AuthenticationExtensionClientInput> authenticationExtensions,
             Parameters parameters) {
         this.challenge = challenge;
         this.authenticationTimeout = authenticationTimeout;
@@ -78,7 +78,7 @@ public class AssertionOptions implements Serializable {
         return credentials;
     }
 
-    public AuthenticationExtensionsClientInputs<AuthenticationExtensionClientInput<?>> getAuthenticationExtensions() {
+    public AuthenticationExtensionsClientInputs<AuthenticationExtensionClientInput> getAuthenticationExtensions() {
         return authenticationExtensions;
     }
 

@@ -65,11 +65,11 @@ public class AuthenticatorEntity implements WebAuthnAuthenticator {
 
     @Lob
     @Convert(converter = ClientExtensionsConverter.class)
-    private Map<String, RegistrationExtensionClientOutput<?>> clientExtensions;
+    private Map<String, RegistrationExtensionClientOutput> clientExtensions;
 
     @Lob
     @Convert(converter = AuthenticatorExtensionsConverter.class)
-    private Map<String, RegistrationExtensionAuthenticatorOutput<?>> authenticatorExtensions;
+    private Map<String, RegistrationExtensionAuthenticatorOutput> authenticatorExtensions;
 
     public String getFormat() {
         return attestationStatement.getFormat();
@@ -139,20 +139,20 @@ public class AuthenticatorEntity implements WebAuthnAuthenticator {
 
 
     @Override
-    public Map<String, RegistrationExtensionClientOutput<?>> getClientExtensions() {
+    public Map<String, RegistrationExtensionClientOutput> getClientExtensions() {
         return clientExtensions;
     }
 
-    public void setClientExtensions(Map<String, RegistrationExtensionClientOutput<?>> clientExtensions) {
+    public void setClientExtensions(Map<String, RegistrationExtensionClientOutput> clientExtensions) {
         this.clientExtensions = clientExtensions;
     }
 
     @Override
-    public Map<String, RegistrationExtensionAuthenticatorOutput<?>> getAuthenticatorExtensions() {
+    public Map<String, RegistrationExtensionAuthenticatorOutput> getAuthenticatorExtensions() {
         return authenticatorExtensions;
     }
 
-    public void setAuthenticatorExtensions(Map<String, RegistrationExtensionAuthenticatorOutput<?>> authenticatorExtensions) {
+    public void setAuthenticatorExtensions(Map<String, RegistrationExtensionAuthenticatorOutput> authenticatorExtensions) {
         this.authenticatorExtensions = authenticatorExtensions;
     }
 }

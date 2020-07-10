@@ -169,11 +169,11 @@ public class WebSecurityBeanConfig {
     public MetadataItemsProvider fidoMetadataItemsProvider(ObjectConverter objectConverter, HttpClient httpClient) {
         X509Certificate conformanceTestCertificate = CertificateUtil.generateX509Certificate(Base64Util.decode("MIICZzCCAe6gAwIBAgIPBF0rd3WL/GExWV/szYNVMAoGCCqGSM49BAMDMGcxCzAJBgNVBAYTAlVTMRYwFAYDVQQKDA1GSURPIEFsbGlhbmNlMScwJQYDVQQLDB5GQUtFIE1ldGFkYXRhIFRPQyBTaWduaW5nIEZBS0UxFzAVBgNVBAMMDkZBS0UgUm9vdCBGQUtFMB4XDTE3MDIwMTAwMDAwMFoXDTQ1MDEzMTIzNTk1OVowZzELMAkGA1UEBhMCVVMxFjAUBgNVBAoMDUZJRE8gQWxsaWFuY2UxJzAlBgNVBAsMHkZBS0UgTWV0YWRhdGEgVE9DIFNpZ25pbmcgRkFLRTEXMBUGA1UEAwwORkFLRSBSb290IEZBS0UwdjAQBgcqhkjOPQIBBgUrgQQAIgNiAARcVLd6r4fnNHzs5K2zfbg//4X9/oBqmsdRVtZ9iXhlgM9vFYaKviYtqmwkq0D3Lihg3qefeZgXXYi4dFgvzU7ZLBapSNM3CT8RDBe/MBJqsPwaRQbIsGmmItmt/ESNQD6jYDBeMAsGA1UdDwQEAwIBBjAPBgNVHRMBAf8EBTADAQH/MB0GA1UdDgQWBBTd95rIHO/hX9Oh69szXzD0ahmZWTAfBgNVHSMEGDAWgBTd95rIHO/hX9Oh69szXzD0ahmZWTAKBggqhkjOPQQDAwNnADBkAjBkP3L99KEXQzviJVGytDMWBmITMBYv1LgNXXiSilWixTyQqHrYrFpLvNFyPZQvS6sCMFMAOUCwAch/515XH0XlDbMgdIe2N4zzdY77TVwiHmsxTFWRT0FtS7fUk85c/LzSPQ=="));
         String[] urls = new String[]{
-                "https://fidoalliance.co.nz/mds/execute/24972a67c1d02c6a848f457c5ab1955f63148441e031e4d3d7eaa79e25ae6a46",
-                "https://fidoalliance.co.nz/mds/execute/427712e10ca2cb354691740a37cd37496874eb5524709150d7e6f9ebd83917e2",
-                "https://fidoalliance.co.nz/mds/execute/6ec77bdf780b80fec995b9083d1bf9659680dfe31b97114b14ae28808b252de2",
-                "https://fidoalliance.co.nz/mds/execute/a1715169d003018816bd238b523f03a37b4ce85a8edc299e9afe0e74f27ad6a3",
-                "https://fidoalliance.co.nz/mds/execute/b3227b69040df61b7dd2e02285207613c1f1a1f531d5cb10b1c5b85827ed4f96"
+                "https://fidoalliance.co.nz/mds//execute/0f01c2027d05dc909511d3c18ff14dbe8b109d1df565a3a9c391c1dc08830e13",
+                "https://fidoalliance.co.nz/mds//execute/2802bb2f78413bcb303b6b13fdeeaa6d7307d6404659fe01f5fb4dfe0790833d",
+                "https://fidoalliance.co.nz/mds//execute/47e932675ec4f0367ca4f439160d89a5973a349a2b14fa36149ea0b308759a48",
+                "https://fidoalliance.co.nz/mds//execute/51f1d6448bdfc829ea4b720169a5762339e4015146b52f4d0e21d2c78c890180",
+                "https://fidoalliance.co.nz/mds//execute/66b56bf384795298788348b318dad4d678cc2d16552c1ca7c5aefcc7fa1bd700"
         };
         List<MetadataItemsProvider> list = new ArrayList<>();
         Arrays.stream(urls).map(url -> {

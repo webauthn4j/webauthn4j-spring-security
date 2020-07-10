@@ -36,7 +36,7 @@ public class AssertionOptionsTest {
         Long authenticationTimeout = 1000L;
         String rpId = "localhost";
         List<String> credentialIds = Collections.singletonList("credentialId");
-        AuthenticationExtensionsClientInputs<AuthenticationExtensionClientInput<?>> authenticationExtensionsClientInputs = new AuthenticationExtensionsClientInputs<>();
+        AuthenticationExtensionsClientInputs<AuthenticationExtensionClientInput> authenticationExtensionsClientInputs = new AuthenticationExtensionsClientInputs<>();
         Parameters parameters = new Parameters(
                 "username",
                 "password",
@@ -58,7 +58,7 @@ public class AssertionOptionsTest {
         Long authenticationTimeout = 1000L;
         String rpId = "localhost";
         List<String> credentialIds = Collections.singletonList("credentialId");
-        AuthenticationExtensionsClientInputs<AuthenticationExtensionClientInput<?>> authenticationExtensionsClientInputs = new AuthenticationExtensionsClientInputs<>();
+        AuthenticationExtensionsClientInputs<AuthenticationExtensionClientInput> authenticationExtensionsClientInputs = new AuthenticationExtensionsClientInputs<>();
         Parameters parameters = new Parameters(
                 "username",
                 "password",

@@ -20,7 +20,6 @@ import com.webauthn4j.WebAuthnManager;
 import com.webauthn4j.converter.util.ObjectConverter;
 import com.webauthn4j.data.PublicKeyCredentialType;
 import com.webauthn4j.data.attestation.statement.COSEAlgorithmIdentifier;
-import com.webauthn4j.data.extension.client.CredentialPropertiesExtensionClientInput;
 import com.webauthn4j.springframework.security.authenticator.WebAuthnAuthenticatorService;
 import com.webauthn4j.springframework.security.config.configurers.WebAuthnAuthenticationProviderConfigurer;
 import com.webauthn4j.springframework.security.config.configurers.WebAuthnConfigurer;
@@ -119,7 +118,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .addPublicKeyCredParams(PublicKeyCredentialType.PUBLIC_KEY, COSEAlgorithmIdentifier.ES256) // FIDO U2F Key, etc
                 .and()
                 .registrationExtensions()
-                .addExtension(new CredentialPropertiesExtensionClientInput(true))
+                    .credProps(true)
                 .and();
 
         // Password Login

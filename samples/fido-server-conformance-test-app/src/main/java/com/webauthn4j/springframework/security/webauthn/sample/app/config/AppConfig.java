@@ -29,7 +29,7 @@ import org.terasoluna.gfw.web.exception.ExceptionLoggingFilter;
  */
 @Configuration
 @EnableSpringDataWebSupport
-@ComponentScan(basePackages = "com.webauthn4j.springframework.security.webauthn.sample.app")
+@ComponentScan(basePackages = {"com.webauthn4j.springframework.security.webauthn.sample.app", "com.webauthn4j.springframework.security.webauthn.sample.domain"})
 public class AppConfig {
 
     @Bean

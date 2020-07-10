@@ -23,7 +23,6 @@ import com.webauthn4j.springframework.security.WebAuthnRegistrationRequestValida
 import com.webauthn4j.springframework.security.authenticator.WebAuthnAuthenticatorService;
 import com.webauthn4j.springframework.security.config.configurers.WebAuthnAuthenticationProviderConfigurer;
 import com.webauthn4j.springframework.security.config.configurers.WebAuthnConfigurer;
-import com.webauthn4j.springframework.security.webauthn.sample.app.security.ExampleExtensionClientInput;
 import com.webauthn4j.springframework.security.webauthn.sample.app.security.SampleUsernameNotFoundHandler;
 import com.webauthn4j.springframework.security.webauthn.sample.domain.component.UserManager;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -117,10 +116,10 @@ WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .addPublicKeyCredParams(PublicKeyCredentialType.PUBLIC_KEY, COSEAlgorithmIdentifier.ES256)  // FIDO U2F Key, etc
                 .and()
                 .registrationExtensions()
-                .addExtension(new ExampleExtensionClientInput("test"))
+                    .entry("example.extension", "test")
                 .and()
                 .authenticationExtensions()
-                .addExtension(new ExampleExtensionClientInput("test"))
+                    .entry("example.extension", "test")
                 .and();
 
         // FIDO Server Endpoints

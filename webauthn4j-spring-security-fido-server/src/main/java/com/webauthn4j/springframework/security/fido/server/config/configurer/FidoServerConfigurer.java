@@ -127,7 +127,7 @@ public class FidoServerConfigurer<H extends HttpSecurityBuilder<H>> extends Abst
 
         @Override
         void configure(H http) {
-            super.configure(http);
+            // configure WebAuthnAuthenticatorManager
             if(userDetailsService == null){
                 userDetailsService = WebAuthnConfigurerUtil.getUserDetailsService(http);
             }
@@ -135,6 +135,8 @@ public class FidoServerConfigurer<H extends HttpSecurityBuilder<H>> extends Abst
                 webAuthnAuthenticatorManager = WebAuthnConfigurerUtil.getWebAuthnAuthenticatorManager(http);
             }
             http.setSharedObject(WebAuthnAuthenticatorManager.class, webAuthnAuthenticatorManager);
+
+            // configure WebAuthnRegistrationRequestValidator
             if (webAuthnRegistrationRequestValidator == null) {
                 webAuthnRegistrationRequestValidator = WebAuthnConfigurerUtil.getWebAuthnRegistrationRequestValidator(http);
             }
@@ -143,12 +145,13 @@ public class FidoServerConfigurer<H extends HttpSecurityBuilder<H>> extends Abst
             }
 
             if (expectedRegistrationExtensionIdsConfig.expectedAuthenticationExtensionIds.isEmpty()) {
-                webAuthnRegistrationRequestValidator.setExpectedRegistrationExtensionIds(new ArrayList<>(optionsProvider.getAuthenticationExtensions().keySet()));
+                webAuthnRegistrationRequestValidator.setExpectedRegistrationExtensionIds(new ArrayList<>(optionsProvider.getAuthenticationExtensions().getKeys()));
             } else {
                 webAuthnRegistrationRequestValidator.setExpectedRegistrationExtensionIds(expectedRegistrationExtensionIdsConfig.expectedAuthenticationExtensionIds);
             }
-
             http.setSharedObject(WebAuthnRegistrationRequestValidator.class, webAuthnRegistrationRequestValidator);
+
+            super.configure(http);
         }
 
         public FidoServerAttestationResultEndpointConfig expectedRegistrationExtensionIds(List<String> expectedRegistrationExtensionIds) {
@@ -265,7 +268,7 @@ public class FidoServerConfigurer<H extends HttpSecurityBuilder<H>> extends Abst
             serverEndpointFilter.setAuthenticationManager(authenticationManager);
 
             if (expectedAuthenticationExtensionIdsConfig.expectedAuthenticationExtensionIds.isEmpty()) {
-                serverEndpointFilter.setExpectedAuthenticationExtensionIds(new ArrayList<>(optionsProvider.getAuthenticationExtensions().keySet()));
+                serverEndpointFilter.setExpectedAuthenticationExtensionIds(new ArrayList<>(optionsProvider.getAuthenticationExtensions().getKeys()));
             } else {
                 serverEndpointFilter.setExpectedAuthenticationExtensionIds(expectedAuthenticationExtensionIdsConfig.expectedAuthenticationExtensionIds);
             }

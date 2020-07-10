@@ -42,8 +42,8 @@ public class OptionsResponse implements Response {
     private final Long registrationTimeout;
     private final Long authenticationTimeout;
     private final List<PublicKeyCredentialDescriptor> credentials;
-    private final AuthenticationExtensionsClientInputs<RegistrationExtensionClientInput<?>> registrationExtensions;
-    private final AuthenticationExtensionsClientInputs<AuthenticationExtensionClientInput<?>> authenticationExtensions;
+    private final AuthenticationExtensionsClientInputs<RegistrationExtensionClientInput> registrationExtensions;
+    private final AuthenticationExtensionsClientInputs<AuthenticationExtensionClientInput> authenticationExtensions;
     private final Parameters parameters;
 
     // ~ Constructors
@@ -58,8 +58,8 @@ public class OptionsResponse implements Response {
             Long registrationTimeout,
             Long authenticationTimeout,
             List<PublicKeyCredentialDescriptor> credentials,
-            AuthenticationExtensionsClientInputs<RegistrationExtensionClientInput<?>> registrationExtensions,
-            AuthenticationExtensionsClientInputs<AuthenticationExtensionClientInput<?>> authenticationExtensions,
+            AuthenticationExtensionsClientInputs<RegistrationExtensionClientInput> registrationExtensions,
+            AuthenticationExtensionsClientInputs<AuthenticationExtensionClientInput> authenticationExtensions,
             Parameters parameters) {
         super();
 
@@ -107,11 +107,11 @@ public class OptionsResponse implements Response {
         return this.credentials;
     }
 
-    public AuthenticationExtensionsClientInputs<RegistrationExtensionClientInput<?>> getRegistrationExtensions() {
+    public AuthenticationExtensionsClientInputs<RegistrationExtensionClientInput> getRegistrationExtensions() {
         return this.registrationExtensions;
     }
 
-    public AuthenticationExtensionsClientInputs<AuthenticationExtensionClientInput<?>> getAuthenticationExtensions() {
+    public AuthenticationExtensionsClientInputs<AuthenticationExtensionClientInput> getAuthenticationExtensions() {
         return this.authenticationExtensions;
     }
 

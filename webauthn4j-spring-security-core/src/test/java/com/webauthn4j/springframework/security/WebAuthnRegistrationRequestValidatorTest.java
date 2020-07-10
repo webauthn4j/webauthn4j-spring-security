@@ -69,7 +69,7 @@ public class WebAuthnRegistrationRequestValidatorTest {
 
         CollectedClientData collectedClientData = mock(CollectedClientData.class);
         AttestationObject attestationObject = mock(AttestationObject.class);
-        AuthenticationExtensionsClientOutputs<RegistrationExtensionClientOutput<?>> clientExtensionOutputs = new AuthenticationExtensionsClientOutputs<>();
+        AuthenticationExtensionsClientOutputs<RegistrationExtensionClientOutput> clientExtensionOutputs = new AuthenticationExtensionsClientOutputs<>();
         when(webAuthnManager.validate(any(RegistrationRequest.class), any(RegistrationParameters.class))).thenReturn(
                 new RegistrationData(attestationObject, null, collectedClientData, null, clientExtensionOutputs, null));
 
@@ -108,7 +108,7 @@ public class WebAuthnRegistrationRequestValidatorTest {
 
         CollectedClientData collectedClientData = mock(CollectedClientData.class);
         AttestationObject attestationObject = mock(AttestationObject.class);
-        AuthenticationExtensionsClientOutputs<RegistrationExtensionClientOutput<?>> clientExtensionOutputs = new AuthenticationExtensionsClientOutputs<>();
+        AuthenticationExtensionsClientOutputs<RegistrationExtensionClientOutput> clientExtensionOutputs = new AuthenticationExtensionsClientOutputs<>();
         when(webAuthnManager.validate(any(RegistrationRequest.class), any(RegistrationParameters.class))).thenReturn(
                 new RegistrationData(attestationObject, null, collectedClientData, null, clientExtensionOutputs, null));
 
