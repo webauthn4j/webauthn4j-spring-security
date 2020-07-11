@@ -178,12 +178,7 @@ public class WebAuthnProcessingFilter extends UsernamePasswordAuthenticationFilt
         if(currentAuthentication == null){
             return true;
         }
-        if(currentAuthentication.isAuthenticated()){
-            return false;
-        }
-        else {
-            return true;
-        }
+        return !currentAuthentication.isAuthenticated();
     }
 
     /**
