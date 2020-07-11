@@ -16,8 +16,6 @@
 
 package com.webauthn4j.springframework.security;
 
-import com.webauthn4j.springframework.security.WebAuthnAuthenticationRequest;
-import com.webauthn4j.springframework.security.WebAuthnAuthenticationToken;
 import org.assertj.core.api.Assertions;
 import org.junit.Test;
 import org.springframework.security.core.userdetails.UserDetails;

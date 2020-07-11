@@ -25,7 +25,6 @@ import com.webauthn4j.data.client.CollectedClientData;
 import com.webauthn4j.data.extension.client.AuthenticationExtensionsClientOutputs;
 import com.webauthn4j.data.extension.client.RegistrationExtensionClientOutput;
 import com.webauthn4j.server.ServerProperty;
-import com.webauthn4j.springframework.security.WebAuthnRegistrationRequestValidator;
 import com.webauthn4j.springframework.security.exception.BadAttestationStatementException;
 import com.webauthn4j.springframework.security.server.ServerPropertyProvider;
 import com.webauthn4j.util.Base64UrlUtil;

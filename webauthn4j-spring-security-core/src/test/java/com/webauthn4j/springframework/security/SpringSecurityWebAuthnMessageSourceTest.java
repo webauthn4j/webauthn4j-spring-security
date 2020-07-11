@@ -16,7 +16,6 @@
 
 package com.webauthn4j.springframework.security;
 
-import com.webauthn4j.springframework.security.SpringSecurityWebAuthnMessageSource;
 import org.junit.Test;
 import org.springframework.context.support.MessageSourceAccessor;
 

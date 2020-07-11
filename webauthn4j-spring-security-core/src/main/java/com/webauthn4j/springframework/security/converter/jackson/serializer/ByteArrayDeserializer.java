@@ -17,7 +17,6 @@
 package com.webauthn4j.springframework.security.converter.jackson.serializer;
 
 import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
 import com.webauthn4j.util.Base64UrlUtil;
@@ -31,7 +30,7 @@ public class ByteArrayDeserializer extends StdDeserializer<byte[]> {
     }
 
     @Override
-    public byte[] deserialize(JsonParser p, DeserializationContext ctxt) throws IOException, JsonProcessingException {
+    public byte[] deserialize(JsonParser p, DeserializationContext ctxt) throws IOException {
         return Base64UrlUtil.decode(p.getValueAsString());
     }
 }

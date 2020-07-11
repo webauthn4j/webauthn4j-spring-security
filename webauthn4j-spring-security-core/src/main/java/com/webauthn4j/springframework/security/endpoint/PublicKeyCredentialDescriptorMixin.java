@@ -25,6 +25,7 @@ import com.webauthn4j.springframework.security.converter.jackson.serializer.Byte
  * A mix-in for {@link com.webauthn4j.data.PublicKeyCredentialDescriptor} not to fix
  * how to serialize it.
  */
+@SuppressWarnings("java:S1610")
 public abstract class PublicKeyCredentialDescriptorMixin {
 
     @JsonSerialize(using = ByteArraySerializer.class)

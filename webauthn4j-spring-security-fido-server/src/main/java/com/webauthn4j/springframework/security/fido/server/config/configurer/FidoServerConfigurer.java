@@ -17,10 +17,10 @@
 package com.webauthn4j.springframework.security.fido.server.config.configurer;
 
 import com.webauthn4j.converter.util.ObjectConverter;
-import com.webauthn4j.springframework.security.fido.server.endpoint.*;
 import com.webauthn4j.springframework.security.WebAuthnRegistrationRequestValidator;
 import com.webauthn4j.springframework.security.authenticator.WebAuthnAuthenticatorManager;
 import com.webauthn4j.springframework.security.config.configurers.internal.WebAuthnConfigurerUtil;
+import com.webauthn4j.springframework.security.fido.server.endpoint.*;
 import com.webauthn4j.springframework.security.options.OptionsProvider;
 import com.webauthn4j.springframework.security.server.ServerPropertyProvider;
 import org.springframework.context.ApplicationContext;

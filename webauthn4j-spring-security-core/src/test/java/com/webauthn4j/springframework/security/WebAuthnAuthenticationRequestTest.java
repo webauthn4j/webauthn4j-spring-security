@@ -19,7 +19,6 @@ package com.webauthn4j.springframework.security;
 import com.webauthn4j.converter.AuthenticatorDataConverter;
 import com.webauthn4j.converter.util.ObjectConverter;
 import com.webauthn4j.data.client.ClientDataType;
-import com.webauthn4j.springframework.security.WebAuthnAuthenticationRequest;
 import com.webauthn4j.test.TestDataUtil;
 import org.junit.Test;
 

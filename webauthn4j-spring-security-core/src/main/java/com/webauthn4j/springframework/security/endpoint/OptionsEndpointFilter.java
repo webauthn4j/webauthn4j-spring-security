@@ -18,7 +18,6 @@ package com.webauthn4j.springframework.security.endpoint;
 
 import com.webauthn4j.converter.util.JsonConverter;
 import com.webauthn4j.converter.util.ObjectConverter;
-import com.webauthn4j.data.PublicKeyCredentialDescriptor;
 import com.webauthn4j.data.PublicKeyCredentialRpEntity;
 import com.webauthn4j.data.client.challenge.Challenge;
 import com.webauthn4j.springframework.security.options.AssertionOptions;
@@ -42,8 +41,6 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * A filter for providing WebAuthn option parameters to clients.

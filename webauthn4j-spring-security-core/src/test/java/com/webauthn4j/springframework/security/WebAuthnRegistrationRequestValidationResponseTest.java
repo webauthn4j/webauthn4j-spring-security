@@ -22,7 +22,6 @@ import com.webauthn4j.data.client.ClientDataType;
 import com.webauthn4j.data.client.CollectedClientData;
 import com.webauthn4j.data.extension.client.AuthenticationExtensionsClientOutputs;
 import com.webauthn4j.data.extension.client.RegistrationExtensionClientOutput;
-import com.webauthn4j.springframework.security.WebAuthnRegistrationRequestValidationResponse;
 import com.webauthn4j.test.TestDataUtil;
 import org.junit.Test;
 

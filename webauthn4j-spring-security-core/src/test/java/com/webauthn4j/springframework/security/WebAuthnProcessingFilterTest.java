@@ -18,9 +18,6 @@ package com.webauthn4j.springframework.security;
 
 import com.webauthn4j.data.extension.client.FIDOAppIDExtensionClientInput;
 import com.webauthn4j.server.ServerProperty;
-import com.webauthn4j.springframework.security.WebAuthnAssertionAuthenticationToken;
-import com.webauthn4j.springframework.security.WebAuthnAuthenticationRequest;
-import com.webauthn4j.springframework.security.WebAuthnProcessingFilter;
 import com.webauthn4j.springframework.security.server.ServerPropertyProvider;
 import com.webauthn4j.util.Base64UrlUtil;
 import org.assertj.core.api.Assertions;

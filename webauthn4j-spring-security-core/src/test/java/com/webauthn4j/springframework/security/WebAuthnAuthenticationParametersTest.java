@@ -23,7 +23,6 @@ import com.webauthn4j.data.client.Origin;
 import com.webauthn4j.data.client.challenge.Challenge;
 import com.webauthn4j.data.client.challenge.DefaultChallenge;
 import com.webauthn4j.server.ServerProperty;
-import com.webauthn4j.springframework.security.WebAuthnAuthenticationParameters;
 import com.webauthn4j.test.TestDataUtil;
 import org.junit.Test;
 

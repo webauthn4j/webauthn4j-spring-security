@@ -34,10 +34,10 @@ import com.webauthn4j.springframework.security.metadata.JsonFileResourceMetadata
 import com.webauthn4j.springframework.security.metadata.RestTemplateAdaptorHttpClient;
 import com.webauthn4j.springframework.security.options.OptionsProvider;
 import com.webauthn4j.springframework.security.options.OptionsProviderImpl;
-import com.webauthn4j.springframework.security.webauthn.sample.app.security.ExampleExtensionAuthenticatorOutput;
-import com.webauthn4j.springframework.security.webauthn.sample.app.security.ExampleExtensionClientInput;
 import com.webauthn4j.springframework.security.server.ServerPropertyProvider;
 import com.webauthn4j.springframework.security.server.ServerPropertyProviderImpl;
+import com.webauthn4j.springframework.security.webauthn.sample.app.security.ExampleExtensionAuthenticatorOutput;
+import com.webauthn4j.springframework.security.webauthn.sample.app.security.ExampleExtensionClientInput;
 import com.webauthn4j.util.Base64Util;
 import com.webauthn4j.util.CertificateUtil;
 import com.webauthn4j.validator.attestation.statement.androidkey.AndroidKeyAttestationStatementValidator;
