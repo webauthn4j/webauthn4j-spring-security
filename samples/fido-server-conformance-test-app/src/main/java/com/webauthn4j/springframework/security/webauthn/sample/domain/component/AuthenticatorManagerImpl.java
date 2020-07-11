@@ -18,7 +18,6 @@ package com.webauthn4j.springframework.security.webauthn.sample.domain.component
 
 import com.webauthn4j.springframework.security.authenticator.WebAuthnAuthenticator;
 import com.webauthn4j.springframework.security.exception.CredentialIdNotFoundException;
-import com.webauthn4j.springframework.security.webauthn.sample.domain.constant.MessageCodes;
 import com.webauthn4j.springframework.security.webauthn.sample.domain.entity.AuthenticatorEntity;
 import com.webauthn4j.springframework.security.webauthn.sample.domain.exception.WebAuthnSampleBusinessException;
 import com.webauthn4j.springframework.security.webauthn.sample.domain.repository.AuthenticatorEntityRepository;
@@ -27,7 +26,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
-import org.terasoluna.gfw.common.message.ResultMessages;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -68,7 +66,7 @@ public class AuthenticatorManagerImpl implements AuthenticatorManager {
     public void addAuthenticator(WebAuthnAuthenticator webAuthnAuthenticator) {
         authenticatorEntityRepository.findOneByCredentialId(webAuthnAuthenticator.getAttestedCredentialData().getCredentialId())
                 .ifPresent((retrievedAuthenticatorEntity) -> {
-            throw new WebAuthnSampleBusinessException(ResultMessages.error().add(MessageCodes.Error.Authenticator.AUTHENTICATOR_NOT_FOUND));
+            throw new WebAuthnSampleBusinessException("Authenticator is not found.");
         });
 
         AuthenticatorEntity authenticatorEntity = new AuthenticatorEntity();
