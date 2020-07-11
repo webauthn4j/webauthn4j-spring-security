@@ -17,8 +17,10 @@
 package com.webauthn4j.springframework.security.authenticator;
 
 import org.junit.Test;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.mock;
 
 public class WebAuthnAuthenticatorImplTest {
 
@@ -29,6 +31,14 @@ public class WebAuthnAuthenticatorImplTest {
         assertThat(instanceA)
                 .isEqualTo(instanceB)
                 .hasSameHashCodeAs(instanceB);
+    }
+
+    @Test
+    public void get_set_userPrincipal_test() {
+        WebAuthnAuthenticatorImpl instance = new WebAuthnAuthenticatorImpl("authenticator", null, null, 0);
+        UserDetails userDetails = mock(UserDetails.class);
+        instance.setUserPrincipal(userDetails);
+        assertThat(instance.getUserPrincipal()).isEqualTo(userDetails);
     }
 
     @Test

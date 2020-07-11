@@ -41,6 +41,7 @@ public class PublicKeyCredentialDescriptorMixinTest {
         PublicKeyCredentialDescriptor publicKeyCredentialDescriptor = new PublicKeyCredentialDescriptor(PublicKeyCredentialType.PUBLIC_KEY, new byte[32], Collections.singleton(AuthenticatorTransport.INTERNAL));
         String json = objectConverter.getJsonConverter().writeValueAsString(publicKeyCredentialDescriptor);
         assertThat(json).isEqualTo("{\"type\":\"public-key\",\"id\":\"AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\",\"transports\":[\"internal\"]}");
+        assertThat(objectConverter.getJsonConverter().readValue(json, PublicKeyCredentialDescriptor.class)).isEqualTo(publicKeyCredentialDescriptor);
     }
 
 }

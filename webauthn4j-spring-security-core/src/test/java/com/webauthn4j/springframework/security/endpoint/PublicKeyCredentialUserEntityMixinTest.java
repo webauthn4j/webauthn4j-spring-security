@@ -28,7 +28,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class PublicKeyCredentialUserEntityMixinTest {
 
     @Test
-    public void test(){
+    public void serialize_deserialize_test(){
         ObjectMapper jsonMapper = new ObjectMapper();
         jsonMapper.addMixIn(PublicKeyCredentialDescriptor.class, PublicKeyCredentialDescriptorMixin.class);
         ObjectMapper cborMapper = new ObjectMapper(new CBORFactory());
@@ -37,7 +37,9 @@ public class PublicKeyCredentialUserEntityMixinTest {
         PublicKeyCredentialUserEntity publicKeyCredentialUserEntity = new PublicKeyCredentialUserEntity(new byte[32], "name", "displayName", "icon");
         String json = objectConverter.getJsonConverter().writeValueAsString(publicKeyCredentialUserEntity);
         assertThat(json).isEqualTo("{\"id\":\"AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=\",\"name\":\"name\",\"displayName\":\"displayName\",\"icon\":\"icon\"}");
+        assertThat(objectConverter.getJsonConverter().readValue(json, PublicKeyCredentialUserEntity.class)).isEqualTo(publicKeyCredentialUserEntity);
     }
+
 
 
 }

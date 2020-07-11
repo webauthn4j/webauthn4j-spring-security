@@ -23,6 +23,20 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class ParametersTest {
 
     @Test
+    public void getter_test(){
+        Parameters instance = new Parameters("username", "password",
+                "credentialId", "clientDataJSON", "authenticatorData",
+                "signature", "clientExtensionsJSON");
+        assertThat(instance.getUsername()).isEqualTo("username");
+        assertThat(instance.getPassword()).isEqualTo("password");
+        assertThat(instance.getCredentialId()).isEqualTo("credentialId");
+        assertThat(instance.getClientDataJSON()).isEqualTo("clientDataJSON");
+        assertThat(instance.getAuthenticatorData()).isEqualTo("authenticatorData");
+        assertThat(instance.getSignature()).isEqualTo("signature");
+        assertThat(instance.getClientExtensionsJSON()).isEqualTo("clientExtensionsJSON");
+    }
+
+    @Test
     public void equals_hashCode_test() {
         Parameters instanceA = new Parameters("username", "password",
                 "credentialId", "clientDataJSON", "authenticatorData",
