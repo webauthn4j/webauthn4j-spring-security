@@ -16,7 +16,6 @@
 
 package com.webauthn4j.springframework.security.webauthn.sample.domain.service;
 
-import com.webauthn4j.springframework.security.webauthn.sample.domain.constant.MessageCodes;
 import com.webauthn4j.springframework.security.webauthn.sample.domain.dto.AuthorityUpdateDto;
 import com.webauthn4j.springframework.security.webauthn.sample.domain.entity.AuthorityEntity;
 import com.webauthn4j.springframework.security.webauthn.sample.domain.entity.GroupEntity;
@@ -30,7 +29,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.terasoluna.gfw.common.message.ResultMessages;
 
 import java.util.List;
 
@@ -55,7 +53,7 @@ public class AuthorityServiceImpl implements AuthorityService {
     @Override
     public AuthorityEntity findOne(Integer authorityId) {
         return authorityEntityRepository.findById(authorityId)
-                .orElseThrow(() -> new WebAuthnSampleEntityNotFoundException(ResultMessages.error().add(MessageCodes.Error.Authority.AUTHORITY_NOT_FOUND)));
+                .orElseThrow(() -> new WebAuthnSampleEntityNotFoundException("Authority not found."));
     }
 
     @Override
@@ -83,13 +81,13 @@ public class AuthorityServiceImpl implements AuthorityService {
     @Override
     public AuthorityEntity update(AuthorityEntity authorityEntity) {
         return authorityEntityRepository.findById(authorityEntity.getId()).orElseThrow(() ->
-                new WebAuthnSampleEntityNotFoundException(ResultMessages.error().add(MessageCodes.Error.Authority.AUTHORITY_NOT_FOUND)));
+                new WebAuthnSampleEntityNotFoundException("Authority not found."));
     }
 
     @Override
     public AuthorityEntity update(AuthorityUpdateDto authorityUpdateDto) {
         AuthorityEntity retrievedAuthorityEntity = authorityEntityRepository.findById(authorityUpdateDto.getId())
-                .orElseThrow(() -> new WebAuthnSampleEntityNotFoundException(ResultMessages.error().add(MessageCodes.Error.Authority.AUTHORITY_NOT_FOUND)));
+                .orElseThrow(() -> new WebAuthnSampleEntityNotFoundException("Authority not found."));
         List<UserEntity> userEntityList = userEntityRepository.findAllById(authorityUpdateDto.getUsers());
         List<GroupEntity> groupEntityList = groupEntityRepository.findAllById(authorityUpdateDto.getGroups());
         retrievedAuthorityEntity.setUsers(userEntityList);

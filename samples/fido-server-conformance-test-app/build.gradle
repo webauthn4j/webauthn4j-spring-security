@@ -36,10 +36,6 @@ dependencies {
     implementation("com.fasterxml.jackson.core:jackson-databind")
     implementation("com.fasterxml.jackson.dataformat:jackson-dataformat-cbor")
 
-    //Terasoluna
-    implementation("org.terasoluna.gfw:terasoluna-gfw-common")
-    implementation("org.terasoluna.gfw:terasoluna-gfw-web")
-
     //Others
     implementation("org.slf4j:jcl-over-slf4j")
     implementation('ch.qos.logback:logback-classic')

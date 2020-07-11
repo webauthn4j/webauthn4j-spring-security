@@ -189,7 +189,6 @@ configure(allJavaProjects) {
     def webauthn4jVersion = '0.13.0-SNAPSHOT'
     def springSecurityVersion = '5.3.3.RELEASE'
     def springBootVersion = '2.3.1.RELEASE'
-    def terasolunaVersion = '5.5.1.RELEASE'
     def thymeleafVersion = '3.0.4.RELEASE'
     def modelMapperVersion = '2.3.8'
     def log4jdbcVersion = '0.2.7'
@@ -213,8 +212,6 @@ configure(allJavaProjects) {
             implementation("com.webauthn4j:webauthn4j-test:$webauthn4jVersion")
 
             // Independent libraries for Sample applications
-            implementation("org.terasoluna.gfw:terasoluna-gfw-common:$terasolunaVersion")
-            implementation("org.terasoluna.gfw:terasoluna-gfw-web:$terasolunaVersion")
             implementation("org.thymeleaf:thymeleaf-testing:$thymeleafVersion")
             implementation("org.modelmapper:modelmapper:$modelMapperVersion")
             implementation("org.lazyluke:log4jdbc-remix:$log4jdbcVersion")
