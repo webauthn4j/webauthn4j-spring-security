@@ -53,8 +53,9 @@ public class WebAuthnAuthenticationTokenTest {
         WebAuthnAuthenticationRequest credential = mock(WebAuthnAuthenticationRequest.class);
         WebAuthnAuthenticationToken tokenA = new WebAuthnAuthenticationToken(new TestUserDetailsImpl("username"), credential, null);
         WebAuthnAuthenticationToken tokenB = new WebAuthnAuthenticationToken(new TestUserDetailsImpl("username"), credential, null);
-        assertThat(tokenA).isEqualTo(tokenB);
-        assertThat(tokenA).hasSameHashCodeAs(tokenB);
+        assertThat(tokenA)
+                .isEqualTo(tokenB)
+                .hasSameHashCodeAs(tokenB);
     }
 
 

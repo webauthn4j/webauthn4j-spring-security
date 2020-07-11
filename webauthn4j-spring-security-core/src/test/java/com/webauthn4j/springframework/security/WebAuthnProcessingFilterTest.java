@@ -126,7 +126,7 @@ public class WebAuthnProcessingFilterTest {
         assertThat(authenticationToken.getCredentials().getClientExtensionsJSON()).isEqualTo(clientExtensionsJSON);
 
         assertThat(authenticationToken.getParameters().getServerProperty()).isEqualTo(serverProperty);
-        assertThat(authenticationToken.getParameters().getExpectedAuthenticationExtensionIds()).isEqualTo(null);
+        assertThat(authenticationToken.getParameters().getExpectedAuthenticationExtensionIds()).isNull();
 
     }
 
@@ -170,7 +170,7 @@ public class WebAuthnProcessingFilterTest {
         assertThat(authenticationToken.getCredentials().getClientExtensionsJSON()).isEqualTo(clientExtensionsJSON);
 
         assertThat(authenticationToken.getParameters().getServerProperty()).isEqualTo(serverProperty);
-        assertThat(authenticationToken.getParameters().getExpectedAuthenticationExtensionIds()).isEqualTo(null);
+        assertThat(authenticationToken.getParameters().getExpectedAuthenticationExtensionIds()).isNull();
 
     }
 

@@ -43,8 +43,8 @@ public class AttestationOptionsTest {
         AttestationOptions instanceA = new AttestationOptions(rpEntity, userEntity, challenge, pubKeyCredParams, registrationTimeout, credentials, authenticationExtensionsClientInputs);
         AttestationOptions instanceB = new AttestationOptions(rpEntity, userEntity, challenge, pubKeyCredParams, registrationTimeout, credentials, authenticationExtensionsClientInputs);
 
-        assertThat(instanceA).isEqualTo(instanceB);
-        assertThat(instanceA).hasSameHashCodeAs(instanceB);
+        assertThat(instanceA)
+                .isEqualTo(instanceB)
+                .hasSameHashCodeAs(instanceB);
     }
-
 }

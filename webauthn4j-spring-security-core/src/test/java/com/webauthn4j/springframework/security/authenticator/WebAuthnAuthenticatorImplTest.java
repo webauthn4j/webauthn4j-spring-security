@@ -26,8 +26,9 @@ public class WebAuthnAuthenticatorImplTest {
     public void equals_hashCode_test() {
         WebAuthnAuthenticatorImpl instanceA = new WebAuthnAuthenticatorImpl("authenticator", null, null, 0);
         WebAuthnAuthenticatorImpl instanceB = new WebAuthnAuthenticatorImpl("authenticator", null, null, 0);
-        assertThat(instanceA).isEqualTo(instanceB);
-        assertThat(instanceA).hasSameHashCodeAs(instanceB);
+        assertThat(instanceA)
+                .isEqualTo(instanceB)
+                .hasSameHashCodeAs(instanceB);
     }
 
     @Test

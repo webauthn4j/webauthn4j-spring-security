@@ -50,8 +50,8 @@ public class WebAuthnAuthenticationParametersTest {
                 Collections.singletonList("uvi")
         );
         assertThat(parameters.getServerProperty()).isEqualTo(serverProperty);
-        assertThat(parameters.isUserVerificationRequired()).isEqualTo(true);
-        assertThat(parameters.isUserPresenceRequired()).isEqualTo(true);
+        assertThat(parameters.isUserVerificationRequired()).isTrue();
+        assertThat(parameters.isUserPresenceRequired()).isTrue();
         assertThat(parameters.getExpectedAuthenticationExtensionIds()).isEqualTo(Collections.singletonList("uvi"));
     }
 
@@ -83,7 +83,8 @@ public class WebAuthnAuthenticationParametersTest {
                 Collections.singletonList("uvi")
         );
 
-        assertThat(parametersA).isEqualTo(parametersB);
-        assertThat(parametersA).hasSameHashCodeAs(parametersB);
+        assertThat(parametersA)
+                .isEqualTo(parametersB)
+                .hasSameHashCodeAs(parametersB);
     }
 }

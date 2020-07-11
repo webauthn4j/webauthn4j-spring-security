@@ -31,8 +31,9 @@ public class ParametersTest {
                 "credentialId", "clientDataJSON", "authenticatorData",
                 "signature", "clientDataJSON");
 
-        assertThat(instanceA).isEqualTo(instanceB);
-        assertThat(instanceA).hasSameHashCodeAs(instanceB);
+        assertThat(instanceA)
+                .isEqualTo(instanceB)
+                .hasSameHashCodeAs(instanceB);
     }
 
 }

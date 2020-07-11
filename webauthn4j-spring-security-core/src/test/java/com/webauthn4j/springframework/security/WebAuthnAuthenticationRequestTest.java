@@ -43,7 +43,7 @@ public class WebAuthnAuthenticationRequestTest {
         assertThat(request.getClientDataJSON()).isEqualTo(clientDataJSON);
         assertThat(request.getAuthenticatorData()).isEqualTo(authenticatorData);
         assertThat(request.getSignature()).isEqualTo(new byte[]{0x45, 0x56});
-        assertThat(request.getClientExtensionsJSON()).isEqualTo("");
+        assertThat(request.getClientExtensionsJSON()).isEmpty();
     }
 
     @Test
@@ -65,7 +65,8 @@ public class WebAuthnAuthenticationRequestTest {
                 ""
         );
 
-        assertThat(requestA).isEqualTo(requestB);
-        assertThat(requestA).hasSameHashCodeAs(requestB);
+        assertThat(requestA)
+                .isEqualTo(requestB)
+                .hasSameHashCodeAs(requestB);
     }
 }

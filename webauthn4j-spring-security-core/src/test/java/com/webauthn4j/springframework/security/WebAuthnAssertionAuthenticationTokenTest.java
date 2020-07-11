@@ -57,7 +57,8 @@ public class WebAuthnAssertionAuthenticationTokenTest {
         WebAuthnAssertionAuthenticationToken tokenA = new WebAuthnAssertionAuthenticationToken(request, parameters, null);
         WebAuthnAssertionAuthenticationToken tokenB = new WebAuthnAssertionAuthenticationToken(request, parameters, null);
 
-        assertThat(tokenA).isEqualTo(tokenB);
-        assertThat(tokenA).hasSameHashCodeAs(tokenB);
+        assertThat(tokenA)
+                .isEqualTo(tokenB)
+                .hasSameHashCodeAs(tokenB);
     }
 }

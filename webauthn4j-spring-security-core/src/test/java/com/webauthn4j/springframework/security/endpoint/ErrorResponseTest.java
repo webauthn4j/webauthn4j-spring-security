@@ -33,8 +33,9 @@ public class ErrorResponseTest {
         ErrorResponse instanceA = new ErrorResponse("message");
         ErrorResponse instanceB = new ErrorResponse("message");
 
-        assertThat(instanceA).isEqualTo(instanceB);
-        assertThat(instanceA).hasSameHashCodeAs(instanceB);
+        assertThat(instanceA)
+                .isEqualTo(instanceB)
+                .hasSameHashCodeAs(instanceB);
     }
 
 }
