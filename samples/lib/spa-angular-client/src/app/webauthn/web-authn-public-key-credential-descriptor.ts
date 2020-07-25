@@ -15,6 +15,7 @@
  */
 
 export interface WebAuthnPublicKeyCredentialDescriptor {
-  type: "public-key";
+  type: PublicKeyCredentialType;
   id: string;
+  transports?: AuthenticatorTransport[];
 }

@@ -21,8 +21,8 @@ import com.webauthn4j.data.client.challenge.Challenge;
 import com.webauthn4j.data.client.challenge.DefaultChallenge;
 import com.webauthn4j.data.extension.client.AuthenticationExtensionsClientInputs;
 import com.webauthn4j.data.extension.client.RegistrationExtensionClientInput;
-import com.webauthn4j.springframework.security.webauthn.options.AttestationOptions;
-import com.webauthn4j.springframework.security.webauthn.options.OptionsProvider;
+import com.webauthn4j.springframework.security.options.AttestationOptions;
+import com.webauthn4j.springframework.security.options.OptionsProvider;
 import com.webauthn4j.util.Base64UrlUtil;
 import org.springframework.util.Assert;
 
@@ -86,12 +86,14 @@ public class FidoServerAttestationOptionsEndpointFilter extends ServerEndpointFi
         if (attestationOptions.getUser() == null) {
             userHandle = Base64UrlUtil.encodeToString(generateUserHandle());
         } else {
-            userHandle = attestationOptions.getUser().getUserHandle();
+            userHandle = Base64UrlUtil.encodeToString(attestationOptions.getUser().getId());
         }
         ServerPublicKeyCredentialUserEntity user = new ServerPublicKeyCredentialUserEntity(userHandle, username, displayName, null);
         List<ServerPublicKeyCredentialDescriptor> credentials =
-                attestationOptions.getCredentials().stream().map(ServerPublicKeyCredentialDescriptor::new).collect(Collectors.toList());
-        AuthenticationExtensionsClientInputs<RegistrationExtensionClientInput<?>> authenticationExtensionsClientInputs;
+                attestationOptions.getCredentials().stream()
+                        .map(credential -> new ServerPublicKeyCredentialDescriptor(credential.getType(), Base64UrlUtil.encodeToString(credential.getId()), credential.getTransports()))
+                        .collect(Collectors.toList());
+        AuthenticationExtensionsClientInputs<RegistrationExtensionClientInput> authenticationExtensionsClientInputs;
         if (serverRequest.getExtensions() != null) {
             authenticationExtensionsClientInputs = serverRequest.getExtensions();
         } else {

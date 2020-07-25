@@ -17,14 +17,14 @@
 package com.webauthn4j.springframework.security.webauthn.sample.app.config;
 
 import com.webauthn4j.WebAuthnManager;
+import com.webauthn4j.converter.util.ObjectConverter;
 import com.webauthn4j.data.PublicKeyCredentialType;
 import com.webauthn4j.data.attestation.statement.COSEAlgorithmIdentifier;
-import com.webauthn4j.data.extension.client.CredentialPropertiesExtensionClientInput;
-import com.webauthn4j.springframework.security.webauthn.authenticator.WebAuthnAuthenticatorService;
-import com.webauthn4j.springframework.security.webauthn.config.configurers.WebAuthnAuthenticationProviderConfigurer;
-import com.webauthn4j.springframework.security.webauthn.config.configurers.WebAuthnConfigurer;
-import com.webauthn4j.springframework.security.webauthn.config.configurers.WebAuthnLoginConfigurer;
-import com.webauthn4j.springframework.security.webauthn.userdetails.WebAuthnUserDetailsService;
+import com.webauthn4j.springframework.security.authenticator.WebAuthnAuthenticatorService;
+import com.webauthn4j.springframework.security.config.configurers.WebAuthnAuthenticationProviderConfigurer;
+import com.webauthn4j.springframework.security.config.configurers.WebAuthnConfigurer;
+import com.webauthn4j.springframework.security.config.configurers.WebAuthnLoginConfigurer;
+import com.webauthn4j.springframework.security.options.OptionsProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
@@ -34,6 +34,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.access.AccessDeniedHandler;
@@ -69,7 +70,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     private AuthenticationEntryPoint authenticationEntryPoint;
 
     @Autowired
-    private WebAuthnUserDetailsService userDetailsService;
+    private UserDetailsService userDetailsService;
 
     @Autowired
     private WebAuthnAuthenticatorService authenticatorService;
@@ -80,9 +81,15 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
+    @Autowired
+    private OptionsProvider optionsProvider;
+
+    @Autowired
+    private ObjectConverter objectConverter;
+
     @Override
     public void configure(AuthenticationManagerBuilder builder) throws Exception {
-        builder.apply(new WebAuthnAuthenticationProviderConfigurer<>(userDetailsService, authenticatorService, webAuthnManager));
+        builder.apply(new WebAuthnAuthenticationProviderConfigurer<>(authenticatorService, webAuthnManager));
         builder.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder);
     }
 
@@ -111,9 +118,17 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .addPublicKeyCredParams(PublicKeyCredentialType.PUBLIC_KEY, COSEAlgorithmIdentifier.ES256) // FIDO U2F Key, etc
                 .and()
                 .registrationExtensions()
-                .addExtension(new CredentialPropertiesExtensionClientInput(true))
+                    .credProps(true)
                 .and();
 
+        // Password Login
+        http.formLogin()
+                .loginPage("/login")
+                .usernameParameter("username")
+                .passwordParameter("password")
+                .loginProcessingUrl("/login")
+                .successHandler(authenticationSuccessHandler)
+                .failureHandler(authenticationFailureHandler);
 
         // WebAuthn Login
         http.apply(WebAuthnLoginConfigurer.webAuthnLogin())
@@ -125,7 +140,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .authenticatorDataParameter("authenticatorData")
                 .signatureParameter("signature")
                 .clientExtensionsJSONParameter("clientExtensionsJSON")
-                .loginProcessingUrl("/login")
+                .loginProcessingUrl("/webAuthnLogin")
                 .successHandler(authenticationSuccessHandler)
                 .failureHandler(authenticationFailureHandler);
 

@@ -186,7 +186,7 @@ configure(allJavaProjects) {
         maven { url "https://oss.jfrog.org/artifactory/libs-snapshot" }
     }
 
-    def webauthn4jVersion = '0.12.1-SNAPSHOT'
+    def webauthn4jVersion = '0.13.0-SNAPSHOT'
     def springSecurityVersion = '5.3.3.RELEASE'
     def springBootVersion = '2.3.1.RELEASE'
     def terasolunaVersion = '5.6.0.RELEASE'
@@ -213,8 +213,6 @@ configure(allJavaProjects) {
             implementation("com.webauthn4j:webauthn4j-test:$webauthn4jVersion")
 
             // Independent libraries for Sample applications
-            implementation("org.terasoluna.gfw:terasoluna-gfw-common:$terasolunaVersion")
-            implementation("org.terasoluna.gfw:terasoluna-gfw-web:$terasolunaVersion")
             implementation("org.thymeleaf:thymeleaf-testing:$thymeleafVersion")
             implementation("org.modelmapper:modelmapper:$modelMapperVersion")
             implementation("org.lazyluke:log4jdbc-remix:$log4jdbcVersion")

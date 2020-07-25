@@ -16,12 +16,9 @@
 
 package com.webauthn4j.springframework.security.webauthn.sample.app.config;
 
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.web.config.EnableSpringDataWebSupport;
-import org.terasoluna.gfw.common.exception.ExceptionLogger;
-import org.terasoluna.gfw.web.exception.ExceptionLoggingFilter;
 
 
 /**
@@ -29,14 +26,7 @@ import org.terasoluna.gfw.web.exception.ExceptionLoggingFilter;
  */
 @Configuration
 @EnableSpringDataWebSupport
-@ComponentScan(basePackages = "com.webauthn4j.springframework.security.webauthn.sample.app")
+@ComponentScan(basePackages = {"com.webauthn4j.springframework.security.webauthn.sample.app", "com.webauthn4j.springframework.security.webauthn.sample.domain"})
 public class AppConfig {
-
-    @Bean
-    public ExceptionLoggingFilter exceptionLoggingFilter(ExceptionLogger exceptionLogger) {
-        ExceptionLoggingFilter exceptionLoggingFilter = new ExceptionLoggingFilter();
-        exceptionLoggingFilter.setExceptionLogger(exceptionLogger);
-        return exceptionLoggingFilter;
-    }
 
 }

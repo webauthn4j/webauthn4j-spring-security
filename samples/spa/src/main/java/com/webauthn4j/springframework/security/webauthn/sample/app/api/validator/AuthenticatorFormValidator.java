@@ -16,7 +16,7 @@
 
 package com.webauthn4j.springframework.security.webauthn.sample.app.api.validator;
 
-import com.webauthn4j.springframework.security.webauthn.WebAuthnRegistrationRequestValidator;
+import com.webauthn4j.springframework.security.WebAuthnRegistrationRequestValidator;
 import com.webauthn4j.springframework.security.webauthn.sample.app.api.AuthenticatorForm;
 import com.webauthn4j.validator.exception.ValidationException;
 import org.springframework.stereotype.Component;

@@ -144,7 +144,8 @@ export class WebAuthnService {
         credentials: response.credentials.map(credential => {
           return {
             type: credential.type,
-            id: base64url.decodeBase64url(credential.id)
+            id: base64url.decodeBase64url(credential.id),
+            //TODO: transports: credential.transports
           }
         }),
         parameters: response.parameters

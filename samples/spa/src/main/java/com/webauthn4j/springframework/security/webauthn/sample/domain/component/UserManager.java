@@ -19,11 +19,14 @@ package com.webauthn4j.springframework.security.webauthn.sample.domain.component
 
 import com.webauthn4j.springframework.security.webauthn.sample.domain.entity.UserEntity;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
 /**
  * ユーザー詳細サービス
  */
 public interface UserManager extends UserDetailsService {
+
+    UserEntity loadUserByUsername(String username) throws UsernameNotFoundException;
 
     /**
      * create a userEntity

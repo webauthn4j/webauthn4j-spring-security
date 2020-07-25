@@ -15,6 +15,8 @@
  */
 
 export interface WebAuthnPublicKeyCredentialUserEntity {
-  userHandle: string;
-  username: string;
+  id: string;
+  name: string;
+  displayName: string;
+  icon: string;
 }

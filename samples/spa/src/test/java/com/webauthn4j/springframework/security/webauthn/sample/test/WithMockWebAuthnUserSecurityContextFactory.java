@@ -16,8 +16,8 @@
 
 package com.webauthn4j.springframework.security.webauthn.sample.test;
 
-import com.webauthn4j.springframework.security.webauthn.WebAuthnAuthenticationToken;
-import com.webauthn4j.springframework.security.webauthn.request.WebAuthnAuthenticationRequest;
+import com.webauthn4j.springframework.security.WebAuthnAuthenticationRequest;
+import com.webauthn4j.springframework.security.WebAuthnAuthenticationToken;
 import com.webauthn4j.springframework.security.webauthn.sample.domain.entity.AuthenticatorEntity;
 import com.webauthn4j.springframework.security.webauthn.sample.domain.entity.AuthorityEntity;
 import com.webauthn4j.springframework.security.webauthn.sample.domain.entity.GroupEntity;

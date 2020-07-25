@@ -16,9 +16,9 @@
 
 package com.webauthn4j.springframework.security.fido.server.util;
 
+import com.webauthn4j.springframework.security.exception.ConstraintViolationException;
 import com.webauthn4j.springframework.security.fido.server.endpoint.ServerAuthenticatorResponse;
 import com.webauthn4j.springframework.security.fido.server.endpoint.ServerPublicKeyCredential;
-import com.webauthn4j.springframework.security.webauthn.exception.ConstraintViolationException;
 
 public class BeanAssertUtil {
 

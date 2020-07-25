@@ -19,7 +19,7 @@ package com.webauthn4j.springframework.security.webauthn.sample.app.util.jackson
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
-import com.webauthn4j.springframework.security.webauthn.converter.Base64UrlStringToCollectedClientDataConverter;
+import com.webauthn4j.springframework.security.converter.Base64UrlStringToCollectedClientDataConverter;
 import com.webauthn4j.springframework.security.webauthn.sample.app.api.CollectedClientDataForm;
 import org.springframework.boot.jackson.JsonComponent;
 

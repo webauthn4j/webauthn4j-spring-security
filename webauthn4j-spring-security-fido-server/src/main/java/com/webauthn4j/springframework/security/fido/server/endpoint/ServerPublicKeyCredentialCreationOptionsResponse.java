@@ -35,7 +35,7 @@ public class ServerPublicKeyCredentialCreationOptionsResponse extends ServerResp
     private List<ServerPublicKeyCredentialDescriptor> excludeCredentials;
     private AuthenticatorSelectionCriteria authenticatorSelection;
     private AttestationConveyancePreference attestation;
-    private AuthenticationExtensionsClientInputs<RegistrationExtensionClientInput<?>> extensions;
+    private AuthenticationExtensionsClientInputs<RegistrationExtensionClientInput> extensions;
 
     @SuppressWarnings("squid:S00107")
     public ServerPublicKeyCredentialCreationOptionsResponse(
@@ -47,7 +47,7 @@ public class ServerPublicKeyCredentialCreationOptionsResponse extends ServerResp
             List<ServerPublicKeyCredentialDescriptor> excludeCredentials,
             AuthenticatorSelectionCriteria authenticatorSelection,
             AttestationConveyancePreference attestation,
-            AuthenticationExtensionsClientInputs<RegistrationExtensionClientInput<?>> extensions) {
+            AuthenticationExtensionsClientInputs<RegistrationExtensionClientInput> extensions) {
         super();
 
         this.rp = rp;
@@ -96,7 +96,7 @@ public class ServerPublicKeyCredentialCreationOptionsResponse extends ServerResp
         return attestation;
     }
 
-    public AuthenticationExtensionsClientInputs<RegistrationExtensionClientInput<?>> getExtensions() {
+    public AuthenticationExtensionsClientInputs<RegistrationExtensionClientInput> getExtensions() {
         return extensions;
     }
 }

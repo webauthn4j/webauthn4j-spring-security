@@ -29,7 +29,7 @@ public class ServerPublicKeyCredentialGetOptionsResponse extends ServerResponseB
     private String rpId;
     private List<ServerPublicKeyCredentialDescriptor> allowCredentials;
     private UserVerificationRequirement userVerification;
-    private AuthenticationExtensionsClientInputs<AuthenticationExtensionClientInput<?>> extensions;
+    private AuthenticationExtensionsClientInputs<AuthenticationExtensionClientInput> extensions;
 
     public ServerPublicKeyCredentialGetOptionsResponse(
             String challenge,
@@ -37,7 +37,7 @@ public class ServerPublicKeyCredentialGetOptionsResponse extends ServerResponseB
             String rpId,
             List<ServerPublicKeyCredentialDescriptor> allowCredentials,
             UserVerificationRequirement userVerification,
-            AuthenticationExtensionsClientInputs<AuthenticationExtensionClientInput<?>> extensions) {
+            AuthenticationExtensionsClientInputs<AuthenticationExtensionClientInput> extensions) {
         super();
         this.challenge = challenge;
         this.timeout = timeout;
@@ -76,7 +76,7 @@ public class ServerPublicKeyCredentialGetOptionsResponse extends ServerResponseB
         return userVerification;
     }
 
-    public AuthenticationExtensionsClientInputs<AuthenticationExtensionClientInput<?>> getExtensions() {
+    public AuthenticationExtensionsClientInputs<AuthenticationExtensionClientInput> getExtensions() {
         return extensions;
     }
 

@@ -25,9 +25,9 @@ import java.util.Objects;
 public class ServerPublicKeyCredentialGetOptionsRequest implements ServerRequest {
     private String username;
     private final UserVerificationRequirement userVerification;
-    private AuthenticationExtensionsClientInputs<AuthenticationExtensionClientInput<?>> extensions;
+    private AuthenticationExtensionsClientInputs<AuthenticationExtensionClientInput> extensions;
 
-    public ServerPublicKeyCredentialGetOptionsRequest(String username, UserVerificationRequirement userVerification, AuthenticationExtensionsClientInputs<AuthenticationExtensionClientInput<?>> extensions) {
+    public ServerPublicKeyCredentialGetOptionsRequest(String username, UserVerificationRequirement userVerification, AuthenticationExtensionsClientInputs<AuthenticationExtensionClientInput> extensions) {
         this.username = username;
         this.userVerification = userVerification;
         this.extensions = extensions;
@@ -55,7 +55,7 @@ public class ServerPublicKeyCredentialGetOptionsRequest implements ServerRequest
         return userVerification;
     }
 
-    public AuthenticationExtensionsClientInputs<AuthenticationExtensionClientInput<?>> getExtensions() {
+    public AuthenticationExtensionsClientInputs<AuthenticationExtensionClientInput> getExtensions() {
         return extensions;
     }
 

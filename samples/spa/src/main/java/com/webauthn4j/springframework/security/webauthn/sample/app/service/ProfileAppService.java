@@ -41,6 +41,7 @@ public interface ProfileAppService {
      * update the specified user
      *
      * @param id userId
+     * @param profileUpdateForm profileUpdateForm
      */
     UserEntity update(int id, ProfileUpdateForm profileUpdateForm);
 

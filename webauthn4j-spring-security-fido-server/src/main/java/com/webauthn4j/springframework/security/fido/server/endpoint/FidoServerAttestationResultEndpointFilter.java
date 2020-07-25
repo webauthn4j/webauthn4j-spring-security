@@ -22,10 +22,12 @@ import com.webauthn4j.converter.CollectedClientDataConverter;
 import com.webauthn4j.converter.util.ObjectConverter;
 import com.webauthn4j.data.attestation.AttestationObject;
 import com.webauthn4j.data.client.CollectedClientData;
+import com.webauthn4j.springframework.security.WebAuthnRegistrationRequestValidator;
+import com.webauthn4j.springframework.security.authenticator.WebAuthnAuthenticatorImpl;
+import com.webauthn4j.springframework.security.authenticator.WebAuthnAuthenticatorManager;
 import com.webauthn4j.springframework.security.fido.server.validator.ServerPublicKeyCredentialValidator;
-import com.webauthn4j.springframework.security.webauthn.WebAuthnRegistrationRequestValidator;
-import com.webauthn4j.springframework.security.webauthn.authenticator.WebAuthnAuthenticator;
-import com.webauthn4j.springframework.security.webauthn.userdetails.WebAuthnUserDetailsService;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.util.Assert;
 
@@ -43,7 +45,8 @@ public class FidoServerAttestationResultEndpointFilter extends ServerEndpointFil
      */
     public static final String FILTER_URL = "/webauthn/attestation/result";
 
-    private final WebAuthnUserDetailsService webAuthnUserDetailsService;
+    private final UserDetailsService userDetailsService;
+    private final WebAuthnAuthenticatorManager webAuthnAuthenticatorManager;
     private final AttestationObjectConverter attestationObjectConverter;
     private final CollectedClientDataConverter collectedClientDataConverter;
     private final WebAuthnRegistrationRequestValidator webAuthnRegistrationRequestValidator;
@@ -56,14 +59,16 @@ public class FidoServerAttestationResultEndpointFilter extends ServerEndpointFil
 
     public FidoServerAttestationResultEndpointFilter(
             ObjectConverter objectConverter,
-            WebAuthnUserDetailsService webAuthnUserDetailsService,
+            UserDetailsService userDetailsService,
+            WebAuthnAuthenticatorManager webAuthnAuthenticatorManager,
             WebAuthnRegistrationRequestValidator webAuthnRegistrationRequestValidator) {
         super(FILTER_URL, objectConverter);
         this.attestationObjectConverter = new AttestationObjectConverter(objectConverter);
         this.collectedClientDataConverter = new CollectedClientDataConverter(objectConverter);
         this.serverPublicKeyCredentialValidator = new ServerPublicKeyCredentialValidator<>();
 
-        this.webAuthnUserDetailsService = webAuthnUserDetailsService;
+        this.userDetailsService = userDetailsService;
+        this.webAuthnAuthenticatorManager = webAuthnAuthenticatorManager;
         this.webAuthnRegistrationRequestValidator = webAuthnRegistrationRequestValidator;
         checkConfig();
     }
@@ -76,7 +81,6 @@ public class FidoServerAttestationResultEndpointFilter extends ServerEndpointFil
 
     @SuppressWarnings("squid:S2177")
     private void checkConfig() {
-        Assert.notNull(webAuthnUserDetailsService, "webAuthnUserDetailsService must not be null");
         Assert.notNull(webAuthnRegistrationRequestValidator, "webAuthnRegistrationRequestValidator must not be null");
     }
 
@@ -102,19 +106,21 @@ public class FidoServerAttestationResultEndpointFilter extends ServerEndpointFil
                 transports,
                 credential.getClientExtensionResults());
 
-        WebAuthnAuthenticator webAuthnAuthenticator =
-                new WebAuthnAuthenticator(
+        WebAuthnAuthenticatorImpl webAuthnAuthenticator =
+                new WebAuthnAuthenticatorImpl(
                         "Authenticator",
                         attestationObject.getAuthenticatorData().getAttestedCredentialData(),
                         attestationObject.getAttestationStatement(),
                         attestationObject.getAuthenticatorData().getSignCount());
         String loginUsername = serverEndpointFilterUtil.decodeUsername(collectedClientData.getChallenge());
         try {
-            webAuthnUserDetailsService.loadUserByUsername(loginUsername);
+            userDetailsService.loadUserByUsername(loginUsername);
         } catch (UsernameNotFoundException e) {
             usernameNotFoundHandler.onUsernameNotFound(loginUsername);
         }
-        webAuthnUserDetailsService.addAuthenticator(loginUsername, webAuthnAuthenticator);
+        UserDetails userDetails = userDetailsService.loadUserByUsername(loginUsername);
+        webAuthnAuthenticator.setUserPrincipal(userDetails);
+        webAuthnAuthenticatorManager.addAuthenticator(webAuthnAuthenticator);
         return new AttestationResultSuccessResponse();
     }
 

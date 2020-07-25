@@ -40,10 +40,6 @@ dependencies {
 
     implementation("org.hibernate:hibernate-validator:6.1.5.Final") //FIXME
 
-    //Terasoluna
-    implementation("org.terasoluna.gfw:terasoluna-gfw-common")
-    implementation("org.terasoluna.gfw:terasoluna-gfw-web")
-
     //Others
     implementation("org.slf4j:jcl-over-slf4j")
     implementation('ch.qos.logback:logback-classic')
