@@ -22,10 +22,7 @@ import com.webauthn4j.data.attestation.statement.AttestationStatement;
 import com.webauthn4j.data.extension.authenticator.RegistrationExtensionAuthenticatorOutput;
 import com.webauthn4j.data.extension.client.RegistrationExtensionClientOutput;
 import com.webauthn4j.springframework.security.authenticator.WebAuthnAuthenticator;
-import com.webauthn4j.springframework.security.webauthn.sample.infrastructure.util.jpa.converter.AttestationStatementConverter;
-import com.webauthn4j.springframework.security.webauthn.sample.infrastructure.util.jpa.converter.AuthenticatorExtensionsConverter;
-import com.webauthn4j.springframework.security.webauthn.sample.infrastructure.util.jpa.converter.AuthenticatorTransportConverter;
-import com.webauthn4j.springframework.security.webauthn.sample.infrastructure.util.jpa.converter.ClientExtensionsConverter;
+import com.webauthn4j.springframework.security.webauthn.sample.infrastructure.util.jpa.converter.*;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
@@ -57,6 +54,15 @@ public class AuthenticatorEntity implements WebAuthnAuthenticator {
     private Set<AuthenticatorTransport> transports;
 
     @Embedded
+    @AttributeOverrides({
+            @AttributeOverride(name="aaguid", column=@Column(columnDefinition = "blob")),
+            @AttributeOverride(name="credentialId", column=@Column(columnDefinition = "blob")),
+            @AttributeOverride(name="coseKey", column=@Column(name = "cose_key", columnDefinition = "blob"))
+    })
+    @Converts({
+            @Convert(converter = AAGUIDConverter.class, attributeName = "aaguid"),
+            @Convert(converter = COSEKeyConverter.class, attributeName = "coseKey")
+    })
     private AttestedCredentialData attestedCredentialData;
 
     @Lob
