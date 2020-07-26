@@ -19,13 +19,12 @@ package com.webauthn4j.springframework.security.webauthn.sample.infrastructure.u
 import com.webauthn4j.converter.util.CborConverter;
 import com.webauthn4j.converter.util.ObjectConverter;
 import com.webauthn4j.data.attestation.authenticator.COSEKey;
-import com.webauthn4j.util.Base64UrlUtil;
 
 import javax.persistence.AttributeConverter;
 import javax.persistence.Converter;
 
 @Converter
-public class COSEKeyConverter implements AttributeConverter<COSEKey, String> {
+public class COSEKeyConverter implements AttributeConverter<COSEKey, byte[]> {
 
     private final CborConverter cborConverter;
 
@@ -34,13 +33,12 @@ public class COSEKeyConverter implements AttributeConverter<COSEKey, String> {
     }
 
     @Override
-    public String convertToDatabaseColumn(COSEKey attribute) {
-        return Base64UrlUtil.encodeToString(cborConverter.writeValueAsBytes(attribute));
+    public byte[] convertToDatabaseColumn(COSEKey attribute) {
+        return cborConverter.writeValueAsBytes(attribute);
     }
 
     @Override
-    public COSEKey convertToEntityAttribute(String dbData) {
-        byte[] data = Base64UrlUtil.decode(dbData);
-        return cborConverter.readValue(data, COSEKey.class);
+    public COSEKey convertToEntityAttribute(byte[] dbData) {
+        return cborConverter.readValue(dbData, COSEKey.class);
     }
 }

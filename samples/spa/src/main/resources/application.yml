@@ -14,8 +14,6 @@ spring:
     hibernate:
       ddl-auto: validate
     database-platform: org.hibernate.dialect.H2Dialect
-    mapping-resources:
-      - db/mapping/orm.xml
   redis:
     host: localhost
     port: 6379
