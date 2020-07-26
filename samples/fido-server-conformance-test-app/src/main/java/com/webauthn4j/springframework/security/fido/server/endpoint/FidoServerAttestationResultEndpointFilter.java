@@ -19,6 +19,7 @@ package com.webauthn4j.springframework.security.fido.server.endpoint;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.webauthn4j.converter.AttestationObjectConverter;
 import com.webauthn4j.converter.CollectedClientDataConverter;
+import com.webauthn4j.converter.exception.DataConversionException;
 import com.webauthn4j.converter.util.ObjectConverter;
 import com.webauthn4j.data.attestation.AttestationObject;
 import com.webauthn4j.data.client.CollectedClientData;
@@ -92,36 +93,41 @@ public class FidoServerAttestationResultEndpointFilter extends ServerEndpointFil
         } catch (IOException e) {
             throw new UncheckedIOException(e);
         }
-        ServerPublicKeyCredential<ServerAuthenticatorAttestationResponse> credential =
-                this.objectConverter.getJsonConverter().readValue(inputStream, credentialTypeRef);
-        serverPublicKeyCredentialValidator.validate(credential);
-        ServerAuthenticatorAttestationResponse response = credential.getResponse();
-        CollectedClientData collectedClientData = collectedClientDataConverter.convert(response.getClientDataJSON());
-        AttestationObject attestationObject = attestationObjectConverter.convert(response.getAttestationObject());
-        Set<String> transports = Collections.emptySet();
-        webAuthnRegistrationRequestValidator.validate(
-                request,
-                response.getClientDataJSON(),
-                response.getAttestationObject(),
-                transports,
-                credential.getClientExtensionResults());
+        try{
+            ServerPublicKeyCredential<ServerAuthenticatorAttestationResponse> credential =
+                    this.objectConverter.getJsonConverter().readValue(inputStream, credentialTypeRef);
+            serverPublicKeyCredentialValidator.validate(credential);
+            ServerAuthenticatorAttestationResponse response = credential.getResponse();
+            CollectedClientData collectedClientData = collectedClientDataConverter.convert(response.getClientDataJSON());
+            AttestationObject attestationObject = attestationObjectConverter.convert(response.getAttestationObject());
+            Set<String> transports = Collections.emptySet();
+            webAuthnRegistrationRequestValidator.validate(
+                    request,
+                    response.getClientDataJSON(),
+                    response.getAttestationObject(),
+                    transports,
+                    credential.getClientExtensionResults());
 
-        WebAuthnAuthenticatorImpl webAuthnAuthenticator =
-                new WebAuthnAuthenticatorImpl(
-                        "Authenticator",
-                        attestationObject.getAuthenticatorData().getAttestedCredentialData(),
-                        attestationObject.getAttestationStatement(),
-                        attestationObject.getAuthenticatorData().getSignCount());
-        String loginUsername = serverEndpointFilterUtil.decodeUsername(collectedClientData.getChallenge());
-        try {
-            userDetailsService.loadUserByUsername(loginUsername);
-        } catch (UsernameNotFoundException e) {
-            usernameNotFoundHandler.onUsernameNotFound(loginUsername);
+            WebAuthnAuthenticatorImpl webAuthnAuthenticator =
+                    new WebAuthnAuthenticatorImpl(
+                            "Authenticator",
+                            attestationObject.getAuthenticatorData().getAttestedCredentialData(),
+                            attestationObject.getAttestationStatement(),
+                            attestationObject.getAuthenticatorData().getSignCount());
+            String loginUsername = serverEndpointFilterUtil.decodeUsername(collectedClientData.getChallenge());
+            try {
+                userDetailsService.loadUserByUsername(loginUsername);
+            } catch (UsernameNotFoundException e) {
+                usernameNotFoundHandler.onUsernameNotFound(loginUsername);
+            }
+            UserDetails userDetails = userDetailsService.loadUserByUsername(loginUsername);
+            webAuthnAuthenticator.setUserPrincipal(userDetails);
+            webAuthnAuthenticatorManager.addAuthenticator(webAuthnAuthenticator);
+            return new AttestationResultSuccessResponse();
         }
-        UserDetails userDetails = userDetailsService.loadUserByUsername(loginUsername);
-        webAuthnAuthenticator.setUserPrincipal(userDetails);
-        webAuthnAuthenticatorManager.addAuthenticator(webAuthnAuthenticator);
-        return new AttestationResultSuccessResponse();
+        catch (DataConversionException e){
+            throw new com.webauthn4j.springframework.security.exception.DataConversionException("Failed to convert data", e);
+        }
     }
 
     public UsernameNotFoundHandler getUsernameNotFoundHandler() {

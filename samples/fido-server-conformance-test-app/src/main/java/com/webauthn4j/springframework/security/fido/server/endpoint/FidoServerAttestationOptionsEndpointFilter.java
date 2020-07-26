@@ -16,6 +16,7 @@
 
 package com.webauthn4j.springframework.security.fido.server.endpoint;
 
+import com.webauthn4j.converter.exception.DataConversionException;
 import com.webauthn4j.converter.util.ObjectConverter;
 import com.webauthn4j.data.client.challenge.Challenge;
 import com.webauthn4j.data.client.challenge.DefaultChallenge;
@@ -76,40 +77,45 @@ public class FidoServerAttestationOptionsEndpointFilter extends ServerEndpointFi
         } catch (IOException e) {
             throw new UncheckedIOException(e);
         }
-        ServerPublicKeyCredentialCreationOptionsRequest serverRequest = objectConverter.getJsonConverter()
-                .readValue(inputStream, ServerPublicKeyCredentialCreationOptionsRequest.class);
-        String username = serverRequest.getUsername();
-        String displayName = serverRequest.getDisplayName();
-        Challenge challenge = serverEndpointFilterUtil.encodeUsername(new DefaultChallenge(), username);
-        AttestationOptions attestationOptions = optionsProvider.getAttestationOptions(request, username, challenge);
-        String userHandle;
-        if (attestationOptions.getUser() == null) {
-            userHandle = Base64UrlUtil.encodeToString(generateUserHandle());
-        } else {
-            userHandle = Base64UrlUtil.encodeToString(attestationOptions.getUser().getId());
-        }
-        ServerPublicKeyCredentialUserEntity user = new ServerPublicKeyCredentialUserEntity(userHandle, username, displayName, null);
-        List<ServerPublicKeyCredentialDescriptor> credentials =
-                attestationOptions.getCredentials().stream()
-                        .map(credential -> new ServerPublicKeyCredentialDescriptor(credential.getType(), Base64UrlUtil.encodeToString(credential.getId()), credential.getTransports()))
-                        .collect(Collectors.toList());
-        AuthenticationExtensionsClientInputs<RegistrationExtensionClientInput> authenticationExtensionsClientInputs;
-        if (serverRequest.getExtensions() != null) {
-            authenticationExtensionsClientInputs = serverRequest.getExtensions();
-        } else {
-            authenticationExtensionsClientInputs = attestationOptions.getRegistrationExtensions();
-        }
+        try {
+            ServerPublicKeyCredentialCreationOptionsRequest serverRequest = objectConverter.getJsonConverter()
+                    .readValue(inputStream, ServerPublicKeyCredentialCreationOptionsRequest.class);
+            String username = serverRequest.getUsername();
+            String displayName = serverRequest.getDisplayName();
+            Challenge challenge = serverEndpointFilterUtil.encodeUsername(new DefaultChallenge(), username);
+            AttestationOptions attestationOptions = optionsProvider.getAttestationOptions(request, username, challenge);
+            String userHandle;
+            if (attestationOptions.getUser() == null) {
+                userHandle = Base64UrlUtil.encodeToString(generateUserHandle());
+            } else {
+                userHandle = Base64UrlUtil.encodeToString(attestationOptions.getUser().getId());
+            }
+            ServerPublicKeyCredentialUserEntity user = new ServerPublicKeyCredentialUserEntity(userHandle, username, displayName, null);
+            List<ServerPublicKeyCredentialDescriptor> credentials =
+                    attestationOptions.getCredentials().stream()
+                            .map(credential -> new ServerPublicKeyCredentialDescriptor(credential.getType(), Base64UrlUtil.encodeToString(credential.getId()), credential.getTransports()))
+                            .collect(Collectors.toList());
+            AuthenticationExtensionsClientInputs<RegistrationExtensionClientInput> authenticationExtensionsClientInputs;
+            if (serverRequest.getExtensions() != null) {
+                authenticationExtensionsClientInputs = serverRequest.getExtensions();
+            } else {
+                authenticationExtensionsClientInputs = attestationOptions.getRegistrationExtensions();
+            }
 
-        return new ServerPublicKeyCredentialCreationOptionsResponse(
-                attestationOptions.getRelyingParty(),
-                user,
-                Base64UrlUtil.encodeToString(attestationOptions.getChallenge().getValue()),
-                attestationOptions.getPubKeyCredParams(),
-                attestationOptions.getRegistrationTimeout(),
-                credentials,
-                serverRequest.getAuthenticatorSelection(),
-                serverRequest.getAttestation(),
-                authenticationExtensionsClientInputs);
+            return new ServerPublicKeyCredentialCreationOptionsResponse(
+                    attestationOptions.getRelyingParty(),
+                    user,
+                    Base64UrlUtil.encodeToString(attestationOptions.getChallenge().getValue()),
+                    attestationOptions.getPubKeyCredParams(),
+                    attestationOptions.getRegistrationTimeout(),
+                    credentials,
+                    serverRequest.getAuthenticatorSelection(),
+                    serverRequest.getAttestation(),
+                    authenticationExtensionsClientInputs);
+        }
+        catch (DataConversionException e){
+            throw new com.webauthn4j.springframework.security.exception.DataConversionException("Failed to convert data", e);
+        }
     }
 
 

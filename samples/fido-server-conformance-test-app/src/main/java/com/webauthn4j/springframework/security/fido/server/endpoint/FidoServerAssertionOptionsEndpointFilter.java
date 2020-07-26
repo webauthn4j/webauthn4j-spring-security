@@ -16,6 +16,7 @@
 
 package com.webauthn4j.springframework.security.fido.server.endpoint;
 
+import com.webauthn4j.converter.exception.DataConversionException;
 import com.webauthn4j.converter.util.ObjectConverter;
 import com.webauthn4j.data.client.challenge.Challenge;
 import com.webauthn4j.data.client.challenge.DefaultChallenge;
@@ -75,26 +76,31 @@ public class FidoServerAssertionOptionsEndpointFilter extends ServerEndpointFilt
         } catch (IOException e) {
             throw new UncheckedIOException(e);
         }
-        ServerPublicKeyCredentialGetOptionsRequest serverRequest =
-                objectConverter.getJsonConverter().readValue(inputStream, ServerPublicKeyCredentialGetOptionsRequest.class);
-        String username = serverRequest.getUsername();
-        Challenge challenge = serverEndpointFilterUtil.encodeUserVerification(new DefaultChallenge(), serverRequest.getUserVerification());
-        AssertionOptions options = optionsProvider.getAssertionOptions(request, username, challenge);
-        List<ServerPublicKeyCredentialDescriptor> credentials = options.getCredentials().stream().map(ServerPublicKeyCredentialDescriptor::new).collect(Collectors.toList());
-        AuthenticationExtensionsClientInputs<AuthenticationExtensionClientInput> authenticationExtensionsClientInputs;
-        if (serverRequest.getExtensions() != null) {
-            authenticationExtensionsClientInputs = serverRequest.getExtensions();
-        } else {
-            authenticationExtensionsClientInputs = options.getAuthenticationExtensions();
-        }
+        try {
+            ServerPublicKeyCredentialGetOptionsRequest serverRequest =
+                    objectConverter.getJsonConverter().readValue(inputStream, ServerPublicKeyCredentialGetOptionsRequest.class);
+            String username = serverRequest.getUsername();
+            Challenge challenge = serverEndpointFilterUtil.encodeUserVerification(new DefaultChallenge(), serverRequest.getUserVerification());
+            AssertionOptions options = optionsProvider.getAssertionOptions(request, username, challenge);
+            List<ServerPublicKeyCredentialDescriptor> credentials = options.getCredentials().stream().map(ServerPublicKeyCredentialDescriptor::new).collect(Collectors.toList());
+            AuthenticationExtensionsClientInputs<AuthenticationExtensionClientInput> authenticationExtensionsClientInputs;
+            if (serverRequest.getExtensions() != null) {
+                authenticationExtensionsClientInputs = serverRequest.getExtensions();
+            } else {
+                authenticationExtensionsClientInputs = options.getAuthenticationExtensions();
+            }
 
-        return new ServerPublicKeyCredentialGetOptionsResponse(
-                Base64UrlUtil.encodeToString(options.getChallenge().getValue()),
-                options.getAuthenticationTimeout(),
-                options.getRpId(),
-                credentials,
-                serverRequest.getUserVerification(),
-                authenticationExtensionsClientInputs);
+            return new ServerPublicKeyCredentialGetOptionsResponse(
+                    Base64UrlUtil.encodeToString(options.getChallenge().getValue()),
+                    options.getAuthenticationTimeout(),
+                    options.getRpId(),
+                    credentials,
+                    serverRequest.getUserVerification(),
+                    authenticationExtensionsClientInputs);
+        }
+        catch (DataConversionException e){
+            throw new com.webauthn4j.springframework.security.exception.DataConversionException("Failed to convert data", e);
+        }
     }
 
 }
