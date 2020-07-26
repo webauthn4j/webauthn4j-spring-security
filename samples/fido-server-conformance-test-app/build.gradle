@@ -26,7 +26,7 @@ bootJar {
 
 dependencies {
     implementation project(':webauthn4j-spring-security-core')
-    implementation project(':webauthn4j-spring-security-fido-server')
+    implementation project(':webauthn4j-spring-security-metadata')
 
     // Spring Framework
     implementation('org.springframework.boot:spring-boot-starter-data-jpa')
@@ -47,9 +47,14 @@ dependencies {
     runtimeOnly("org.lazyluke:log4jdbc-remix")
 
     //Test
+    testImplementation('org.projectlombok:lombok')
+
     testImplementation("com.webauthn4j:webauthn4j-test")
+
     testImplementation('org.springframework.boot:spring-boot-starter-test')
+    testImplementation('org.springframework:spring-webmvc')
     testImplementation('org.springframework.security:spring-security-test')
+
     testImplementation('junit:junit')
     testImplementation('org.mockito:mockito-core')
     testImplementation('org.assertj:assertj-core')
