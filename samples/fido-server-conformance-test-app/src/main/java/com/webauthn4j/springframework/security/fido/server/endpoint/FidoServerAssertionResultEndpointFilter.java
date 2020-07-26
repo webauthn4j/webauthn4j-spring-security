@@ -18,6 +18,7 @@ package com.webauthn4j.springframework.security.fido.server.endpoint;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.webauthn4j.converter.CollectedClientDataConverter;
+import com.webauthn4j.converter.exception.DataConversionException;
 import com.webauthn4j.converter.util.JsonConverter;
 import com.webauthn4j.converter.util.ObjectConverter;
 import com.webauthn4j.data.UserVerificationRequirement;
@@ -60,7 +61,7 @@ public class FidoServerAssertionResultEndpointFilter extends AbstractAuthenticat
     private final CollectedClientDataConverter collectedClientDataConverter;
     private final ServerEndpointFilterUtil serverEndpointFilterUtil;
 
-    private List<String> expectedAuthenticationExtensionIds = Collections.emptyList();
+    private List<String> expectedAuthenticationExtensionIds = null;
 
     public FidoServerAssertionResultEndpointFilter(
             ObjectConverter objectConverter,
@@ -108,35 +109,39 @@ public class FidoServerAssertionResultEndpointFilter extends AbstractAuthenticat
         } catch (IOException e) {
             throw new UncheckedIOException(e);
         }
-        ServerPublicKeyCredential<ServerAuthenticatorAssertionResponse> credential =
-                jsonConverter.readValue(inputStream, credentialTypeRef);
-        serverPublicKeyCredentialValidator.validate(credential);
+        try{
+            ServerPublicKeyCredential<ServerAuthenticatorAssertionResponse> credential = jsonConverter.readValue(inputStream, credentialTypeRef);
+            serverPublicKeyCredentialValidator.validate(credential);
 
-        ServerAuthenticatorAssertionResponse assertionResponse = credential.getResponse();
+            ServerAuthenticatorAssertionResponse assertionResponse = credential.getResponse();
 
-        ServerProperty serverProperty = serverPropertyProvider.provide(request);
+            ServerProperty serverProperty = serverPropertyProvider.provide(request);
 
-        CollectedClientData collectedClientData = collectedClientDataConverter.convert(assertionResponse.getClientDataJSON());
-        UserVerificationRequirement userVerificationRequirement = serverEndpointFilterUtil.decodeUserVerification(collectedClientData.getChallenge());
+            CollectedClientData collectedClientData = collectedClientDataConverter.convert(assertionResponse.getClientDataJSON());
+            UserVerificationRequirement userVerificationRequirement = serverEndpointFilterUtil.decodeUserVerification(collectedClientData.getChallenge());
 
-        WebAuthnAuthenticationRequest webAuthnAuthenticationRequest = new WebAuthnAuthenticationRequest(
-                Base64UrlUtil.decode(credential.getRawId()),
-                Base64UrlUtil.decode(assertionResponse.getClientDataJSON()),
-                Base64UrlUtil.decode(assertionResponse.getAuthenticatorData()),
-                Base64UrlUtil.decode(assertionResponse.getSignature()),
-                credential.getClientExtensionResults()
-        );
-        WebAuthnAuthenticationParameters webAuthnAuthenticationParameters = new WebAuthnAuthenticationParameters(
-                serverProperty,
-                userVerificationRequirement == UserVerificationRequirement.REQUIRED,
-                true,
-                expectedAuthenticationExtensionIds
-        );
+            WebAuthnAuthenticationRequest webAuthnAuthenticationRequest = new WebAuthnAuthenticationRequest(
+                    credential.getRawId() == null ? null : Base64UrlUtil.decode(credential.getRawId()),
+                    assertionResponse.getClientDataJSON() == null ? null : Base64UrlUtil.decode(assertionResponse.getClientDataJSON()),
+                    assertionResponse.getAuthenticatorData() == null ? null : Base64UrlUtil.decode(assertionResponse.getAuthenticatorData()),
+                    assertionResponse.getSignature() == null ? null : Base64UrlUtil.decode(assertionResponse.getSignature()),
+                    credential.getClientExtensionResults()
+            );
+            WebAuthnAuthenticationParameters webAuthnAuthenticationParameters = new WebAuthnAuthenticationParameters(
+                    serverProperty,
+                    userVerificationRequirement == UserVerificationRequirement.REQUIRED,
+                    false,
+                    expectedAuthenticationExtensionIds
+            );
 
-        WebAuthnAssertionAuthenticationToken webAuthnAssertionAuthenticationToken =
-                new WebAuthnAssertionAuthenticationToken(webAuthnAuthenticationRequest, webAuthnAuthenticationParameters, Collections.emptyList());
-        setDetails(request, webAuthnAssertionAuthenticationToken);
-        return this.getAuthenticationManager().authenticate(webAuthnAssertionAuthenticationToken);
+            WebAuthnAssertionAuthenticationToken webAuthnAssertionAuthenticationToken =
+                    new WebAuthnAssertionAuthenticationToken(webAuthnAuthenticationRequest, webAuthnAuthenticationParameters, Collections.emptyList());
+            setDetails(request, webAuthnAssertionAuthenticationToken);
+            return this.getAuthenticationManager().authenticate(webAuthnAssertionAuthenticationToken);
+        }
+        catch (DataConversionException e){
+            throw new com.webauthn4j.springframework.security.exception.DataConversionException("Failed to convert data", e);
+        }
     }
 
     protected void setDetails(HttpServletRequest request, WebAuthnAssertionAuthenticationToken authRequest) {

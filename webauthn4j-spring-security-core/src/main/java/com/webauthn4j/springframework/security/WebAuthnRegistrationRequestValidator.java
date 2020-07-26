@@ -122,7 +122,6 @@ public class WebAuthnRegistrationRequestValidator {
     }
 
     public void setExpectedRegistrationExtensionIds(List<String> expectedRegistrationExtensionIds) {
-        Assert.notNull(expectedRegistrationExtensionIds, "expectedRegistrationExtensionIds must not be null");
         this.expectedRegistrationExtensionIds = expectedRegistrationExtensionIds;
     }
 }
