@@ -61,7 +61,7 @@ public class FidoServerAssertionResultEndpointFilter extends AbstractAuthenticat
     private final CollectedClientDataConverter collectedClientDataConverter;
     private final ServerEndpointFilterUtil serverEndpointFilterUtil;
 
-    private List<String> expectedAuthenticationExtensionIds = Collections.emptyList();
+    private List<String> expectedAuthenticationExtensionIds = null;
 
     public FidoServerAssertionResultEndpointFilter(
             ObjectConverter objectConverter,
@@ -130,7 +130,7 @@ public class FidoServerAssertionResultEndpointFilter extends AbstractAuthenticat
             WebAuthnAuthenticationParameters webAuthnAuthenticationParameters = new WebAuthnAuthenticationParameters(
                     serverProperty,
                     userVerificationRequirement == UserVerificationRequirement.REQUIRED,
-                    true,
+                    false,
                     expectedAuthenticationExtensionIds
             );
 
