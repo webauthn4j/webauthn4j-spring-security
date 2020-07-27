@@ -19,7 +19,8 @@ package com.webauthn4j.springframework.security.config.configurers;
 import com.webauthn4j.converter.util.ObjectConverter;
 import com.webauthn4j.springframework.security.WebAuthnProcessingFilter;
 import com.webauthn4j.springframework.security.challenge.ChallengeRepository;
-import com.webauthn4j.springframework.security.endpoint.OptionsEndpointFilter;
+import com.webauthn4j.springframework.security.endpoint.AssertionOptionsEndpointFilter;
+import com.webauthn4j.springframework.security.endpoint.AttestationOptionsEndpointFilter;
 import com.webauthn4j.springframework.security.options.OptionsProvider;
 import com.webauthn4j.springframework.security.server.ServerPropertyProvider;
 import org.springframework.context.ApplicationContext;
@@ -48,7 +49,7 @@ import java.util.List;
  *
  * <ul>
  * <li>{@link WebAuthnProcessingFilter}</li>
- * <li>{@link OptionsEndpointFilter}</li>
+ * <li>{@link AttestationOptionsEndpointFilter}</li>
  * </ul>
  *
  * <h2>Shared Objects Created</h2>
@@ -74,7 +75,8 @@ import java.util.List;
 public final class WebAuthnLoginConfigurer<H extends HttpSecurityBuilder<H>> extends
         AbstractAuthenticationFilterConfigurer<H, WebAuthnLoginConfigurer<H>, WebAuthnProcessingFilter> {
 
-    private final WebAuthnLoginConfigurer<H>.OptionsEndpointConfig optionsEndpointConfig = new WebAuthnLoginConfigurer<H>.OptionsEndpointConfig();
+    private final AttestationOptionsEndpointConfig attestationOptionsEndpointConfig = new AttestationOptionsEndpointConfig();
+    private final AssertionOptionsEndpointConfig assertionOptionsEndpointConfig = new AssertionOptionsEndpointConfig();
     private final WebAuthnLoginConfigurer<H>.ExpectedAuthenticationExtensionIdsConfig
             expectedAuthenticationExtensionIdsConfig = new WebAuthnLoginConfigurer<H>.ExpectedAuthenticationExtensionIdsConfig();
     //~ Instance fields
@@ -124,7 +126,9 @@ public final class WebAuthnLoginConfigurer<H extends HttpSecurityBuilder<H>> ext
 
         this.getAuthenticationFilter().setServerPropertyProvider(serverPropertyProvider);
 
-        this.optionsEndpointConfig.configure(http);
+        this.attestationOptionsEndpointConfig.configure(http);
+        this.assertionOptionsEndpointConfig.configure(http);
+
         if (expectedAuthenticationExtensionIdsConfig.expectedAuthenticationExtensionIds.isEmpty()) {
             this.getAuthenticationFilter().setExpectedAuthenticationExtensionIds(new ArrayList<>(optionsProvider.getAuthenticationExtensions().getKeys()));
         } else {
@@ -203,13 +207,23 @@ public final class WebAuthnLoginConfigurer<H extends HttpSecurityBuilder<H>> ext
 
 
     /**
-     * Returns the {@link OptionsEndpointConfig} for configuring the {@link OptionsEndpointFilter}
+     * Returns the {@link AttestationOptionsEndpointConfig} for configuring the {@link AttestationOptionsEndpointFilter}
      *
-     * @return the {@link OptionsEndpointConfig}
+     * @return the {@link AttestationOptionsEndpointConfig}
      */
-    public WebAuthnLoginConfigurer<H>.OptionsEndpointConfig optionsEndpoint() {
-        return optionsEndpointConfig;
+    public AttestationOptionsEndpointConfig attestationOptionsEndpoint() {
+        return attestationOptionsEndpointConfig;
     }
+
+    /**
+     * Returns the {@link AssertionOptionsEndpointConfig} for configuring the {@link AssertionOptionsEndpointFilter}
+     *
+     * @return the {@link AssertionOptionsEndpointConfig}
+     */
+    public AssertionOptionsEndpointConfig assertionOptionsEndpointConfig() {
+        return assertionOptionsEndpointConfig;
+    }
+
 
     /**
      * Returns the {@link ExpectedAuthenticationExtensionIdsConfig} for configuring the expectedAuthenticationExtensionId(s)
@@ -369,24 +383,24 @@ public final class WebAuthnLoginConfigurer<H extends HttpSecurityBuilder<H>> ext
     }
 
     /**
-     * Configuration options for the {@link OptionsEndpointFilter}
+     * Configuration options for the {@link AttestationOptionsEndpointFilter}
      */
-    public class OptionsEndpointConfig {
+    public class AttestationOptionsEndpointConfig {
 
-        private String processingUrl = OptionsEndpointFilter.FILTER_URL;
+        private String processingUrl = AttestationOptionsEndpointFilter.FILTER_URL;
 
-        private OptionsEndpointConfig() {
+        private AttestationOptionsEndpointConfig() {
         }
 
         private void configure(H http) {
-            OptionsEndpointFilter optionsEndpointFilter;
+            AttestationOptionsEndpointFilter optionsEndpointFilter;
             ApplicationContext applicationContext = http.getSharedObject(ApplicationContext.class);
-            String[] beanNames = applicationContext.getBeanNamesForType(OptionsEndpointFilter.class);
+            String[] beanNames = applicationContext.getBeanNamesForType(AttestationOptionsEndpointFilter.class);
             if (beanNames.length == 0) {
-                optionsEndpointFilter = new OptionsEndpointFilter(optionsProvider, objectConverter);
+                optionsEndpointFilter = new AttestationOptionsEndpointFilter(optionsProvider, objectConverter);
                 optionsEndpointFilter.setFilterProcessesUrl(processingUrl);
             } else {
-                optionsEndpointFilter = applicationContext.getBean(OptionsEndpointFilter.class);
+                optionsEndpointFilter = applicationContext.getBean(AttestationOptionsEndpointFilter.class);
             }
 
             http.addFilterAfter(optionsEndpointFilter, SessionManagementFilter.class);
@@ -396,9 +410,55 @@ public final class WebAuthnLoginConfigurer<H extends HttpSecurityBuilder<H>> ext
          * Sets the URL for the options endpoint
          *
          * @param processingUrl the URL for the options endpoint
-         * @return the {@link OptionsEndpointConfig} for additional customization
+         * @return the {@link AttestationOptionsEndpointConfig} for additional customization
          */
-        public WebAuthnLoginConfigurer<H>.OptionsEndpointConfig processingUrl(String processingUrl) {
+        public AttestationOptionsEndpointConfig processingUrl(String processingUrl) {
+            this.processingUrl = processingUrl;
+            return this;
+        }
+
+        /**
+         * Returns the {@link WebAuthnLoginConfigurer} for further configuration.
+         *
+         * @return the {@link WebAuthnLoginConfigurer}
+         */
+        public WebAuthnLoginConfigurer<H> and() {
+            return WebAuthnLoginConfigurer.this;
+        }
+
+    }
+
+    /**
+     * Configuration options for the {@link AssertionOptionsEndpointFilter}
+     */
+    public class AssertionOptionsEndpointConfig {
+
+        private String processingUrl = AssertionOptionsEndpointFilter.FILTER_URL;
+
+        private AssertionOptionsEndpointConfig() {
+        }
+
+        private void configure(H http) {
+            AssertionOptionsEndpointFilter optionsEndpointFilter;
+            ApplicationContext applicationContext = http.getSharedObject(ApplicationContext.class);
+            String[] beanNames = applicationContext.getBeanNamesForType(AssertionOptionsEndpointFilter.class);
+            if (beanNames.length == 0) {
+                optionsEndpointFilter = new AssertionOptionsEndpointFilter(optionsProvider, objectConverter);
+                optionsEndpointFilter.setFilterProcessesUrl(processingUrl);
+            } else {
+                optionsEndpointFilter = applicationContext.getBean(AssertionOptionsEndpointFilter.class);
+            }
+
+            http.addFilterAfter(optionsEndpointFilter, SessionManagementFilter.class);
+        }
+
+        /**
+         * Sets the URL for the options endpoint
+         *
+         * @param processingUrl the URL for the options endpoint
+         * @return the {@link AssertionOptionsEndpointConfig} for additional customization
+         */
+        public AssertionOptionsEndpointConfig processingUrl(String processingUrl) {
             this.processingUrl = processingUrl;
             return this;
         }

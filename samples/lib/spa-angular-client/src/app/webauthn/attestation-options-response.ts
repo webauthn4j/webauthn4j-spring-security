@@ -14,19 +14,14 @@
  * limitations under the License.
  */
 
-package com.webauthn4j.springframework.security.options;
+import {WebAuthnPublicKeyCredentialUserEntity} from "./web-authn-public-key-credential-user-entity";
+import {WebAuthnPublicKeyCredentialDescriptor} from "./web-authn-public-key-credential-descriptor";
 
-import com.webauthn4j.data.PublicKeyCredentialUserEntity;
-
-/**
- * Core interface to load {@link PublicKeyCredentialUserEntity}
- */
-public interface PublicKeyCredentialUserEntityService {
-
-    /**
-     * Load {@link PublicKeyCredentialUserEntity}
-     * @param username username
-     * @return {@link PublicKeyCredentialUserEntity}
-     */
-    PublicKeyCredentialUserEntity loadUserByUsername(String username);
+export interface AttestationOptionsResponse {
+  relyingParty: PublicKeyCredentialRpEntity;
+  user?: WebAuthnPublicKeyCredentialUserEntity;
+  challenge: string;
+  pubKeyCredParams: PublicKeyCredentialParameters[];
+  timeout?: number,
+  credentials: WebAuthnPublicKeyCredentialDescriptor[];
 }

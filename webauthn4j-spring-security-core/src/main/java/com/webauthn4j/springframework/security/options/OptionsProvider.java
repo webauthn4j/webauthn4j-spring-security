@@ -21,7 +21,7 @@ import com.webauthn4j.data.client.challenge.Challenge;
 import com.webauthn4j.data.extension.client.AuthenticationExtensionClientInput;
 import com.webauthn4j.data.extension.client.AuthenticationExtensionsClientInputs;
 import com.webauthn4j.data.extension.client.RegistrationExtensionClientInput;
-import com.webauthn4j.springframework.security.endpoint.OptionsResponse;
+import com.webauthn4j.springframework.security.endpoint.AttestationOptionsResponse;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
@@ -38,7 +38,7 @@ public interface OptionsProvider {
      * @param request   request
      * @param username  username
      * @param challenge if null, new challenge is generated. Otherwise, specified challenge is used.
-     * @return {@link OptionsResponse} instance
+     * @return {@link AttestationOptionsResponse} instance
      */
     AttestationOptions getAttestationOptions(HttpServletRequest request, String username, Challenge challenge);
 
@@ -48,7 +48,7 @@ public interface OptionsProvider {
      * @param request   request
      * @param username  username
      * @param challenge if null, new challenge is generated. Otherwise, specified challenge is used.
-     * @return {@link OptionsResponse} instance
+     * @return {@link AttestationOptionsResponse} instance
      */
     AssertionOptions getAssertionOptions(HttpServletRequest request, String username, Challenge challenge);
 

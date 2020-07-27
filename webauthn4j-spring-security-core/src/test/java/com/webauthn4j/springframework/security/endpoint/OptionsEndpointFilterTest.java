@@ -43,7 +43,7 @@ public class OptionsEndpointFilterTest {
 
     @Test
     public void getter_setter_test() {
-        OptionsEndpointFilter optionsEndpointFilter = new OptionsEndpointFilter(mock(OptionsProvider.class), objectConverter);
+        AttestationOptionsEndpointFilter optionsEndpointFilter = new AttestationOptionsEndpointFilter(mock(OptionsProvider.class), objectConverter);
         AuthenticationTrustResolver trustResolver = new AuthenticationTrustResolverImpl();
         optionsEndpointFilter.setTrustResolver(trustResolver);
         assertThat(optionsEndpointFilter.getTrustResolver()).isEqualTo(trustResolver);
@@ -51,7 +51,7 @@ public class OptionsEndpointFilterTest {
 
     @Test
     public void afterPropertiesSet_test() {
-        OptionsEndpointFilter optionsEndpointFilter = new OptionsEndpointFilter(mock(OptionsProvider.class), objectConverter);
+        AttestationOptionsEndpointFilter optionsEndpointFilter = new AttestationOptionsEndpointFilter(mock(OptionsProvider.class), objectConverter);
         assertThatCode(optionsEndpointFilter::afterPropertiesSet).doesNotThrowAnyException();
     }
 
@@ -62,12 +62,12 @@ public class OptionsEndpointFilterTest {
         when(optionsProvider.getAttestationOptions(any(), any(), any())).thenReturn(attestationOptions);
         AssertionOptions assertionOptions = new AssertionOptions(null, null, null, null, null, null);
         when(optionsProvider.getAssertionOptions(any(), any(), any())).thenReturn(assertionOptions);
-        OptionsEndpointFilter optionsEndpointFilter = new OptionsEndpointFilter(optionsProvider, objectConverter);
+        AttestationOptionsEndpointFilter optionsEndpointFilter = new AttestationOptionsEndpointFilter(optionsProvider, objectConverter);
         AuthenticationTrustResolver trustResolver = new AuthenticationTrustResolverImpl();
         optionsEndpointFilter.setTrustResolver(trustResolver);
 
         MockHttpServletRequest request = new MockHttpServletRequest();
-        request.setRequestURI(OptionsEndpointFilter.FILTER_URL);
+        request.setRequestURI(AttestationOptionsEndpointFilter.FILTER_URL);
         MockHttpServletResponse response = new MockHttpServletResponse();
         MockFilterChain filterChain = new MockFilterChain();
 
@@ -79,12 +79,12 @@ public class OptionsEndpointFilterTest {
     public void doFilter_with_error_test() throws IOException, ServletException {
         OptionsProvider optionsProvider = mock(OptionsProvider.class);
         doThrow(new RuntimeException()).when(optionsProvider).getAttestationOptions(any(), any(), any());
-        OptionsEndpointFilter optionsEndpointFilter = new OptionsEndpointFilter(optionsProvider, objectConverter);
+        AttestationOptionsEndpointFilter optionsEndpointFilter = new AttestationOptionsEndpointFilter(optionsProvider, objectConverter);
         AuthenticationTrustResolver trustResolver = new AuthenticationTrustResolverImpl();
         optionsEndpointFilter.setTrustResolver(trustResolver);
 
         MockHttpServletRequest request = new MockHttpServletRequest();
-        request.setRequestURI(OptionsEndpointFilter.FILTER_URL);
+        request.setRequestURI(AttestationOptionsEndpointFilter.FILTER_URL);
         MockHttpServletResponse response = new MockHttpServletResponse();
         MockFilterChain filterChain = new MockFilterChain();
 
@@ -95,7 +95,7 @@ public class OptionsEndpointFilterTest {
     @Test
     public void writeErrorResponse_with_RuntimeException_test() throws IOException {
         OptionsProvider optionsProvider = mock(OptionsProvider.class);
-        OptionsEndpointFilter optionsEndpointFilter = new OptionsEndpointFilter(optionsProvider, objectConverter);
+        AttestationOptionsEndpointFilter optionsEndpointFilter = new AttestationOptionsEndpointFilter(optionsProvider, objectConverter);
 
         MockHttpServletResponse response = new MockHttpServletResponse();
         RuntimeException exception = new RuntimeException();
@@ -106,7 +106,7 @@ public class OptionsEndpointFilterTest {
     @Test
     public void writeErrorResponse_with_InsufficientAuthenticationException_test() throws IOException {
         OptionsProvider optionsProvider = mock(OptionsProvider.class);
-        OptionsEndpointFilter optionsEndpointFilter = new OptionsEndpointFilter(optionsProvider, objectConverter);
+        AttestationOptionsEndpointFilter optionsEndpointFilter = new AttestationOptionsEndpointFilter(optionsProvider, objectConverter);
 
         MockHttpServletResponse response = new MockHttpServletResponse();
         InsufficientAuthenticationException exception = new InsufficientAuthenticationException(null);

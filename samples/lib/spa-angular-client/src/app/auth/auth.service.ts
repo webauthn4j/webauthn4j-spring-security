@@ -41,7 +41,7 @@ export class AuthService {
 
 
   loginWithPublicKeyCredential(credentialRequestOptions: WebAuthn4NgCredentialRequestOptions): Observable<string> {
-    let promise = this.webauthnService.fetchServerOptions().toPromise().then((serverOptions) => {
+    let promise = this.webauthnService.fetchAssertionServerOptions().toPromise().then((serverOptions) => {
       return this.webauthnService.getCredential(credentialRequestOptions, serverOptions).then(credential => {
         return {serverOptions: serverOptions, credential: credential}
       });

@@ -21,7 +21,6 @@ import com.webauthn4j.data.PublicKeyCredentialParameters;
 import com.webauthn4j.data.PublicKeyCredentialRpEntity;
 import com.webauthn4j.data.PublicKeyCredentialUserEntity;
 import com.webauthn4j.data.client.challenge.Challenge;
-import com.webauthn4j.data.extension.client.AuthenticationExtensionClientInput;
 import com.webauthn4j.data.extension.client.AuthenticationExtensionsClientInputs;
 import com.webauthn4j.data.extension.client.RegistrationExtensionClientInput;
 import com.webauthn4j.util.CollectionUtil;
@@ -29,9 +28,9 @@ import com.webauthn4j.util.CollectionUtil;
 import java.util.List;
 
 /**
- * Success response of {@link OptionsEndpointFilter}
+ * Success response of {@link AttestationOptionsEndpointFilter}
  */
-public class OptionsResponse implements Response {
+public class AttestationOptionsResponse implements Response {
 
     // ~ Instance fields
     // ================================================================================================
@@ -39,40 +38,31 @@ public class OptionsResponse implements Response {
     private final PublicKeyCredentialUserEntity user;
     private final Challenge challenge;
     private final List<PublicKeyCredentialParameters> pubKeyCredParams;
-    private final Long registrationTimeout;
-    private final Long authenticationTimeout;
+    private final Long timeout;
     private final List<PublicKeyCredentialDescriptor> credentials;
-    private final AuthenticationExtensionsClientInputs<RegistrationExtensionClientInput> registrationExtensions;
-    private final AuthenticationExtensionsClientInputs<AuthenticationExtensionClientInput> authenticationExtensions;
-    private final Parameters parameters;
+    private final AuthenticationExtensionsClientInputs<RegistrationExtensionClientInput> extensions;
 
     // ~ Constructors
     // ===================================================================================================
 
     @SuppressWarnings("squid:S00107")
-    public OptionsResponse(
+    public AttestationOptionsResponse(
             PublicKeyCredentialRpEntity relyingParty,
             PublicKeyCredentialUserEntity user,
             Challenge challenge,
             List<PublicKeyCredentialParameters> pubKeyCredParams,
-            Long registrationTimeout,
-            Long authenticationTimeout,
+            Long timeout,
             List<PublicKeyCredentialDescriptor> credentials,
-            AuthenticationExtensionsClientInputs<RegistrationExtensionClientInput> registrationExtensions,
-            AuthenticationExtensionsClientInputs<AuthenticationExtensionClientInput> authenticationExtensions,
-            Parameters parameters) {
+            AuthenticationExtensionsClientInputs<RegistrationExtensionClientInput> extensions) {
         super();
 
         this.relyingParty = relyingParty;
         this.user = user;
         this.challenge = challenge;
         this.pubKeyCredParams = CollectionUtil.unmodifiableList(pubKeyCredParams);
-        this.registrationTimeout = registrationTimeout;
-        this.authenticationTimeout = authenticationTimeout;
+        this.timeout = timeout;
         this.credentials = CollectionUtil.unmodifiableList(credentials);
-        this.registrationExtensions = registrationExtensions;
-        this.authenticationExtensions = authenticationExtensions;
-        this.parameters = parameters;
+        this.extensions = extensions;
     }
 
     // ~ Methods
@@ -95,29 +85,18 @@ public class OptionsResponse implements Response {
         return this.pubKeyCredParams;
     }
 
-    public Long getRegistrationTimeout() {
-        return this.registrationTimeout;
-    }
-
-    public Long getAuthenticationTimeout() {
-        return this.authenticationTimeout;
+    public Long getTimeout() {
+        return this.timeout;
     }
 
     public List<PublicKeyCredentialDescriptor> getCredentials() {
         return this.credentials;
     }
 
-    public AuthenticationExtensionsClientInputs<RegistrationExtensionClientInput> getRegistrationExtensions() {
-        return this.registrationExtensions;
+    public AuthenticationExtensionsClientInputs<RegistrationExtensionClientInput> getExtensions() {
+        return this.extensions;
     }
 
-    public AuthenticationExtensionsClientInputs<AuthenticationExtensionClientInput> getAuthenticationExtensions() {
-        return this.authenticationExtensions;
-    }
-
-    public Parameters getParameters() {
-        return this.parameters;
-    }
 
     @Override
     public String getErrorMessage() {

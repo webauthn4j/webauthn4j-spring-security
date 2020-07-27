@@ -18,8 +18,16 @@ package com.webauthn4j.springframework.security;
 
 import org.springframework.security.core.Authentication;
 
+/**
+ * SpEL expression to be used within Spring Security configuration
+ */
 public class WebAuthnSecurityExpression {
 
+    /**
+     * Return <code>true</code> if it is authenticated with WebAuthn
+     * @param authentication authentication
+     * @return true if it is authenticated with WebAuthn
+     */
     public boolean isWebAuthnAuthenticated(Authentication authentication) {
         if (authentication == null) {
             return false;

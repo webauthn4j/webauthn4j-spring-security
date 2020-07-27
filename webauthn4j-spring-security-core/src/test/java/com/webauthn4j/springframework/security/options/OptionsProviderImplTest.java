@@ -121,7 +121,7 @@ public class OptionsProviderImplTest {
         AssertionOptions attestationOptions = optionsProvider.getAssertionOptions(mockRequest, "dummy", challenge);
         assertThat(attestationOptions.getRpId()).isEqualTo("example.com");
         assertThat(attestationOptions.getChallenge()).isEqualTo(challenge);
-        assertThat(attestationOptions.getCredentials()).containsExactly(credentialId);
+        assertThat(attestationOptions.getCredentials().stream().map(PublicKeyCredentialDescriptor::getId)).containsExactly(credentialId);
 
     }
 

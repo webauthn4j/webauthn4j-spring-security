@@ -133,10 +133,9 @@ public class OptionsProviderImpl implements OptionsProvider {
 
         String effectiveRpId = getEffectiveRpId(request);
 
-        List<byte[]> credentials = new ArrayList<>();
+        List<PublicKeyCredentialDescriptor> credentials = new ArrayList<>();
         for (WebAuthnAuthenticator authenticator : authenticators) {
-            byte[] credentialId = authenticator.getAttestedCredentialData().getCredentialId();
-            credentials.add(credentialId);
+            credentials.add(new PublicKeyCredentialDescriptor(PublicKeyCredentialType.PUBLIC_KEY, authenticator.getAttestedCredentialData().getCredentialId(), authenticator.getTransports()));
         }
         if (challenge == null) {
             challenge = challengeRepository.loadOrGenerateChallenge(request);

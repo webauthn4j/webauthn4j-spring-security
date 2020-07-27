@@ -19,7 +19,7 @@ package com.webauthn4j.springframework.security.endpoint;
 import java.io.Serializable;
 
 /**
- * Response for {@link OptionsEndpointFilter}
+ * Response for {@link AttestationOptionsEndpointFilter}
  */
 public interface Response extends Serializable {
 

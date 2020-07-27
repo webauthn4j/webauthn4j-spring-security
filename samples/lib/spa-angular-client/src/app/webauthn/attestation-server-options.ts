@@ -19,22 +19,11 @@
 
 import {WebAuthnPublicKeyCredentialUserEntity} from "./web-authn-public-key-credential-user-entity";
 
-export interface ServerOptions {
+export interface AttestationServerOptions {
   relyingParty: PublicKeyCredentialRpEntity;
   user?: WebAuthnPublicKeyCredentialUserEntity;
   challenge: BufferSource;
   pubKeyCredParams: PublicKeyCredentialParameters[];
-  registrationTimeout?: number;
-  authenticationTimeout?: number;
+  timeout?: number;
   credentials: PublicKeyCredentialDescriptor[];
-  parameters: {
-    username: string,
-    password: string,
-    credentialId: string,
-    clientDataJSON: string,
-    authenticatorData: string,
-    signature: string,
-    clientExtensionsJSON: string
-  };
 }
-
