@@ -23,13 +23,11 @@ import com.webauthn4j.data.extension.client.AuthenticationExtensionClientInput;
 import com.webauthn4j.data.extension.client.AuthenticationExtensionsClientInputs;
 import com.webauthn4j.data.extension.client.RegistrationExtensionClientInput;
 import com.webauthn4j.springframework.security.WebAuthnProcessingFilter;
-import com.webauthn4j.springframework.security.WebAuthnUserEntityProvider;
 import com.webauthn4j.springframework.security.authenticator.WebAuthnAuthenticator;
 import com.webauthn4j.springframework.security.authenticator.WebAuthnAuthenticatorService;
 import com.webauthn4j.springframework.security.challenge.ChallengeRepository;
 import com.webauthn4j.springframework.security.endpoint.Parameters;
 import com.webauthn4j.springframework.security.util.internal.ServletUtil;
-import com.webauthn4j.util.Base64UrlUtil;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.util.Assert;
@@ -66,25 +64,25 @@ public class OptionsProviderImpl implements OptionsProvider {
     private String clientExtensionsJSONParameter = WebAuthnProcessingFilter.SPRING_SECURITY_FORM_CLIENT_EXTENSIONS_JSON_KEY;
 
     private final WebAuthnAuthenticatorService authenticatorService;
-    private final WebAuthnUserEntityProvider webAuthnUserEntityProvider;
+    private final PublicKeyCredentialUserEntityService publicKeyCredentialUserEntityService;
     private final ChallengeRepository challengeRepository;
 
     // ~ Constructors
     // ===================================================================================================
 
-    public OptionsProviderImpl(WebAuthnAuthenticatorService authenticatorService, WebAuthnUserEntityProvider webAuthnUserEntityProvider, ChallengeRepository challengeRepository) {
+    public OptionsProviderImpl(WebAuthnAuthenticatorService authenticatorService, PublicKeyCredentialUserEntityService publicKeyCredentialUserEntityService, ChallengeRepository challengeRepository) {
 
         Assert.notNull(authenticatorService, "authenticatorService must not be null");
-        Assert.notNull(webAuthnUserEntityProvider, "webAuthnUserHandleProvider must not be null");
+        Assert.notNull(publicKeyCredentialUserEntityService, "webAuthnUserHandleProvider must not be null");
         Assert.notNull(challengeRepository, "challengeRepository must not be null");
 
         this.authenticatorService = authenticatorService;
-        this.webAuthnUserEntityProvider = webAuthnUserEntityProvider;
+        this.publicKeyCredentialUserEntityService = publicKeyCredentialUserEntityService;
         this.challengeRepository = challengeRepository;
     }
 
     public OptionsProviderImpl(WebAuthnAuthenticatorService authenticatorService, ChallengeRepository challengeRepository) {
-        this(authenticatorService, new DefaultWebAuthnUserEntityProvider(), challengeRepository);
+        this(authenticatorService, new DefaultPublicKeyCredentialUserEntityService(), challengeRepository);
     }
 
 
@@ -101,7 +99,7 @@ public class OptionsProviderImpl implements OptionsProvider {
 
         try {
             authenticators = authenticatorService.loadAuthenticatorsByPrincipal(username);
-            user = webAuthnUserEntityProvider.provide(username);
+            user = publicKeyCredentialUserEntityService.loadUserByUsername(username);
         } catch (UsernameNotFoundException e) {
             authenticators = Collections.emptyList();
             user = null;
@@ -135,9 +133,9 @@ public class OptionsProviderImpl implements OptionsProvider {
 
         String effectiveRpId = getEffectiveRpId(request);
 
-        List<String> credentials = new ArrayList<>();
+        List<byte[]> credentials = new ArrayList<>();
         for (WebAuthnAuthenticator authenticator : authenticators) {
-            String credentialId = Base64UrlUtil.encodeToString(authenticator.getAttestedCredentialData().getCredentialId());
+            byte[] credentialId = authenticator.getAttestedCredentialData().getCredentialId();
             credentials.add(credentialId);
         }
         if (challenge == null) {
@@ -298,10 +296,10 @@ public class OptionsProviderImpl implements OptionsProvider {
         this.clientExtensionsJSONParameter = clientExtensionsJSONParameter;
     }
 
-    static class DefaultWebAuthnUserEntityProvider implements WebAuthnUserEntityProvider {
+    static class DefaultPublicKeyCredentialUserEntityService implements PublicKeyCredentialUserEntityService {
 
         @Override
-        public PublicKeyCredentialUserEntity provide(String username) {
+        public PublicKeyCredentialUserEntity loadUserByUsername(String username) {
             return new PublicKeyCredentialUserEntity(
                     username.getBytes(StandardCharsets.UTF_8),
                     username,

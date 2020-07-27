@@ -26,7 +26,6 @@ import com.webauthn4j.data.extension.client.AuthenticationExtensionsClientInputs
 import com.webauthn4j.springframework.security.authenticator.WebAuthnAuthenticator;
 import com.webauthn4j.springframework.security.authenticator.WebAuthnAuthenticatorService;
 import com.webauthn4j.springframework.security.challenge.ChallengeRepository;
-import com.webauthn4j.util.Base64UrlUtil;
 import org.assertj.core.util.Lists;
 import org.junit.Test;
 import org.springframework.mock.web.MockHttpServletRequest;
@@ -122,7 +121,7 @@ public class OptionsProviderImplTest {
         AssertionOptions attestationOptions = optionsProvider.getAssertionOptions(mockRequest, "dummy", challenge);
         assertThat(attestationOptions.getRpId()).isEqualTo("example.com");
         assertThat(attestationOptions.getChallenge()).isEqualTo(challenge);
-        assertThat(attestationOptions.getCredentials()).containsExactly(Base64UrlUtil.encodeToString(credentialId));
+        assertThat(attestationOptions.getCredentials()).containsExactly(credentialId);
 
     }
 

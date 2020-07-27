@@ -37,7 +37,7 @@ public class AssertionOptions implements Serializable {
     private final Challenge challenge;
     private final Long authenticationTimeout;
     private final String rpId;
-    private final List<String> credentials;
+    private final List<byte[]> credentials;
     private final AuthenticationExtensionsClientInputs<AuthenticationExtensionClientInput> authenticationExtensions;
     private final Parameters parameters;
 
@@ -48,7 +48,7 @@ public class AssertionOptions implements Serializable {
             Challenge challenge,
             Long authenticationTimeout,
             String rpId,
-            List<String> credentials,
+            List<byte[]> credentials,
             AuthenticationExtensionsClientInputs<AuthenticationExtensionClientInput> authenticationExtensions,
             Parameters parameters) {
         this.challenge = challenge;
@@ -74,7 +74,7 @@ public class AssertionOptions implements Serializable {
         return rpId;
     }
 
-    public List<String> getCredentials() {
+    public List<byte[]> getCredentials() {
         return credentials;
     }
 
@@ -101,7 +101,6 @@ public class AssertionOptions implements Serializable {
 
     @Override
     public int hashCode() {
-
         return Objects.hash(challenge, authenticationTimeout, rpId, credentials, authenticationExtensions, parameters);
     }
 }

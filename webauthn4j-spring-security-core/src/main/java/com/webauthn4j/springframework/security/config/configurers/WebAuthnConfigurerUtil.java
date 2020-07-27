@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.webauthn4j.springframework.security.config.configurers.internal;
+package com.webauthn4j.springframework.security.config.configurers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.cbor.CBORFactory;
@@ -37,7 +37,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 /**
  * Internal utility for WebAuthn Configurers
  */
-public class WebAuthnConfigurerUtil {
+class WebAuthnConfigurerUtil {
 
     private WebAuthnConfigurerUtil() {
     }

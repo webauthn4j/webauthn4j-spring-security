@@ -17,19 +17,19 @@
 package com.webauthn4j.springframework.security.webauthn.sample.domain.component;
 
 import com.webauthn4j.data.PublicKeyCredentialUserEntity;
-import com.webauthn4j.springframework.security.WebAuthnUserEntityProvider;
+import com.webauthn4j.springframework.security.options.PublicKeyCredentialUserEntityService;
 import com.webauthn4j.springframework.security.webauthn.sample.domain.entity.UserEntity;
 
-public class WebAuthnUserEntityProviderImpl implements WebAuthnUserEntityProvider {
+public class PublicKeyCredentialUserEntityServiceImpl implements PublicKeyCredentialUserEntityService {
 
     private UserManager userManager;
 
-    public WebAuthnUserEntityProviderImpl(UserManager userManager) {
+    public PublicKeyCredentialUserEntityServiceImpl(UserManager userManager) {
         this.userManager = userManager;
     }
 
     @Override
-    public PublicKeyCredentialUserEntity provide(String username) {
+    public PublicKeyCredentialUserEntity loadUserByUsername(String username) {
         UserEntity userEntity = userManager.loadUserByUsername(username);
         return new PublicKeyCredentialUserEntity(
                 userEntity.getUserHandle(),

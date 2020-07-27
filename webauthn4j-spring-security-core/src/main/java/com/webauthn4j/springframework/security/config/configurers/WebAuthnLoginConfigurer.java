@@ -19,7 +19,6 @@ package com.webauthn4j.springframework.security.config.configurers;
 import com.webauthn4j.converter.util.ObjectConverter;
 import com.webauthn4j.springframework.security.WebAuthnProcessingFilter;
 import com.webauthn4j.springframework.security.challenge.ChallengeRepository;
-import com.webauthn4j.springframework.security.config.configurers.internal.WebAuthnConfigurerUtil;
 import com.webauthn4j.springframework.security.endpoint.OptionsEndpointFilter;
 import com.webauthn4j.springframework.security.options.OptionsProvider;
 import com.webauthn4j.springframework.security.server.ServerPropertyProvider;

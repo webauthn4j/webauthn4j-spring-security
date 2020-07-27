@@ -23,7 +23,9 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Objects;
 
-
+/**
+ * An implementation of {@link WebAuthnAuthenticator}
+ */
 public class WebAuthnAuthenticatorImpl extends AuthenticatorImpl implements WebAuthnAuthenticator {
 
     // ~ Instance fields

@@ -35,7 +35,7 @@ public class AssertionOptionsTest {
         Challenge challenge = new DefaultChallenge();
         Long authenticationTimeout = 1000L;
         String rpId = "localhost";
-        List<String> credentialIds = Collections.singletonList("credentialId");
+        List<byte[]> credentialIds = Collections.singletonList(new byte[32]);
         AuthenticationExtensionsClientInputs<AuthenticationExtensionClientInput> authenticationExtensionsClientInputs = new AuthenticationExtensionsClientInputs<>();
         Parameters parameters = new Parameters(
                 "username",
@@ -58,7 +58,7 @@ public class AssertionOptionsTest {
         Challenge challenge = new DefaultChallenge();
         Long authenticationTimeout = 1000L;
         String rpId = "localhost";
-        List<String> credentialIds = Collections.singletonList("credentialId");
+        List<byte[]> credentialIds = Collections.singletonList(new byte[32]);
         AuthenticationExtensionsClientInputs<AuthenticationExtensionClientInput> authenticationExtensionsClientInputs = new AuthenticationExtensionsClientInputs<>();
         Parameters parameters = new Parameters(
                 "username",
