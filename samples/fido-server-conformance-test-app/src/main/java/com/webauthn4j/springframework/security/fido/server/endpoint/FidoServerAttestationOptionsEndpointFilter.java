@@ -99,7 +99,7 @@ public class FidoServerAttestationOptionsEndpointFilter extends ServerEndpointFi
             if (serverRequest.getExtensions() != null) {
                 authenticationExtensionsClientInputs = serverRequest.getExtensions();
             } else {
-                authenticationExtensionsClientInputs = attestationOptions.getRegistrationExtensions();
+                authenticationExtensionsClientInputs = attestationOptions.getExtensions();
             }
 
             return new ServerPublicKeyCredentialCreationOptionsResponse(
@@ -107,7 +107,7 @@ public class FidoServerAttestationOptionsEndpointFilter extends ServerEndpointFi
                     user,
                     Base64UrlUtil.encodeToString(attestationOptions.getChallenge().getValue()),
                     attestationOptions.getPubKeyCredParams(),
-                    attestationOptions.getRegistrationTimeout(),
+                    attestationOptions.getTimeout(),
                     credentials,
                     serverRequest.getAuthenticatorSelection(),
                     serverRequest.getAttestation(),

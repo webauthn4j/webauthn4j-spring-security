@@ -16,6 +16,9 @@
 
 package com.webauthn4j.springframework.security.options;
 
+import com.webauthn4j.data.AuthenticatorTransport;
+import com.webauthn4j.data.PublicKeyCredentialDescriptor;
+import com.webauthn4j.data.PublicKeyCredentialType;
 import com.webauthn4j.data.client.challenge.Challenge;
 import com.webauthn4j.data.client.challenge.DefaultChallenge;
 import com.webauthn4j.data.extension.client.AuthenticationExtensionClientInput;
@@ -35,7 +38,7 @@ public class AssertionOptionsTest {
         Challenge challenge = new DefaultChallenge();
         Long authenticationTimeout = 1000L;
         String rpId = "localhost";
-        List<String> credentialIds = Collections.singletonList("credentialId");
+        List<PublicKeyCredentialDescriptor> credentials = Collections.singletonList(new PublicKeyCredentialDescriptor(PublicKeyCredentialType.PUBLIC_KEY, new byte[32], Collections.singleton(AuthenticatorTransport.INTERNAL)));
         AuthenticationExtensionsClientInputs<AuthenticationExtensionClientInput> authenticationExtensionsClientInputs = new AuthenticationExtensionsClientInputs<>();
         Parameters parameters = new Parameters(
                 "username",
@@ -45,8 +48,8 @@ public class AssertionOptionsTest {
                 "authenticatorData",
                 "signature",
                 "clientExtensionsJSON");
-        AssertionOptions instanceA = new AssertionOptions(challenge, authenticationTimeout, rpId, credentialIds, authenticationExtensionsClientInputs, parameters);
-        AssertionOptions instanceB = new AssertionOptions(challenge, authenticationTimeout, rpId, credentialIds, authenticationExtensionsClientInputs, parameters);
+        AssertionOptions instanceA = new AssertionOptions(challenge, authenticationTimeout, rpId, credentials, authenticationExtensionsClientInputs, parameters);
+        AssertionOptions instanceB = new AssertionOptions(challenge, authenticationTimeout, rpId, credentials, authenticationExtensionsClientInputs, parameters);
 
         assertThat(instanceA)
                 .isEqualTo(instanceB)
@@ -58,7 +61,7 @@ public class AssertionOptionsTest {
         Challenge challenge = new DefaultChallenge();
         Long authenticationTimeout = 1000L;
         String rpId = "localhost";
-        List<String> credentialIds = Collections.singletonList("credentialId");
+        List<PublicKeyCredentialDescriptor> credentials = Collections.singletonList(new PublicKeyCredentialDescriptor(PublicKeyCredentialType.PUBLIC_KEY, new byte[32], Collections.singleton(AuthenticatorTransport.INTERNAL)));
         AuthenticationExtensionsClientInputs<AuthenticationExtensionClientInput> authenticationExtensionsClientInputs = new AuthenticationExtensionsClientInputs<>();
         Parameters parameters = new Parameters(
                 "username",
@@ -68,13 +71,13 @@ public class AssertionOptionsTest {
                 "authenticatorData",
                 "signature",
                 "clientExtensionsJSON");
-        AssertionOptions assertionOptions = new AssertionOptions(challenge, authenticationTimeout, rpId, credentialIds, authenticationExtensionsClientInputs, parameters);
+        AssertionOptions assertionOptions = new AssertionOptions(challenge, authenticationTimeout, rpId, credentials, authenticationExtensionsClientInputs, parameters);
 
         assertThat(assertionOptions.getChallenge()).isEqualTo(challenge);
-        assertThat(assertionOptions.getAuthenticationTimeout()).isEqualTo(authenticationTimeout);
+        assertThat(assertionOptions.getTimeout()).isEqualTo(authenticationTimeout);
         assertThat(assertionOptions.getRpId()).isEqualTo(rpId);
-        assertThat(assertionOptions.getCredentials()).isEqualTo(credentialIds);
-        assertThat(assertionOptions.getAuthenticationExtensions()).isEqualTo(authenticationExtensionsClientInputs);
+        assertThat(assertionOptions.getCredentials()).isEqualTo(credentials);
+        assertThat(assertionOptions.getExtensions()).isEqualTo(authenticationExtensionsClientInputs);
         assertThat(assertionOptions.getParameters()).isEqualTo(parameters);
     }
 }

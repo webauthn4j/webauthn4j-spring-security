@@ -14,11 +14,19 @@
  * limitations under the License.
  */
 
-package com.webauthn4j.springframework.security;
+package com.webauthn4j.springframework.security.options;
 
 import com.webauthn4j.data.PublicKeyCredentialUserEntity;
 
-public interface WebAuthnUserEntityProvider {
+/**
+ * Core interface to load {@link PublicKeyCredentialUserEntity}
+ */
+public interface PublicKeyCredentialUserEntityService {
 
-    PublicKeyCredentialUserEntity provide(String username);
+    /**
+     * Load {@link PublicKeyCredentialUserEntity}
+     * @param username username
+     * @return {@link PublicKeyCredentialUserEntity}
+     */
+    PublicKeyCredentialUserEntity loadUserByUsername(String username);
 }

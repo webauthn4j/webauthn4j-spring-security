@@ -43,9 +43,9 @@ public class AttestationOptions implements Serializable {
     private final PublicKeyCredentialUserEntity user;
     private final Challenge challenge;
     private final List<PublicKeyCredentialParameters> pubKeyCredParams;
-    private final Long registrationTimeout;
+    private final Long timeout;
     private final List<PublicKeyCredentialDescriptor> credentials;
-    private final AuthenticationExtensionsClientInputs<RegistrationExtensionClientInput> registrationExtensions;
+    private final AuthenticationExtensionsClientInputs<RegistrationExtensionClientInput> extensions;
 
     // ~ Constructors
     // ===================================================================================================
@@ -55,16 +55,16 @@ public class AttestationOptions implements Serializable {
             PublicKeyCredentialUserEntity user,
             Challenge challenge,
             List<PublicKeyCredentialParameters> pubKeyCredParams,
-            Long registrationTimeout,
+            Long timeout,
             List<PublicKeyCredentialDescriptor> credentials,
-            AuthenticationExtensionsClientInputs<RegistrationExtensionClientInput> registrationExtensions) {
+            AuthenticationExtensionsClientInputs<RegistrationExtensionClientInput> extensions) {
         this.relyingParty = relyingParty;
         this.user = user;
         this.challenge = challenge;
         this.pubKeyCredParams = CollectionUtil.unmodifiableList(pubKeyCredParams);
-        this.registrationTimeout = registrationTimeout;
+        this.timeout = timeout;
         this.credentials = CollectionUtil.unmodifiableList(credentials);
-        this.registrationExtensions = registrationExtensions;
+        this.extensions = extensions;
     }
 
     /**
@@ -97,16 +97,16 @@ public class AttestationOptions implements Serializable {
         return pubKeyCredParams;
     }
 
-    public Long getRegistrationTimeout() {
-        return registrationTimeout;
+    public Long getTimeout() {
+        return timeout;
     }
 
     public List<PublicKeyCredentialDescriptor> getCredentials() {
         return credentials;
     }
 
-    public AuthenticationExtensionsClientInputs<RegistrationExtensionClientInput> getRegistrationExtensions() {
-        return registrationExtensions;
+    public AuthenticationExtensionsClientInputs<RegistrationExtensionClientInput> getExtensions() {
+        return extensions;
     }
 
     @Override
@@ -118,14 +118,14 @@ public class AttestationOptions implements Serializable {
                 Objects.equals(user, that.user) &&
                 Objects.equals(challenge, that.challenge) &&
                 Objects.equals(pubKeyCredParams, that.pubKeyCredParams) &&
-                Objects.equals(registrationTimeout, that.registrationTimeout) &&
+                Objects.equals(timeout, that.timeout) &&
                 Objects.equals(credentials, that.credentials) &&
-                Objects.equals(registrationExtensions, that.registrationExtensions);
+                Objects.equals(extensions, that.extensions);
     }
 
     @Override
     public int hashCode() {
 
-        return Objects.hash(relyingParty, user, challenge, pubKeyCredParams, registrationTimeout, credentials, registrationExtensions);
+        return Objects.hash(relyingParty, user, challenge, pubKeyCredParams, timeout, credentials, extensions);
     }
 }

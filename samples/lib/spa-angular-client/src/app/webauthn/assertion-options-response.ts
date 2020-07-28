@@ -14,16 +14,13 @@
  * limitations under the License.
  */
 
-import {WebAuthnPublicKeyCredentialUserEntity} from "./web-authn-public-key-credential-user-entity";
 import {WebAuthnPublicKeyCredentialDescriptor} from "./web-authn-public-key-credential-descriptor";
 
-export interface OptionsResponse {
-  relyingParty: PublicKeyCredentialRpEntity;
-  user?: WebAuthnPublicKeyCredentialUserEntity;
+export interface AssertionOptionsResponse {
   challenge: string;
   pubKeyCredParams: PublicKeyCredentialParameters[];
-  registrationTimeout?: number,
-  authenticationTimeout?: number,
+  timeout?: number,
+  rpId?: string,
   credentials: WebAuthnPublicKeyCredentialDescriptor[];
   parameters: {
     username: string,

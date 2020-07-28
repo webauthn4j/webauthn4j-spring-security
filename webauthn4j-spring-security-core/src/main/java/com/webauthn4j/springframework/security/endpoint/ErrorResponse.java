@@ -19,7 +19,7 @@ package com.webauthn4j.springframework.security.endpoint;
 import java.util.Objects;
 
 /**
- * Error response of {@link OptionsEndpointFilter}
+ * Error response of {@link AttestationOptionsEndpointFilter}
  */
 public class ErrorResponse implements Response {
 

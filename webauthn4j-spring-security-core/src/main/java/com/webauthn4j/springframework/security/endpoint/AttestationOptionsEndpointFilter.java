@@ -20,7 +20,6 @@ import com.webauthn4j.converter.util.JsonConverter;
 import com.webauthn4j.converter.util.ObjectConverter;
 import com.webauthn4j.data.PublicKeyCredentialRpEntity;
 import com.webauthn4j.data.client.challenge.Challenge;
-import com.webauthn4j.springframework.security.options.AssertionOptions;
 import com.webauthn4j.springframework.security.options.AttestationOptions;
 import com.webauthn4j.springframework.security.options.OptionsProvider;
 import org.springframework.context.support.MessageSourceAccessor;
@@ -43,10 +42,10 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 /**
- * A filter for providing WebAuthn option parameters to clients.
- * Clients can retrieve {@link OptionsResponse}, which includes {@link Challenge}, {@link PublicKeyCredentialRpEntity} and etc.
+ * A filter for providing WebAuthn attestation option parameters to clients.
+ * Clients can retrieve {@link AttestationOptionsResponse}, which includes {@link Challenge}, {@link PublicKeyCredentialRpEntity} and etc.
  */
-public class OptionsEndpointFilter extends GenericFilterBean {
+public class AttestationOptionsEndpointFilter extends GenericFilterBean {
 
     // ~ Static fields/initializers
     // =====================================================================================
@@ -54,7 +53,7 @@ public class OptionsEndpointFilter extends GenericFilterBean {
     /**
      * Default name of path suffix which will validate this filter.
      */
-    public static final String FILTER_URL = "/webauthn/options";
+    public static final String FILTER_URL = "/webauthn/attestation/options";
 
     //~ Instance fields
     // ================================================================================================
@@ -73,7 +72,7 @@ public class OptionsEndpointFilter extends GenericFilterBean {
     // ~ Constructors
     // ===================================================================================================
 
-    public OptionsEndpointFilter(OptionsProvider optionsProvider, ObjectConverter objectConverter) {
+    public AttestationOptionsEndpointFilter(OptionsProvider optionsProvider, ObjectConverter objectConverter) {
         this.optionsProvider = optionsProvider;
         this.jsonConverter = objectConverter.getJsonConverter();
         this.trustResolver = new AuthenticationTrustResolverImpl();
@@ -105,8 +104,8 @@ public class OptionsEndpointFilter extends GenericFilterBean {
         }
 
         try {
-            OptionsResponse optionsResponse = processRequest(fi.getRequest());
-            writeResponse(fi.getResponse(), optionsResponse);
+            AttestationOptionsResponse attestationOptionsResponse = processRequest(fi.getRequest());
+            writeResponse(fi.getResponse(), attestationOptionsResponse);
         } catch (RuntimeException e) {
             logger.debug(e);
             writeErrorResponse(fi.getResponse(), e);
@@ -114,21 +113,17 @@ public class OptionsEndpointFilter extends GenericFilterBean {
 
     }
 
-    OptionsResponse processRequest(HttpServletRequest request) {
+    AttestationOptionsResponse processRequest(HttpServletRequest request) {
         String loginUsername = getLoginUsername();
         AttestationOptions attestationOptions = optionsProvider.getAttestationOptions(request, loginUsername, null);
-        AssertionOptions assertionOptions = optionsProvider.getAssertionOptions(request, loginUsername, null);
-        return new OptionsResponse(
+        return new AttestationOptionsResponse(
                 attestationOptions.getRelyingParty(),
                 attestationOptions.getUser(),
                 attestationOptions.getChallenge(),
                 attestationOptions.getPubKeyCredParams(),
-                attestationOptions.getRegistrationTimeout(),
-                assertionOptions.getAuthenticationTimeout(),
+                attestationOptions.getTimeout(),
                 attestationOptions.getCredentials(),
-                attestationOptions.getRegistrationExtensions(),
-                assertionOptions.getAuthenticationExtensions(),
-                assertionOptions.getParameters()
+                attestationOptions.getExtensions()
         );
     }
 

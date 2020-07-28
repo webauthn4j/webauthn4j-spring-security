@@ -91,7 +91,7 @@ Regarding WebAuthn4J Spring Security, `WebAuthnProcessingFilter` retrieves `cred
 
 Web Authentication requests to obtain a challenge from the server prior to authentication.
 When using the FIDO-U2F token as an authentication device, the CredentialIds associated with the user identified by the first authentication factor are also need to be obtained from the server.
-To retrieve these data, WebAuthn4J Spring Security offers `OptionsEndpointFilter`.
+To retrieve these data, WebAuthn4J Spring Security offers `AttestationOptionsEndpointFilter`.
 
 === Customization
 

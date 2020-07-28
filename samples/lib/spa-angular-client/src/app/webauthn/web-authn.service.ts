@@ -22,9 +22,11 @@ import {HttpClient} from "@angular/common/http";
 import * as base64url from "./base64url";
 import {WebAuthn4NgCredentialCreationOptions} from "./web-authn-4-ng-credential-creation-options";
 import {WebAuthn4NgCredentialRequestOptions} from "./web-authn-4-ng-credential-request-options";
-import {ServerOptions} from "./server-options";
+import {AttestationServerOptions} from "./attestation-server-options";
+import {AssertionServerOptions} from "./assertion-server-options";
 import {Observable} from "rxjs/internal/Observable";
-import {OptionsResponse} from "./options-response";
+import {AttestationOptionsResponse} from "./attestation-options-response";
+import {AssertionOptionsResponse} from "./assertion-options-response";
 import * as Bowser from "bowser";
 import {map} from "rxjs/operators";
 
@@ -35,7 +37,8 @@ export class WebAuthnService {
 
   private static bowser = Bowser.getParser(window.navigator.userAgent);
 
-  private _optionsUrl: string = "/webauthn/options";
+  private _attestationOptionsUrl: string = "/webauthn/attestation/options";
+  private _assertionOptionsUrl: string = "/webauthn/assertion/options";
 
   constructor(private httpClient: HttpClient) {
   }
@@ -44,14 +47,14 @@ export class WebAuthnService {
     webAuthnCredentialCreationOptions: WebAuthn4NgCredentialCreationOptions
   );
   createCredential(
-    webAuthnCredentialCreationOptions: WebAuthn4NgCredentialCreationOptions, serverOptions: ServerOptions
+    webAuthnCredentialCreationOptions: WebAuthn4NgCredentialCreationOptions, serverOptions: AttestationServerOptions
   );
   createCredential(
-    webAuthnCredentialCreationOptions: WebAuthn4NgCredentialCreationOptions, serverOptions?: ServerOptions
+    webAuthnCredentialCreationOptions: WebAuthn4NgCredentialCreationOptions, serverOptions?: AttestationServerOptions
   ): Promise<Credential> {
-    let serverOptionsPromise: Promise<ServerOptions>;
+    let serverOptionsPromise: Promise<AttestationServerOptions>;
     if (serverOptions === undefined) {
-      serverOptionsPromise = this.fetchServerOptions().toPromise()
+      serverOptionsPromise = this.fetchAttestationServerOptions().toPromise()
     } else {
       serverOptionsPromise = Promise.resolve(serverOptions);
     }
@@ -61,8 +64,8 @@ export class WebAuthnService {
       let timeout: number;
       if (typeof webAuthnCredentialCreationOptions.timeout != "undefined" && webAuthnCredentialCreationOptions.timeout != null) {
         timeout = webAuthnCredentialCreationOptions.timeout;
-      } else if (typeof serverOptions.registrationTimeout != "undefined" && serverOptions.registrationTimeout != null) {
-        timeout = serverOptions.registrationTimeout;
+      } else if (typeof serverOptions.timeout != "undefined" && serverOptions.timeout != null) {
+        timeout = serverOptions.timeout;
       } else {
         timeout = undefined;
       }
@@ -91,14 +94,14 @@ export class WebAuthnService {
     webAuthnCredentialRequestOptions: WebAuthn4NgCredentialRequestOptions
   );
   getCredential(
-    webAuthnCredentialRequestOptions: WebAuthn4NgCredentialRequestOptions, serverOptions: ServerOptions
+    webAuthnCredentialRequestOptions: WebAuthn4NgCredentialRequestOptions, serverOptions: AssertionServerOptions
   );
   getCredential(
-    webAuthnCredentialRequestOptions: WebAuthn4NgCredentialRequestOptions, serverOptions?: ServerOptions
+    webAuthnCredentialRequestOptions: WebAuthn4NgCredentialRequestOptions, serverOptions?: AssertionServerOptions
   ): Promise<Credential> {
-    let serverOptionsPromise: Promise<ServerOptions>;
+    let serverOptionsPromise: Promise<AssertionServerOptions>;
     if (serverOptions === undefined) {
-      serverOptionsPromise = this.fetchServerOptions().toPromise();
+      serverOptionsPromise = this.fetchAssertionServerOptions().toPromise();
     } else {
       serverOptionsPromise = Promise.resolve(serverOptions);
     }
@@ -108,8 +111,8 @@ export class WebAuthnService {
       let timeout: number;
       if (typeof webAuthnCredentialRequestOptions.timeout != "undefined" && webAuthnCredentialRequestOptions.timeout != null) {
         timeout = webAuthnCredentialRequestOptions.timeout;
-      } else if (typeof serverOptions.authenticationTimeout != "undefined" && serverOptions.authenticationTimeout != null) {
-        timeout = serverOptions.authenticationTimeout;
+      } else if (typeof serverOptions.timeout != "undefined" && serverOptions.timeout != null) {
+        timeout = serverOptions.timeout;
       } else {
         timeout = undefined;
       }
@@ -117,7 +120,7 @@ export class WebAuthnService {
       let publicKeyCredentialRequestOptions: PublicKeyCredentialRequestOptions = {
         challenge: webAuthnCredentialRequestOptions.challenge ? webAuthnCredentialRequestOptions.challenge : serverOptions.challenge,
         timeout: timeout,
-        rpId: webAuthnCredentialRequestOptions.rpId ? webAuthnCredentialRequestOptions.rpId : serverOptions.relyingParty.id,
+        rpId: webAuthnCredentialRequestOptions.rpId ? webAuthnCredentialRequestOptions.rpId : serverOptions.rpId,
         allowCredentials: webAuthnCredentialRequestOptions.allowCredentials ? webAuthnCredentialRequestOptions.allowCredentials : serverOptions.credentials,
         userVerification: webAuthnCredentialRequestOptions.userVerification ? webAuthnCredentialRequestOptions.userVerification : "preferred",
         extensions: webAuthnCredentialRequestOptions.extensions
@@ -132,15 +135,32 @@ export class WebAuthnService {
   }
 
 
-  fetchServerOptions(): Observable<ServerOptions> {
-    return this.httpClient.get<OptionsResponse>(this._optionsUrl).pipe(map<OptionsResponse, ServerOptions>(response => {
+  fetchAttestationServerOptions(): Observable<AttestationServerOptions> {
+    return this.httpClient.get<AttestationOptionsResponse>(this._attestationOptionsUrl).pipe(map<AttestationOptionsResponse, AttestationServerOptions>(response => {
       return {
         relyingParty: response.relyingParty,
         user: response.user,
         challenge: base64url.decodeBase64url(response.challenge),
         pubKeyCredParams: response.pubKeyCredParams,
-        registrationTimeout: response.registrationTimeout,
-        authenticationTimeout: response.authenticationTimeout,
+        timeout: response.timeout,
+        credentials: response.credentials.map(credential => {
+          return {
+            type: credential.type,
+            id: base64url.decodeBase64url(credential.id),
+            //TODO: transports: credential.transports
+          }
+        })
+      };
+    }));
+  }
+
+  fetchAssertionServerOptions(): Observable<AssertionServerOptions> {
+    return this.httpClient.get<AssertionOptionsResponse>(this._assertionOptionsUrl).pipe(map<AssertionOptionsResponse, AssertionServerOptions>(response => {
+      return {
+        challenge: base64url.decodeBase64url(response.challenge),
+        pubKeyCredParams: response.pubKeyCredParams,
+        timeout: response.timeout,
+        rpId: response.rpId,
         credentials: response.credentials.map(credential => {
           return {
             type: credential.type,
@@ -153,12 +173,12 @@ export class WebAuthnService {
     }));
   }
 
-  get optionsUrl(): string {
-    return this._optionsUrl;
+  get attestationOptionsUrl(): string {
+    return this._attestationOptionsUrl;
   }
 
-  set optionsUrl(value: string) {
-    this._optionsUrl = value;
+  set attestationOptionsUrl(value: string) {
+    this._attestationOptionsUrl = value;
   }
 
   static isWebAuthnAvailable(): boolean {

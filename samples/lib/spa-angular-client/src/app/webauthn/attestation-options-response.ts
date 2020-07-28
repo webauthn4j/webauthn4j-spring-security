@@ -14,14 +14,14 @@
  * limitations under the License.
  */
 
-package com.webauthn4j.springframework.security.endpoint;
+import {WebAuthnPublicKeyCredentialUserEntity} from "./web-authn-public-key-credential-user-entity";
+import {WebAuthnPublicKeyCredentialDescriptor} from "./web-authn-public-key-credential-descriptor";
 
-import java.io.Serializable;
-
-/**
- * Response for {@link AttestationOptionsEndpointFilter}
- */
-public interface Response extends Serializable {
-
-    String getErrorMessage();
+export interface AttestationOptionsResponse {
+  relyingParty: PublicKeyCredentialRpEntity;
+  user?: WebAuthnPublicKeyCredentialUserEntity;
+  challenge: string;
+  pubKeyCredParams: PublicKeyCredentialParameters[];
+  timeout?: number,
+  credentials: WebAuthnPublicKeyCredentialDescriptor[];
 }
