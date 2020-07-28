@@ -37,21 +37,21 @@ public class WebAuthnAuthenticationProviderConfigurer<
 
     //~ Instance fields
     // ================================================================================================
-    private final A authenticatorService;
+    private A webAuthnAuthenticatorService;
     private final V webAuthnManager;
 
     /**
      * Constructor
      *
-     * @param authenticatorService {@link WebAuthnAuthenticatorService}
+     * @param webAuthnAuthenticatorService {@link WebAuthnAuthenticatorService}
      * @param webAuthnManager      {@link WebAuthnManager}
      */
-    public WebAuthnAuthenticationProviderConfigurer(A authenticatorService, V webAuthnManager) {
+    public WebAuthnAuthenticationProviderConfigurer(A webAuthnAuthenticatorService, V webAuthnManager) {
 
-        Assert.notNull(authenticatorService, "authenticatorService must not be null");
+        Assert.notNull(webAuthnAuthenticatorService, "webAuthnAuthenticatorService must not be null");
         Assert.notNull(webAuthnManager, "webAuthnManager must not be null");
 
-        this.authenticatorService = authenticatorService;
+        this.webAuthnAuthenticatorService = webAuthnAuthenticatorService;
         this.webAuthnManager = webAuthnManager;
     }
 
@@ -60,8 +60,7 @@ public class WebAuthnAuthenticationProviderConfigurer<
 
     @Override
     public void configure(B builder) {
-        WebAuthnAuthenticationProvider authenticationProvider =
-                new WebAuthnAuthenticationProvider(authenticatorService, webAuthnManager);
+        WebAuthnAuthenticationProvider authenticationProvider = new WebAuthnAuthenticationProvider(webAuthnAuthenticatorService, webAuthnManager);
         authenticationProvider = postProcess(authenticationProvider);
         builder.authenticationProvider(authenticationProvider);
     }

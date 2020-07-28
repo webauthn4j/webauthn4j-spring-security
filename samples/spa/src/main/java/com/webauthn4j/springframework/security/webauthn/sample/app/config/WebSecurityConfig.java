@@ -17,14 +17,12 @@
 package com.webauthn4j.springframework.security.webauthn.sample.app.config;
 
 import com.webauthn4j.WebAuthnManager;
-import com.webauthn4j.converter.util.ObjectConverter;
 import com.webauthn4j.data.PublicKeyCredentialType;
 import com.webauthn4j.data.attestation.statement.COSEAlgorithmIdentifier;
 import com.webauthn4j.springframework.security.authenticator.WebAuthnAuthenticatorService;
 import com.webauthn4j.springframework.security.config.configurers.WebAuthnAuthenticationProviderConfigurer;
 import com.webauthn4j.springframework.security.config.configurers.WebAuthnConfigurer;
 import com.webauthn4j.springframework.security.config.configurers.WebAuthnLoginConfigurer;
-import com.webauthn4j.springframework.security.options.OptionsProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
@@ -52,8 +50,6 @@ import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 @EnableWebSecurity
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
-    private static final String ADMIN_ROLE = "ADMIN";
-
     @Autowired
     private AuthenticationSuccessHandler authenticationSuccessHandler;
 
@@ -80,12 +76,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
     private PasswordEncoder passwordEncoder;
-
-    @Autowired
-    private OptionsProvider optionsProvider;
-
-    @Autowired
-    private ObjectConverter objectConverter;
 
     @Override
     public void configure(AuthenticationManagerBuilder builder) throws Exception {
@@ -131,7 +121,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .failureHandler(authenticationFailureHandler);
 
         // WebAuthn Login
-        http.apply(WebAuthnLoginConfigurer.webAuthnLogin())
+        http.apply(WebAuthnLoginConfigurer.webAuthnLogin()) //FIXME: duplicated feature
                 .loginPage("/login")
                 .usernameParameter("username")
                 .passwordParameter("password")
@@ -168,9 +158,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .authenticationEntryPoint(authenticationEntryPoint)
                 .accessDeniedHandler(accessDeniedHandler);
 
-        //TODO:
+        // As WebAuthn has its own CSRF protection mechanism (challenge), CSRF token is disabled here
         http.csrf().csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse());
-
         http.csrf().ignoringAntMatchers("/webauthn/**");
 
 

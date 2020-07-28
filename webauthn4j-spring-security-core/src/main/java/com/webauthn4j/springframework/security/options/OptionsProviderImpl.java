@@ -111,6 +111,9 @@ public class OptionsProviderImpl implements OptionsProvider {
                 credentials, registrationExtensions);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public AssertionOptions getAssertionOptions(HttpServletRequest request, String username, Challenge challenge) {
 
         Collection<? extends WebAuthnAuthenticator> authenticators;
@@ -135,6 +138,9 @@ public class OptionsProviderImpl implements OptionsProvider {
         return new AssertionOptions(challenge, authenticationTimeout, effectiveRpId, credentials, authenticationExtensions);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public String getEffectiveRpId(HttpServletRequest request) {
         String effectiveRpId;
         if (this.rpId != null) {

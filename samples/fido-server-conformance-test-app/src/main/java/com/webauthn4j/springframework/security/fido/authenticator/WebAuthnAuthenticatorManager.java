@@ -14,7 +14,10 @@
  * limitations under the License.
  */
 
-package com.webauthn4j.springframework.security.authenticator;
+package com.webauthn4j.springframework.security.fido.authenticator;
+
+import com.webauthn4j.springframework.security.authenticator.WebAuthnAuthenticator;
+import com.webauthn4j.springframework.security.authenticator.WebAuthnAuthenticatorService;
 
 public interface WebAuthnAuthenticatorManager extends WebAuthnAuthenticatorService {
 

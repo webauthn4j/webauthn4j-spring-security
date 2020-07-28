@@ -20,8 +20,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.cbor.CBORFactory;
 import com.webauthn4j.converter.util.ObjectConverter;
 import com.webauthn4j.metadata.converter.jackson.WebAuthnMetadataJSONModule;
-import com.webauthn4j.springframework.security.WebAuthnRegistrationRequestValidator;
-import com.webauthn4j.springframework.security.authenticator.WebAuthnAuthenticatorManager;
 import com.webauthn4j.springframework.security.authenticator.WebAuthnAuthenticatorService;
 import com.webauthn4j.springframework.security.challenge.ChallengeRepository;
 import com.webauthn4j.springframework.security.challenge.HttpSessionChallengeRepository;
@@ -32,7 +30,6 @@ import com.webauthn4j.springframework.security.server.ServerPropertyProvider;
 import com.webauthn4j.springframework.security.server.ServerPropertyProviderImpl;
 import org.springframework.context.ApplicationContext;
 import org.springframework.security.config.annotation.web.HttpSecurityBuilder;
-import org.springframework.security.core.userdetails.UserDetailsService;
 
 /**
  * Internal utility for WebAuthn Configurers
@@ -93,21 +90,6 @@ class WebAuthnConfigurerUtil {
             serverPropertyProvider = applicationContext.getBean(ServerPropertyProvider.class);
         }
         return serverPropertyProvider;
-    }
-
-    public static <H extends HttpSecurityBuilder<H>> UserDetailsService getUserDetailsService(H http) {
-        ApplicationContext applicationContext = http.getSharedObject(ApplicationContext.class);
-        return applicationContext.getBean(UserDetailsService.class);
-    }
-
-    public static <H extends HttpSecurityBuilder<H>> WebAuthnAuthenticatorManager getWebAuthnAuthenticatorManager(H http) {
-        ApplicationContext applicationContext = http.getSharedObject(ApplicationContext.class);
-        return applicationContext.getBean(WebAuthnAuthenticatorManager.class);
-    }
-
-    public static <H extends HttpSecurityBuilder<H>> WebAuthnRegistrationRequestValidator getWebAuthnRegistrationRequestValidator(H http) {
-        ApplicationContext applicationContext = http.getSharedObject(ApplicationContext.class);
-        return applicationContext.getBean(WebAuthnRegistrationRequestValidator.class);
     }
 
 }
