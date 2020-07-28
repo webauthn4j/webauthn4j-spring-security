@@ -60,7 +60,7 @@ public class OptionsEndpointFilterTest {
         OptionsProvider optionsProvider = mock(OptionsProvider.class);
         AttestationOptions attestationOptions = new AttestationOptions(null, null, null, null, null, Collections.emptyList(), null);
         when(optionsProvider.getAttestationOptions(any(), any(), any())).thenReturn(attestationOptions);
-        AssertionOptions assertionOptions = new AssertionOptions(null, null, null, null, null, null);
+        AssertionOptions assertionOptions = new AssertionOptions(null, null, null, null, null);
         when(optionsProvider.getAssertionOptions(any(), any(), any())).thenReturn(assertionOptions);
         AttestationOptionsEndpointFilter optionsEndpointFilter = new AttestationOptionsEndpointFilter(optionsProvider, objectConverter);
         AuthenticationTrustResolver trustResolver = new AuthenticationTrustResolverImpl();

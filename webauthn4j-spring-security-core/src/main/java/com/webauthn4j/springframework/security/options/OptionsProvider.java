@@ -21,7 +21,6 @@ import com.webauthn4j.data.client.challenge.Challenge;
 import com.webauthn4j.data.extension.client.AuthenticationExtensionClientInput;
 import com.webauthn4j.data.extension.client.AuthenticationExtensionsClientInputs;
 import com.webauthn4j.data.extension.client.RegistrationExtensionClientInput;
-import com.webauthn4j.springframework.security.endpoint.AttestationOptionsResponse;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
@@ -38,7 +37,7 @@ public interface OptionsProvider {
      * @param request   request
      * @param username  username
      * @param challenge if null, new challenge is generated. Otherwise, specified challenge is used.
-     * @return {@link AttestationOptionsResponse} instance
+     * @return {@link AttestationOptions} instance
      */
     AttestationOptions getAttestationOptions(HttpServletRequest request, String username, Challenge challenge);
 
@@ -48,7 +47,7 @@ public interface OptionsProvider {
      * @param request   request
      * @param username  username
      * @param challenge if null, new challenge is generated. Otherwise, specified challenge is used.
-     * @return {@link AttestationOptionsResponse} instance
+     * @return {@link AssertionOptions} instance
      */
     AssertionOptions getAssertionOptions(HttpServletRequest request, String username, Challenge challenge);
 
@@ -152,34 +151,5 @@ public interface OptionsProvider {
     AuthenticationExtensionsClientInputs<AuthenticationExtensionClientInput> getAuthenticationExtensions();
 
     void setAuthenticationExtensions(AuthenticationExtensionsClientInputs<AuthenticationExtensionClientInput> authenticationExtensions);
-
-
-    String getUsernameParameter();
-
-    void setUsernameParameter(String usernameParameter);
-
-    String getPasswordParameter();
-
-    void setPasswordParameter(String passwordParameter);
-
-    String getCredentialIdParameter();
-
-    void setCredentialIdParameter(String credentialIdParameter);
-
-    String getClientDataJSONParameter();
-
-    void setClientDataJSONParameter(String clientDataJSONParameter);
-
-    String getAuthenticatorDataParameter();
-
-    void setAuthenticatorDataParameter(String authenticatorDataParameter);
-
-    String getSignatureParameter();
-
-    void setSignatureParameter(String signatureParameter);
-
-    String getClientExtensionsJSONParameter();
-
-    void setClientExtensionsJSONParameter(String clientExtensionsJSONParameter);
 
 }

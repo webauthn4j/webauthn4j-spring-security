@@ -23,7 +23,6 @@ import com.webauthn4j.data.client.challenge.Challenge;
 import com.webauthn4j.data.client.challenge.DefaultChallenge;
 import com.webauthn4j.data.extension.client.AuthenticationExtensionClientInput;
 import com.webauthn4j.data.extension.client.AuthenticationExtensionsClientInputs;
-import com.webauthn4j.springframework.security.endpoint.Parameters;
 import org.junit.Test;
 
 import java.util.Collections;
@@ -40,16 +39,8 @@ public class AssertionOptionsTest {
         String rpId = "localhost";
         List<PublicKeyCredentialDescriptor> credentials = Collections.singletonList(new PublicKeyCredentialDescriptor(PublicKeyCredentialType.PUBLIC_KEY, new byte[32], Collections.singleton(AuthenticatorTransport.INTERNAL)));
         AuthenticationExtensionsClientInputs<AuthenticationExtensionClientInput> authenticationExtensionsClientInputs = new AuthenticationExtensionsClientInputs<>();
-        Parameters parameters = new Parameters(
-                "username",
-                "password",
-                "credentialId",
-                "clientDataJSON",
-                "authenticatorData",
-                "signature",
-                "clientExtensionsJSON");
-        AssertionOptions instanceA = new AssertionOptions(challenge, authenticationTimeout, rpId, credentials, authenticationExtensionsClientInputs, parameters);
-        AssertionOptions instanceB = new AssertionOptions(challenge, authenticationTimeout, rpId, credentials, authenticationExtensionsClientInputs, parameters);
+        AssertionOptions instanceA = new AssertionOptions(challenge, authenticationTimeout, rpId, credentials, authenticationExtensionsClientInputs);
+        AssertionOptions instanceB = new AssertionOptions(challenge, authenticationTimeout, rpId, credentials, authenticationExtensionsClientInputs);
 
         assertThat(instanceA)
                 .isEqualTo(instanceB)
@@ -63,21 +54,12 @@ public class AssertionOptionsTest {
         String rpId = "localhost";
         List<PublicKeyCredentialDescriptor> credentials = Collections.singletonList(new PublicKeyCredentialDescriptor(PublicKeyCredentialType.PUBLIC_KEY, new byte[32], Collections.singleton(AuthenticatorTransport.INTERNAL)));
         AuthenticationExtensionsClientInputs<AuthenticationExtensionClientInput> authenticationExtensionsClientInputs = new AuthenticationExtensionsClientInputs<>();
-        Parameters parameters = new Parameters(
-                "username",
-                "password",
-                "credentialId",
-                "clientDataJSON",
-                "authenticatorData",
-                "signature",
-                "clientExtensionsJSON");
-        AssertionOptions assertionOptions = new AssertionOptions(challenge, authenticationTimeout, rpId, credentials, authenticationExtensionsClientInputs, parameters);
+        AssertionOptions assertionOptions = new AssertionOptions(challenge, authenticationTimeout, rpId, credentials, authenticationExtensionsClientInputs);
 
         assertThat(assertionOptions.getChallenge()).isEqualTo(challenge);
         assertThat(assertionOptions.getTimeout()).isEqualTo(authenticationTimeout);
         assertThat(assertionOptions.getRpId()).isEqualTo(rpId);
         assertThat(assertionOptions.getCredentials()).isEqualTo(credentials);
         assertThat(assertionOptions.getExtensions()).isEqualTo(authenticationExtensionsClientInputs);
-        assertThat(assertionOptions.getParameters()).isEqualTo(parameters);
     }
 }

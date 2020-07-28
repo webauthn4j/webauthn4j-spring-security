@@ -167,8 +167,7 @@ export class WebAuthnService {
             id: base64url.decodeBase64url(credential.id),
             //TODO: transports: credential.transports
           }
-        }),
-        parameters: response.parameters
+        })
       };
     }));
   }

@@ -22,13 +22,4 @@ export interface AssertionOptionsResponse {
   timeout?: number,
   rpId?: string,
   credentials: WebAuthnPublicKeyCredentialDescriptor[];
-  parameters: {
-    username: string,
-    password: string,
-    credentialId: string,
-    clientDataJSON: string,
-    authenticatorData: string,
-    signature: string,
-    clientExtensionsJSON: string
-  };
 }

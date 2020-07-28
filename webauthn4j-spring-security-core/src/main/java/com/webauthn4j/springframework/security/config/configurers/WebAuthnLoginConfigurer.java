@@ -141,31 +141,24 @@ public final class WebAuthnLoginConfigurer<H extends HttpSecurityBuilder<H>> ext
     private void configureParameters() {
         if (usernameParameter != null) {
             this.getAuthenticationFilter().setUsernameParameter(usernameParameter);
-            this.optionsProvider.setUsernameParameter(usernameParameter);
         }
         if (passwordParameter != null) {
             this.getAuthenticationFilter().setPasswordParameter(passwordParameter);
-            this.optionsProvider.setPasswordParameter(passwordParameter);
         }
         if (credentialIdParameter != null) {
             this.getAuthenticationFilter().setCredentialIdParameter(credentialIdParameter);
-            this.optionsProvider.setCredentialIdParameter(credentialIdParameter);
         }
         if (clientDataJSONParameter != null) {
             this.getAuthenticationFilter().setClientDataJSONParameter(clientDataJSONParameter);
-            this.optionsProvider.setClientDataJSONParameter(clientDataJSONParameter);
         }
         if (authenticatorDataParameter != null) {
             this.getAuthenticationFilter().setAuthenticatorDataParameter(authenticatorDataParameter);
-            this.optionsProvider.setAuthenticatorDataParameter(authenticatorDataParameter);
         }
         if (signatureParameter != null) {
             this.getAuthenticationFilter().setSignatureParameter(signatureParameter);
-            this.optionsProvider.setSignatureParameter(signatureParameter);
         }
         if (clientExtensionsJSONParameter != null) {
             this.getAuthenticationFilter().setClientExtensionsJSONParameter(clientExtensionsJSONParameter);
-            this.optionsProvider.setClientExtensionsJSONParameter(clientExtensionsJSONParameter);
         }
     }
 

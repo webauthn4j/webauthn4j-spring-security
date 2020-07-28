@@ -20,7 +20,6 @@ import com.webauthn4j.data.PublicKeyCredentialDescriptor;
 import com.webauthn4j.data.client.challenge.Challenge;
 import com.webauthn4j.data.extension.client.AuthenticationExtensionClientInput;
 import com.webauthn4j.data.extension.client.AuthenticationExtensionsClientInputs;
-import com.webauthn4j.springframework.security.endpoint.Parameters;
 import com.webauthn4j.util.CollectionUtil;
 
 import java.io.Serializable;
@@ -40,7 +39,6 @@ public class AssertionOptions implements Serializable {
     private final String rpId;
     private final List<PublicKeyCredentialDescriptor> credentials;
     private final AuthenticationExtensionsClientInputs<AuthenticationExtensionClientInput> extensions;
-    private final Parameters parameters;
 
     // ~ Constructors
     // ===================================================================================================
@@ -50,14 +48,12 @@ public class AssertionOptions implements Serializable {
             Long timeout,
             String rpId,
             List<PublicKeyCredentialDescriptor> credentials,
-            AuthenticationExtensionsClientInputs<AuthenticationExtensionClientInput> extensions,
-            Parameters parameters) {
+            AuthenticationExtensionsClientInputs<AuthenticationExtensionClientInput> extensions) {
         this.challenge = challenge;
         this.timeout = timeout;
         this.rpId = rpId;
         this.credentials = CollectionUtil.unmodifiableList(credentials);
         this.extensions = extensions;
-        this.parameters = parameters;
     }
 
     // ~ Methods
@@ -83,10 +79,6 @@ public class AssertionOptions implements Serializable {
         return extensions;
     }
 
-    public Parameters getParameters() {
-        return parameters;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -96,12 +88,11 @@ public class AssertionOptions implements Serializable {
                 Objects.equals(timeout, that.timeout) &&
                 Objects.equals(rpId, that.rpId) &&
                 Objects.equals(credentials, that.credentials) &&
-                Objects.equals(extensions, that.extensions) &&
-                Objects.equals(parameters, that.parameters);
+                Objects.equals(extensions, that.extensions);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(challenge, timeout, rpId, credentials, extensions, parameters);
+        return Objects.hash(challenge, timeout, rpId, credentials, extensions);
     }
 }

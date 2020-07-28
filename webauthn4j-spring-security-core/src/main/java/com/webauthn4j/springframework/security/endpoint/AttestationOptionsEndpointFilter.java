@@ -43,7 +43,7 @@ import java.io.IOException;
 
 /**
  * A filter for providing WebAuthn attestation option parameters to clients.
- * Clients can retrieve {@link AttestationOptionsResponse}, which includes {@link Challenge}, {@link PublicKeyCredentialRpEntity} and etc.
+ * Clients can retrieve {@link AttestationOptions}, which includes {@link Challenge}, {@link PublicKeyCredentialRpEntity} and etc.
  */
 public class AttestationOptionsEndpointFilter extends GenericFilterBean {
 
@@ -104,27 +104,14 @@ public class AttestationOptionsEndpointFilter extends GenericFilterBean {
         }
 
         try {
-            AttestationOptionsResponse attestationOptionsResponse = processRequest(fi.getRequest());
-            writeResponse(fi.getResponse(), attestationOptionsResponse);
+            String loginUsername = getLoginUsername();
+            AttestationOptions attestationOptions = optionsProvider.getAttestationOptions(fi.getRequest(), loginUsername, null);
+            writeResponse(fi.getResponse(), attestationOptions);
         } catch (RuntimeException e) {
             logger.debug(e);
             writeErrorResponse(fi.getResponse(), e);
         }
 
-    }
-
-    AttestationOptionsResponse processRequest(HttpServletRequest request) {
-        String loginUsername = getLoginUsername();
-        AttestationOptions attestationOptions = optionsProvider.getAttestationOptions(request, loginUsername, null);
-        return new AttestationOptionsResponse(
-                attestationOptions.getRelyingParty(),
-                attestationOptions.getUser(),
-                attestationOptions.getChallenge(),
-                attestationOptions.getPubKeyCredParams(),
-                attestationOptions.getTimeout(),
-                attestationOptions.getCredentials(),
-                attestationOptions.getExtensions()
-        );
     }
 
     public AuthenticationTrustResolver getTrustResolver() {
@@ -146,8 +133,8 @@ public class AttestationOptionsEndpointFilter extends GenericFilterBean {
         return (request.getRequestURI().contains(filterProcessesUrl));
     }
 
-    void writeResponse(HttpServletResponse httpServletResponse, Response response) throws IOException {
-        String responseText = jsonConverter.writeValueAsString(response);
+    void writeResponse(HttpServletResponse httpServletResponse, AttestationOptions attestationOptions) throws IOException {
+        String responseText = jsonConverter.writeValueAsString(attestationOptions);
         httpServletResponse.setContentType("application/json");
         httpServletResponse.getWriter().print(responseText);
     }
