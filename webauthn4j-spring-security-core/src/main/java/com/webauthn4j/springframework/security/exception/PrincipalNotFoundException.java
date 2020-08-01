@@ -14,19 +14,16 @@
  * limitations under the License.
  */
 
-package com.webauthn4j.springframework.security.webauthn.sample;
+package com.webauthn4j.springframework.security.exception;
 
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit4.SpringRunner;
+public class PrincipalNotFoundException extends ValidationException {
 
-@RunWith(SpringRunner.class)
-@SpringBootTest
-public class SampleWebApplicationSpringTest {
+    public PrincipalNotFoundException(String message) {
+        super(message);
+    }
 
-    @Test
-    public void contextLoads() {
+    public PrincipalNotFoundException(String message, Throwable cause) {
+        super(message, cause);
     }
 
 }

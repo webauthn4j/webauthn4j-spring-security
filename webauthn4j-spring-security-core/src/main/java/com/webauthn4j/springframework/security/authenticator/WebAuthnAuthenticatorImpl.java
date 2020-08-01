@@ -26,7 +26,7 @@ import java.util.Objects;
 /**
  * An implementation of {@link WebAuthnAuthenticator}
  */
-public class WebAuthnAuthenticatorImpl extends AuthenticatorImpl implements WebAuthnAuthenticator {
+public class WebAuthnAuthenticatorImpl extends AuthenticatorImpl implements WebAuthnAuthenticator { //TODO: add more members
 
     // ~ Instance fields
     // ================================================================================================
@@ -52,6 +52,9 @@ public class WebAuthnAuthenticatorImpl extends AuthenticatorImpl implements WebA
     // ~ Methods
     // ========================================================================================================
 
+    /**
+     * {@inheritDoc}
+     */
     public String getName() {
         return name;
     }

@@ -16,16 +16,24 @@
 
 package com.webauthn4j.springframework.security.authenticator;
 
-import com.webauthn4j.authenticator.Authenticator;
-import org.springframework.security.core.userdetails.UserDetails;
+import com.webauthn4j.springframework.security.exception.CredentialIdNotFoundException;
 
-/**
- * Models core authenticator information retrieved by a {@link WebAuthnAuthenticatorService}
- *
- * @see WebAuthnAuthenticatorService
- */
-public interface WebAuthnAuthenticator extends Authenticator {
+public interface WebAuthnAuthenticatorManager extends WebAuthnAuthenticatorService {
 
-    UserDetails getUserPrincipal();
+    /**
+     * Create a new user with the supplied details.
+     */
+    void createAuthenticator(Object userPrincipal, WebAuthnAuthenticator webAuthnAuthenticator);
+
+    /**
+     * Remove the authenticator with the given credentialId
+     */
+    void deleteAuthenticator(byte[] credentialId) throws CredentialIdNotFoundException;
+
+    /**
+     * Check if a authenticator with the supplied credentialId
+     * @return
+     */
+    boolean authenticatorExists(byte[] credentialId);
 
 }

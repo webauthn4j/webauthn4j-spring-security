@@ -14,18 +14,18 @@
  * limitations under the License.
  */
 
-package com.webauthn4j.springframework.security.authenticator;
+package com.webauthn4j.springframework.security.webauthn.sample.app.config;
 
-import com.webauthn4j.authenticator.Authenticator;
-import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.Configuration;
+
 
 /**
- * Models core authenticator information retrieved by a {@link WebAuthnAuthenticatorService}
- *
- * @see WebAuthnAuthenticatorService
+ * Application Layer Configuration
  */
-public interface WebAuthnAuthenticator extends Authenticator {
+@Configuration
+@ComponentScan(basePackages = "com.webauthn4j.springframework.security.webauthn.sample.app")
+public class AppConfig {
 
-    UserDetails getUserPrincipal();
 
 }

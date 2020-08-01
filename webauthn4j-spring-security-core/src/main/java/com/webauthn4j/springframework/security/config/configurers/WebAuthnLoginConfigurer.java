@@ -213,7 +213,7 @@ public final class WebAuthnLoginConfigurer<H extends HttpSecurityBuilder<H>> ext
      *
      * @return the {@link AssertionOptionsEndpointConfig}
      */
-    public AssertionOptionsEndpointConfig assertionOptionsEndpointConfig() {
+    public AssertionOptionsEndpointConfig assertionOptionsEndpoint() {
         return assertionOptionsEndpointConfig;
     }
 

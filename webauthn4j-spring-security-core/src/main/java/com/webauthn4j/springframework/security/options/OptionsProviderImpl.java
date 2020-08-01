@@ -25,8 +25,8 @@ import com.webauthn4j.data.extension.client.RegistrationExtensionClientInput;
 import com.webauthn4j.springframework.security.authenticator.WebAuthnAuthenticator;
 import com.webauthn4j.springframework.security.authenticator.WebAuthnAuthenticatorService;
 import com.webauthn4j.springframework.security.challenge.ChallengeRepository;
+import com.webauthn4j.springframework.security.exception.PrincipalNotFoundException;
 import com.webauthn4j.springframework.security.util.internal.ServletUtil;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.util.Assert;
 
 import javax.servlet.http.HttpServletRequest;
@@ -89,7 +89,7 @@ public class OptionsProviderImpl implements OptionsProvider {
         try {
             authenticators = authenticatorService.loadAuthenticatorsByPrincipal(username);
             user = publicKeyCredentialUserEntityService.loadUserByUsername(username);
-        } catch (UsernameNotFoundException e) {
+        } catch (PrincipalNotFoundException e) {
             authenticators = Collections.emptyList();
             user = null;
         }
@@ -119,7 +119,7 @@ public class OptionsProviderImpl implements OptionsProvider {
         Collection<? extends WebAuthnAuthenticator> authenticators;
         try {
             authenticators = authenticatorService.loadAuthenticatorsByPrincipal(username);
-        } catch (UsernameNotFoundException e) {
+        } catch (PrincipalNotFoundException e) {
             authenticators = Collections.emptyList();
         }
 

@@ -14,18 +14,19 @@
  * limitations under the License.
  */
 
-package com.webauthn4j.springframework.security.authenticator;
+package com.webauthn4j.springframework.security.webauthn.sample;
 
-import com.webauthn4j.authenticator.Authenticator;
-import org.springframework.security.core.userdetails.UserDetails;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.junit4.SpringRunner;
 
-/**
- * Models core authenticator information retrieved by a {@link WebAuthnAuthenticatorService}
- *
- * @see WebAuthnAuthenticatorService
- */
-public interface WebAuthnAuthenticator extends Authenticator {
+@RunWith(SpringRunner.class)
+@SpringBootTest
+public class SampleSPASpringTest {
 
-    UserDetails getUserPrincipal();
+    @Test
+    public void contextLoads() {
+    }
 
 }
