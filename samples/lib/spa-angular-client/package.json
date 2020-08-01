@@ -29,7 +29,7 @@
     "@ng-bootstrap/ng-bootstrap": "^6.1.0",
     "bootstrap": "^4.5.0",
     "core-js": "^3.6.5",
-    "bowser": "^2.9.0",
+    "bowser": "^2.10.0",
     "rxjs": "~6.5.5",
     "tslib": "^1.10.0",
     "zone.js": "~0.10.2"
