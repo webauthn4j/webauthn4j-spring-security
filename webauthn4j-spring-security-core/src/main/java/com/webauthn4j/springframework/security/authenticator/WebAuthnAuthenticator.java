@@ -26,6 +26,6 @@ import org.springframework.security.core.userdetails.UserDetails;
  */
 public interface WebAuthnAuthenticator extends Authenticator {
 
-    UserDetails getUserPrincipal();
+    UserDetails getUserDetails();
 
 }

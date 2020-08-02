@@ -108,12 +108,6 @@ public class FidoServerAttestationResultEndpointFilter extends ServerEndpointFil
                     transports,
                     credential.getClientExtensionResults());
 
-            WebAuthnAuthenticatorImpl webAuthnAuthenticator =
-                    new WebAuthnAuthenticatorImpl(
-                            "Authenticator",
-                            attestationObject.getAuthenticatorData().getAttestedCredentialData(),
-                            attestationObject.getAttestationStatement(),
-                            attestationObject.getAuthenticatorData().getSignCount());
             String loginUsername = serverEndpointFilterUtil.decodeUsername(collectedClientData.getChallenge());
             try {
                 userDetailsService.loadUserByUsername(loginUsername);
@@ -121,7 +115,14 @@ public class FidoServerAttestationResultEndpointFilter extends ServerEndpointFil
                 usernameNotFoundHandler.onUsernameNotFound(loginUsername);
             }
             UserDetails userDetails = userDetailsService.loadUserByUsername(loginUsername);
-            webAuthnAuthenticator.setUserPrincipal(userDetails);
+            WebAuthnAuthenticatorImpl webAuthnAuthenticator =
+                    new WebAuthnAuthenticatorImpl(
+                            "Authenticator",
+                            userDetails,
+                            attestationObject.getAuthenticatorData().getAttestedCredentialData(),
+                            attestationObject.getAttestationStatement(),
+                            attestationObject.getAuthenticatorData().getSignCount()
+                    );
             webAuthnAuthenticatorManager.addAuthenticator(webAuthnAuthenticator);
             return new AttestationResultSuccessResponse();
         }

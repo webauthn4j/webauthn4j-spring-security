@@ -17,14 +17,23 @@
 package com.webauthn4j.springframework.security.webauthn.sample.app.config;
 
 import com.webauthn4j.WebAuthnManager;
+import com.webauthn4j.data.PublicKeyCredentialType;
+import com.webauthn4j.data.attestation.statement.COSEAlgorithmIdentifier;
 import com.webauthn4j.springframework.security.authenticator.WebAuthnAuthenticatorService;
+import com.webauthn4j.springframework.security.config.configurers.WebAuthnAuthenticationProviderConfigurer;
+import com.webauthn4j.springframework.security.config.configurers.WebAuthnConfigurer;
+import com.webauthn4j.springframework.security.config.configurers.WebAuthnLoginConfigurer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 
 @Configuration
 @EnableWebSecurity
@@ -39,18 +48,22 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     private UserDetailsService userDetailsService;
 
-//    @Override
-//    public void configure(AuthenticationManagerBuilder builder) throws Exception {
-////        builder.apply(new WebAuthnAuthenticationProviderConfigurer<>(webAuthnAuthenticatorService, webAuthnManager));
-////        builder.userDetailsService(userDetailsService);
-//    }
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
+    @Override
+    public void configure(AuthenticationManagerBuilder builder) throws Exception {
+        builder.apply(new WebAuthnAuthenticationProviderConfigurer<>(webAuthnAuthenticatorService, webAuthnManager));
+        builder.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder);
+    }
 
     @Override
     public void configure(WebSecurity web) {
         // ignore static resources
         web.ignoring().antMatchers(
                 "/favicon.ico",
-                "/static/**",
+                "/js/**",
+                "/css/**",
                 "/webjars/**");
     }
 
@@ -59,6 +72,36 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
      */
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.authorizeRequests().anyRequest().permitAll();
+                // WebAuthn Config
+        http.apply(WebAuthnConfigurer.webAuthn())
+                .rpName("WebAuthn4J Spring Security Sample MPA")
+                .publicKeyCredParams()
+                .addPublicKeyCredParams(PublicKeyCredentialType.PUBLIC_KEY, COSEAlgorithmIdentifier.RS256)  // Windows Hello
+                .addPublicKeyCredParams(PublicKeyCredentialType.PUBLIC_KEY, COSEAlgorithmIdentifier.ES256) // FIDO U2F Key, etc
+                .and()
+                .registrationExtensions()
+                .credProps(true)
+                .and();
+
+        // WebAuthn Login
+        http.apply(WebAuthnLoginConfigurer.webAuthnLogin())
+                .defaultSuccessUrl("/")
+                .failureUrl("/login");
+
+        // Authorization
+        http.authorizeRequests()
+                .mvcMatchers(HttpMethod.GET, "/login").permitAll()
+                .mvcMatchers(HttpMethod.GET, "/signup").permitAll()
+                .mvcMatchers(HttpMethod.POST, "/signup").permitAll()
+                .anyRequest().access("@webAuthnSecurityExpression.isWebAuthnAuthenticated(authentication) || hasAuthority('SINGLE_FACTOR_AUTHN_ALLOWED')");
+
+        http.exceptionHandling()
+                .accessDeniedHandler((request, response, accessDeniedException) -> response.sendRedirect("/login"));
+
+
+
+        // As WebAuthn has its own CSRF protection mechanism (challenge), CSRF token is disabled here
+        http.csrf().csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse());
+        http.csrf().ignoringAntMatchers("/webauthn/**");
     }
 }

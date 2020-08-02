@@ -26,8 +26,8 @@ public class WebAuthnAuthenticatorImplTest {
 
     @Test
     public void equals_hashCode_test() {
-        WebAuthnAuthenticatorImpl instanceA = new WebAuthnAuthenticatorImpl("authenticator", null, null, 0);
-        WebAuthnAuthenticatorImpl instanceB = new WebAuthnAuthenticatorImpl("authenticator", null, null, 0);
+        WebAuthnAuthenticatorImpl instanceA = new WebAuthnAuthenticatorImpl("authenticator", null, null, null, 0);
+        WebAuthnAuthenticatorImpl instanceB = new WebAuthnAuthenticatorImpl("authenticator", null, null, null, 0);
         assertThat(instanceA)
                 .isEqualTo(instanceB)
                 .hasSameHashCodeAs(instanceB);
@@ -35,15 +35,14 @@ public class WebAuthnAuthenticatorImplTest {
 
     @Test
     public void get_set_userPrincipal_test() {
-        WebAuthnAuthenticatorImpl instance = new WebAuthnAuthenticatorImpl("authenticator", null, null, 0);
         UserDetails userDetails = mock(UserDetails.class);
-        instance.setUserPrincipal(userDetails);
-        assertThat(instance.getUserPrincipal()).isEqualTo(userDetails);
+        WebAuthnAuthenticatorImpl instance = new WebAuthnAuthenticatorImpl("authenticator", userDetails, null, null, 0);
+        assertThat(instance.getUserDetails()).isEqualTo(userDetails);
     }
 
     @Test
     public void get_set_name_test() {
-        WebAuthnAuthenticatorImpl instance = new WebAuthnAuthenticatorImpl("authenticator", null, null, 0);
+        WebAuthnAuthenticatorImpl instance = new WebAuthnAuthenticatorImpl("authenticator", null, null, null, 0);
         assertThat(instance.getName()).isEqualTo("authenticator");
         instance.setName("newName");
         assertThat(instance.getName()).isEqualTo("newName");

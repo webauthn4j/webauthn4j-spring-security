@@ -88,7 +88,7 @@ public class OptionsProviderImpl implements OptionsProvider {
 
         try {
             authenticators = authenticatorService.loadAuthenticatorsByPrincipal(username);
-            user = publicKeyCredentialUserEntityService.loadUserByUsername(username);
+            user = publicKeyCredentialUserEntityService.loadUserByPrincipal(username);
         } catch (PrincipalNotFoundException e) {
             authenticators = Collections.emptyList();
             user = null;
@@ -227,11 +227,12 @@ public class OptionsProviderImpl implements OptionsProvider {
     static class DefaultPublicKeyCredentialUserEntityService implements PublicKeyCredentialUserEntityService {
 
         @Override
-        public PublicKeyCredentialUserEntity loadUserByUsername(String username) {
+        public PublicKeyCredentialUserEntity loadUserByPrincipal(Object principal) {
+            String principalString = principal.toString();
             return new PublicKeyCredentialUserEntity(
-                    username.getBytes(StandardCharsets.UTF_8),
-                    username,
-                    username
+                    principalString.getBytes(StandardCharsets.UTF_8),
+                    principalString,
+                    principalString
             );
         }
     }

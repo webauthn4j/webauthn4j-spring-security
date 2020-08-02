@@ -29,8 +29,8 @@ public class PublicKeyCredentialUserEntityServiceImpl implements PublicKeyCreden
     }
 
     @Override
-    public PublicKeyCredentialUserEntity loadUserByUsername(String username) {
-        UserEntity userEntity = userManager.loadUserByUsername(username);
+    public PublicKeyCredentialUserEntity loadUserByPrincipal(Object principal) {
+        UserEntity userEntity = userManager.loadUserByUsername((String) principal);
         return new PublicKeyCredentialUserEntity(
                 userEntity.getUserHandle(),
                 userEntity.getUsername(),

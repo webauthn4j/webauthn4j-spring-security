@@ -16,7 +16,7 @@
 
 package com.webauthn4j.springframework.security.webauthn.sample.domain.config;
 
-import com.webauthn4j.springframework.security.webauthn.sample.util.modelmapper.StringToChallengeConverter;
+import com.webauthn4j.springframework.security.webauthn.sample.app.util.modelmapper.StringToChallengeConverter;
 import org.modelmapper.ModelMapper;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

@@ -22,17 +22,21 @@ public interface WebAuthnAuthenticatorManager extends WebAuthnAuthenticatorServi
 
     /**
      * Create a new user with the supplied details.
+     * @param userPrincipal user principal
+     * @param webAuthnAuthenticator authenticator
      */
     void createAuthenticator(Object userPrincipal, WebAuthnAuthenticator webAuthnAuthenticator);
 
     /**
      * Remove the authenticator with the given credentialId
+     * @param credentialId credentialId
      */
     void deleteAuthenticator(byte[] credentialId) throws CredentialIdNotFoundException;
 
     /**
      * Check if a authenticator with the supplied credentialId
-     * @return
+     * @param credentialId credentialId
+     * @return true if a authenticator with the supplied credentialId exists
      */
     boolean authenticatorExists(byte[] credentialId);
 

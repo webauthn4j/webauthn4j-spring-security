@@ -85,7 +85,8 @@ public class WebAuthnRegistrationRequestValidator {
             return new WebAuthnRegistrationRequestValidationResponse(
                     response.getCollectedClientData(),
                     response.getAttestationObject(),
-                    response.getClientExtensions());
+                    response.getClientExtensions(),
+                    response.getTransports());
         } catch (WebAuthnException e) {
             throw ExceptionUtil.wrapWithAuthenticationException(e);
         }

@@ -19,14 +19,15 @@ package com.webauthn4j.springframework.security.webauthn.sample.domain.entity;
 import com.webauthn4j.data.AuthenticatorTransport;
 import com.webauthn4j.data.attestation.authenticator.AttestedCredentialData;
 import com.webauthn4j.data.attestation.statement.AttestationStatement;
+import com.webauthn4j.data.extension.authenticator.AuthenticationExtensionsAuthenticatorOutputs;
 import com.webauthn4j.data.extension.authenticator.RegistrationExtensionAuthenticatorOutput;
+import com.webauthn4j.data.extension.client.AuthenticationExtensionsClientOutputs;
 import com.webauthn4j.data.extension.client.RegistrationExtensionClientOutput;
 import com.webauthn4j.springframework.security.authenticator.WebAuthnAuthenticator;
 import com.webauthn4j.springframework.security.webauthn.sample.infrastructure.util.jpa.converter.*;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
-import java.util.Map;
 import java.util.Set;
 
 /**
@@ -71,11 +72,11 @@ public class AuthenticatorEntity implements WebAuthnAuthenticator {
 
     @Lob
     @Convert(converter = ClientExtensionsConverter.class)
-    private Map<String, RegistrationExtensionClientOutput> clientExtensions;
+    private AuthenticationExtensionsClientOutputs<RegistrationExtensionClientOutput>  clientExtensions;
 
     @Lob
     @Convert(converter = AuthenticatorExtensionsConverter.class)
-    private Map<String, RegistrationExtensionAuthenticatorOutput> authenticatorExtensions;
+    private AuthenticationExtensionsAuthenticatorOutputs<RegistrationExtensionAuthenticatorOutput>  authenticatorExtensions;
 
     public String getFormat() {
         return attestationStatement.getFormat();
@@ -94,7 +95,7 @@ public class AuthenticatorEntity implements WebAuthnAuthenticator {
     }
 
     @Override
-    public UserDetails getUserPrincipal() {
+    public UserDetails getUserDetails() {
         return getUser();
     }
 
@@ -145,20 +146,20 @@ public class AuthenticatorEntity implements WebAuthnAuthenticator {
 
 
     @Override
-    public Map<String, RegistrationExtensionClientOutput> getClientExtensions() {
+    public AuthenticationExtensionsClientOutputs<RegistrationExtensionClientOutput> getClientExtensions() {
         return clientExtensions;
     }
 
-    public void setClientExtensions(Map<String, RegistrationExtensionClientOutput> clientExtensions) {
+    public void setClientExtensions(AuthenticationExtensionsClientOutputs<RegistrationExtensionClientOutput> clientExtensions) {
         this.clientExtensions = clientExtensions;
     }
 
     @Override
-    public Map<String, RegistrationExtensionAuthenticatorOutput> getAuthenticatorExtensions() {
+    public AuthenticationExtensionsAuthenticatorOutputs<RegistrationExtensionAuthenticatorOutput> getAuthenticatorExtensions() {
         return authenticatorExtensions;
     }
 
-    public void setAuthenticatorExtensions(Map<String, RegistrationExtensionAuthenticatorOutput> authenticatorExtensions) {
+    public void setAuthenticatorExtensions(AuthenticationExtensionsAuthenticatorOutputs<RegistrationExtensionAuthenticatorOutput>  authenticatorExtensions) {
         this.authenticatorExtensions = authenticatorExtensions;
     }
 }

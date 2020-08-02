@@ -17,26 +17,38 @@
 package com.webauthn4j.springframework.security.webauthn.sample.app.web;
 
 import com.webauthn4j.data.client.challenge.Challenge;
+import com.webauthn4j.springframework.security.WebAuthnRegistrationRequestValidationResponse;
 import com.webauthn4j.springframework.security.WebAuthnRegistrationRequestValidator;
 import com.webauthn4j.springframework.security.authenticator.WebAuthnAuthenticator;
+import com.webauthn4j.springframework.security.authenticator.WebAuthnAuthenticatorImpl;
 import com.webauthn4j.springframework.security.authenticator.WebAuthnAuthenticatorManager;
 import com.webauthn4j.springframework.security.challenge.ChallengeRepository;
 import com.webauthn4j.springframework.security.exception.PrincipalNotFoundException;
+import com.webauthn4j.springframework.security.exception.WebAuthnAuthenticationException;
 import com.webauthn4j.util.Base64UrlUtil;
 import com.webauthn4j.util.UUIDUtil;
+import com.webauthn4j.util.exception.WebAuthnException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.AuthenticationTrustResolver;
+import org.springframework.security.authentication.AuthenticationTrustResolverImpl;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.UserDetailsManager;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
 import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
@@ -77,10 +89,12 @@ public class WebAuthnSampleController {
 	@Autowired
 	private PasswordEncoder passwordEncoder;
 
+	private AuthenticationTrustResolver authenticationTrustResolver = new AuthenticationTrustResolverImpl();
+
 	@ModelAttribute
 	public void addAttributes(Model model, HttpServletRequest request) {
 		Challenge challenge = challengeRepository.loadOrGenerateChallenge(request);
-		model.addAttribute("webAuthnChallenge", challenge);
+		model.addAttribute("webAuthnChallenge", Base64UrlUtil.encodeToString(challenge.getValue()));
 		model.addAttribute("webAuthnCredentialIds", getCredentialIds());
 	}
 
@@ -98,68 +112,80 @@ public class WebAuthnSampleController {
 		model.addAttribute("userForm", userCreateForm);
 		return VIEW_SIGNUP_SIGNUP;
 	}
-//
-//	@PostMapping(value = "/signup")
-//	public String create(HttpServletRequest request, @Valid @ModelAttribute("userForm") UserCreateForm userCreateForm, BindingResult result, Model model) {
-//
-//		if (result.hasErrors()) {
-//			return VIEW_SIGNUP_SIGNUP;
-//		}
-//
-//		WebAuthnRegistrationRequestValidationResponse registrationRequestValidationResponse;
-//		try {
-//			registrationRequestValidationResponse = registrationRequestValidator.validate(
-//					request,
-//					userCreateForm.getAuthenticator().getClientDataJSON(),
-//					userCreateForm.getAuthenticator().getAttestationObject(),
-//					userCreateForm.getAuthenticator().getTransports(),
-//					userCreateForm.getAuthenticator().getClientExtensions()
-//			);
-//		}
-//		catch (WebAuthnException | WebAuthnAuthenticationException e){
-//			logger.debug("WebAuthn registration request validation failed.", e);
-//			return VIEW_SIGNUP_SIGNUP;
-//		}
-//
-//		String username = userCreateForm.getUsername();
-//		String password = passwordEncoder.encode(userCreateForm.getPassword());
-//		List<GrantedAuthority> authorities = Collections.emptyList();
-//		User user = new User(username, password, authorities);
-//
-//		WebAuthnAuthenticator authenticator = new WebAuthnAuthenticatorImpl(
-//				"",
-//				registrationRequestValidationResponse.getAttestationObject().getAuthenticatorData().getAttestedCredentialData(),
-//				registrationRequestValidationResponse.getAttestationObject().getAttestationStatement(),
-//				registrationRequestValidationResponse.getAttestationObject().getAuthenticatorData().getSignCount()
-//		);
-//
-//		try {
-//			userDetailsManager.createUser(user);
-//			webAuthnAuthenticatorManager.createAuthenticator(user, authenticator);
-//		} catch (IllegalArgumentException ex) {
-//			return VIEW_SIGNUP_SIGNUP;
-//		}
-//
-//		return REDIRECT_LOGIN;
-//	}
+
+	@PostMapping(value = "/signup")
+	public String create(HttpServletRequest request, @Valid @ModelAttribute("userForm") UserCreateForm userCreateForm, BindingResult result, Model model) {
+
+		if (result.hasErrors()) {
+			return VIEW_SIGNUP_SIGNUP;
+		}
+
+		WebAuthnRegistrationRequestValidationResponse registrationRequestValidationResponse;
+		try {
+			registrationRequestValidationResponse = registrationRequestValidator.validate(
+					request,
+					userCreateForm.getAuthenticator().getClientDataJSON(),
+					userCreateForm.getAuthenticator().getAttestationObject(),
+					userCreateForm.getAuthenticator().getTransports(),
+					userCreateForm.getAuthenticator().getClientExtensions()
+			);
+		}
+		catch (WebAuthnException | WebAuthnAuthenticationException e){
+			logger.debug("WebAuthn registration request validation failed.", e);
+			return VIEW_SIGNUP_SIGNUP;
+		}
+
+		String username = userCreateForm.getUsername();
+		String password = passwordEncoder.encode(userCreateForm.getPassword());
+		boolean singleFactorAuthenticationAllowed = userCreateForm.isSingleFactorAuthenticationAllowed();
+		List<GrantedAuthority> authorities;
+		if(singleFactorAuthenticationAllowed){
+			authorities = Collections.singletonList(new SimpleGrantedAuthority("SINGLE_FACTOR_AUTHN_ALLOWED"));
+		}
+		else {
+			authorities = Collections.emptyList();
+		}
+		User user = new User(username, password, authorities);
+
+		WebAuthnAuthenticator authenticator = new WebAuthnAuthenticatorImpl(
+				"",
+				user,
+				registrationRequestValidationResponse.getAttestationObject().getAuthenticatorData().getAttestedCredentialData(),
+				registrationRequestValidationResponse.getAttestationObject().getAttestationStatement(),
+				registrationRequestValidationResponse.getAttestationObject().getAuthenticatorData().getSignCount(),
+				registrationRequestValidationResponse.getTransports(),
+				registrationRequestValidationResponse.getRegistrationExtensionsClientOutputs(),
+				registrationRequestValidationResponse.getAttestationObject().getAuthenticatorData().getExtensions()
+		);
+
+		try {
+			userDetailsManager.createUser(user);
+			webAuthnAuthenticatorManager.createAuthenticator(user, authenticator);
+		} catch (IllegalArgumentException ex) {
+			return VIEW_SIGNUP_SIGNUP;
+		}
+
+		return REDIRECT_LOGIN;
+	}
 
 	@GetMapping(value = "/login")
 	public String login() {
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-		if (authentication.isAuthenticated()) {
-			return VIEW_LOGIN_AUTHENTICATOR_LOGIN;
-		} else {
+		if (authenticationTrustResolver.isAnonymous(authentication)) {
 			return VIEW_LOGIN_LOGIN;
+		} else {
+			return VIEW_LOGIN_AUTHENTICATOR_LOGIN;
 		}
 	}
 
 	private List<String> getCredentialIds() {
-		String username = SecurityContextHolder.getContext().getAuthentication().getName();
-		if (username == null) {
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		Object principal = authentication.getPrincipal();
+		if (principal == null || authenticationTrustResolver.isAnonymous(authentication)) {
 			return Collections.emptyList();
 		} else {
 			try {
-				List<WebAuthnAuthenticator> webAuthnAuthenticators = webAuthnAuthenticatorManager.loadAuthenticatorsByPrincipal(username);
+				List<WebAuthnAuthenticator> webAuthnAuthenticators = webAuthnAuthenticatorManager.loadAuthenticatorsByPrincipal(principal);
 				return webAuthnAuthenticators.stream()
 						.map(webAuthnAuthenticator -> Base64UrlUtil.encodeToString(webAuthnAuthenticator.getAttestedCredentialData().getCredentialId()))
 						.collect(Collectors.toList());

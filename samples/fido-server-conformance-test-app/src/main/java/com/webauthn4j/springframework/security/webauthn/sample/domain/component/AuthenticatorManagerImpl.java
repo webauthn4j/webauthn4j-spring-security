@@ -17,6 +17,7 @@
 package com.webauthn4j.springframework.security.webauthn.sample.domain.component;
 
 import com.webauthn4j.springframework.security.authenticator.WebAuthnAuthenticator;
+import com.webauthn4j.springframework.security.authenticator.WebAuthnAuthenticatorImpl;
 import com.webauthn4j.springframework.security.exception.CredentialIdNotFoundException;
 import com.webauthn4j.springframework.security.webauthn.sample.domain.entity.AuthenticatorEntity;
 import com.webauthn4j.springframework.security.webauthn.sample.domain.exception.WebAuthnSampleBusinessException;
@@ -71,11 +72,18 @@ public class AuthenticatorManagerImpl implements AuthenticatorManager {
 
         AuthenticatorEntity authenticatorEntity = new AuthenticatorEntity();
 
-        if(webAuthnAuthenticator.getUserPrincipal() != null){
-            userEntityRepository.findOneByEmailAddress(webAuthnAuthenticator.getUserPrincipal().getUsername()).ifPresent(authenticatorEntity::setUser);
+        if(webAuthnAuthenticator.getUserDetails() != null){
+            userEntityRepository.findOneByEmailAddress(webAuthnAuthenticator.getUserDetails().getUsername()).ifPresent(authenticatorEntity::setUser);
         }
 
-        authenticatorEntity.setName(webAuthnAuthenticator.getName());
+        String authenticatorName;
+        if(webAuthnAuthenticator instanceof WebAuthnAuthenticatorImpl){
+            authenticatorName = ((WebAuthnAuthenticatorImpl) webAuthnAuthenticator).getName();
+        }
+        else {
+            authenticatorName = "Authenticator";
+        }
+        authenticatorEntity.setName(authenticatorName);
         authenticatorEntity.setCounter(webAuthnAuthenticator.getCounter());
         authenticatorEntity.setTransports(webAuthnAuthenticator.getTransports());
         authenticatorEntity.setAttestedCredentialData(webAuthnAuthenticator.getAttestedCredentialData());

@@ -17,26 +17,37 @@
 package com.webauthn4j.springframework.security.webauthn.sample.app.config;
 
 import com.webauthn4j.WebAuthnManager;
+import com.webauthn4j.converter.util.ObjectConverter;
 import com.webauthn4j.springframework.security.WebAuthnRegistrationRequestValidator;
 import com.webauthn4j.springframework.security.WebAuthnSecurityExpression;
+import com.webauthn4j.springframework.security.authenticator.InMemoryWebAuthnAuthenticatorManager;
 import com.webauthn4j.springframework.security.authenticator.WebAuthnAuthenticatorManager;
 import com.webauthn4j.springframework.security.authenticator.WebAuthnAuthenticatorService;
 import com.webauthn4j.springframework.security.challenge.ChallengeRepository;
 import com.webauthn4j.springframework.security.challenge.HttpSessionChallengeRepository;
 import com.webauthn4j.springframework.security.options.OptionsProvider;
 import com.webauthn4j.springframework.security.options.OptionsProviderImpl;
-import com.webauthn4j.springframework.security.options.PublicKeyCredentialUserEntityService;
 import com.webauthn4j.springframework.security.server.ServerPropertyProvider;
 import com.webauthn4j.springframework.security.server.ServerPropertyProviderImpl;
-import com.webauthn4j.springframework.security.authenticator.InMemoryWebAuthnAuthenticatorManager;
-import com.webauthn4j.springframework.security.webauthn.sample.app.service.SamplePublicKeyCredentialUserEntityService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.provisioning.InMemoryUserDetailsManager;
+import org.springframework.security.provisioning.UserDetailsManager;
 
 @Configuration
 public class WebSecurityBeanConfig {
+
+    @Bean
+    public PasswordEncoder passwordEncoder(){
+        return new BCryptPasswordEncoder();
+    }
+
+    @Bean
+    public UserDetailsManager userDetailsManager(){
+        return new InMemoryUserDetailsManager();
+    }
 
     @Bean
     public WebAuthnAuthenticatorManager webAuthnAuthenticatorManager(){
@@ -44,13 +55,13 @@ public class WebSecurityBeanConfig {
     }
 
     @Bean
-    public WebAuthnManager webAuthnManager(){
-        return WebAuthnManager.createNonStrictWebAuthnManager();
+    public ObjectConverter objectConverter(){
+        return new ObjectConverter();
     }
 
     @Bean
-    public PublicKeyCredentialUserEntityService publicKeyCredentialUserEntityService(){
-        return new SamplePublicKeyCredentialUserEntityService();
+    public WebAuthnManager webAuthnManager(ObjectConverter objectConverter){
+        return WebAuthnManager.createNonStrictWebAuthnManager(objectConverter);
     }
 
     @Bean
@@ -59,18 +70,13 @@ public class WebSecurityBeanConfig {
     }
 
     @Bean
-    public PasswordEncoder passwordEncoder(){
-        return new BCryptPasswordEncoder();
-    }
-
-    @Bean
-    public OptionsProvider optionsProvider(WebAuthnAuthenticatorService webAuthnAuthenticatorService, PublicKeyCredentialUserEntityService publicKeyCredentialUserEntityService, ChallengeRepository challengeRepository) {
-        return new OptionsProviderImpl(webAuthnAuthenticatorService, publicKeyCredentialUserEntityService, challengeRepository);
-    }
-
-    @Bean
     public ChallengeRepository challengeRepository() {
         return new HttpSessionChallengeRepository();
+    }
+
+    @Bean
+    public OptionsProvider optionsProvider(WebAuthnAuthenticatorService webAuthnAuthenticatorService,  ChallengeRepository challengeRepository) {
+        return new OptionsProviderImpl(webAuthnAuthenticatorService, challengeRepository);
     }
 
     @Bean

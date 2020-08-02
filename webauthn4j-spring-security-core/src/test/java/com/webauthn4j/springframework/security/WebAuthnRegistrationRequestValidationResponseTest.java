@@ -17,6 +17,7 @@
 package com.webauthn4j.springframework.security;
 
 
+import com.webauthn4j.data.AuthenticatorTransport;
 import com.webauthn4j.data.attestation.AttestationObject;
 import com.webauthn4j.data.client.ClientDataType;
 import com.webauthn4j.data.client.CollectedClientData;
@@ -24,6 +25,9 @@ import com.webauthn4j.data.extension.client.AuthenticationExtensionsClientOutput
 import com.webauthn4j.data.extension.client.RegistrationExtensionClientOutput;
 import com.webauthn4j.test.TestDataUtil;
 import org.junit.Test;
+
+import java.util.HashSet;
+import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -34,10 +38,11 @@ public class WebAuthnRegistrationRequestValidationResponseTest {
         CollectedClientData clientData = TestDataUtil.createClientData(ClientDataType.CREATE);
         AttestationObject attestationObject = TestDataUtil.createAttestationObjectWithFIDOU2FAttestationStatement();
         AuthenticationExtensionsClientOutputs<RegistrationExtensionClientOutput> clientExtensions = new AuthenticationExtensionsClientOutputs<>();
+        Set<AuthenticatorTransport> transports = new HashSet<>();
         WebAuthnRegistrationRequestValidationResponse instanceA =
-                new WebAuthnRegistrationRequestValidationResponse(clientData, attestationObject, clientExtensions);
+                new WebAuthnRegistrationRequestValidationResponse(clientData, attestationObject, clientExtensions, transports);
         WebAuthnRegistrationRequestValidationResponse instanceB =
-                new WebAuthnRegistrationRequestValidationResponse(clientData, attestationObject, clientExtensions);
+                new WebAuthnRegistrationRequestValidationResponse(clientData, attestationObject, clientExtensions, transports);
         assertThat(instanceA).isEqualTo(instanceB);
         assertThat(instanceB).hasSameHashCodeAs(instanceB);
     }
@@ -47,8 +52,9 @@ public class WebAuthnRegistrationRequestValidationResponseTest {
         CollectedClientData clientData = TestDataUtil.createClientData(ClientDataType.CREATE);
         AttestationObject attestationObject = TestDataUtil.createAttestationObjectWithFIDOU2FAttestationStatement();
         AuthenticationExtensionsClientOutputs<RegistrationExtensionClientOutput> clientExtensions = new AuthenticationExtensionsClientOutputs<>();
+        Set<AuthenticatorTransport> transports = new HashSet<>();
         WebAuthnRegistrationRequestValidationResponse instance =
-                new WebAuthnRegistrationRequestValidationResponse(clientData, attestationObject, clientExtensions);
+                new WebAuthnRegistrationRequestValidationResponse(clientData, attestationObject, clientExtensions, transports);
 
         assertThat(instance.getCollectedClientData()).isEqualTo(clientData);
         assertThat(instance.getAttestationObject()).isEqualTo(attestationObject);

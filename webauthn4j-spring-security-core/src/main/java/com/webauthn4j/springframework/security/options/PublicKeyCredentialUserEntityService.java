@@ -25,8 +25,8 @@ public interface PublicKeyCredentialUserEntityService {
 
     /**
      * Load {@link PublicKeyCredentialUserEntity}
-     * @param username username
+     * @param principal principal
      * @return {@link PublicKeyCredentialUserEntity}
      */
-    PublicKeyCredentialUserEntity loadUserByUsername(String username);
+    PublicKeyCredentialUserEntity loadUserByPrincipal(Object principal);
 }
