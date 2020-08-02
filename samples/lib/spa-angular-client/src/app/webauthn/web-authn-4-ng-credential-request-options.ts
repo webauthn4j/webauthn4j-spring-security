@@ -20,5 +20,5 @@ export interface WebAuthn4NgCredentialRequestOptions {
   rpId?: string;
   allowCredentials?: PublicKeyCredentialDescriptor[];
   userVerification?: "required" | "preferred" | "discouraged";
-  extensions?: any;
+  extensions?: AuthenticationExtensionsClientInputs;
 }

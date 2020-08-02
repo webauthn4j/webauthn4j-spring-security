@@ -18,11 +18,11 @@ package com.webauthn4j.springframework.security.fido.server.endpoint;
 
 import com.webauthn4j.converter.exception.DataConversionException;
 import com.webauthn4j.converter.util.ObjectConverter;
+import com.webauthn4j.data.PublicKeyCredentialCreationOptions;
 import com.webauthn4j.data.client.challenge.Challenge;
 import com.webauthn4j.data.client.challenge.DefaultChallenge;
 import com.webauthn4j.data.extension.client.AuthenticationExtensionsClientInputs;
 import com.webauthn4j.data.extension.client.RegistrationExtensionClientInput;
-import com.webauthn4j.springframework.security.options.AttestationOptions;
 import com.webauthn4j.springframework.security.options.OptionsProvider;
 import com.webauthn4j.util.Base64UrlUtil;
 import org.springframework.util.Assert;
@@ -83,7 +83,7 @@ public class FidoServerAttestationOptionsEndpointFilter extends ServerEndpointFi
             String username = serverRequest.getUsername();
             String displayName = serverRequest.getDisplayName();
             Challenge challenge = serverEndpointFilterUtil.encodeUsername(new DefaultChallenge(), username);
-            AttestationOptions attestationOptions = optionsProvider.getAttestationOptions(request, username, challenge);
+            PublicKeyCredentialCreationOptions attestationOptions = optionsProvider.getAttestationOptions(request, username, challenge);
             String userHandle;
             if (attestationOptions.getUser() == null) {
                 userHandle = Base64UrlUtil.encodeToString(generateUserHandle());
@@ -92,7 +92,7 @@ public class FidoServerAttestationOptionsEndpointFilter extends ServerEndpointFi
             }
             ServerPublicKeyCredentialUserEntity user = new ServerPublicKeyCredentialUserEntity(userHandle, username, displayName, null);
             List<ServerPublicKeyCredentialDescriptor> credentials =
-                    attestationOptions.getCredentials().stream()
+                    attestationOptions.getExcludeCredentials().stream()
                             .map(credential -> new ServerPublicKeyCredentialDescriptor(credential.getType(), Base64UrlUtil.encodeToString(credential.getId()), credential.getTransports()))
                             .collect(Collectors.toList());
             AuthenticationExtensionsClientInputs<RegistrationExtensionClientInput> authenticationExtensionsClientInputs;
@@ -103,7 +103,7 @@ public class FidoServerAttestationOptionsEndpointFilter extends ServerEndpointFi
             }
 
             return new ServerPublicKeyCredentialCreationOptionsResponse(
-                    attestationOptions.getRelyingParty(),
+                    attestationOptions.getRp(),
                     user,
                     Base64UrlUtil.encodeToString(attestationOptions.getChallenge().getValue()),
                     attestationOptions.getPubKeyCredParams(),

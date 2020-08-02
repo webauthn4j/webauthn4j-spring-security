@@ -21,6 +21,7 @@ import com.webauthn4j.data.PublicKeyCredentialType;
 import com.webauthn4j.data.attestation.statement.COSEAlgorithmIdentifier;
 import com.webauthn4j.data.extension.client.AuthenticationExtensionsClientInputs;
 import com.webauthn4j.springframework.security.options.OptionsProvider;
+import com.webauthn4j.springframework.security.options.OptionsProviderImpl;
 import org.springframework.security.config.annotation.web.HttpSecurityBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -75,9 +76,6 @@ public class WebAuthnConfigurer<H extends HttpSecurityBuilder<H>> extends Abstra
     public void init(H http) throws Exception {
         super.init(http);
 
-        if (optionsProvider == null) {
-            optionsProvider = WebAuthnConfigurerUtil.getOptionsProvider(http);
-        }
         http.setSharedObject(OptionsProvider.class, optionsProvider);
     }
 
@@ -88,24 +86,30 @@ public class WebAuthnConfigurer<H extends HttpSecurityBuilder<H>> extends Abstra
     public void configure(H http) throws Exception {
         super.configure(http);
 
-        if (rpId != null) {
-            optionsProvider.setRpId(rpId);
+        if(optionsProvider == null){
+            optionsProvider = WebAuthnConfigurerUtil.getOptionsProvider(http);
         }
-        if (rpName != null) {
-            optionsProvider.setRpName(rpName);
+        if(optionsProvider instanceof OptionsProviderImpl){
+            OptionsProviderImpl optionsProviderImpl = (OptionsProviderImpl)optionsProvider;
+            if (rpId != null) {
+                optionsProviderImpl.setRpId(rpId);
+            }
+            if (rpName != null) {
+                optionsProviderImpl.setRpName(rpName);
+            }
+            if (rpIcon != null) {
+                optionsProviderImpl.setRpIcon(rpIcon);
+            }
+            optionsProviderImpl.getPubKeyCredParams().addAll(publicKeyCredParamsConfig.publicKeyCredentialParameters);
+            if (registrationTimeout != null) {
+                optionsProviderImpl.setRegistrationTimeout(registrationTimeout);
+            }
+            if (authenticationTimeout != null) {
+                optionsProviderImpl.setAuthenticationTimeout(authenticationTimeout);
+            }
+            optionsProviderImpl.setRegistrationExtensions(registrationExtensions.builder.build());
+            optionsProviderImpl.setAuthenticationExtensions(authenticationExtensions.builder.build());
         }
-        if (rpIcon != null) {
-            optionsProvider.setRpIcon(rpIcon);
-        }
-        optionsProvider.getPubKeyCredParams().addAll(publicKeyCredParamsConfig.publicKeyCredentialParameters);
-        if (registrationTimeout != null) {
-            optionsProvider.setRegistrationTimeout(registrationTimeout);
-        }
-        if (authenticationTimeout != null) {
-            optionsProvider.setAuthenticationTimeout(authenticationTimeout);
-        }
-        optionsProvider.setRegistrationExtensions(registrationExtensions.builder.build());
-        optionsProvider.setAuthenticationExtensions(authenticationExtensions.builder.build());
     }
 
     /**

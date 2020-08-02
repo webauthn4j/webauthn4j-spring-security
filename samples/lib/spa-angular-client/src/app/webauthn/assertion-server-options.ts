@@ -17,13 +17,13 @@
 // DO NOT REMOVE: The above comment is mandatory to use webappsec-credential-management type definition
 
 
-import {WebAuthnPublicKeyCredentialUserEntity} from "./web-authn-public-key-credential-user-entity";
+import {WebAuthnPublicKeyCredentialDescriptor} from "./web-authn-public-key-credential-descriptor";
 
 export interface AssertionServerOptions {
-  challenge: BufferSource;
-  pubKeyCredParams: PublicKeyCredentialParameters[];
+  challenge: string;
   timeout?: number;
   rpId?: string,
-  credentials: PublicKeyCredentialDescriptor[];
+  allowCredentials?: WebAuthnPublicKeyCredentialDescriptor[];
+  userVerification?: UserVerificationRequirement;
+  extensions?: AuthenticationExtensionsClientInputs;
 }
-

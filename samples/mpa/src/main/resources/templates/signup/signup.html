@@ -24,11 +24,13 @@
 </head>
 <body class="hold-transition login-page" id="signup-signup-view">
 <div class="content-wrapper">
-    <h1 href="/" class="h3 font-weight-normal text-center">WebAuthn4J for Spring Security Sample MPA</h1>
+    <h1 href="/" class="h3 font-weight-normal text-center">WebAuthn4J Spring Security Sample MPA</h1>
 
     <h2 href="/" class="h4 font-weight-normal text-center">Sign up</h2>
 
     <form th:action="@{/signup}" th:object="${userForm}" method="post" id="signup-form" class="signup-form">
+
+        <div class="alert alert-danger" role="alert" th:text="${errorMessage}" th:if="${errorMessage}"></div>
 
         <input id="userHandle" name="userHandle" th:field="*{userHandle}" type="hidden" />
 

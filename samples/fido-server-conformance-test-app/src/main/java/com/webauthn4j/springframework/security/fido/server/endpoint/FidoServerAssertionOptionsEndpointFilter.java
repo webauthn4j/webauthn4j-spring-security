@@ -18,11 +18,11 @@ package com.webauthn4j.springframework.security.fido.server.endpoint;
 
 import com.webauthn4j.converter.exception.DataConversionException;
 import com.webauthn4j.converter.util.ObjectConverter;
+import com.webauthn4j.data.PublicKeyCredentialRequestOptions;
 import com.webauthn4j.data.client.challenge.Challenge;
 import com.webauthn4j.data.client.challenge.DefaultChallenge;
 import com.webauthn4j.data.extension.client.AuthenticationExtensionClientInput;
 import com.webauthn4j.data.extension.client.AuthenticationExtensionsClientInputs;
-import com.webauthn4j.springframework.security.options.AssertionOptions;
 import com.webauthn4j.springframework.security.options.OptionsProvider;
 import com.webauthn4j.util.Base64UrlUtil;
 import org.springframework.util.Assert;
@@ -81,8 +81,8 @@ public class FidoServerAssertionOptionsEndpointFilter extends ServerEndpointFilt
                     objectConverter.getJsonConverter().readValue(inputStream, ServerPublicKeyCredentialGetOptionsRequest.class);
             String username = serverRequest.getUsername();
             Challenge challenge = serverEndpointFilterUtil.encodeUserVerification(new DefaultChallenge(), serverRequest.getUserVerification());
-            AssertionOptions options = optionsProvider.getAssertionOptions(request, username, challenge);
-            List<ServerPublicKeyCredentialDescriptor> credentials = options.getCredentials().stream()
+            PublicKeyCredentialRequestOptions options = optionsProvider.getAssertionOptions(request, username, challenge);
+            List<ServerPublicKeyCredentialDescriptor> credentials = options.getAllowCredentials().stream()
                     .map(credential -> new ServerPublicKeyCredentialDescriptor(credential.getType(), Base64UrlUtil.encodeToString(credential.getId()), credential.getTransports()))
                     .collect(Collectors.toList());
             AuthenticationExtensionsClientInputs<AuthenticationExtensionClientInput> authenticationExtensionsClientInputs;

@@ -18,12 +18,16 @@
 
 
 import {WebAuthnPublicKeyCredentialUserEntity} from "./web-authn-public-key-credential-user-entity";
+import {WebAuthnPublicKeyCredentialDescriptor} from "./web-authn-public-key-credential-descriptor";
 
 export interface AttestationServerOptions {
-  relyingParty: PublicKeyCredentialRpEntity;
+  rp: PublicKeyCredentialRpEntity;
   user?: WebAuthnPublicKeyCredentialUserEntity;
-  challenge: BufferSource;
+  challenge: string;
   pubKeyCredParams: PublicKeyCredentialParameters[];
   timeout?: number;
-  credentials: PublicKeyCredentialDescriptor[];
+  excludeCredentials?: WebAuthnPublicKeyCredentialDescriptor[];
+  authenticatorSelection?: AuthenticatorSelectionCriteria;
+  attestation?: AttestationConveyancePreference;
+  extensions?: AuthenticationExtensionsClientInputs;
 }

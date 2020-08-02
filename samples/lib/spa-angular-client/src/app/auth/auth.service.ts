@@ -41,17 +41,13 @@ export class AuthService {
 
 
   loginWithPublicKeyCredential(credentialRequestOptions: WebAuthn4NgCredentialRequestOptions): Observable<string> {
-    let promise = this.webauthnService.fetchAssertionServerOptions().toPromise().then((serverOptions) => {
-      return this.webauthnService.getCredential(credentialRequestOptions, serverOptions).then(credential => {
-        return {serverOptions: serverOptions, credential: credential}
-      });
-    });
+    let promise = this.webauthnService.getCredential(credentialRequestOptions);
 
-    return from(promise).pipe(concatMap((data) => {
-      if (data.credential.type != "public-key") {
+    return from(promise).pipe(concatMap((credential) => {
+      if (credential.type != "public-key") {
         throwError("Unexpected credential type");
       }
-      let publicKeyCredential: PublicKeyCredential = data.credential as PublicKeyCredential;
+      let publicKeyCredential: PublicKeyCredential = credential as PublicKeyCredential;
       let assertionResponse: AuthenticatorAssertionResponse = publicKeyCredential.response as AuthenticatorAssertionResponse;
       let clientDataJSON = assertionResponse.clientDataJSON;
       let authenticatorData = assertionResponse.authenticatorData;

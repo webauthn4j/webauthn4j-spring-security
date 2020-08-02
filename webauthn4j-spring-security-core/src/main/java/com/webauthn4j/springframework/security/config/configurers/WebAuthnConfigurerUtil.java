@@ -51,17 +51,20 @@ class WebAuthnConfigurerUtil {
         return challengeRepository;
     }
 
+    public static <H extends HttpSecurityBuilder<H>> WebAuthnAuthenticatorService getWebAuthnAuthenticatorService(H http){
+        ApplicationContext applicationContext = http.getSharedObject(ApplicationContext.class);
+        return applicationContext.getBean(WebAuthnAuthenticatorService.class);
+    }
+
     public static <H extends HttpSecurityBuilder<H>> OptionsProvider getOptionsProvider(H http) {
         ApplicationContext applicationContext = http.getSharedObject(ApplicationContext.class);
-        OptionsProvider optionsProvider;
         String[] beanNames = applicationContext.getBeanNamesForType(OptionsProvider.class);
-        if (beanNames.length == 0) {
-            WebAuthnAuthenticatorService authenticatorService = applicationContext.getBean(WebAuthnAuthenticatorService.class);
-            optionsProvider = new OptionsProviderImpl(authenticatorService, getChallengeRepository(http));
-        } else {
-            optionsProvider = applicationContext.getBean(OptionsProvider.class);
+        if(beanNames.length == 0){
+            return new OptionsProviderImpl(getWebAuthnAuthenticatorService(http), getChallengeRepository(http));
         }
-        return optionsProvider;
+        else {
+            return applicationContext.getBean(OptionsProvider.class);
+        }
     }
 
     public static <H extends HttpSecurityBuilder<H>> ObjectConverter getObjectConverter(H http) {

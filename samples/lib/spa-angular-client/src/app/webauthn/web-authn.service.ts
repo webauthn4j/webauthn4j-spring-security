@@ -24,11 +24,7 @@ import {WebAuthn4NgCredentialCreationOptions} from "./web-authn-4-ng-credential-
 import {WebAuthn4NgCredentialRequestOptions} from "./web-authn-4-ng-credential-request-options";
 import {AttestationServerOptions} from "./attestation-server-options";
 import {AssertionServerOptions} from "./assertion-server-options";
-import {Observable} from "rxjs/internal/Observable";
-import {AttestationOptionsResponse} from "./attestation-options-response";
-import {AssertionOptionsResponse} from "./assertion-options-response";
 import * as Bowser from "bowser";
-import {map} from "rxjs/operators";
 
 @Injectable({
   providedIn: 'root'
@@ -43,141 +39,76 @@ export class WebAuthnService {
   constructor(private httpClient: HttpClient) {
   }
 
-  createCredential(
-    webAuthnCredentialCreationOptions: WebAuthn4NgCredentialCreationOptions
-  );
-  createCredential(
-    webAuthnCredentialCreationOptions: WebAuthn4NgCredentialCreationOptions, serverOptions: AttestationServerOptions
-  );
-  createCredential(
-    webAuthnCredentialCreationOptions: WebAuthn4NgCredentialCreationOptions, serverOptions?: AttestationServerOptions
-  ): Promise<Credential> {
-    let serverOptionsPromise: Promise<AttestationServerOptions>;
-    if (serverOptions === undefined) {
-      serverOptionsPromise = this.fetchAttestationServerOptions().toPromise()
-    } else {
-      serverOptionsPromise = Promise.resolve(serverOptions);
-    }
+  createCredential(publicKeyCredentialCreationOptions: WebAuthn4NgCredentialCreationOptions): Promise<Credential> {
+    return this.fetchAttestationOptions().then(fetchedOptions => {
 
-    return serverOptionsPromise.then(serverOptions => {
-
-      let timeout: number;
-      if (typeof webAuthnCredentialCreationOptions.timeout != "undefined" && webAuthnCredentialCreationOptions.timeout != null) {
-        timeout = webAuthnCredentialCreationOptions.timeout;
-      } else if (typeof serverOptions.timeout != "undefined" && serverOptions.timeout != null) {
-        timeout = serverOptions.timeout;
-      } else {
-        timeout = undefined;
-      }
-
-      let publicKeyCredentialCreationOptions: PublicKeyCredentialCreationOptions = {
-        rp: webAuthnCredentialCreationOptions.rp ? webAuthnCredentialCreationOptions.rp : serverOptions.relyingParty,
-        user: webAuthnCredentialCreationOptions.user,
-        challenge: webAuthnCredentialCreationOptions.challenge ? webAuthnCredentialCreationOptions.challenge : serverOptions.challenge,
-        pubKeyCredParams: webAuthnCredentialCreationOptions.pubKeyCredParams ? webAuthnCredentialCreationOptions.pubKeyCredParams : serverOptions.pubKeyCredParams,
-        timeout: timeout,
-        excludeCredentials: webAuthnCredentialCreationOptions.excludeCredentials ? webAuthnCredentialCreationOptions.excludeCredentials : serverOptions.credentials,
-        authenticatorSelection: webAuthnCredentialCreationOptions.authenticatorSelection,
-        attestation: webAuthnCredentialCreationOptions.attestation,
-        extensions: webAuthnCredentialCreationOptions.extensions
-      };
+      let mergedOptions = { ...fetchedOptions, ...publicKeyCredentialCreationOptions};
 
       let credentialCreationOptions: CredentialCreationOptions = {
-        publicKey: publicKeyCredentialCreationOptions
+        publicKey: mergedOptions
       };
 
       return navigator.credentials.create(credentialCreationOptions);
     });
   }
 
-  getCredential(
-    webAuthnCredentialRequestOptions: WebAuthn4NgCredentialRequestOptions
-  );
-  getCredential(
-    webAuthnCredentialRequestOptions: WebAuthn4NgCredentialRequestOptions, serverOptions: AssertionServerOptions
-  );
-  getCredential(
-    webAuthnCredentialRequestOptions: WebAuthn4NgCredentialRequestOptions, serverOptions?: AssertionServerOptions
-  ): Promise<Credential> {
-    let serverOptionsPromise: Promise<AssertionServerOptions>;
-    if (serverOptions === undefined) {
-      serverOptionsPromise = this.fetchAssertionServerOptions().toPromise();
-    } else {
-      serverOptionsPromise = Promise.resolve(serverOptions);
-    }
+  getCredential(publicKeyCredentialRequestOptions: WebAuthn4NgCredentialRequestOptions): Promise<Credential> {
+    return this.fetchAssertionOptions().then(fetchedOptions => {
 
-    return serverOptionsPromise.then(serverOptions => {
-
-      let timeout: number;
-      if (typeof webAuthnCredentialRequestOptions.timeout != "undefined" && webAuthnCredentialRequestOptions.timeout != null) {
-        timeout = webAuthnCredentialRequestOptions.timeout;
-      } else if (typeof serverOptions.timeout != "undefined" && serverOptions.timeout != null) {
-        timeout = serverOptions.timeout;
-      } else {
-        timeout = undefined;
-      }
-
-      let publicKeyCredentialRequestOptions: PublicKeyCredentialRequestOptions = {
-        challenge: webAuthnCredentialRequestOptions.challenge ? webAuthnCredentialRequestOptions.challenge : serverOptions.challenge,
-        timeout: timeout,
-        rpId: webAuthnCredentialRequestOptions.rpId ? webAuthnCredentialRequestOptions.rpId : serverOptions.rpId,
-        allowCredentials: webAuthnCredentialRequestOptions.allowCredentials ? webAuthnCredentialRequestOptions.allowCredentials : serverOptions.credentials,
-        userVerification: webAuthnCredentialRequestOptions.userVerification ? webAuthnCredentialRequestOptions.userVerification : "preferred",
-        extensions: webAuthnCredentialRequestOptions.extensions
-      };
+      let mergedOptions = { ...fetchedOptions, ...publicKeyCredentialRequestOptions};
 
       let credentialRequestOptions: CredentialRequestOptions = {
-        publicKey: publicKeyCredentialRequestOptions
+        publicKey: mergedOptions
       };
 
       return navigator.credentials.get(credentialRequestOptions);
     });
   }
 
-
-  fetchAttestationServerOptions(): Observable<AttestationServerOptions> {
-    return this.httpClient.get<AttestationOptionsResponse>(this._attestationOptionsUrl).pipe(map<AttestationOptionsResponse, AttestationServerOptions>(response => {
+  fetchAttestationOptions(): Promise<PublicKeyCredentialCreationOptions> {
+    return this.httpClient.get<AttestationServerOptions>(this._attestationOptionsUrl).toPromise().then(serverOptions => {
       return {
-        relyingParty: response.relyingParty,
-        user: response.user,
-        challenge: base64url.decodeBase64url(response.challenge),
-        pubKeyCredParams: response.pubKeyCredParams,
-        timeout: response.timeout,
-        credentials: response.credentials.map(credential => {
+        rp: serverOptions.rp,
+        user: serverOptions.user ? {
+          id: base64url.decodeBase64url(serverOptions.user.id),
+          name: serverOptions.user.name,
+          displayName: serverOptions.user.displayName,
+          icon: serverOptions.user.icon
+        } : null,
+        challenge: base64url.decodeBase64url(serverOptions.challenge),
+        pubKeyCredParams: serverOptions.pubKeyCredParams,
+        timeout: serverOptions.timeout,
+        excludeCredentials: serverOptions.excludeCredentials ? serverOptions.excludeCredentials.map(credential => {
           return {
             type: credential.type,
             id: base64url.decodeBase64url(credential.id),
-            //TODO: transports: credential.transports
+            transports: credential.transports
           }
-        })
+        }): null,
+        authenticatorSelection: serverOptions.authenticatorSelection,
+        attestation: serverOptions.attestation,
+        extensions: serverOptions.extensions
       };
-    }));
+    });
   }
 
-  fetchAssertionServerOptions(): Observable<AssertionServerOptions> {
-    return this.httpClient.get<AssertionOptionsResponse>(this._assertionOptionsUrl).pipe(map<AssertionOptionsResponse, AssertionServerOptions>(response => {
+  fetchAssertionOptions(): Promise<PublicKeyCredentialRequestOptions> {
+    return this.httpClient.get<AssertionServerOptions>(this._assertionOptionsUrl).toPromise().then(serverOptions => {
       return {
-        challenge: base64url.decodeBase64url(response.challenge),
-        pubKeyCredParams: response.pubKeyCredParams,
-        timeout: response.timeout,
-        rpId: response.rpId,
-        credentials: response.credentials.map(credential => {
+        challenge: base64url.decodeBase64url(serverOptions.challenge),
+        timeout: serverOptions.timeout,
+        rpId: serverOptions.rpId,
+        allowCredentials: serverOptions.allowCredentials ? serverOptions.allowCredentials.map(credential => {
           return {
             type: credential.type,
             id: base64url.decodeBase64url(credential.id),
-            //TODO: transports: credential.transports
+            transports: credential.transports
           }
-        })
+        }) : null,
+        userVerification: serverOptions.userVerification,
+        extensions: serverOptions.extensions
       };
-    }));
-  }
-
-  get attestationOptionsUrl(): string {
-    return this._attestationOptionsUrl;
-  }
-
-  set attestationOptionsUrl(value: string) {
-    this._attestationOptionsUrl = value;
+    });
   }
 
   static isWebAuthnAvailable(): boolean {

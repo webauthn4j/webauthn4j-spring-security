@@ -22,7 +22,7 @@ export interface WebAuthn4NgCredentialCreationOptions {
   timeout?: number;
   excludeCredentials?: PublicKeyCredentialDescriptor[];
   authenticatorSelection?: AuthenticatorSelectionCriteria;
-  attestation?: "none" | "indirect" | "direct";
-  extensions?: any;
+  attestation?: AttestationConveyancePreference;
+  extensions?: AuthenticationExtensionsClientInputs;
 }
 

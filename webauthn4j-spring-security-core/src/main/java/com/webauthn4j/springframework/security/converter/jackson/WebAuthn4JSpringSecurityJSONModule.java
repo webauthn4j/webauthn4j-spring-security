@@ -18,7 +18,9 @@ package com.webauthn4j.springframework.security.converter.jackson;
 
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.webauthn4j.data.PublicKeyCredentialDescriptor;
+import com.webauthn4j.data.PublicKeyCredentialUserEntity;
 import com.webauthn4j.springframework.security.endpoint.PublicKeyCredentialDescriptorMixin;
+import com.webauthn4j.springframework.security.endpoint.PublicKeyCredentialUserEntityMixin;
 
 public class WebAuthn4JSpringSecurityJSONModule extends SimpleModule {
 
@@ -26,6 +28,7 @@ public class WebAuthn4JSpringSecurityJSONModule extends SimpleModule {
         super("WebAuthn4JSpringSecurityJSONModule");
 
         this.setMixInAnnotation(PublicKeyCredentialDescriptor.class, PublicKeyCredentialDescriptorMixin.class);
+        this.setMixInAnnotation(PublicKeyCredentialUserEntity.class, PublicKeyCredentialUserEntityMixin.class);
 
 
     }

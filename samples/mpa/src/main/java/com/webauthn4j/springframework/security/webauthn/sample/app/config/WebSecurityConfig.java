@@ -85,7 +85,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
         // WebAuthn Login
         http.apply(WebAuthnLoginConfigurer.webAuthnLogin())
-                .defaultSuccessUrl("/")
+                .defaultSuccessUrl("/", true)
                 .failureUrl("/login");
 
         // Authorization

@@ -25,11 +25,14 @@
 </head>
 <body class="hold-transition login-page" id="login-login-view">
 <div class="content-wrapper">
-    <h1 href="/" class="h3 font-weight-normal text-center">WebAuthn4J for Spring Security Sample MPA</h1>
+    <h1 href="/" class="h3 font-weight-normal text-center">WebAuthn4J Spring Security Sample MPA</h1>
 
     <h2 href="/" class="h4 font-weight-normal text-center">Login</h2>
 
     <form th:action="@{/login}" method="post" id="login-form" class="login-form">
+
+        <div class="alert alert-success" role="alert" th:text="${successMessage}" th:if="${successMessage}"></div>
+
         <label for="username" class="sr-only">Username</label>
         <input type="text" id="username" name="username" class="form-control" placeholder="Username" required autofocus />
         <label for="password" class="sr-only">Password</label>
@@ -40,7 +43,7 @@
             <p class="mt-1 mb-1 text-muted text-center">OR</p>
             <button id="fast-login" class="btn btn-primary btn-block" type="button"
                     data-toggle="tooltip" data-placement="bottom"
-                    title="Fast(id&password-less) Login is only supported on Windows 10 19H1 or Chrome Canary(77)">Fast Login</button>
+                    title="Fast(id&password-less) Login">Fast Login</button>
         </div>
 
         <input id="credentialId" name="credentialId" type="hidden" />

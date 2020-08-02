@@ -27,6 +27,8 @@ import com.webauthn4j.springframework.security.authenticator.WebAuthnAuthenticat
 import com.webauthn4j.springframework.security.challenge.ChallengeRepository;
 import com.webauthn4j.springframework.security.exception.PrincipalNotFoundException;
 import com.webauthn4j.springframework.security.util.internal.ServletUtil;
+import com.webauthn4j.util.exception.WebAuthnException;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.util.Assert;
 
 import javax.servlet.http.HttpServletRequest;
@@ -47,6 +49,9 @@ public class OptionsProviderImpl implements OptionsProvider {
     private String rpName = null;
     private String rpIcon = null;
     private List<PublicKeyCredentialParameters> pubKeyCredParams = new ArrayList<>();
+    private AuthenticatorSelectionCriteria registrationAuthenticatorSelection;
+    private AttestationConveyancePreference attestation;
+    private UserVerificationRequirement authenticationUserVerification;
     private Long registrationTimeout = null;
     private Long authenticationTimeout = null;
     private AuthenticationExtensionsClientInputs<RegistrationExtensionClientInput> registrationExtensions = new AuthenticationExtensionsClientInputs<>();
@@ -81,14 +86,14 @@ public class OptionsProviderImpl implements OptionsProvider {
     /**
      * {@inheritDoc}
      */
-    public AttestationOptions getAttestationOptions(HttpServletRequest request, String username, Challenge challenge) {
+    public PublicKeyCredentialCreationOptions getAttestationOptions(HttpServletRequest request, Object principal, Challenge challenge) {
 
         PublicKeyCredentialUserEntity user;
         Collection<? extends WebAuthnAuthenticator> authenticators;
 
         try {
-            authenticators = authenticatorService.loadAuthenticatorsByPrincipal(username);
-            user = publicKeyCredentialUserEntityService.loadUserByPrincipal(username);
+            authenticators = authenticatorService.loadAuthenticatorsByPrincipal(principal);
+            user = publicKeyCredentialUserEntityService.loadUserByPrincipal(principal);
         } catch (PrincipalNotFoundException e) {
             authenticators = Collections.emptyList();
             user = null;
@@ -107,18 +112,19 @@ public class OptionsProviderImpl implements OptionsProvider {
             challengeRepository.saveChallenge(challenge, request);
         }
 
-        return new AttestationOptions(relyingParty, user, challenge, pubKeyCredParams, registrationTimeout,
-                credentials, registrationExtensions);
+        return new PublicKeyCredentialCreationOptions(
+                relyingParty, user, challenge, pubKeyCredParams, registrationTimeout,
+                credentials, registrationAuthenticatorSelection, attestation, registrationExtensions);
     }
 
     /**
      * {@inheritDoc}
      */
-    public AssertionOptions getAssertionOptions(HttpServletRequest request, String username, Challenge challenge) {
+    public PublicKeyCredentialRequestOptions getAssertionOptions(HttpServletRequest request, Object principal, Challenge challenge) {
 
         Collection<? extends WebAuthnAuthenticator> authenticators;
         try {
-            authenticators = authenticatorService.loadAuthenticatorsByPrincipal(username);
+            authenticators = authenticatorService.loadAuthenticatorsByPrincipal(principal);
         } catch (PrincipalNotFoundException e) {
             authenticators = Collections.emptyList();
         }
@@ -135,7 +141,7 @@ public class OptionsProviderImpl implements OptionsProvider {
             challengeRepository.saveChallenge(challenge, request);
         }
 
-        return new AssertionOptions(challenge, authenticationTimeout, effectiveRpId, credentials, authenticationExtensions);
+        return new PublicKeyCredentialRequestOptions(challenge, authenticationTimeout, effectiveRpId, credentials, authenticationUserVerification, authenticationExtensions);
     }
 
     /**
@@ -169,12 +175,10 @@ public class OptionsProviderImpl implements OptionsProvider {
         this.rpName = rpName;
     }
 
-    @Override
     public String getRpIcon() {
         return rpIcon;
     }
 
-    @Override
     public void setRpIcon(String rpIcon) {
         Assert.hasText(rpIcon, "rpIcon parameter must not be empty or null");
         this.rpIcon = rpIcon;
@@ -228,12 +232,26 @@ public class OptionsProviderImpl implements OptionsProvider {
 
         @Override
         public PublicKeyCredentialUserEntity loadUserByPrincipal(Object principal) {
-            String principalString = principal.toString();
-            return new PublicKeyCredentialUserEntity(
-                    principalString.getBytes(StandardCharsets.UTF_8),
-                    principalString,
-                    principalString
-            );
+            if(principal instanceof UserDetails){
+                String username = ((UserDetails)principal).getUsername();
+                return new PublicKeyCredentialUserEntity(
+                        username.getBytes(StandardCharsets.UTF_8),
+                        username,
+                        username
+                );
+            }
+            else if(principal instanceof String){
+                String username = (String) principal;
+                return new PublicKeyCredentialUserEntity(
+                        username.getBytes(StandardCharsets.UTF_8),
+                        username,
+                        username
+                );
+
+            }
+            else {
+                throw new WebAuthnException("Could not determine username from principal. Please use custom PublicKeyCredentialUserEntityService instead.");
+            }
         }
     }
 
