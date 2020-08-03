@@ -59,10 +59,13 @@ npm_install {
   group = 'other'
 }
 
-npm_run_update {
+npm_run_ng_update {
   group = 'other'
 }
 
+npm_outdated {
+  group = 'other'
+}
 
 // processResources is a Java task
 classes.dependsOn npm_run_build

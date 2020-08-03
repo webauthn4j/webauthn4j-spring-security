@@ -36,14 +36,13 @@ dependencies {
     implementation("com.fasterxml.jackson.core:jackson-databind")
     implementation("com.fasterxml.jackson.dataformat:jackson-dataformat-cbor")
 
-    implementation("org.hibernate:hibernate-validator:6.1.5.Final") //FIXME
+    implementation("org.hibernate:hibernate-validator")
 
     //Others
     implementation("org.slf4j:jcl-over-slf4j")
-    implementation('ch.qos.logback:logback-classic')
-    implementation('javax.xml.bind:jaxb-api')
     implementation("org.modelmapper:modelmapper")
     implementation('org.flywaydb:flyway-core')
+    runtimeOnly('ch.qos.logback:logback-classic')
     runtimeOnly('com.h2database:h2')
     runtimeOnly('mysql:mysql-connector-java')
     runtimeOnly("org.lazyluke:log4jdbc-remix")
