@@ -93,7 +93,6 @@ public class WebAuthnRegistrationRequestValidatorTest {
         assertThat(registrationRequest.getAttestationObject()).isEqualTo(Base64UrlUtil.decode(attestationObjectBase64));
         assertThat(registrationRequest.getClientExtensionsJSON()).isEqualTo(clientExtensionsJSON);
         assertThat(registrationParameters.getServerProperty()).isEqualTo(serverProperty);
-        assertThat(registrationParameters.getExpectedExtensionIds()).isEqualTo(target.getExpectedRegistrationExtensionIds());
     }
 
     @Test
@@ -131,18 +130,6 @@ public class WebAuthnRegistrationRequestValidatorTest {
         assertThat(registrationRequest.getAttestationObject()).isEqualTo(Base64UrlUtil.decode(attestationObjectBase64));
         assertThat(registrationRequest.getClientExtensionsJSON()).isEqualTo(clientExtensionsJSON);
         assertThat(registrationParameters.getServerProperty()).isEqualTo(serverProperty);
-        assertThat(registrationParameters.getExpectedExtensionIds()).isEqualTo(target.getExpectedRegistrationExtensionIds());
-    }
-
-
-    @Test
-    public void getter_setter_test() {
-        WebAuthnRegistrationRequestValidator target = new WebAuthnRegistrationRequestValidator(
-                webAuthnManager, serverPropertyProvider
-        );
-        target.setExpectedRegistrationExtensionIds(Collections.singletonList("appId"));
-        assertThat(target.getExpectedRegistrationExtensionIds()).containsExactly("appId");
-
     }
 
     @Test(expected = BadAttestationStatementException.class)

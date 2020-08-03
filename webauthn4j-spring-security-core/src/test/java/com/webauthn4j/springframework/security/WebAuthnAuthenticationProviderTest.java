@@ -101,9 +101,7 @@ public class WebAuthnAuthenticationProviderTest {
         ArgumentCaptor<AuthenticationRequest> requestCaptor = ArgumentCaptor.forClass(AuthenticationRequest.class);
         ArgumentCaptor<AuthenticationParameters> parameterCaptor = ArgumentCaptor.forClass(AuthenticationParameters.class);
         verify(webAuthnManager).validate(requestCaptor.capture(), parameterCaptor.capture());
-        AuthenticationParameters authenticationParameters = parameterCaptor.getValue();
 
-        assertThat(authenticationParameters.getExpectedExtensionIds()).isEqualTo(parameters.getExpectedAuthenticationExtensionIds());
 
         assertThat(authenticatedToken.getPrincipal()).isEqualTo(webAuthnPrincipal);
         assertThat(authenticatedToken.getCredentials()).isEqualTo(request);
@@ -143,7 +141,6 @@ public class WebAuthnAuthenticationProviderTest {
     public void authenticate_with_BadChallengeException_from_authenticationContextValidator_test() {
         //Given
         byte[] credentialId = new byte[32];
-        GrantedAuthority grantedAuthority = new SimpleGrantedAuthority("ROLE_ADMIN");
         WebAuthnAuthenticatorImpl authenticator = mock(WebAuthnAuthenticatorImpl.class, RETURNS_DEEP_STUBS);
         WebAuthnAuthenticator webAuthnAuthenticator = mock(WebAuthnAuthenticator.class);
         when(authenticator.getAttestedCredentialData().getCredentialId()).thenReturn(credentialId);

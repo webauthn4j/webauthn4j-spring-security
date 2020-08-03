@@ -19,7 +19,6 @@ package com.webauthn4j.springframework.security;
 import com.webauthn4j.server.ServerProperty;
 
 import java.io.Serializable;
-import java.util.List;
 import java.util.Objects;
 
 public class WebAuthnAuthenticationParameters implements Serializable {
@@ -27,17 +26,14 @@ public class WebAuthnAuthenticationParameters implements Serializable {
     private final ServerProperty serverProperty;
     private final boolean userVerificationRequired;
     private final boolean userPresenceRequired;
-    private final List<String> expectedAuthenticationExtensionIds;
 
     public WebAuthnAuthenticationParameters(
             ServerProperty serverProperty,
             boolean userVerificationRequired,
-            boolean userPresenceRequired,
-            List<String> expectedAuthenticationExtensionIds) {
+            boolean userPresenceRequired) {
         this.serverProperty = serverProperty;
         this.userVerificationRequired = userVerificationRequired;
         this.userPresenceRequired = userPresenceRequired;
-        this.expectedAuthenticationExtensionIds = expectedAuthenticationExtensionIds;
     }
 
     public ServerProperty getServerProperty() {
@@ -52,10 +48,6 @@ public class WebAuthnAuthenticationParameters implements Serializable {
         return userPresenceRequired;
     }
 
-    public List<String> getExpectedAuthenticationExtensionIds() {
-        return expectedAuthenticationExtensionIds;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -63,12 +55,11 @@ public class WebAuthnAuthenticationParameters implements Serializable {
         WebAuthnAuthenticationParameters that = (WebAuthnAuthenticationParameters) o;
         return userVerificationRequired == that.userVerificationRequired &&
                 userPresenceRequired == that.userPresenceRequired &&
-                Objects.equals(serverProperty, that.serverProperty) &&
-                Objects.equals(expectedAuthenticationExtensionIds, that.expectedAuthenticationExtensionIds);
+                Objects.equals(serverProperty, that.serverProperty);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(serverProperty, userVerificationRequired, userPresenceRequired, expectedAuthenticationExtensionIds);
+        return Objects.hash(serverProperty, userVerificationRequired, userPresenceRequired);
     }
 }

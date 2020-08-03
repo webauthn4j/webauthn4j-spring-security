@@ -35,9 +35,6 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.security.web.util.matcher.RequestMatcher;
 import org.springframework.util.Assert;
 
-import java.util.ArrayList;
-import java.util.List;
-
 /**
  * Adds WebAuthn authentication. All attributes have reasonable defaults making all
  * parameters are optional. If no {@link #loginPage(String)} is specified, a default login
@@ -77,8 +74,6 @@ public final class WebAuthnLoginConfigurer<H extends HttpSecurityBuilder<H>> ext
 
     private final AttestationOptionsEndpointConfig attestationOptionsEndpointConfig = new AttestationOptionsEndpointConfig();
     private final AssertionOptionsEndpointConfig assertionOptionsEndpointConfig = new AssertionOptionsEndpointConfig();
-    private final WebAuthnLoginConfigurer<H>.ExpectedAuthenticationExtensionIdsConfig
-            expectedAuthenticationExtensionIdsConfig = new WebAuthnLoginConfigurer<H>.ExpectedAuthenticationExtensionIdsConfig();
     //~ Instance fields
     // ================================================================================================
     private OptionsProvider optionsProvider = null;
@@ -128,8 +123,6 @@ public final class WebAuthnLoginConfigurer<H extends HttpSecurityBuilder<H>> ext
 
         this.attestationOptionsEndpointConfig.configure(http);
         this.assertionOptionsEndpointConfig.configure(http);
-
-        this.getAuthenticationFilter().setExpectedAuthenticationExtensionIds(expectedAuthenticationExtensionIdsConfig.expectedAuthenticationExtensionIds);
 
         configureParameters();
     }
@@ -211,16 +204,6 @@ public final class WebAuthnLoginConfigurer<H extends HttpSecurityBuilder<H>> ext
      */
     public AssertionOptionsEndpointConfig assertionOptionsEndpoint() {
         return assertionOptionsEndpointConfig;
-    }
-
-
-    /**
-     * Returns the {@link ExpectedAuthenticationExtensionIdsConfig} for configuring the expectedAuthenticationExtensionId(s)
-     *
-     * @return the {@link ExpectedAuthenticationExtensionIdsConfig}
-     */
-    public WebAuthnLoginConfigurer<H>.ExpectedAuthenticationExtensionIdsConfig expectedAuthenticationExtensionIds() {
-        return this.expectedAuthenticationExtensionIdsConfig;
     }
 
     /**
@@ -464,35 +447,4 @@ public final class WebAuthnLoginConfigurer<H extends HttpSecurityBuilder<H>> ext
     }
 
 
-    /**
-     * Configuration options for expectedAuthenticationExtensionIds
-     */
-    public class ExpectedAuthenticationExtensionIdsConfig {
-
-        private final List<String> expectedAuthenticationExtensionIds = new ArrayList<>();
-
-        private ExpectedAuthenticationExtensionIdsConfig() {
-        }
-
-        /**
-         * Add AuthenticationExtensionClientInput
-         *
-         * @param expectedAuthenticationExtensionId the expected authentication extension id
-         * @return the {@link WebAuthnLoginConfigurer.ExpectedAuthenticationExtensionIdsConfig}
-         */
-        public ExpectedAuthenticationExtensionIdsConfig add(String expectedAuthenticationExtensionId) {
-            Assert.notNull(expectedAuthenticationExtensionId, "expectedAuthenticationExtensionId must not be null");
-            expectedAuthenticationExtensionIds.add(expectedAuthenticationExtensionId);
-            return this;
-        }
-
-        /**
-         * Returns the {@link WebAuthnConfigurer} for further configuration.
-         *
-         * @return the {@link WebAuthnConfigurer}
-         */
-        public WebAuthnLoginConfigurer<H> and() {
-            return WebAuthnLoginConfigurer.this;
-        }
-    }
 }
