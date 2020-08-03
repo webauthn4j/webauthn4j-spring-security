@@ -39,10 +39,9 @@ dependencies {
 
     //Others
     implementation("org.slf4j:jcl-over-slf4j")
-    implementation('ch.qos.logback:logback-classic')
-    implementation('javax.xml.bind:jaxb-api')
     implementation("org.modelmapper:modelmapper")
     implementation('org.flywaydb:flyway-core')
+    runtimeOnly('ch.qos.logback:logback-classic')
     runtimeOnly('com.h2database:h2')
     runtimeOnly('mysql:mysql-connector-java')
     runtimeOnly("org.lazyluke:log4jdbc-remix")
@@ -53,7 +52,6 @@ dependencies {
     testImplementation("com.webauthn4j:webauthn4j-test")
 
     testImplementation('org.springframework.boot:spring-boot-starter-test')
-    testImplementation('org.springframework:spring-webmvc')
     testImplementation('org.springframework.security:spring-security-test')
 
     testImplementation('junit:junit')
