@@ -16,7 +16,6 @@
 
 package com.webauthn4j.springframework.security;
 
-import com.webauthn4j.data.extension.client.FIDOAppIDExtensionClientInput;
 import com.webauthn4j.server.ServerProperty;
 import com.webauthn4j.springframework.security.server.ServerPropertyProvider;
 import com.webauthn4j.util.Base64UrlUtil;
@@ -34,8 +33,6 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationServiceException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.AuthorityUtils;
-
-import java.util.Collections;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
@@ -126,7 +123,6 @@ public class WebAuthnProcessingFilterTest {
         assertThat(authenticationToken.getCredentials().getClientExtensionsJSON()).isEqualTo(clientExtensionsJSON);
 
         assertThat(authenticationToken.getParameters().getServerProperty()).isEqualTo(serverProperty);
-        assertThat(authenticationToken.getParameters().getExpectedAuthenticationExtensionIds()).isNull();
 
     }
 
@@ -170,7 +166,6 @@ public class WebAuthnProcessingFilterTest {
         assertThat(authenticationToken.getCredentials().getClientExtensionsJSON()).isEqualTo(clientExtensionsJSON);
 
         assertThat(authenticationToken.getParameters().getServerProperty()).isEqualTo(serverProperty);
-        assertThat(authenticationToken.getParameters().getExpectedAuthenticationExtensionIds()).isNull();
 
     }
 
@@ -198,8 +193,6 @@ public class WebAuthnProcessingFilterTest {
         target.setAuthenticatorDataParameter(authenticatorDataParameter);
         target.setSignatureParameter(signatureParameter);
         target.setClientExtensionsJSONParameter(clientExtensionsJSONParameter);
-        target.setExpectedAuthenticationExtensionIds(Collections.singletonList(FIDOAppIDExtensionClientInput.ID));
-
         mockHttpServletRequest.setMethod("POST");
         mockHttpServletRequest.setServerName("example.com");
         mockHttpServletRequest.setParameter(credentialIdParameter, credentialId);
@@ -220,7 +213,6 @@ public class WebAuthnProcessingFilterTest {
         assertThat(target.getAuthenticatorDataParameter()).isEqualTo(authenticatorDataParameter);
         assertThat(target.getSignatureParameter()).isEqualTo(signatureParameter);
         assertThat(target.getClientExtensionsJSONParameter()).isEqualTo(clientExtensionsJSONParameter);
-        assertThat(target.getExpectedAuthenticationExtensionIds()).isEqualTo(Collections.singletonList(FIDOAppIDExtensionClientInput.ID));
         Assertions.assertThat(target.getServerPropertyProvider()).isEqualTo(serverPropertyProvider);
 
 
@@ -235,7 +227,6 @@ public class WebAuthnProcessingFilterTest {
         assertThat(authenticationToken.getCredentials().getClientExtensionsJSON()).isEqualTo(clientExtensionsJSON);
 
         assertThat(authenticationToken.getParameters().getServerProperty()).isEqualTo(serverProperty);
-        assertThat(authenticationToken.getParameters().getExpectedAuthenticationExtensionIds()).isEqualTo(Collections.singletonList(FIDOAppIDExtensionClientInput.ID));
 
 
     }

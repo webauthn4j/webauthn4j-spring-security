@@ -28,7 +28,6 @@ import com.webauthn4j.util.exception.WebAuthnException;
 import org.springframework.util.Assert;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.List;
 import java.util.Set;
 
 
@@ -38,8 +37,6 @@ public class WebAuthnRegistrationRequestValidator {
     // ================================================================================================
     private final WebAuthnManager webAuthnManager;
     private final ServerPropertyProvider serverPropertyProvider;
-
-    private List<String> expectedRegistrationExtensionIds;
 
     // ~ Constructors
     // ===================================================================================================
@@ -113,16 +110,8 @@ public class WebAuthnRegistrationRequestValidator {
         return new RegistrationParameters(
                 serverProperty,
                 false,
-                false,
-                expectedRegistrationExtensionIds
+                false
         );
     }
 
-    public List<String> getExpectedRegistrationExtensionIds() {
-        return expectedRegistrationExtensionIds;
-    }
-
-    public void setExpectedRegistrationExtensionIds(List<String> expectedRegistrationExtensionIds) {
-        this.expectedRegistrationExtensionIds = expectedRegistrationExtensionIds;
-    }
 }

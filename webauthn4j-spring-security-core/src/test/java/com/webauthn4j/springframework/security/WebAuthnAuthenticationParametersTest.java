@@ -16,23 +16,15 @@
 
 package com.webauthn4j.springframework.security;
 
-import com.webauthn4j.converter.AuthenticatorDataConverter;
-import com.webauthn4j.converter.util.ObjectConverter;
-import com.webauthn4j.data.client.ClientDataType;
 import com.webauthn4j.data.client.Origin;
 import com.webauthn4j.data.client.challenge.Challenge;
 import com.webauthn4j.data.client.challenge.DefaultChallenge;
 import com.webauthn4j.server.ServerProperty;
-import com.webauthn4j.test.TestDataUtil;
 import org.junit.Test;
-
-import java.util.Collections;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class WebAuthnAuthenticationParametersTest {
-
-    private final ObjectConverter objectConverter = new ObjectConverter();
 
     @Test
     public void getter_test() {
@@ -46,20 +38,16 @@ public class WebAuthnAuthenticationParametersTest {
         WebAuthnAuthenticationParameters parameters = new WebAuthnAuthenticationParameters(
                 serverProperty,
                 true,
-                true,
-                Collections.singletonList("uvi")
+                true
         );
         assertThat(parameters.getServerProperty()).isEqualTo(serverProperty);
         assertThat(parameters.isUserVerificationRequired()).isTrue();
         assertThat(parameters.isUserPresenceRequired()).isTrue();
-        assertThat(parameters.getExpectedAuthenticationExtensionIds()).isEqualTo(Collections.singletonList("uvi"));
     }
 
     @Test
     public void equals_hashCode_test() {
         Challenge challenge = new DefaultChallenge();
-        byte[] clientDataJSON = TestDataUtil.createClientDataJSON(ClientDataType.GET);
-        byte[] authenticatorData = new AuthenticatorDataConverter(objectConverter).convert(TestDataUtil.createAuthenticatorData());
         WebAuthnAuthenticationParameters parametersA = new WebAuthnAuthenticationParameters(
                 new ServerProperty(
                         new Origin("https://example.com"),
@@ -68,8 +56,7 @@ public class WebAuthnAuthenticationParametersTest {
                         new byte[]{0x43, 0x21}
                 ),
                 true,
-                true,
-                Collections.singletonList("uvi")
+                true
         );
         WebAuthnAuthenticationParameters parametersB = new WebAuthnAuthenticationParameters(
                 new ServerProperty(
@@ -79,8 +66,7 @@ public class WebAuthnAuthenticationParametersTest {
                         new byte[]{0x43, 0x21}
                 ),
                 true,
-                true,
-                Collections.singletonList("uvi")
+                true
         );
 
         assertThat(parametersA)

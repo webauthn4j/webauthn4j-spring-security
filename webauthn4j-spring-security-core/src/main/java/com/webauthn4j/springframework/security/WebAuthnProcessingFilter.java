@@ -77,8 +77,6 @@ public class WebAuthnProcessingFilter extends UsernamePasswordAuthenticationFilt
 
     private ServerPropertyProvider serverPropertyProvider;
 
-    private List<String> expectedAuthenticationExtensionIds = null;
-
     private boolean postOnly = true;
 
     // ~ Constructors
@@ -162,8 +160,7 @@ public class WebAuthnProcessingFilter extends UsernamePasswordAuthenticationFilt
             WebAuthnAuthenticationParameters webAuthnAuthenticationParameters = new WebAuthnAuthenticationParameters(
                     serverProperty,
                     requiresUserVerification(),
-                    true,
-                    expectedAuthenticationExtensionIds
+                    true
             );
             AbstractAuthenticationToken authenticationToken = new WebAuthnAssertionAuthenticationToken(webAuthnAuthenticationRequest, webAuthnAuthenticationParameters, authorities);
 
@@ -236,19 +233,6 @@ public class WebAuthnProcessingFilter extends UsernamePasswordAuthenticationFilt
 
     public void setClientExtensionsJSONParameter(String clientExtensionsJSONParameter) {
         this.clientExtensionsJSONParameter = clientExtensionsJSONParameter;
-    }
-
-    public List<String> getExpectedAuthenticationExtensionIds() {
-        return expectedAuthenticationExtensionIds;
-    }
-
-    /**
-     * Sets expected authentication extensionId list
-     *
-     * @param expectedAuthenticationExtensionIds list of expected authentication extensionId
-     */
-    public void setExpectedAuthenticationExtensionIds(List<String> expectedAuthenticationExtensionIds) {
-        this.expectedAuthenticationExtensionIds = expectedAuthenticationExtensionIds;
     }
 
     public ServerPropertyProvider getServerPropertyProvider() {

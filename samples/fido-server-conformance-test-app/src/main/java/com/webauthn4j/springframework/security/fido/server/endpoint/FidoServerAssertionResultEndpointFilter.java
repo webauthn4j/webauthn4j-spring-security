@@ -43,7 +43,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.UncheckedIOException;
 import java.util.Collections;
-import java.util.List;
 
 public class FidoServerAssertionResultEndpointFilter extends AbstractAuthenticationProcessingFilter {
 
@@ -60,8 +59,6 @@ public class FidoServerAssertionResultEndpointFilter extends AbstractAuthenticat
     };
     private final CollectedClientDataConverter collectedClientDataConverter;
     private final ServerEndpointFilterUtil serverEndpointFilterUtil;
-
-    private List<String> expectedAuthenticationExtensionIds = null;
 
     public FidoServerAssertionResultEndpointFilter(
             ObjectConverter objectConverter,
@@ -130,8 +127,7 @@ public class FidoServerAssertionResultEndpointFilter extends AbstractAuthenticat
             WebAuthnAuthenticationParameters webAuthnAuthenticationParameters = new WebAuthnAuthenticationParameters(
                     serverProperty,
                     userVerificationRequirement == UserVerificationRequirement.REQUIRED,
-                    false,
-                    expectedAuthenticationExtensionIds
+                    false
             );
 
             WebAuthnAssertionAuthenticationToken webAuthnAssertionAuthenticationToken =
@@ -146,19 +142,5 @@ public class FidoServerAssertionResultEndpointFilter extends AbstractAuthenticat
 
     protected void setDetails(HttpServletRequest request, WebAuthnAssertionAuthenticationToken authRequest) {
         authRequest.setDetails(this.authenticationDetailsSource.buildDetails(request));
-    }
-
-
-    public List<String> getExpectedAuthenticationExtensionIds() {
-        return expectedAuthenticationExtensionIds;
-    }
-
-    /**
-     * Sets expected authentication extensionId list
-     *
-     * @param expectedAuthenticationExtensionIds list of expected authentication extensionId
-     */
-    public void setExpectedAuthenticationExtensionIds(List<String> expectedAuthenticationExtensionIds) {
-        this.expectedAuthenticationExtensionIds = expectedAuthenticationExtensionIds;
     }
 }
