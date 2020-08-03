@@ -17,11 +17,17 @@
 package com.webauthn4j.springframework.security.authenticator;
 
 import com.webauthn4j.authenticator.AuthenticatorImpl;
+import com.webauthn4j.data.AuthenticatorTransport;
 import com.webauthn4j.data.attestation.authenticator.AttestedCredentialData;
 import com.webauthn4j.data.attestation.statement.AttestationStatement;
+import com.webauthn4j.data.extension.authenticator.AuthenticationExtensionsAuthenticatorOutputs;
+import com.webauthn4j.data.extension.authenticator.RegistrationExtensionAuthenticatorOutput;
+import com.webauthn4j.data.extension.client.AuthenticationExtensionsClientOutputs;
+import com.webauthn4j.data.extension.client.RegistrationExtensionClientOutput;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Objects;
+import java.util.Set;
 
 /**
  * An implementation of {@link WebAuthnAuthenticator}
@@ -31,7 +37,7 @@ public class WebAuthnAuthenticatorImpl extends AuthenticatorImpl implements WebA
     // ~ Instance fields
     // ================================================================================================
     private String name;
-    private UserDetails userPrincipal;
+    private UserDetails userDetails;
 
     // ~ Constructor
     // ========================================================================================================
@@ -39,19 +45,54 @@ public class WebAuthnAuthenticatorImpl extends AuthenticatorImpl implements WebA
     /**
      * Constructor
      *
-     * @param name                   authenticator's friendly name
-     * @param attestedCredentialData attested credential data
-     * @param attestationStatement   attestation statement
-     * @param counter                counter
+     * @param name                    authenticator's friendly name
+     * @param userDetails             userDetails
+     * @param attestedCredentialData  attested credential data
+     * @param attestationStatement    attestation statement
+     * @param counter                 counter
+     * @param transports              transports
+     * @param clientExtensions        client extensions
+     * @param authenticatorExtensions authenticator extensions
      */
-    public WebAuthnAuthenticatorImpl(String name, AttestedCredentialData attestedCredentialData, AttestationStatement attestationStatement, long counter) {
-        super(attestedCredentialData, attestationStatement, counter);
+    @SuppressWarnings("java:S107")
+    public WebAuthnAuthenticatorImpl(
+            String name,
+            UserDetails userDetails,
+            AttestedCredentialData attestedCredentialData,
+            AttestationStatement attestationStatement,
+            long counter,
+            Set<AuthenticatorTransport> transports,
+            AuthenticationExtensionsClientOutputs<RegistrationExtensionClientOutput> clientExtensions,
+            AuthenticationExtensionsAuthenticatorOutputs<RegistrationExtensionAuthenticatorOutput> authenticatorExtensions) {
+        super(attestedCredentialData, attestationStatement, counter, transports, clientExtensions, authenticatorExtensions);
         this.setName(name);
+        this.userDetails = userDetails;
+    }
+
+    /**
+     * Constructor
+     *
+     * @param name                    authenticator's friendly name
+     * @param userDetails             userDetails
+     * @param attestedCredentialData  attested credential data
+     * @param attestationStatement    attestation statement
+     * @param counter                 counter
+     */
+    public WebAuthnAuthenticatorImpl(
+            String name,
+            UserDetails userDetails,
+            AttestedCredentialData attestedCredentialData,
+            AttestationStatement attestationStatement,
+            long counter) {
+        this(name, userDetails, attestedCredentialData, attestationStatement, counter, null, null, null);
     }
 
     // ~ Methods
     // ========================================================================================================
 
+    /**
+     * {@inheritDoc}
+     */
     public String getName() {
         return name;
     }
@@ -61,12 +102,8 @@ public class WebAuthnAuthenticatorImpl extends AuthenticatorImpl implements WebA
     }
 
     @Override
-    public UserDetails getUserPrincipal() {
-        return userPrincipal;
-    }
-
-    public void setUserPrincipal(UserDetails userPrincipal) {
-        this.userPrincipal = userPrincipal;
+    public UserDetails getUserDetails() {
+        return userDetails;
     }
 
     /**

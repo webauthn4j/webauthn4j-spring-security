@@ -14,14 +14,15 @@
  * limitations under the License.
  */
 
-import {WebAuthnPublicKeyCredentialUserEntity} from "./web-authn-public-key-credential-user-entity";
-import {WebAuthnPublicKeyCredentialDescriptor} from "./web-authn-public-key-credential-descriptor";
+package com.webauthn4j.springframework.security.fido.authenticator;
 
-export interface AttestationOptionsResponse {
-  relyingParty: PublicKeyCredentialRpEntity;
-  user?: WebAuthnPublicKeyCredentialUserEntity;
-  challenge: string;
-  pubKeyCredParams: PublicKeyCredentialParameters[];
-  timeout?: number,
-  credentials: WebAuthnPublicKeyCredentialDescriptor[];
+import com.webauthn4j.springframework.security.authenticator.WebAuthnAuthenticator;
+import com.webauthn4j.springframework.security.authenticator.WebAuthnAuthenticatorService;
+
+public interface WebAuthnAuthenticatorManager extends WebAuthnAuthenticatorService {
+
+    void addAuthenticator(WebAuthnAuthenticator webAuthnAuthenticator);
+
+    //TODO: add 'remove', etc.
+
 }

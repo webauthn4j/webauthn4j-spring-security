@@ -16,7 +16,7 @@
 
 <ng-container>
   <nav class="navbar navbar-expand-md navbar-dark bg-dark mb-5" *ngIf="this.authStatus == 'MULTI_FACTOR_AUTHENTICATED'">
-    <a class="navbar-brand" href="#">WebAuthn4J Spring Security Sample</a>
+    <a class="navbar-brand" href="#">WebAuthn4J Spring Security Sample SPA</a>
 
     <ul class="navbar-nav ml-auto">
       <li ngbDropdown placement="bottom-right" class="navbar-nav ml-auto">
@@ -33,6 +33,6 @@
   </nav>
   <div class="site-title-container">
     <h1 class="h3 font-weight-normal text-center" id="site-title"
-        *ngIf="this.authStatus != 'MULTI_FACTOR_AUTHENTICATED'">WebAuthn4J Spring Security Sample</h1>
+        *ngIf="this.authStatus != 'MULTI_FACTOR_AUTHENTICATED'">WebAuthn4J Spring Security Sample SPA</h1>
   </div>
 </ng-container>

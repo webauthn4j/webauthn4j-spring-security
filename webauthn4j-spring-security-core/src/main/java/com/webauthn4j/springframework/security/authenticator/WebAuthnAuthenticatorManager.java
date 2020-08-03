@@ -16,10 +16,29 @@
 
 package com.webauthn4j.springframework.security.authenticator;
 
+import com.webauthn4j.springframework.security.exception.CredentialIdNotFoundException;
+
 public interface WebAuthnAuthenticatorManager extends WebAuthnAuthenticatorService {
 
-    void addAuthenticator(WebAuthnAuthenticator webAuthnAuthenticator);
+    /**
+     * Create a new user with the supplied details.
+     * @param userPrincipal user principal
+     * @param webAuthnAuthenticator authenticator
+     */
+    void createAuthenticator(Object userPrincipal, WebAuthnAuthenticator webAuthnAuthenticator);
 
-    //TODO: add 'remove', etc.
+    /**
+     * Remove the authenticator with the given credentialId
+     * @param credentialId credentialId
+     */
+    @SuppressWarnings("squid:RedundantThrowsDeclarationCheck")
+    void deleteAuthenticator(byte[] credentialId) throws CredentialIdNotFoundException;
+
+    /**
+     * Check if a authenticator with the supplied credentialId
+     * @param credentialId credentialId
+     * @return true if a authenticator with the supplied credentialId exists
+     */
+    boolean authenticatorExists(byte[] credentialId);
 
 }

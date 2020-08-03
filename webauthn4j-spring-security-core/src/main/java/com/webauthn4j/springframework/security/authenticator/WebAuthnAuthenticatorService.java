@@ -39,8 +39,10 @@ public interface WebAuthnAuthenticatorService {
      * Load {@link WebAuthnAuthenticator} by credentialId
      * @param credentialId credentialId
      * @return {@link WebAuthnAuthenticator}
+     * @throws CredentialIdNotFoundException if the authenticator could not be found
      */
-    WebAuthnAuthenticator loadAuthenticatorByCredentialId(byte[] credentialId);
+    @SuppressWarnings("squid:RedundantThrowsDeclarationCheck")
+    WebAuthnAuthenticator loadAuthenticatorByCredentialId(byte[] credentialId) throws CredentialIdNotFoundException;
 
     /**
      * Load {@link WebAuthnAuthenticator} list by user principal

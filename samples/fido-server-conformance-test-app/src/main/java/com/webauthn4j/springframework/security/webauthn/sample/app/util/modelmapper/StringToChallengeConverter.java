@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.webauthn4j.springframework.security.webauthn.sample.util.modelmapper;
+package com.webauthn4j.springframework.security.webauthn.sample.app.util.modelmapper;
 
 import com.webauthn4j.data.client.challenge.Challenge;
 import com.webauthn4j.data.client.challenge.DefaultChallenge;

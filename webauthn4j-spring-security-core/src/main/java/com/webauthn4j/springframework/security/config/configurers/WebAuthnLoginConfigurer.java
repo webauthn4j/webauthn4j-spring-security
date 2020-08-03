@@ -129,11 +129,7 @@ public final class WebAuthnLoginConfigurer<H extends HttpSecurityBuilder<H>> ext
         this.attestationOptionsEndpointConfig.configure(http);
         this.assertionOptionsEndpointConfig.configure(http);
 
-        if (expectedAuthenticationExtensionIdsConfig.expectedAuthenticationExtensionIds.isEmpty()) {
-            this.getAuthenticationFilter().setExpectedAuthenticationExtensionIds(new ArrayList<>(optionsProvider.getAuthenticationExtensions().getKeys()));
-        } else {
-            this.getAuthenticationFilter().setExpectedAuthenticationExtensionIds(expectedAuthenticationExtensionIdsConfig.expectedAuthenticationExtensionIds);
-        }
+        this.getAuthenticationFilter().setExpectedAuthenticationExtensionIds(expectedAuthenticationExtensionIdsConfig.expectedAuthenticationExtensionIds);
 
         configureParameters();
     }
@@ -141,31 +137,24 @@ public final class WebAuthnLoginConfigurer<H extends HttpSecurityBuilder<H>> ext
     private void configureParameters() {
         if (usernameParameter != null) {
             this.getAuthenticationFilter().setUsernameParameter(usernameParameter);
-            this.optionsProvider.setUsernameParameter(usernameParameter);
         }
         if (passwordParameter != null) {
             this.getAuthenticationFilter().setPasswordParameter(passwordParameter);
-            this.optionsProvider.setPasswordParameter(passwordParameter);
         }
         if (credentialIdParameter != null) {
             this.getAuthenticationFilter().setCredentialIdParameter(credentialIdParameter);
-            this.optionsProvider.setCredentialIdParameter(credentialIdParameter);
         }
         if (clientDataJSONParameter != null) {
             this.getAuthenticationFilter().setClientDataJSONParameter(clientDataJSONParameter);
-            this.optionsProvider.setClientDataJSONParameter(clientDataJSONParameter);
         }
         if (authenticatorDataParameter != null) {
             this.getAuthenticationFilter().setAuthenticatorDataParameter(authenticatorDataParameter);
-            this.optionsProvider.setAuthenticatorDataParameter(authenticatorDataParameter);
         }
         if (signatureParameter != null) {
             this.getAuthenticationFilter().setSignatureParameter(signatureParameter);
-            this.optionsProvider.setSignatureParameter(signatureParameter);
         }
         if (clientExtensionsJSONParameter != null) {
             this.getAuthenticationFilter().setClientExtensionsJSONParameter(clientExtensionsJSONParameter);
-            this.optionsProvider.setClientExtensionsJSONParameter(clientExtensionsJSONParameter);
         }
     }
 
@@ -220,7 +209,7 @@ public final class WebAuthnLoginConfigurer<H extends HttpSecurityBuilder<H>> ext
      *
      * @return the {@link AssertionOptionsEndpointConfig}
      */
-    public AssertionOptionsEndpointConfig assertionOptionsEndpointConfig() {
+    public AssertionOptionsEndpointConfig assertionOptionsEndpoint() {
         return assertionOptionsEndpointConfig;
     }
 

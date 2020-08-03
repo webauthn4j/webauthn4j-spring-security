@@ -14,21 +14,18 @@
  * limitations under the License.
  */
 
-package com.webauthn4j.springframework.security.webauthn.sample.util.modelmapper;
+package com.webauthn4j.springframework.security.webauthn.sample.app.config;
 
-import com.webauthn4j.data.client.challenge.Challenge;
-import com.webauthn4j.data.client.challenge.DefaultChallenge;
-import org.modelmapper.AbstractConverter;
-import org.springframework.util.Base64Utils;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.Configuration;
+
 
 /**
- * Converter which converts from {@link String} to {@link Challenge}
+ * Application Layer Configuration
  */
-public class StringToChallengeConverter extends AbstractConverter<String, Challenge> {
+@Configuration
+@ComponentScan(basePackages = "com.webauthn4j.springframework.security.webauthn.sample.app")
+public class AppConfig {
 
-    @Override
-    protected Challenge convert(String source) {
-        byte[] challenge = Base64Utils.decodeFromUrlSafeString(source);
-        return new DefaultChallenge(challenge);
-    }
+
 }

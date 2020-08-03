@@ -22,14 +22,13 @@ import com.webauthn4j.data.client.challenge.Challenge;
 import com.webauthn4j.data.extension.client.AuthenticationExtensionClientInput;
 import com.webauthn4j.data.extension.client.AuthenticationExtensionsClientInputs;
 import com.webauthn4j.data.extension.client.RegistrationExtensionClientInput;
-import com.webauthn4j.springframework.security.WebAuthnProcessingFilter;
 import com.webauthn4j.springframework.security.authenticator.WebAuthnAuthenticator;
 import com.webauthn4j.springframework.security.authenticator.WebAuthnAuthenticatorService;
 import com.webauthn4j.springframework.security.challenge.ChallengeRepository;
-import com.webauthn4j.springframework.security.endpoint.Parameters;
+import com.webauthn4j.springframework.security.exception.PrincipalNotFoundException;
 import com.webauthn4j.springframework.security.util.internal.ServletUtil;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import com.webauthn4j.util.exception.WebAuthnException;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.util.Assert;
 
 import javax.servlet.http.HttpServletRequest;
@@ -50,18 +49,13 @@ public class OptionsProviderImpl implements OptionsProvider {
     private String rpName = null;
     private String rpIcon = null;
     private List<PublicKeyCredentialParameters> pubKeyCredParams = new ArrayList<>();
+    private AuthenticatorSelectionCriteria registrationAuthenticatorSelection;
+    private AttestationConveyancePreference attestation;
+    private UserVerificationRequirement authenticationUserVerification;
     private Long registrationTimeout = null;
     private Long authenticationTimeout = null;
     private AuthenticationExtensionsClientInputs<RegistrationExtensionClientInput> registrationExtensions = new AuthenticationExtensionsClientInputs<>();
     private AuthenticationExtensionsClientInputs<AuthenticationExtensionClientInput> authenticationExtensions = new AuthenticationExtensionsClientInputs<>();
-
-    private String usernameParameter = UsernamePasswordAuthenticationFilter.SPRING_SECURITY_FORM_USERNAME_KEY;
-    private String passwordParameter = UsernamePasswordAuthenticationFilter.SPRING_SECURITY_FORM_PASSWORD_KEY;
-    private String credentialIdParameter = WebAuthnProcessingFilter.SPRING_SECURITY_FORM_CREDENTIAL_ID_KEY;
-    private String clientDataJSONParameter = WebAuthnProcessingFilter.SPRING_SECURITY_FORM_CLIENT_DATA_JSON_KEY;
-    private String authenticatorDataParameter = WebAuthnProcessingFilter.SPRING_SECURITY_FORM_AUTHENTICATOR_DATA_KEY;
-    private String signatureParameter = WebAuthnProcessingFilter.SPRING_SECURITY_FORM_SIGNATURE_KEY;
-    private String clientExtensionsJSONParameter = WebAuthnProcessingFilter.SPRING_SECURITY_FORM_CLIENT_EXTENSIONS_JSON_KEY;
 
     private final WebAuthnAuthenticatorService authenticatorService;
     private final PublicKeyCredentialUserEntityService publicKeyCredentialUserEntityService;
@@ -92,15 +86,15 @@ public class OptionsProviderImpl implements OptionsProvider {
     /**
      * {@inheritDoc}
      */
-    public AttestationOptions getAttestationOptions(HttpServletRequest request, String username, Challenge challenge) {
+    public PublicKeyCredentialCreationOptions getAttestationOptions(HttpServletRequest request, Object principal, Challenge challenge) {
 
         PublicKeyCredentialUserEntity user;
         Collection<? extends WebAuthnAuthenticator> authenticators;
 
         try {
-            authenticators = authenticatorService.loadAuthenticatorsByPrincipal(username);
-            user = publicKeyCredentialUserEntityService.loadUserByUsername(username);
-        } catch (UsernameNotFoundException e) {
+            authenticators = authenticatorService.loadAuthenticatorsByPrincipal(principal);
+            user = publicKeyCredentialUserEntityService.loadUserByPrincipal(principal);
+        } catch (PrincipalNotFoundException e) {
             authenticators = Collections.emptyList();
             user = null;
         }
@@ -118,16 +112,20 @@ public class OptionsProviderImpl implements OptionsProvider {
             challengeRepository.saveChallenge(challenge, request);
         }
 
-        return new AttestationOptions(relyingParty, user, challenge, pubKeyCredParams, registrationTimeout,
-                credentials, registrationExtensions);
+        return new PublicKeyCredentialCreationOptions(
+                relyingParty, user, challenge, pubKeyCredParams, registrationTimeout,
+                credentials, registrationAuthenticatorSelection, attestation, registrationExtensions);
     }
 
-    public AssertionOptions getAssertionOptions(HttpServletRequest request, String username, Challenge challenge) {
+    /**
+     * {@inheritDoc}
+     */
+    public PublicKeyCredentialRequestOptions getAssertionOptions(HttpServletRequest request, Object principal, Challenge challenge) {
 
         Collection<? extends WebAuthnAuthenticator> authenticators;
         try {
-            authenticators = authenticatorService.loadAuthenticatorsByPrincipal(username);
-        } catch (UsernameNotFoundException e) {
+            authenticators = authenticatorService.loadAuthenticatorsByPrincipal(principal);
+        } catch (PrincipalNotFoundException e) {
             authenticators = Collections.emptyList();
         }
 
@@ -142,13 +140,13 @@ public class OptionsProviderImpl implements OptionsProvider {
         } else {
             challengeRepository.saveChallenge(challenge, request);
         }
-        Parameters parameters
-                = new Parameters(usernameParameter, passwordParameter,
-                credentialIdParameter, clientDataJSONParameter, authenticatorDataParameter, signatureParameter, clientExtensionsJSONParameter);
 
-        return new AssertionOptions(challenge, authenticationTimeout, effectiveRpId, credentials, authenticationExtensions, parameters);
+        return new PublicKeyCredentialRequestOptions(challenge, authenticationTimeout, effectiveRpId, credentials, authenticationUserVerification, authenticationExtensions);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public String getEffectiveRpId(HttpServletRequest request) {
         String effectiveRpId;
         if (this.rpId != null) {
@@ -177,12 +175,10 @@ public class OptionsProviderImpl implements OptionsProvider {
         this.rpName = rpName;
     }
 
-    @Override
     public String getRpIcon() {
         return rpIcon;
     }
 
-    @Override
     public void setRpIcon(String rpIcon) {
         Assert.hasText(rpIcon, "rpIcon parameter must not be empty or null");
         this.rpIcon = rpIcon;
@@ -232,78 +228,30 @@ public class OptionsProviderImpl implements OptionsProvider {
         this.authenticationExtensions = authenticationExtensions;
     }
 
-    public String getUsernameParameter() {
-        return usernameParameter;
-    }
-
-    public void setUsernameParameter(String usernameParameter) {
-        Assert.hasText(usernameParameter, "usernameParameter must not be empty or null");
-        this.usernameParameter = usernameParameter;
-    }
-
-    public String getPasswordParameter() {
-        return passwordParameter;
-    }
-
-    public void setPasswordParameter(String passwordParameter) {
-        Assert.hasText(passwordParameter, "passwordParameter must not be empty or null");
-        this.passwordParameter = passwordParameter;
-    }
-
-    public String getCredentialIdParameter() {
-        return credentialIdParameter;
-    }
-
-    public void setCredentialIdParameter(String credentialIdParameter) {
-        Assert.hasText(credentialIdParameter, "credentialIdParameter must not be empty or null");
-        this.credentialIdParameter = credentialIdParameter;
-    }
-
-    public String getClientDataJSONParameter() {
-        return clientDataJSONParameter;
-    }
-
-    public void setClientDataJSONParameter(String clientDataJSONParameter) {
-        Assert.hasText(clientDataJSONParameter, "clientDataJSONParameter must not be empty or null");
-        this.clientDataJSONParameter = clientDataJSONParameter;
-    }
-
-    public String getAuthenticatorDataParameter() {
-        return authenticatorDataParameter;
-    }
-
-    public void setAuthenticatorDataParameter(String authenticatorDataParameter) {
-        Assert.hasText(authenticatorDataParameter, "authenticatorDataParameter must not be empty or null");
-        this.authenticatorDataParameter = authenticatorDataParameter;
-    }
-
-    public String getSignatureParameter() {
-        return signatureParameter;
-    }
-
-    public void setSignatureParameter(String signatureParameter) {
-        Assert.hasText(signatureParameter, "signatureParameter must not be empty or null");
-        this.signatureParameter = signatureParameter;
-    }
-
-    public String getClientExtensionsJSONParameter() {
-        return clientExtensionsJSONParameter;
-    }
-
-    public void setClientExtensionsJSONParameter(String clientExtensionsJSONParameter) {
-        Assert.hasText(clientExtensionsJSONParameter, "clientExtensionsJSONParameter must not be empty or null");
-        this.clientExtensionsJSONParameter = clientExtensionsJSONParameter;
-    }
-
     static class DefaultPublicKeyCredentialUserEntityService implements PublicKeyCredentialUserEntityService {
 
         @Override
-        public PublicKeyCredentialUserEntity loadUserByUsername(String username) {
-            return new PublicKeyCredentialUserEntity(
-                    username.getBytes(StandardCharsets.UTF_8),
-                    username,
-                    username
-            );
+        public PublicKeyCredentialUserEntity loadUserByPrincipal(Object principal) {
+            if(principal instanceof UserDetails){
+                String username = ((UserDetails)principal).getUsername();
+                return new PublicKeyCredentialUserEntity(
+                        username.getBytes(StandardCharsets.UTF_8),
+                        username,
+                        username
+                );
+            }
+            else if(principal instanceof String){
+                String username = (String) principal;
+                return new PublicKeyCredentialUserEntity(
+                        username.getBytes(StandardCharsets.UTF_8),
+                        username,
+                        username
+                );
+
+            }
+            else {
+                throw new WebAuthnException("Could not determine username from principal. Please use custom PublicKeyCredentialUserEntityService instead.");
+            }
         }
     }
 

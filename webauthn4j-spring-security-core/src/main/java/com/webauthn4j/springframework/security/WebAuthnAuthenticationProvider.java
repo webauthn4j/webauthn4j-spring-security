@@ -100,16 +100,17 @@ public class WebAuthnAuthenticationProvider implements AuthenticationProvider {
 
         Serializable principalToReturn;
         if(forcePrincipalAsString){
-            principalToReturn = webAuthnAuthenticator.getUserPrincipal().getUsername();
+            principalToReturn = webAuthnAuthenticator.getUserDetails().getUsername();
         }
         else {
-            principalToReturn = webAuthnAuthenticator.getUserPrincipal();
+            principalToReturn = webAuthnAuthenticator.getUserDetails();
         }
+
 
         WebAuthnAuthenticationToken webAuthnAuthenticationToken = new WebAuthnAuthenticationToken(
                 principalToReturn,
                 authenticationToken.getCredentials(),
-                authoritiesMapper.mapAuthorities(webAuthnAuthenticator.getUserPrincipal().getAuthorities()));
+                authoritiesMapper.mapAuthorities(webAuthnAuthenticator.getUserDetails().getAuthorities()));
         webAuthnAuthenticationToken.setDetails(authenticationToken.getDetails());
 
         return webAuthnAuthenticationToken;

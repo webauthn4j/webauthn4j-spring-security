@@ -64,7 +64,7 @@ public class WebAuthnAuthenticationProviderConfigurerSpringTest {
 
         @Bean
         public OptionsProvider optionsProvider(WebAuthnAuthenticatorService webAuthnAuthenticatorService, ChallengeRepository challengeRepository) {
-            OptionsProvider optionsProvider = new OptionsProviderImpl(webAuthnAuthenticatorService, challengeRepository);
+            OptionsProviderImpl optionsProvider = new OptionsProviderImpl(webAuthnAuthenticatorService, challengeRepository);
             optionsProvider.setRpId("example.com");
             return optionsProvider;
         }

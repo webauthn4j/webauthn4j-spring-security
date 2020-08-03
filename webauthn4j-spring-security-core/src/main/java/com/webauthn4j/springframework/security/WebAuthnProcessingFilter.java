@@ -29,6 +29,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.util.Assert;
 import org.springframework.util.Base64Utils;
+import org.springframework.util.StringUtils;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -116,7 +117,7 @@ public class WebAuthnProcessingFilter extends UsernamePasswordAuthenticationFilt
 
         String credentialId = obtainCredentialId(request);
 
-        if(credentialId == null){
+        if(StringUtils.isEmpty(credentialId)){
             String username = obtainUsername(request);
             String password = obtainPassword(request);
 

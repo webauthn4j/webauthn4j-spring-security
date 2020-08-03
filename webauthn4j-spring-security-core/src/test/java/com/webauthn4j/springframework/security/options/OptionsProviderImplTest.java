@@ -16,10 +16,7 @@
 
 package com.webauthn4j.springframework.security.options;
 
-import com.webauthn4j.data.AuthenticatorTransport;
-import com.webauthn4j.data.PublicKeyCredentialDescriptor;
-import com.webauthn4j.data.PublicKeyCredentialParameters;
-import com.webauthn4j.data.PublicKeyCredentialType;
+import com.webauthn4j.data.*;
 import com.webauthn4j.data.client.challenge.Challenge;
 import com.webauthn4j.data.client.challenge.DefaultChallenge;
 import com.webauthn4j.data.extension.client.AuthenticationExtensionsClientInputs;
@@ -56,17 +53,17 @@ public class OptionsProviderImplTest {
         when(authenticator.getAttestedCredentialData().getCredentialId()).thenReturn(credentialId);
         when(challengeRepository.loadOrGenerateChallenge(mockRequest)).thenReturn(challenge);
 
-        OptionsProvider optionsProvider = new OptionsProviderImpl(authenticatorService, challengeRepository);
+        OptionsProviderImpl optionsProvider = new OptionsProviderImpl(authenticatorService, challengeRepository);
         optionsProvider.setRpId("example.com");
         optionsProvider.setRpName("rpName");
         optionsProvider.setRpIcon("data://dummy");
 
-        AttestationOptions attestationOptions = optionsProvider.getAttestationOptions(mockRequest, "dummy", null);
-        assertThat(attestationOptions.getRelyingParty().getId()).isEqualTo("example.com");
-        assertThat(attestationOptions.getRelyingParty().getName()).isEqualTo("rpName");
-        assertThat(attestationOptions.getRelyingParty().getIcon()).isEqualTo("data://dummy");
+        PublicKeyCredentialCreationOptions attestationOptions = optionsProvider.getAttestationOptions(mockRequest, "dummy", null);
+        assertThat(attestationOptions.getRp().getId()).isEqualTo("example.com");
+        assertThat(attestationOptions.getRp().getName()).isEqualTo("rpName");
+        assertThat(attestationOptions.getRp().getIcon()).isEqualTo("data://dummy");
         assertThat(attestationOptions.getChallenge()).isEqualTo(challenge);
-        assertThat(attestationOptions.getCredentials()).containsExactly(new PublicKeyCredentialDescriptor(PublicKeyCredentialType.PUBLIC_KEY, credentialId, transports));
+        assertThat(attestationOptions.getExcludeCredentials()).containsExactly(new PublicKeyCredentialDescriptor(PublicKeyCredentialType.PUBLIC_KEY, credentialId, transports));
 
     }
 
@@ -86,17 +83,17 @@ public class OptionsProviderImplTest {
         when(authenticatorService.loadAuthenticatorsByPrincipal(any())).thenReturn(authenticators);
         when(authenticator.getAttestedCredentialData().getCredentialId()).thenReturn(credentialId);
 
-        OptionsProvider optionsProvider = new OptionsProviderImpl(authenticatorService, challengeRepository);
+        OptionsProviderImpl optionsProvider = new OptionsProviderImpl(authenticatorService, challengeRepository);
         optionsProvider.setRpId("example.com");
         optionsProvider.setRpName("rpName");
         optionsProvider.setRpIcon("data://dummy");
 
-        AttestationOptions attestationOptions = optionsProvider.getAttestationOptions(mockRequest, "dummy", challenge);
-        assertThat(attestationOptions.getRelyingParty().getId()).isEqualTo("example.com");
-        assertThat(attestationOptions.getRelyingParty().getName()).isEqualTo("rpName");
-        assertThat(attestationOptions.getRelyingParty().getIcon()).isEqualTo("data://dummy");
+        PublicKeyCredentialCreationOptions attestationOptions = optionsProvider.getAttestationOptions(mockRequest, "dummy", challenge);
+        assertThat(attestationOptions.getRp().getId()).isEqualTo("example.com");
+        assertThat(attestationOptions.getRp().getName()).isEqualTo("rpName");
+        assertThat(attestationOptions.getRp().getIcon()).isEqualTo("data://dummy");
         assertThat(attestationOptions.getChallenge()).isEqualTo(challenge);
-        assertThat(attestationOptions.getCredentials()).containsExactly(new PublicKeyCredentialDescriptor(PublicKeyCredentialType.PUBLIC_KEY, credentialId, transport));
+        assertThat(attestationOptions.getExcludeCredentials()).containsExactly(new PublicKeyCredentialDescriptor(PublicKeyCredentialType.PUBLIC_KEY, credentialId, transport));
 
     }
 
@@ -114,14 +111,14 @@ public class OptionsProviderImplTest {
         when(authenticatorService.loadAuthenticatorsByPrincipal(any())).thenReturn(authenticators);
         when(authenticator.getAttestedCredentialData().getCredentialId()).thenReturn(credentialId);
 
-        OptionsProvider optionsProvider = new OptionsProviderImpl(authenticatorService, challengeRepository);
+        OptionsProviderImpl optionsProvider = new OptionsProviderImpl(authenticatorService, challengeRepository);
         optionsProvider.setRpId("example.com");
         optionsProvider.setRpName("rpName");
 
-        AssertionOptions attestationOptions = optionsProvider.getAssertionOptions(mockRequest, "dummy", challenge);
-        assertThat(attestationOptions.getRpId()).isEqualTo("example.com");
-        assertThat(attestationOptions.getChallenge()).isEqualTo(challenge);
-        assertThat(attestationOptions.getCredentials().stream().map(PublicKeyCredentialDescriptor::getId)).containsExactly(credentialId);
+        PublicKeyCredentialRequestOptions assertionOptions = optionsProvider.getAssertionOptions(mockRequest, "dummy", challenge);
+        assertThat(assertionOptions.getRpId()).isEqualTo("example.com");
+        assertThat(assertionOptions.getChallenge()).isEqualTo(challenge);
+        assertThat(assertionOptions.getAllowCredentials().stream().map(PublicKeyCredentialDescriptor::getId)).containsExactly(credentialId);
 
     }
 
@@ -162,21 +159,6 @@ public class OptionsProviderImplTest {
         assertThat(optionsProvider.getRegistrationExtensions()).isEqualTo(new AuthenticationExtensionsClientInputs<>());
         optionsProvider.setAuthenticationExtensions(new AuthenticationExtensionsClientInputs<>());
         assertThat(optionsProvider.getAuthenticationExtensions()).isEqualTo(new AuthenticationExtensionsClientInputs<>());
-
-        optionsProvider.setUsernameParameter("usernameParameter");
-        assertThat(optionsProvider.getUsernameParameter()).isEqualTo("usernameParameter");
-        optionsProvider.setPasswordParameter("passwordParameter");
-        assertThat(optionsProvider.getPasswordParameter()).isEqualTo("passwordParameter");
-        optionsProvider.setCredentialIdParameter("credentialIdParameter");
-        assertThat(optionsProvider.getCredentialIdParameter()).isEqualTo("credentialIdParameter");
-        optionsProvider.setClientDataJSONParameter("clientDataJSONParameter");
-        assertThat(optionsProvider.getClientDataJSONParameter()).isEqualTo("clientDataJSONParameter");
-        optionsProvider.setAuthenticatorDataParameter("authenticatorDataParameter");
-        assertThat(optionsProvider.getAuthenticatorDataParameter()).isEqualTo("authenticatorDataParameter");
-        optionsProvider.setSignatureParameter("signatureParameter");
-        assertThat(optionsProvider.getSignatureParameter()).isEqualTo("signatureParameter");
-        optionsProvider.setClientExtensionsJSONParameter("clientExtensionsJSONParameter");
-        assertThat(optionsProvider.getClientExtensionsJSONParameter()).isEqualTo("clientExtensionsJSONParameter");
 
     }
 

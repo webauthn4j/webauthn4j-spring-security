@@ -41,30 +41,26 @@ export class AuthService {
 
 
   loginWithPublicKeyCredential(credentialRequestOptions: WebAuthn4NgCredentialRequestOptions): Observable<string> {
-    let promise = this.webauthnService.fetchAssertionServerOptions().toPromise().then((serverOptions) => {
-      return this.webauthnService.getCredential(credentialRequestOptions, serverOptions).then(credential => {
-        return {serverOptions: serverOptions, credential: credential}
-      });
-    });
+    let promise = this.webauthnService.getCredential(credentialRequestOptions);
 
-    return from(promise).pipe(concatMap((data) => {
-      if (data.credential.type != "public-key") {
+    return from(promise).pipe(concatMap((credential) => {
+      if (credential.type != "public-key") {
         throwError("Unexpected credential type");
       }
-      let publicKeyCredential: PublicKeyCredential = data.credential as PublicKeyCredential;
+      let publicKeyCredential: PublicKeyCredential = credential as PublicKeyCredential;
       let assertionResponse: AuthenticatorAssertionResponse = publicKeyCredential.response as AuthenticatorAssertionResponse;
       let clientDataJSON = assertionResponse.clientDataJSON;
       let authenticatorData = assertionResponse.authenticatorData;
       let signature = assertionResponse.signature;
-      // let clientExtensions = publicKeyCredential.getClientExtensionResults(); //Edge preview throws exception as of build 180603-1447
-      let clientExtensions = {};
+      let clientExtensions = publicKeyCredential.getClientExtensionResults();
 
       if (publicKeyCredential.response as AuthenticatorAttestationResponse) {
         let formData = new FormData();
-        formData.set(data.serverOptions.parameters.credentialId, base64url.encodeBase64url(new Uint8Array(publicKeyCredential.rawId)));
-        formData.set(data.serverOptions.parameters.clientDataJSON, base64url.encodeBase64url(new Uint8Array(clientDataJSON)));
-        formData.set(data.serverOptions.parameters.authenticatorData, base64url.encodeBase64url(new Uint8Array(authenticatorData)));
-        formData.set(data.serverOptions.parameters.signature, base64url.encodeBase64url(new Uint8Array(signature)));
+        formData.set("credentialId", base64url.encodeBase64url(new Uint8Array(publicKeyCredential.rawId)));
+        formData.set("clientDataJSON", base64url.encodeBase64url(new Uint8Array(clientDataJSON)));
+        formData.set("authenticatorData", base64url.encodeBase64url(new Uint8Array(authenticatorData)));
+        formData.set("signature", base64url.encodeBase64url(new Uint8Array(signature)));
+        formData.set("clientExtensionsJSON", JSON.stringify(clientExtensions));
 
         return this.http.post(this.webAuthnLoginUrl, formData, {responseType: 'text'});
       }

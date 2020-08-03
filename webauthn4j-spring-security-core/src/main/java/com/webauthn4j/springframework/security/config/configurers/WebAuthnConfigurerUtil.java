@@ -20,8 +20,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.cbor.CBORFactory;
 import com.webauthn4j.converter.util.ObjectConverter;
 import com.webauthn4j.metadata.converter.jackson.WebAuthnMetadataJSONModule;
-import com.webauthn4j.springframework.security.WebAuthnRegistrationRequestValidator;
-import com.webauthn4j.springframework.security.authenticator.WebAuthnAuthenticatorManager;
 import com.webauthn4j.springframework.security.authenticator.WebAuthnAuthenticatorService;
 import com.webauthn4j.springframework.security.challenge.ChallengeRepository;
 import com.webauthn4j.springframework.security.challenge.HttpSessionChallengeRepository;
@@ -32,7 +30,6 @@ import com.webauthn4j.springframework.security.server.ServerPropertyProvider;
 import com.webauthn4j.springframework.security.server.ServerPropertyProviderImpl;
 import org.springframework.context.ApplicationContext;
 import org.springframework.security.config.annotation.web.HttpSecurityBuilder;
-import org.springframework.security.core.userdetails.UserDetailsService;
 
 /**
  * Internal utility for WebAuthn Configurers
@@ -54,17 +51,20 @@ class WebAuthnConfigurerUtil {
         return challengeRepository;
     }
 
+    public static <H extends HttpSecurityBuilder<H>> WebAuthnAuthenticatorService getWebAuthnAuthenticatorService(H http){
+        ApplicationContext applicationContext = http.getSharedObject(ApplicationContext.class);
+        return applicationContext.getBean(WebAuthnAuthenticatorService.class);
+    }
+
     public static <H extends HttpSecurityBuilder<H>> OptionsProvider getOptionsProvider(H http) {
         ApplicationContext applicationContext = http.getSharedObject(ApplicationContext.class);
-        OptionsProvider optionsProvider;
         String[] beanNames = applicationContext.getBeanNamesForType(OptionsProvider.class);
-        if (beanNames.length == 0) {
-            WebAuthnAuthenticatorService authenticatorService = applicationContext.getBean(WebAuthnAuthenticatorService.class);
-            optionsProvider = new OptionsProviderImpl(authenticatorService, getChallengeRepository(http));
-        } else {
-            optionsProvider = applicationContext.getBean(OptionsProvider.class);
+        if(beanNames.length == 0){
+            return new OptionsProviderImpl(getWebAuthnAuthenticatorService(http), getChallengeRepository(http));
         }
-        return optionsProvider;
+        else {
+            return applicationContext.getBean(OptionsProvider.class);
+        }
     }
 
     public static <H extends HttpSecurityBuilder<H>> ObjectConverter getObjectConverter(H http) {
@@ -93,21 +93,6 @@ class WebAuthnConfigurerUtil {
             serverPropertyProvider = applicationContext.getBean(ServerPropertyProvider.class);
         }
         return serverPropertyProvider;
-    }
-
-    public static <H extends HttpSecurityBuilder<H>> UserDetailsService getUserDetailsService(H http) {
-        ApplicationContext applicationContext = http.getSharedObject(ApplicationContext.class);
-        return applicationContext.getBean(UserDetailsService.class);
-    }
-
-    public static <H extends HttpSecurityBuilder<H>> WebAuthnAuthenticatorManager getWebAuthnAuthenticatorManager(H http) {
-        ApplicationContext applicationContext = http.getSharedObject(ApplicationContext.class);
-        return applicationContext.getBean(WebAuthnAuthenticatorManager.class);
-    }
-
-    public static <H extends HttpSecurityBuilder<H>> WebAuthnRegistrationRequestValidator getWebAuthnRegistrationRequestValidator(H http) {
-        ApplicationContext applicationContext = http.getSharedObject(ApplicationContext.class);
-        return applicationContext.getBean(WebAuthnRegistrationRequestValidator.class);
     }
 
 }

@@ -18,9 +18,9 @@ package com.webauthn4j.springframework.security.endpoint;
 
 import com.webauthn4j.converter.util.JsonConverter;
 import com.webauthn4j.converter.util.ObjectConverter;
+import com.webauthn4j.data.PublicKeyCredentialRequestOptions;
 import com.webauthn4j.data.PublicKeyCredentialRpEntity;
 import com.webauthn4j.data.client.challenge.Challenge;
-import com.webauthn4j.springframework.security.options.AssertionOptions;
 import com.webauthn4j.springframework.security.options.OptionsProvider;
 import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.security.authentication.AuthenticationTrustResolver;
@@ -43,7 +43,7 @@ import java.io.IOException;
 
 /**
  * A filter for providing WebAuthn assertion option parameters to clients.
- * Clients can retrieve {@link AttestationOptionsResponse}, which includes {@link Challenge}, {@link PublicKeyCredentialRpEntity} and etc.
+ * Clients can retrieve {@link PublicKeyCredentialRequestOptions}, which includes {@link Challenge}, {@link PublicKeyCredentialRpEntity} and etc.
  */
 public class AssertionOptionsEndpointFilter extends GenericFilterBean {
 
@@ -104,25 +104,14 @@ public class AssertionOptionsEndpointFilter extends GenericFilterBean {
         }
 
         try {
-            AssertionOptionsResponse assertionOptionsResponse = processRequest(fi.getRequest());
-            writeResponse(fi.getResponse(), assertionOptionsResponse);
+            Object principal = getPrincipal();
+            PublicKeyCredentialRequestOptions assertionOptions = optionsProvider.getAssertionOptions(fi.getRequest(), principal, null);
+            writeResponse(fi.getResponse(), assertionOptions);
         } catch (RuntimeException e) {
             logger.debug(e);
             writeErrorResponse(fi.getResponse(), e);
         }
 
-    }
-
-    AssertionOptionsResponse processRequest(HttpServletRequest request) {
-        String loginUsername = getLoginUsername();
-        AssertionOptions assertionOptions = optionsProvider.getAssertionOptions(request, loginUsername, null);
-        return new AssertionOptionsResponse(
-                assertionOptions.getChallenge(),
-                assertionOptions.getTimeout(),
-                assertionOptions.getCredentials(),
-                assertionOptions.getExtensions(),
-                assertionOptions.getParameters()
-        );
     }
 
     public AuthenticationTrustResolver getTrustResolver() {
@@ -144,8 +133,8 @@ public class AssertionOptionsEndpointFilter extends GenericFilterBean {
         return (request.getRequestURI().contains(filterProcessesUrl));
     }
 
-    void writeResponse(HttpServletResponse httpServletResponse, Response response) throws IOException {
-        String responseText = jsonConverter.writeValueAsString(response);
+    void writeResponse(HttpServletResponse httpServletResponse, PublicKeyCredentialRequestOptions assertionOptions) throws IOException {
+        String responseText = jsonConverter.writeValueAsString(assertionOptions);
         httpServletResponse.setContentType("application/json");
         httpServletResponse.getWriter().print(responseText);
     }
@@ -166,12 +155,12 @@ public class AssertionOptionsEndpointFilter extends GenericFilterBean {
         httpServletResponse.setStatus(statusCode);
     }
 
-    String getLoginUsername() {
+    Object getPrincipal() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication == null || trustResolver.isAnonymous(authentication)) {
             return null;
         } else {
-            return authentication.getName();
+            return authentication.getPrincipal();
         }
     }
 

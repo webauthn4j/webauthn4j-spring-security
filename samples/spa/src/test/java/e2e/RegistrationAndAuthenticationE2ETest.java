@@ -16,7 +16,7 @@
 
 package e2e;
 
-import com.webauthn4j.springframework.security.webauthn.sample.SampleWebApplication;
+import com.webauthn4j.springframework.security.webauthn.sample.SampleSPA;
 import e2e.page.AuthenticatorLoginComponent;
 import e2e.page.PasswordLoginComponent;
 import e2e.page.ProfileComponent;
@@ -41,7 +41,7 @@ import java.time.Duration;
 import java.util.concurrent.TimeUnit;
 
 @RunWith(SpringRunner.class)
-@SpringBootTest(classes = SampleWebApplication.class, webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
+@SpringBootTest(classes = SampleSPA.class, webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 public class RegistrationAndAuthenticationE2ETest {
 
     private WebDriver driver;

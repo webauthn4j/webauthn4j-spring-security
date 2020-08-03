@@ -18,9 +18,9 @@ package com.webauthn4j.springframework.security.endpoint;
 
 import com.webauthn4j.converter.util.JsonConverter;
 import com.webauthn4j.converter.util.ObjectConverter;
+import com.webauthn4j.data.PublicKeyCredentialCreationOptions;
 import com.webauthn4j.data.PublicKeyCredentialRpEntity;
 import com.webauthn4j.data.client.challenge.Challenge;
-import com.webauthn4j.springframework.security.options.AttestationOptions;
 import com.webauthn4j.springframework.security.options.OptionsProvider;
 import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.security.authentication.AuthenticationTrustResolver;
@@ -43,7 +43,7 @@ import java.io.IOException;
 
 /**
  * A filter for providing WebAuthn attestation option parameters to clients.
- * Clients can retrieve {@link AttestationOptionsResponse}, which includes {@link Challenge}, {@link PublicKeyCredentialRpEntity} and etc.
+ * Clients can retrieve {@link PublicKeyCredentialCreationOptions}, which includes {@link Challenge}, {@link PublicKeyCredentialRpEntity} and etc.
  */
 public class AttestationOptionsEndpointFilter extends GenericFilterBean {
 
@@ -104,27 +104,14 @@ public class AttestationOptionsEndpointFilter extends GenericFilterBean {
         }
 
         try {
-            AttestationOptionsResponse attestationOptionsResponse = processRequest(fi.getRequest());
-            writeResponse(fi.getResponse(), attestationOptionsResponse);
+            Object principal = getPrincipal();
+            PublicKeyCredentialCreationOptions attestationOptions = optionsProvider.getAttestationOptions(fi.getRequest(), principal, null);
+            writeResponse(fi.getResponse(), attestationOptions);
         } catch (RuntimeException e) {
             logger.debug(e);
             writeErrorResponse(fi.getResponse(), e);
         }
 
-    }
-
-    AttestationOptionsResponse processRequest(HttpServletRequest request) {
-        String loginUsername = getLoginUsername();
-        AttestationOptions attestationOptions = optionsProvider.getAttestationOptions(request, loginUsername, null);
-        return new AttestationOptionsResponse(
-                attestationOptions.getRelyingParty(),
-                attestationOptions.getUser(),
-                attestationOptions.getChallenge(),
-                attestationOptions.getPubKeyCredParams(),
-                attestationOptions.getTimeout(),
-                attestationOptions.getCredentials(),
-                attestationOptions.getExtensions()
-        );
     }
 
     public AuthenticationTrustResolver getTrustResolver() {
@@ -146,8 +133,8 @@ public class AttestationOptionsEndpointFilter extends GenericFilterBean {
         return (request.getRequestURI().contains(filterProcessesUrl));
     }
 
-    void writeResponse(HttpServletResponse httpServletResponse, Response response) throws IOException {
-        String responseText = jsonConverter.writeValueAsString(response);
+    void writeResponse(HttpServletResponse httpServletResponse, PublicKeyCredentialCreationOptions attestationOptions) throws IOException {
+        String responseText = jsonConverter.writeValueAsString(attestationOptions);
         httpServletResponse.setContentType("application/json");
         httpServletResponse.getWriter().print(responseText);
     }
@@ -168,12 +155,12 @@ public class AttestationOptionsEndpointFilter extends GenericFilterBean {
         httpServletResponse.setStatus(statusCode);
     }
 
-    String getLoginUsername() {
+    Object getPrincipal() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication == null || trustResolver.isAnonymous(authentication)) {
             return null;
         } else {
-            return authentication.getName();
+            return authentication.getPrincipal();
         }
     }
 

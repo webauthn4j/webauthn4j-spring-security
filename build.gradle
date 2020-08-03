@@ -47,7 +47,7 @@ apply plugin: 'org.asciidoctor.convert'
 group 'com.webauthn4j'
 version "${webAuthn4JSpringSecurityVersion}"
 
-def sampleAppProjects = subprojects.findAll { ["fido-server-conformance-test-app", "spa", "spa-angular-client"].contains(it.name) }
+def sampleAppProjects = subprojects.findAll { ["fido-server-conformance-test-app", "spa", "spa-angular-client", "mpa"].contains(it.name) }
 def webAuthn4JSpringSecurityLibraryProjects = subprojects.findAll { it.name.startsWith('webauthn4j-spring-security') }
 def allJavaProjects = new HashSet()
 allJavaProjects.addAll(webAuthn4JSpringSecurityLibraryProjects);

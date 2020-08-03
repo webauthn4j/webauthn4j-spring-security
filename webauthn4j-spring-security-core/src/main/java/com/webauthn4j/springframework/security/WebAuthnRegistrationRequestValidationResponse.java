@@ -16,12 +16,14 @@
 
 package com.webauthn4j.springframework.security;
 
+import com.webauthn4j.data.AuthenticatorTransport;
 import com.webauthn4j.data.attestation.AttestationObject;
 import com.webauthn4j.data.client.CollectedClientData;
 import com.webauthn4j.data.extension.client.AuthenticationExtensionsClientOutputs;
 import com.webauthn4j.data.extension.client.RegistrationExtensionClientOutput;
 
 import java.util.Objects;
+import java.util.Set;
 
 public class WebAuthnRegistrationRequestValidationResponse {
 
@@ -31,15 +33,22 @@ public class WebAuthnRegistrationRequestValidationResponse {
     private final CollectedClientData collectedClientData;
     private final AttestationObject attestationObject;
     private final AuthenticationExtensionsClientOutputs<RegistrationExtensionClientOutput> registrationExtensionsClientOutputs;
+    private final Set<AuthenticatorTransport> transports;
 
     // ~ Constructors
     // ===================================================================================================
 
-    public WebAuthnRegistrationRequestValidationResponse(CollectedClientData collectedClientData, AttestationObject attestationObject, AuthenticationExtensionsClientOutputs<RegistrationExtensionClientOutput> registrationExtensionsClientOutputs) {
+    public WebAuthnRegistrationRequestValidationResponse(
+            CollectedClientData collectedClientData,
+            AttestationObject attestationObject,
+            AuthenticationExtensionsClientOutputs<RegistrationExtensionClientOutput> registrationExtensionsClientOutputs,
+            Set<AuthenticatorTransport> transports) {
         this.collectedClientData = collectedClientData;
         this.attestationObject = attestationObject;
         this.registrationExtensionsClientOutputs = registrationExtensionsClientOutputs;
+        this.transports = transports;
     }
+
 
     // ~ Methods
     // ========================================================================================================
@@ -56,6 +65,10 @@ public class WebAuthnRegistrationRequestValidationResponse {
         return registrationExtensionsClientOutputs;
     }
 
+    public Set<AuthenticatorTransport> getTransports() {
+        return transports;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -63,13 +76,13 @@ public class WebAuthnRegistrationRequestValidationResponse {
         WebAuthnRegistrationRequestValidationResponse that = (WebAuthnRegistrationRequestValidationResponse) o;
         return Objects.equals(collectedClientData, that.collectedClientData) &&
                 Objects.equals(attestationObject, that.attestationObject) &&
-                Objects.equals(registrationExtensionsClientOutputs, that.registrationExtensionsClientOutputs);
+                Objects.equals(registrationExtensionsClientOutputs, that.registrationExtensionsClientOutputs) &&
+                Objects.equals(transports, that.transports);
     }
 
     @Override
     public int hashCode() {
-
-        return Objects.hash(collectedClientData, attestationObject, registrationExtensionsClientOutputs);
+        return Objects.hash(collectedClientData, attestationObject, registrationExtensionsClientOutputs, transports);
     }
 }
 

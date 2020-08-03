@@ -22,6 +22,7 @@ import com.webauthn4j.springframework.security.webauthn.sample.domain.entity.Aut
 import com.webauthn4j.springframework.security.webauthn.sample.domain.repository.AuthenticatorEntityRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -55,7 +56,8 @@ public class AuthenticatorManagerImpl implements AuthenticatorManager {
 
     @Override
     public List<WebAuthnAuthenticator> loadAuthenticatorsByPrincipal(Object principal) {
-        return new ArrayList<>(authenticatorEntityRepository.findAllByEmailAddress((String) principal));
+        String username = principal == null ? null : ((UserDetails) principal).getUsername();
+        return new ArrayList<>(authenticatorEntityRepository.findAllByEmailAddress(username));
     }
 
 }

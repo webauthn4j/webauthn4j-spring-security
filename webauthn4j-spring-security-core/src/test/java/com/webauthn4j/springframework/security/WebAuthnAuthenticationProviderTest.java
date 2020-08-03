@@ -87,7 +87,7 @@ public class WebAuthnAuthenticationProviderTest {
         GrantedAuthority grantedAuthority = new SimpleGrantedAuthority("ROLE_ADMIN");
         UserDetails webAuthnPrincipal = new TestUserDetailsImpl("dummy", Collections.singletonList(grantedAuthority));
         WebAuthnAuthenticator webAuthnAuthenticator = mock(WebAuthnAuthenticator.class, RETURNS_DEEP_STUBS);
-        when(webAuthnAuthenticator.getUserPrincipal()).thenReturn(webAuthnPrincipal);
+        when(webAuthnAuthenticator.getUserDetails()).thenReturn(webAuthnPrincipal);
         when(webAuthnAuthenticator.getAttestedCredentialData().getCredentialId()).thenReturn(credentialId);
 
         //When
@@ -120,7 +120,7 @@ public class WebAuthnAuthenticationProviderTest {
         GrantedAuthority grantedAuthority = new SimpleGrantedAuthority("ROLE_ADMIN");
         WebAuthnAuthenticatorImpl webAuthnAuthenticator = mock(WebAuthnAuthenticatorImpl.class, RETURNS_DEEP_STUBS);
         when(webAuthnAuthenticator.getAttestedCredentialData().getCredentialId()).thenReturn(credentialId);
-        when(webAuthnAuthenticator.getUserPrincipal()).thenReturn(new TestUserDetailsImpl("dummy", Collections.singletonList(grantedAuthority)));
+        when(webAuthnAuthenticator.getUserDetails()).thenReturn(new TestUserDetailsImpl("dummy", Collections.singletonList(grantedAuthority)));
 
         //When
         WebAuthnAuthenticationRequest request = mock(WebAuthnAuthenticationRequest.class);

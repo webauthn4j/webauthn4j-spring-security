@@ -14,21 +14,16 @@
  * limitations under the License.
  */
 
-import {WebAuthnPublicKeyCredentialDescriptor} from "./web-authn-public-key-credential-descriptor";
+package com.webauthn4j.springframework.security.exception;
 
-export interface AssertionOptionsResponse {
-  challenge: string;
-  pubKeyCredParams: PublicKeyCredentialParameters[];
-  timeout?: number,
-  rpId?: string,
-  credentials: WebAuthnPublicKeyCredentialDescriptor[];
-  parameters: {
-    username: string,
-    password: string,
-    credentialId: string,
-    clientDataJSON: string,
-    authenticatorData: string,
-    signature: string,
-    clientExtensionsJSON: string
-  };
+public class PrincipalNotFoundException extends ValidationException {
+
+    public PrincipalNotFoundException(String message) {
+        super(message);
+    }
+
+    public PrincipalNotFoundException(String message, Throwable cause) {
+        super(message, cause);
+    }
+
 }
