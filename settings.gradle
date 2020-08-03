@@ -15,7 +15,6 @@
  */
 
 include 'webauthn4j-spring-security-core'
-include 'webauthn4j-spring-security-thymeleaf'
 include 'webauthn4j-spring-security-metadata'
 include 'webauthn4j-spring-security-test'
 
