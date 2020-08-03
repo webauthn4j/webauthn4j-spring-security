@@ -31,6 +31,7 @@ public interface WebAuthnAuthenticatorManager extends WebAuthnAuthenticatorServi
      * Remove the authenticator with the given credentialId
      * @param credentialId credentialId
      */
+    @SuppressWarnings("squid:RedundantThrowsDeclarationCheck")
     void deleteAuthenticator(byte[] credentialId) throws CredentialIdNotFoundException;
 
     /**

@@ -41,6 +41,7 @@ public interface WebAuthnAuthenticatorService {
      * @return {@link WebAuthnAuthenticator}
      * @throws CredentialIdNotFoundException if the authenticator could not be found
      */
+    @SuppressWarnings("squid:RedundantThrowsDeclarationCheck")
     WebAuthnAuthenticator loadAuthenticatorByCredentialId(byte[] credentialId) throws CredentialIdNotFoundException;
 
     /**

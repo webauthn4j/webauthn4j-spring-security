@@ -54,6 +54,7 @@ public class WebAuthnAuthenticatorImpl extends AuthenticatorImpl implements WebA
      * @param clientExtensions        client extensions
      * @param authenticatorExtensions authenticator extensions
      */
+    @SuppressWarnings("java:S107")
     public WebAuthnAuthenticatorImpl(
             String name,
             UserDetails userDetails,

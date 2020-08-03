@@ -18,54 +18,51 @@ package com.webauthn4j.springframework.security.authenticator;
 
 import com.webauthn4j.springframework.security.exception.CredentialIdNotFoundException;
 import com.webauthn4j.springframework.security.exception.PrincipalNotFoundException;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
 
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class InMemoryWebAuthnAuthenticatorManager implements WebAuthnAuthenticatorManager {
 
-    private MultiValueMap<Object, WebAuthnAuthenticator> multiValueMap = new LinkedMultiValueMap<>();
+    private Map<Object, Map<byte[], WebAuthnAuthenticator>> map = new HashMap<>();
 
+    @SuppressWarnings("squid:RedundantThrowsDeclarationCheck")
     @Override
     public void updateCounter(byte[] credentialId, long counter) throws CredentialIdNotFoundException {
         WebAuthnAuthenticator webAuthnAuthenticator = this.loadAuthenticatorByCredentialId(credentialId);
         webAuthnAuthenticator.setCounter(counter);
     }
 
+    @SuppressWarnings("squid:RedundantThrowsDeclarationCheck")
     @Override
     public WebAuthnAuthenticator loadAuthenticatorByCredentialId(byte[] credentialId) throws CredentialIdNotFoundException{
-        return multiValueMap.values().stream().
-                flatMap(Collection::stream)
-                .filter(authenticator -> Arrays.equals(authenticator.getAttestedCredentialData().getCredentialId(), credentialId))
+        return map.values().stream().
+                map(innerMap -> innerMap.get(credentialId))
                 .findFirst().orElseThrow(()-> new CredentialIdNotFoundException("credentialId not found."));
     }
 
     @Override
     public List<WebAuthnAuthenticator> loadAuthenticatorsByPrincipal(Object userPrincipal) {
-        List<WebAuthnAuthenticator> list = multiValueMap.get(userPrincipal);
-        if(list == null){
+        Map<byte[], WebAuthnAuthenticator> innerMap = map.get(userPrincipal);
+        if(innerMap == null || innerMap.isEmpty()){
             throw new PrincipalNotFoundException("principal not found.");
         }
-        return list;
+        return Collections.unmodifiableList(new ArrayList<>(innerMap.values()));
     }
 
     @Override
     public void createAuthenticator(Object userPrincipal, WebAuthnAuthenticator webAuthnAuthenticator) {
-        multiValueMap.add(userPrincipal, webAuthnAuthenticator);
+        if(!map.containsKey(userPrincipal)){
+            map.put(userPrincipal, new HashMap<>());
+        }
+        map.get(userPrincipal).put(webAuthnAuthenticator.getAttestedCredentialData().getCredentialId(), webAuthnAuthenticator);
     }
 
     @Override
     public void deleteAuthenticator(byte[] credentialId) {
-        for (Map.Entry<Object, List<WebAuthnAuthenticator>> entry : multiValueMap.entrySet()){
-            WebAuthnAuthenticator webAuthnAuthenticator = entry.getValue().stream()
-                    .filter( item -> Arrays.equals(credentialId, item.getAttestedCredentialData().getCredentialId()))
-                    .findFirst().orElse(null);
+        for (Map.Entry<Object, Map<byte[], WebAuthnAuthenticator>> entry : map.entrySet()){
+            WebAuthnAuthenticator webAuthnAuthenticator = entry.getValue().get(credentialId);
             if(webAuthnAuthenticator != null){
-                multiValueMap.remove(entry.getKey(), webAuthnAuthenticator);
+                entry.getValue().remove(credentialId);
                 break;
             }
         }
@@ -74,6 +71,6 @@ public class InMemoryWebAuthnAuthenticatorManager implements WebAuthnAuthenticat
 
     @Override
     public boolean authenticatorExists(byte[] credentialId) {
-        return multiValueMap.values().stream().flatMap(Collection::stream).anyMatch( webAuthnAuthenticator -> Arrays.equals(credentialId, webAuthnAuthenticator.getAttestedCredentialData().getCredentialId()));
+        return map.values().stream().anyMatch(innerMap -> innerMap.get(credentialId) != null);
     }
 }
