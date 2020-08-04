@@ -43,7 +43,7 @@ dependencies {
     implementation('org.thymeleaf:thymeleaf-spring5')
     implementation('org.webjars:bootstrap:4.5.0')
     implementation('org.webjars:jquery:3.5.1')
-    implementation('org.webjars:font-awesome:5.8.2')
+    implementation('org.webjars:font-awesome:5.14.0')
 
 
     //Test
