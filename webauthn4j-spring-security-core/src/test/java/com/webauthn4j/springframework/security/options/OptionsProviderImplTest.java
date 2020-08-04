@@ -58,67 +58,12 @@ public class OptionsProviderImplTest {
         optionsProvider.setRpName("rpName");
         optionsProvider.setRpIcon("data://dummy");
 
-        PublicKeyCredentialCreationOptions attestationOptions = optionsProvider.getAttestationOptions(mockRequest, "dummy", null);
+        PublicKeyCredentialCreationOptions attestationOptions = optionsProvider.getAttestationOptions(mockRequest, "dummy");
         assertThat(attestationOptions.getRp().getId()).isEqualTo("example.com");
         assertThat(attestationOptions.getRp().getName()).isEqualTo("rpName");
         assertThat(attestationOptions.getRp().getIcon()).isEqualTo("data://dummy");
         assertThat(attestationOptions.getChallenge()).isEqualTo(challenge);
         assertThat(attestationOptions.getExcludeCredentials()).containsExactly(new PublicKeyCredentialDescriptor(PublicKeyCredentialType.PUBLIC_KEY, credentialId, transports));
-
-    }
-
-    @Test
-    public void getAttestationOptions_with_challenge_test() {
-        Challenge challenge = new DefaultChallenge();
-        byte[] credentialId = new byte[]{0x01, 0x23, 0x45};
-        Set<AuthenticatorTransport> transport = Collections.singleton(AuthenticatorTransport.INTERNAL);
-        WebAuthnAuthenticatorService authenticatorService = mock(WebAuthnAuthenticatorService.class);
-        WebAuthnAuthenticator authenticator = mock(WebAuthnAuthenticator.class, RETURNS_DEEP_STUBS);
-        when(authenticator.getTransports()).thenReturn(transport);
-        List<WebAuthnAuthenticator> authenticators = Collections.singletonList(authenticator);
-        ChallengeRepository challengeRepository = mock(ChallengeRepository.class);
-
-        MockHttpServletRequest mockRequest = new MockHttpServletRequest();
-
-        when(authenticatorService.loadAuthenticatorsByPrincipal(any())).thenReturn(authenticators);
-        when(authenticator.getAttestedCredentialData().getCredentialId()).thenReturn(credentialId);
-
-        OptionsProviderImpl optionsProvider = new OptionsProviderImpl(authenticatorService, challengeRepository);
-        optionsProvider.setRpId("example.com");
-        optionsProvider.setRpName("rpName");
-        optionsProvider.setRpIcon("data://dummy");
-
-        PublicKeyCredentialCreationOptions attestationOptions = optionsProvider.getAttestationOptions(mockRequest, "dummy", challenge);
-        assertThat(attestationOptions.getRp().getId()).isEqualTo("example.com");
-        assertThat(attestationOptions.getRp().getName()).isEqualTo("rpName");
-        assertThat(attestationOptions.getRp().getIcon()).isEqualTo("data://dummy");
-        assertThat(attestationOptions.getChallenge()).isEqualTo(challenge);
-        assertThat(attestationOptions.getExcludeCredentials()).containsExactly(new PublicKeyCredentialDescriptor(PublicKeyCredentialType.PUBLIC_KEY, credentialId, transport));
-
-    }
-
-    @Test
-    public void getAssertionOptions_with_challenge_test() {
-        Challenge challenge = new DefaultChallenge();
-        byte[] credentialId = new byte[]{0x01, 0x23, 0x45};
-        WebAuthnAuthenticatorService authenticatorService = mock(WebAuthnAuthenticatorService.class);
-        WebAuthnAuthenticator authenticator = mock(WebAuthnAuthenticator.class, RETURNS_DEEP_STUBS);
-        List<WebAuthnAuthenticator> authenticators = Collections.singletonList(authenticator);
-        ChallengeRepository challengeRepository = mock(ChallengeRepository.class);
-
-        MockHttpServletRequest mockRequest = new MockHttpServletRequest();
-
-        when(authenticatorService.loadAuthenticatorsByPrincipal(any())).thenReturn(authenticators);
-        when(authenticator.getAttestedCredentialData().getCredentialId()).thenReturn(credentialId);
-
-        OptionsProviderImpl optionsProvider = new OptionsProviderImpl(authenticatorService, challengeRepository);
-        optionsProvider.setRpId("example.com");
-        optionsProvider.setRpName("rpName");
-
-        PublicKeyCredentialRequestOptions assertionOptions = optionsProvider.getAssertionOptions(mockRequest, "dummy", challenge);
-        assertThat(assertionOptions.getRpId()).isEqualTo("example.com");
-        assertThat(assertionOptions.getChallenge()).isEqualTo(challenge);
-        assertThat(assertionOptions.getAllowCredentials().stream().map(PublicKeyCredentialDescriptor::getId)).containsExactly(credentialId);
 
     }
 

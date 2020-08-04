@@ -79,7 +79,9 @@ public class WebSecurityBeanConfig {
 
     @Bean
     public OptionsProvider optionsProvider(WebAuthnAuthenticatorService webAuthnAuthenticatorService, PublicKeyCredentialUserEntityService publicKeyCredentialUserEntityService, ChallengeRepository challengeRepository) {
-        return new OptionsProviderImpl(webAuthnAuthenticatorService, publicKeyCredentialUserEntityService, challengeRepository);
+        OptionsProviderImpl optionsProviderImpl = new OptionsProviderImpl(webAuthnAuthenticatorService, challengeRepository);
+        optionsProviderImpl.setPublicKeyCredentialUserEntityService(publicKeyCredentialUserEntityService);
+        return optionsProviderImpl;
     }
 
     @Bean

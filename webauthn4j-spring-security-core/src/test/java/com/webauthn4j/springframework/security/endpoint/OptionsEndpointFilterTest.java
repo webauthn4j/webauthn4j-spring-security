@@ -59,9 +59,9 @@ public class OptionsEndpointFilterTest {
     public void doFilter_test() throws IOException, ServletException {
         OptionsProvider optionsProvider = mock(OptionsProvider.class);
         PublicKeyCredentialCreationOptions attestationOptions = new PublicKeyCredentialCreationOptions(null, null, null, null, null, Collections.emptyList(), null, null, null);
-        when(optionsProvider.getAttestationOptions(any(), any(), any())).thenReturn(attestationOptions);
+        when(optionsProvider.getAttestationOptions(any(), any())).thenReturn(attestationOptions);
         PublicKeyCredentialRequestOptions assertionOptions = new PublicKeyCredentialRequestOptions(null, null, null, null, null,null);
-        when(optionsProvider.getAssertionOptions(any(), any(), any())).thenReturn(assertionOptions);
+        when(optionsProvider.getAssertionOptions(any(), any())).thenReturn(assertionOptions);
         AttestationOptionsEndpointFilter optionsEndpointFilter = new AttestationOptionsEndpointFilter(optionsProvider, objectConverter);
         AuthenticationTrustResolver trustResolver = new AuthenticationTrustResolverImpl();
         optionsEndpointFilter.setTrustResolver(trustResolver);
@@ -78,7 +78,7 @@ public class OptionsEndpointFilterTest {
     @Test
     public void doFilter_with_error_test() throws IOException, ServletException {
         OptionsProvider optionsProvider = mock(OptionsProvider.class);
-        doThrow(new RuntimeException()).when(optionsProvider).getAttestationOptions(any(), any(), any());
+        doThrow(new RuntimeException()).when(optionsProvider).getAttestationOptions(any(), any());
         AttestationOptionsEndpointFilter optionsEndpointFilter = new AttestationOptionsEndpointFilter(optionsProvider, objectConverter);
         AuthenticationTrustResolver trustResolver = new AuthenticationTrustResolverImpl();
         optionsEndpointFilter.setTrustResolver(trustResolver);

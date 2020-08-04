@@ -54,29 +54,25 @@ public class OptionsProviderImpl implements OptionsProvider {
     private UserVerificationRequirement authenticationUserVerification;
     private Long registrationTimeout = null;
     private Long authenticationTimeout = null;
-    private AuthenticationExtensionsClientInputs<RegistrationExtensionClientInput> registrationExtensions = new AuthenticationExtensionsClientInputs<>();
-    private AuthenticationExtensionsClientInputs<AuthenticationExtensionClientInput> authenticationExtensions = new AuthenticationExtensionsClientInputs<>();
+    private AuthenticationExtensionsClientInputs<RegistrationExtensionClientInput> registrationExtensions;
+    private AuthenticationExtensionsClientInputs<AuthenticationExtensionClientInput> authenticationExtensions;
 
     private final WebAuthnAuthenticatorService authenticatorService;
-    private final PublicKeyCredentialUserEntityService publicKeyCredentialUserEntityService;
+    private PublicKeyCredentialUserEntityService publicKeyCredentialUserEntityService = new DefaultPublicKeyCredentialUserEntityService();
     private final ChallengeRepository challengeRepository;
+    private AuthenticationExtensionsClientInputsProvider<RegistrationExtensionClientInput> registrationExtensionsProvider = new DefaultRegistrationExtensionsProvider();
+    private AuthenticationExtensionsClientInputsProvider<AuthenticationExtensionClientInput> authenticationExtensionsProvider = new DefaultAuthenticationExtensionsProvider();
 
     // ~ Constructors
     // ===================================================================================================
 
-    public OptionsProviderImpl(WebAuthnAuthenticatorService authenticatorService, PublicKeyCredentialUserEntityService publicKeyCredentialUserEntityService, ChallengeRepository challengeRepository) {
+    public OptionsProviderImpl(WebAuthnAuthenticatorService authenticatorService, ChallengeRepository challengeRepository) {
 
         Assert.notNull(authenticatorService, "authenticatorService must not be null");
-        Assert.notNull(publicKeyCredentialUserEntityService, "webAuthnUserHandleProvider must not be null");
         Assert.notNull(challengeRepository, "challengeRepository must not be null");
 
         this.authenticatorService = authenticatorService;
-        this.publicKeyCredentialUserEntityService = publicKeyCredentialUserEntityService;
         this.challengeRepository = challengeRepository;
-    }
-
-    public OptionsProviderImpl(WebAuthnAuthenticatorService authenticatorService, ChallengeRepository challengeRepository) {
-        this(authenticatorService, new DefaultPublicKeyCredentialUserEntityService(), challengeRepository);
     }
 
 
@@ -86,62 +82,37 @@ public class OptionsProviderImpl implements OptionsProvider {
     /**
      * {@inheritDoc}
      */
-    public PublicKeyCredentialCreationOptions getAttestationOptions(HttpServletRequest request, Object principal, Challenge challenge) {
+    public PublicKeyCredentialCreationOptions getAttestationOptions(HttpServletRequest request, Object principal) {
 
         PublicKeyCredentialUserEntity user;
-        Collection<? extends WebAuthnAuthenticator> authenticators;
-
         try {
-            authenticators = authenticatorService.loadAuthenticatorsByPrincipal(principal);
             user = publicKeyCredentialUserEntityService.loadUserByPrincipal(principal);
         } catch (PrincipalNotFoundException e) {
-            authenticators = Collections.emptyList();
             user = null;
         }
 
-        List<PublicKeyCredentialDescriptor> credentials = new ArrayList<>();
-        for (WebAuthnAuthenticator authenticator : authenticators) {
-            byte[] credentialId = authenticator.getAttestedCredentialData().getCredentialId();
-            credentials.add(new PublicKeyCredentialDescriptor(PublicKeyCredentialType.PUBLIC_KEY, credentialId, authenticator.getTransports()));
-        }
-
+        List<PublicKeyCredentialDescriptor> credentials = getCredentials(principal);
         PublicKeyCredentialRpEntity relyingParty = new PublicKeyCredentialRpEntity(getEffectiveRpId(request), rpName, rpIcon);
-        if (challenge == null) {
-            challenge = challengeRepository.loadOrGenerateChallenge(request);
-        } else {
-            challengeRepository.saveChallenge(challenge, request);
-        }
+        Challenge challenge = challengeRepository.loadOrGenerateChallenge(request);
 
         return new PublicKeyCredentialCreationOptions(
                 relyingParty, user, challenge, pubKeyCredParams, registrationTimeout,
-                credentials, registrationAuthenticatorSelection, attestation, registrationExtensions);
+                credentials, registrationAuthenticatorSelection, attestation, registrationExtensionsProvider.provide(request));
     }
 
     /**
      * {@inheritDoc}
      */
-    public PublicKeyCredentialRequestOptions getAssertionOptions(HttpServletRequest request, Object principal, Challenge challenge) {
-
-        Collection<? extends WebAuthnAuthenticator> authenticators;
-        try {
-            authenticators = authenticatorService.loadAuthenticatorsByPrincipal(principal);
-        } catch (PrincipalNotFoundException e) {
-            authenticators = Collections.emptyList();
-        }
+    public PublicKeyCredentialRequestOptions getAssertionOptions(HttpServletRequest request, Object principal) {
 
         String effectiveRpId = getEffectiveRpId(request);
 
-        List<PublicKeyCredentialDescriptor> credentials = new ArrayList<>();
-        for (WebAuthnAuthenticator authenticator : authenticators) {
-            credentials.add(new PublicKeyCredentialDescriptor(PublicKeyCredentialType.PUBLIC_KEY, authenticator.getAttestedCredentialData().getCredentialId(), authenticator.getTransports()));
-        }
-        if (challenge == null) {
-            challenge = challengeRepository.loadOrGenerateChallenge(request);
-        } else {
-            challengeRepository.saveChallenge(challenge, request);
-        }
+        List<PublicKeyCredentialDescriptor> credentials = getCredentials(principal);
+        Challenge challenge = challengeRepository.loadOrGenerateChallenge(request);
 
-        return new PublicKeyCredentialRequestOptions(challenge, authenticationTimeout, effectiveRpId, credentials, authenticationUserVerification, authenticationExtensions);
+        return new PublicKeyCredentialRequestOptions(
+                challenge, authenticationTimeout, effectiveRpId, credentials,
+                authenticationUserVerification, authenticationExtensionsProvider.provide(request));
     }
 
     /**
@@ -192,6 +163,30 @@ public class OptionsProviderImpl implements OptionsProvider {
         this.pubKeyCredParams = pubKeyCredParams;
     }
 
+    public AuthenticatorSelectionCriteria getRegistrationAuthenticatorSelection() {
+        return registrationAuthenticatorSelection;
+    }
+
+    public void setRegistrationAuthenticatorSelection(AuthenticatorSelectionCriteria registrationAuthenticatorSelection) {
+        this.registrationAuthenticatorSelection = registrationAuthenticatorSelection;
+    }
+
+    public AttestationConveyancePreference getAttestation() {
+        return attestation;
+    }
+
+    public void setAttestation(AttestationConveyancePreference attestation) {
+        this.attestation = attestation;
+    }
+
+    public UserVerificationRequirement getAuthenticationUserVerification() {
+        return authenticationUserVerification;
+    }
+
+    public void setAuthenticationUserVerification(UserVerificationRequirement authenticationUserVerification) {
+        this.authenticationUserVerification = authenticationUserVerification;
+    }
+
     public Long getRegistrationTimeout() {
         return registrationTimeout;
     }
@@ -228,30 +223,85 @@ public class OptionsProviderImpl implements OptionsProvider {
         this.authenticationExtensions = authenticationExtensions;
     }
 
+    public AuthenticationExtensionsClientInputsProvider<RegistrationExtensionClientInput> getRegistrationExtensionsProvider() {
+        return registrationExtensionsProvider;
+    }
+
+    public void setRegistrationExtensionsProvider(AuthenticationExtensionsClientInputsProvider<RegistrationExtensionClientInput> registrationExtensionsProvider) {
+        Assert.notNull(registrationExtensionsProvider, "registrationExtensionsProvider must not be null");
+        this.registrationExtensionsProvider = registrationExtensionsProvider;
+    }
+
+    public AuthenticationExtensionsClientInputsProvider<AuthenticationExtensionClientInput> getAuthenticationExtensionsProvider() {
+        return authenticationExtensionsProvider;
+    }
+
+    public void setAuthenticationExtensionsProvider(AuthenticationExtensionsClientInputsProvider<AuthenticationExtensionClientInput> authenticationExtensionsProvider) {
+        Assert.notNull(registrationExtensionsProvider, "registrationExtensionsProvider must not be null");
+        this.authenticationExtensionsProvider = authenticationExtensionsProvider;
+    }
+
+    public WebAuthnAuthenticatorService getAuthenticatorService() {
+        return authenticatorService;
+    }
+
+    public void setPublicKeyCredentialUserEntityService(PublicKeyCredentialUserEntityService publicKeyCredentialUserEntityService) {
+        Assert.notNull(publicKeyCredentialUserEntityService, "webAuthnUserHandleProvider must not be null");
+        this.publicKeyCredentialUserEntityService = publicKeyCredentialUserEntityService;
+    }
+
+    public PublicKeyCredentialUserEntityService getPublicKeyCredentialUserEntityService() {
+        return publicKeyCredentialUserEntityService;
+    }
+
+    protected List<PublicKeyCredentialDescriptor> getCredentials(Object principal){
+        Collection<? extends WebAuthnAuthenticator> authenticators;
+        try {
+            authenticators = authenticatorService.loadAuthenticatorsByPrincipal(principal);
+        } catch (PrincipalNotFoundException e) {
+            authenticators = Collections.emptyList();
+        }
+        List<PublicKeyCredentialDescriptor> credentials = new ArrayList<>();
+        for (WebAuthnAuthenticator authenticator : authenticators) {
+            credentials.add(new PublicKeyCredentialDescriptor(PublicKeyCredentialType.PUBLIC_KEY, authenticator.getAttestedCredentialData().getCredentialId(), authenticator.getTransports()));
+        }
+        return credentials;
+    }
+
+
     static class DefaultPublicKeyCredentialUserEntityService implements PublicKeyCredentialUserEntityService {
 
         @Override
         public PublicKeyCredentialUserEntity loadUserByPrincipal(Object principal) {
+            String username;
             if(principal instanceof UserDetails){
-                String username = ((UserDetails)principal).getUsername();
-                return new PublicKeyCredentialUserEntity(
-                        username.getBytes(StandardCharsets.UTF_8),
-                        username,
-                        username
-                );
+                username = ((UserDetails)principal).getUsername();
             }
             else if(principal instanceof String){
-                String username = (String) principal;
-                return new PublicKeyCredentialUserEntity(
-                        username.getBytes(StandardCharsets.UTF_8),
-                        username,
-                        username
-                );
-
+                username = (String) principal;
             }
             else {
                 throw new WebAuthnException("Could not determine username from principal. Please use custom PublicKeyCredentialUserEntityService instead.");
             }
+            return new PublicKeyCredentialUserEntity(
+                    username.getBytes(StandardCharsets.UTF_8),
+                    username,
+                    username
+            );
+        }
+    }
+
+    class DefaultRegistrationExtensionsProvider implements AuthenticationExtensionsClientInputsProvider<RegistrationExtensionClientInput> {
+        @Override
+        public AuthenticationExtensionsClientInputs<RegistrationExtensionClientInput> provide(HttpServletRequest httpServletRequest) {
+            return registrationExtensions;
+        }
+    }
+
+    class DefaultAuthenticationExtensionsProvider implements AuthenticationExtensionsClientInputsProvider<AuthenticationExtensionClientInput> {
+        @Override
+        public AuthenticationExtensionsClientInputs<AuthenticationExtensionClientInput> provide(HttpServletRequest httpServletRequest) {
+            return authenticationExtensions;
         }
     }
 
