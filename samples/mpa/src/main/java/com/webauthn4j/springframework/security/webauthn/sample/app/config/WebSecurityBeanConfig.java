@@ -17,6 +17,7 @@
 package com.webauthn4j.springframework.security.webauthn.sample.app.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.jsontype.NamedType;
 import com.fasterxml.jackson.dataformat.cbor.CBORFactory;
 import com.webauthn4j.WebAuthnManager;
 import com.webauthn4j.converter.util.ObjectConverter;
@@ -33,12 +34,18 @@ import com.webauthn4j.springframework.security.options.OptionsProvider;
 import com.webauthn4j.springframework.security.options.OptionsProviderImpl;
 import com.webauthn4j.springframework.security.server.ServerPropertyProvider;
 import com.webauthn4j.springframework.security.server.ServerPropertyProviderImpl;
+import com.webauthn4j.springframework.security.webauthn.sample.exp.AppleAnonymousAttestationStatement;
+import com.webauthn4j.springframework.security.webauthn.sample.exp.AppleAnonymousAttestationStatementValidator;
+import com.webauthn4j.validator.attestation.trustworthiness.certpath.NullCertPathTrustworthinessValidator;
+import com.webauthn4j.validator.attestation.trustworthiness.self.NullSelfAttestationTrustworthinessValidator;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.provisioning.UserDetailsManager;
+
+import java.util.Collections;
 
 @Configuration
 public class WebSecurityBeanConfig {
@@ -64,12 +71,16 @@ public class WebSecurityBeanConfig {
         jsonMapper.registerModule(new WebAuthnMetadataJSONModule());
         jsonMapper.registerModule(new WebAuthn4JSpringSecurityJSONModule());
         ObjectMapper cborMapper = new ObjectMapper(new CBORFactory());
+        cborMapper.registerSubtypes(new NamedType(AppleAnonymousAttestationStatement.class));
         return new ObjectConverter(jsonMapper, cborMapper);
     }
 
     @Bean
     public WebAuthnManager webAuthnManager(ObjectConverter objectConverter){
-        return WebAuthnManager.createNonStrictWebAuthnManager(objectConverter);
+        return new WebAuthnManager(Collections.singletonList(
+                new AppleAnonymousAttestationStatementValidator()),
+                new NullCertPathTrustworthinessValidator(),
+                new NullSelfAttestationTrustworthinessValidator(), objectConverter);
     }
 
     @Bean

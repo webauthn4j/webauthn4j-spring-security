@@ -56,6 +56,10 @@ dependencies {
     testImplementation("io.github.bonigarcia:webdrivermanager")
     testImplementation("org.seleniumhq.selenium:selenium-java")
 
+
+    implementation("org.apache.kerby:kerby-asn1:2.0.1")
+
+
 }
 
 test {
