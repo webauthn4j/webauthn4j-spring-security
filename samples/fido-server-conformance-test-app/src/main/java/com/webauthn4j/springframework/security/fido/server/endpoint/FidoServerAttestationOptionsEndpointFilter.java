@@ -23,6 +23,7 @@ import com.webauthn4j.data.client.challenge.Challenge;
 import com.webauthn4j.data.client.challenge.DefaultChallenge;
 import com.webauthn4j.data.extension.client.AuthenticationExtensionsClientInputs;
 import com.webauthn4j.data.extension.client.RegistrationExtensionClientInput;
+import com.webauthn4j.springframework.security.challenge.ChallengeRepository;
 import com.webauthn4j.springframework.security.options.OptionsProvider;
 import com.webauthn4j.util.Base64UrlUtil;
 import org.springframework.util.Assert;
@@ -51,10 +52,12 @@ public class FidoServerAttestationOptionsEndpointFilter extends ServerEndpointFi
     // ================================================================================================
 
     private final OptionsProvider optionsProvider;
+    private final ChallengeRepository challengeRepository;
 
-    public FidoServerAttestationOptionsEndpointFilter(ObjectConverter objectConverter, OptionsProvider optionsProvider) {
+    public FidoServerAttestationOptionsEndpointFilter(ObjectConverter objectConverter, OptionsProvider optionsProvider, ChallengeRepository challengeRepository) {
         super(FILTER_URL, objectConverter);
         this.optionsProvider = optionsProvider;
+        this.challengeRepository = challengeRepository;
         checkConfig();
     }
 
@@ -83,7 +86,8 @@ public class FidoServerAttestationOptionsEndpointFilter extends ServerEndpointFi
             String username = serverRequest.getUsername();
             String displayName = serverRequest.getDisplayName();
             Challenge challenge = serverEndpointFilterUtil.encodeUsername(new DefaultChallenge(), username);
-            PublicKeyCredentialCreationOptions attestationOptions = optionsProvider.getAttestationOptions(request, username, challenge);
+            challengeRepository.saveChallenge(challenge, request);
+            PublicKeyCredentialCreationOptions attestationOptions = optionsProvider.getAttestationOptions(request, username);
             String userHandle;
             if (attestationOptions.getUser() == null) {
                 userHandle = Base64UrlUtil.encodeToString(generateUserHandle());

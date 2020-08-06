@@ -23,6 +23,7 @@ import com.webauthn4j.data.client.challenge.Challenge;
 import com.webauthn4j.data.client.challenge.DefaultChallenge;
 import com.webauthn4j.data.extension.client.AuthenticationExtensionClientInput;
 import com.webauthn4j.data.extension.client.AuthenticationExtensionsClientInputs;
+import com.webauthn4j.springframework.security.challenge.ChallengeRepository;
 import com.webauthn4j.springframework.security.options.OptionsProvider;
 import com.webauthn4j.util.Base64UrlUtil;
 import org.springframework.util.Assert;
@@ -49,10 +50,12 @@ public class FidoServerAssertionOptionsEndpointFilter extends ServerEndpointFilt
     // ================================================================================================
 
     private final OptionsProvider optionsProvider;
+    private final ChallengeRepository challengeRepository;
 
-    public FidoServerAssertionOptionsEndpointFilter(ObjectConverter objectConverter, OptionsProvider optionsProvider) {
+    public FidoServerAssertionOptionsEndpointFilter(ObjectConverter objectConverter, OptionsProvider optionsProvider, ChallengeRepository challengeRepository) {
         super(FILTER_URL, objectConverter);
         this.optionsProvider = optionsProvider;
+        this.challengeRepository = challengeRepository;
         checkConfig();
     }
 
@@ -81,7 +84,8 @@ public class FidoServerAssertionOptionsEndpointFilter extends ServerEndpointFilt
                     objectConverter.getJsonConverter().readValue(inputStream, ServerPublicKeyCredentialGetOptionsRequest.class);
             String username = serverRequest.getUsername();
             Challenge challenge = serverEndpointFilterUtil.encodeUserVerification(new DefaultChallenge(), serverRequest.getUserVerification());
-            PublicKeyCredentialRequestOptions options = optionsProvider.getAssertionOptions(request, username, challenge);
+            challengeRepository.saveChallenge(challenge, request);
+            PublicKeyCredentialRequestOptions options = optionsProvider.getAssertionOptions(request, username);
             List<ServerPublicKeyCredentialDescriptor> credentials = options.getAllowCredentials().stream()
                     .map(credential -> new ServerPublicKeyCredentialDescriptor(credential.getType(), Base64UrlUtil.encodeToString(credential.getId()), credential.getTransports()))
                     .collect(Collectors.toList());

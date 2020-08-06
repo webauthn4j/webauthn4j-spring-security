@@ -105,7 +105,7 @@ public class AssertionOptionsEndpointFilter extends GenericFilterBean {
 
         try {
             Object principal = getPrincipal();
-            PublicKeyCredentialRequestOptions assertionOptions = optionsProvider.getAssertionOptions(fi.getRequest(), principal, null);
+            PublicKeyCredentialRequestOptions assertionOptions = optionsProvider.getAssertionOptions(fi.getRequest(), principal);
             writeResponse(fi.getResponse(), assertionOptions);
         } catch (RuntimeException e) {
             logger.debug(e);

@@ -18,7 +18,6 @@ package com.webauthn4j.springframework.security.options;
 
 import com.webauthn4j.data.PublicKeyCredentialCreationOptions;
 import com.webauthn4j.data.PublicKeyCredentialRequestOptions;
-import com.webauthn4j.data.client.challenge.Challenge;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -33,20 +32,18 @@ public interface OptionsProvider {
      *
      * @param request   request
      * @param principal principal
-     * @param challenge if null, new challenge is generated. Otherwise, specified challenge is used.
      * @return {@link PublicKeyCredentialCreationOptions} instance
      */
-    PublicKeyCredentialCreationOptions getAttestationOptions(HttpServletRequest request, Object principal, Challenge challenge);
+    PublicKeyCredentialCreationOptions getAttestationOptions(HttpServletRequest request, Object principal);
 
     /**
      * provides {@link PublicKeyCredentialRequestOptions}. If <code>username</code> is <code>null</code>, <code>credentials</code> are not populated.
      *
      * @param request   request
      * @param principal principal
-     * @param challenge if null, new challenge is generated. Otherwise, specified challenge is used.
      * @return {@link PublicKeyCredentialRequestOptions} instance
      */
-    PublicKeyCredentialRequestOptions getAssertionOptions(HttpServletRequest request, Object principal, Challenge challenge);
+    PublicKeyCredentialRequestOptions getAssertionOptions(HttpServletRequest request, Object principal);
 
     /**
      * returns effective rpId based on request origin and configured <code>rpId</code>.

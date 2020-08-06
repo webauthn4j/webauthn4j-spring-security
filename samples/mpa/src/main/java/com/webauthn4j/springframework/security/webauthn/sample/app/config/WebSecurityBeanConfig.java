@@ -83,7 +83,7 @@ public class WebSecurityBeanConfig {
     }
 
     @Bean
-    public OptionsProvider optionsProvider(WebAuthnAuthenticatorService webAuthnAuthenticatorService,  ChallengeRepository challengeRepository) {
+    public OptionsProvider optionsProvider(WebAuthnAuthenticatorService webAuthnAuthenticatorService, ChallengeRepository challengeRepository) {
         return new OptionsProviderImpl(webAuthnAuthenticatorService, challengeRepository);
     }
 

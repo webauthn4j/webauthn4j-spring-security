@@ -105,7 +105,7 @@ public class AttestationOptionsEndpointFilter extends GenericFilterBean {
 
         try {
             Object principal = getPrincipal();
-            PublicKeyCredentialCreationOptions attestationOptions = optionsProvider.getAttestationOptions(fi.getRequest(), principal, null);
+            PublicKeyCredentialCreationOptions attestationOptions = optionsProvider.getAttestationOptions(fi.getRequest(), principal);
             writeResponse(fi.getResponse(), attestationOptions);
         } catch (RuntimeException e) {
             logger.debug(e);

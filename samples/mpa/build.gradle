@@ -34,7 +34,7 @@ dependencies {
     implementation("com.fasterxml.jackson.core:jackson-databind")
     implementation("com.fasterxml.jackson.dataformat:jackson-dataformat-cbor")
 
-    implementation("org.hibernate:hibernate-validator:6.1.5.Final") //FIXME
+    implementation("org.hibernate:hibernate-validator")
 
     //Others
     implementation("org.slf4j:jcl-over-slf4j")
@@ -44,7 +44,7 @@ dependencies {
     implementation('org.webjars:bootstrap:4.5.0')
     implementation('org.webjars:jquery:3.5.1')
     implementation('org.webjars:font-awesome:5.14.0')
-
+    implementation('org.webjars:webjars-locator:0.40')
 
     //Test
     testImplementation("com.webauthn4j:webauthn4j-test")
