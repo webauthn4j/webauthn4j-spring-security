@@ -4,7 +4,7 @@ function createCredential(residentKeyRequirement){
     let username = $("#username").val();
     let userHandle = $("#userHandle").val();
 
-    return fetch('/webauthn/attestation/options').then(response => response.json()).then( options =>{
+    return $.get('/webauthn/attestation/options', null, null, "json").then( options =>{
         let publicKeyCredentialCreationOptions = {
             rp: {
                 id: options.rp.id,
@@ -36,12 +36,11 @@ function createCredential(residentKeyRequirement){
         };
 
         return navigator.credentials.create(credentialCreationOptions);
-
     });
 }
 
 function getCredential(userVerification){
-    return fetch('/webauthn/assertion/options').then(response => response.json()).then(options => {
+    return $.get('/webauthn/assertion/options', null, null, "json").then(options => {
         let publicKeyCredentialRequestOptions = {
             challenge: base64url.decodeBase64url(options.challenge),
             timeout: options.timeout,

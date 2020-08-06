@@ -14,14 +14,10 @@ spring:
     hibernate:
       ddl-auto: validate
     database-platform: org.hibernate.dialect.H2Dialect
-  redis:
-    host: localhost
-    port: 6379
-
   flyway:
     locations: classpath:db/migration/{vendor}
 server:
   servlet:
     session:
       tracking-modes: cookie
-  use-forward-headers: true
+  forward-headers-strategy: framework

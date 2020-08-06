@@ -17,6 +17,7 @@
 package com.webauthn4j.springframework.security.webauthn.sample.app.config;
 
 import com.webauthn4j.WebAuthnManager;
+import com.webauthn4j.data.AttestationConveyancePreference;
 import com.webauthn4j.data.PublicKeyCredentialType;
 import com.webauthn4j.data.attestation.statement.COSEAlgorithmIdentifier;
 import com.webauthn4j.springframework.security.authenticator.WebAuthnAuthenticatorService;
@@ -79,6 +80,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .addPublicKeyCredParams(PublicKeyCredentialType.PUBLIC_KEY, COSEAlgorithmIdentifier.RS256)  // Windows Hello
                 .addPublicKeyCredParams(PublicKeyCredentialType.PUBLIC_KEY, COSEAlgorithmIdentifier.ES256) // FIDO U2F Key, etc
                 .and()
+                .attestation(AttestationConveyancePreference.DIRECT)
                 .registrationExtensions()
                 .credProps(true)
                 .and();

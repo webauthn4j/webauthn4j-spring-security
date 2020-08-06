@@ -16,6 +16,7 @@
 
 package com.webauthn4j.springframework.security.config.configurers;
 
+import com.webauthn4j.data.AttestationConveyancePreference;
 import com.webauthn4j.data.PublicKeyCredentialParameters;
 import com.webauthn4j.data.PublicKeyCredentialType;
 import com.webauthn4j.data.attestation.statement.COSEAlgorithmIdentifier;
@@ -53,6 +54,7 @@ public class WebAuthnConfigurer<H extends HttpSecurityBuilder<H>> extends Abstra
     private String rpId = null;
     private String rpName = null;
     private String rpIcon = null;
+    private AttestationConveyancePreference attestation = null;
     private Long registrationTimeout;
     private Long authenticationTimeout;
 
@@ -101,6 +103,9 @@ public class WebAuthnConfigurer<H extends HttpSecurityBuilder<H>> extends Abstra
                 optionsProviderImpl.setRpIcon(rpIcon);
             }
             optionsProviderImpl.getPubKeyCredParams().addAll(publicKeyCredParamsConfig.publicKeyCredentialParameters);
+            if (attestation != null){
+                optionsProviderImpl.setAttestation(attestation);
+            }
             if (registrationTimeout != null) {
                 optionsProviderImpl.setRegistrationTimeout(registrationTimeout);
             }
@@ -156,6 +161,18 @@ public class WebAuthnConfigurer<H extends HttpSecurityBuilder<H>> extends Abstra
     public WebAuthnConfigurer<H>.PublicKeyCredParamsConfig publicKeyCredParams() {
         return this.publicKeyCredParamsConfig;
     }
+
+    /**
+     * The attestation conveyance preference
+     *
+     * @param attestation the attestation conveyance preference
+     * @return the {@link WebAuthnConfigurer} for additional customization
+     */
+    public WebAuthnConfigurer<H> attestation(AttestationConveyancePreference attestation) {
+        this.attestation = attestation;
+        return this;
+    }
+
 
     /**
      * The timeout for registration ceremony

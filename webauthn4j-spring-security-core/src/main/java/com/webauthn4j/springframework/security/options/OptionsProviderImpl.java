@@ -18,7 +18,6 @@ package com.webauthn4j.springframework.security.options;
 
 import com.webauthn4j.data.*;
 import com.webauthn4j.data.client.Origin;
-import com.webauthn4j.data.client.challenge.Challenge;
 import com.webauthn4j.data.extension.client.AuthenticationExtensionClientInput;
 import com.webauthn4j.data.extension.client.AuthenticationExtensionsClientInputs;
 import com.webauthn4j.data.extension.client.RegistrationExtensionClientInput;
@@ -58,8 +57,8 @@ public class OptionsProviderImpl implements OptionsProvider {
     private AuthenticationExtensionsClientInputs<AuthenticationExtensionClientInput> authenticationExtensions;
 
     private final WebAuthnAuthenticatorService authenticatorService;
-    private PublicKeyCredentialUserEntityService publicKeyCredentialUserEntityService = new DefaultPublicKeyCredentialUserEntityService();
     private final ChallengeRepository challengeRepository;
+    private PublicKeyCredentialUserEntityService publicKeyCredentialUserEntityService = new DefaultPublicKeyCredentialUserEntityService();
     private AuthenticationExtensionsClientInputsProvider<RegistrationExtensionClientInput> registrationExtensionsProvider = new DefaultRegistrationExtensionsProvider();
     private AuthenticationExtensionsClientInputsProvider<AuthenticationExtensionClientInput> authenticationExtensionsProvider = new DefaultAuthenticationExtensionsProvider();
 
@@ -84,6 +83,7 @@ public class OptionsProviderImpl implements OptionsProvider {
      */
     public PublicKeyCredentialCreationOptions getAttestationOptions(HttpServletRequest request, Object principal) {
 
+        PublicKeyCredentialRpEntity relyingParty = new PublicKeyCredentialRpEntity(getEffectiveRpId(request), rpName, rpIcon);
         PublicKeyCredentialUserEntity user;
         try {
             user = publicKeyCredentialUserEntityService.loadUserByPrincipal(principal);
@@ -91,28 +91,29 @@ public class OptionsProviderImpl implements OptionsProvider {
             user = null;
         }
 
-        List<PublicKeyCredentialDescriptor> credentials = getCredentials(principal);
-        PublicKeyCredentialRpEntity relyingParty = new PublicKeyCredentialRpEntity(getEffectiveRpId(request), rpName, rpIcon);
-        Challenge challenge = challengeRepository.loadOrGenerateChallenge(request);
-
         return new PublicKeyCredentialCreationOptions(
-                relyingParty, user, challenge, pubKeyCredParams, registrationTimeout,
-                credentials, registrationAuthenticatorSelection, attestation, registrationExtensionsProvider.provide(request));
+                relyingParty,
+                user,
+                getChallengeRepository().loadOrGenerateChallenge(request),
+                getPubKeyCredParams(),
+                getRegistrationTimeout(),
+                getCredentials(principal),
+                getRegistrationAuthenticatorSelection(),
+                getAttestation(),
+                getRegistrationExtensionsProvider().provide(request));
     }
 
     /**
      * {@inheritDoc}
      */
     public PublicKeyCredentialRequestOptions getAssertionOptions(HttpServletRequest request, Object principal) {
-
-        String effectiveRpId = getEffectiveRpId(request);
-
-        List<PublicKeyCredentialDescriptor> credentials = getCredentials(principal);
-        Challenge challenge = challengeRepository.loadOrGenerateChallenge(request);
-
         return new PublicKeyCredentialRequestOptions(
-                challenge, authenticationTimeout, effectiveRpId, credentials,
-                authenticationUserVerification, authenticationExtensionsProvider.provide(request));
+                getChallengeRepository().loadOrGenerateChallenge(request),
+                getAuthenticationTimeout(),
+                getEffectiveRpId(request),
+                getCredentials(principal),
+                getAuthenticationUserVerification(),
+                getAuthenticationExtensionsProvider().provide(request));
     }
 
     /**
@@ -254,6 +255,10 @@ public class OptionsProviderImpl implements OptionsProvider {
         return publicKeyCredentialUserEntityService;
     }
 
+    protected ChallengeRepository getChallengeRepository() {
+        return challengeRepository;
+    }
+
     protected List<PublicKeyCredentialDescriptor> getCredentials(Object principal){
         Collection<? extends WebAuthnAuthenticator> authenticators;
         try {
@@ -274,7 +279,10 @@ public class OptionsProviderImpl implements OptionsProvider {
         @Override
         public PublicKeyCredentialUserEntity loadUserByPrincipal(Object principal) {
             String username;
-            if(principal instanceof UserDetails){
+            if(principal == null){
+                return null;
+            }
+            else if(principal instanceof UserDetails){
                 username = ((UserDetails)principal).getUsername();
             }
             else if(principal instanceof String){

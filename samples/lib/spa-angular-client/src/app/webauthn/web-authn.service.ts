@@ -112,8 +112,9 @@ export class WebAuthnService {
   }
 
   static isWebAuthnAvailable(): boolean {
-    let untypedWindow: any = window;
-    return navigator.credentials && untypedWindow.PublicKeyCredential;
+    return true;
+    // let untypedWindow: any = window;
+    // return navigator.credentials && untypedWindow.PublicKeyCredential;
   }
 
   static isResidentKeyLoginAvailable(): boolean {

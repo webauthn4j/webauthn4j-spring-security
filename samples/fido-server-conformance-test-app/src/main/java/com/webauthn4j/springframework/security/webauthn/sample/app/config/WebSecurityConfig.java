@@ -18,6 +18,7 @@ package com.webauthn4j.springframework.security.webauthn.sample.app.config;
 
 import com.webauthn4j.WebAuthnManager;
 import com.webauthn4j.converter.util.ObjectConverter;
+import com.webauthn4j.data.AttestationConveyancePreference;
 import com.webauthn4j.data.PublicKeyCredentialType;
 import com.webauthn4j.data.attestation.statement.COSEAlgorithmIdentifier;
 import com.webauthn4j.springframework.security.WebAuthnRegistrationRequestValidator;
