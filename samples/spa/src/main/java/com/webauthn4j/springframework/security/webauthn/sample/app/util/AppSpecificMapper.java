@@ -20,88 +20,23 @@ import com.webauthn4j.springframework.security.webauthn.sample.app.api.Authentic
 import com.webauthn4j.springframework.security.webauthn.sample.app.api.ProfileCreateForm;
 import com.webauthn4j.springframework.security.webauthn.sample.app.api.ProfileForm;
 import com.webauthn4j.springframework.security.webauthn.sample.app.api.ProfileUpdateForm;
-import com.webauthn4j.springframework.security.webauthn.sample.app.api.admin.UserCreateForm;
-import com.webauthn4j.springframework.security.webauthn.sample.app.api.admin.UserForm;
-import com.webauthn4j.springframework.security.webauthn.sample.app.api.admin.UserUpdateForm;
 import com.webauthn4j.springframework.security.webauthn.sample.domain.entity.AuthenticatorEntity;
 import com.webauthn4j.springframework.security.webauthn.sample.domain.entity.UserEntity;
 import com.webauthn4j.springframework.security.webauthn.sample.domain.exception.WebAuthnSampleEntityNotFoundException;
 import com.webauthn4j.util.Base64UrlUtil;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Component
 public class AppSpecificMapper {
 
     @Autowired
     PasswordEncoder passwordEncoder;
-
-    public UserEntity mapForCreate(UserCreateForm userForm) {
-        UserEntity userEntity = new UserEntity();
-        userEntity.setId(null);
-        userEntity.setUserHandle(mapFromBase64Url(userForm.getUserHandle()));
-        userEntity.setFirstName(userForm.getFirstName());
-        userEntity.setLastName(userForm.getLastName());
-        userEntity.setEmailAddress(userForm.getEmailAddress());
-
-        // authenticators
-        if (userForm.getAuthenticators() == null) {
-            userForm.setAuthenticators(new ArrayList<>());
-        }
-        if (userEntity.getAuthenticators() == null) {
-            userEntity.setAuthenticators(new ArrayList<>());
-        }
-        mapToAuthenticatorListForCreate(userForm.getAuthenticators(), userEntity.getAuthenticators());
-        userEntity.getAuthenticators().forEach(authenticatorEntity -> authenticatorEntity.setUser(userEntity));
-
-        userEntity.setSingleFactorAuthenticationAllowed(userForm.isSingleFactorAuthenticationAllowed());
-        userEntity.setLocked(userForm.isLocked());
-
-        return userEntity;
-    }
-
-    public UserEntity mapForUpdate(UserUpdateForm userForm, UserEntity userEntity) {
-        userEntity.setUserHandle(mapFromBase64Url(userForm.getUserHandle()));
-        userEntity.setFirstName(userForm.getFirstName());
-        userEntity.setLastName(userForm.getLastName());
-        userEntity.setEmailAddress(userForm.getEmailAddress());
-
-        // authenticators
-        if (userForm.getAuthenticators() == null) {
-            userForm.setAuthenticators(new ArrayList<>());
-        }
-        mapToAuthenticatorListForUpdate(userForm.getAuthenticators(), userEntity.getAuthenticators());
-        userEntity.getAuthenticators().forEach(authenticatorEntity -> authenticatorEntity.setUser(userEntity));
-
-        userEntity.setSingleFactorAuthenticationAllowed(userForm.isSingleFactorAuthenticationAllowed());
-        userEntity.setLocked(userForm.isLocked());
-
-        return userEntity;
-    }
-
-    public UserForm mapToUserForm(UserEntity userEntity) {
-        UserForm userForm = new UserForm();
-        userForm.setId(userEntity.getId());
-        userForm.setUserHandle(mapToBase64Url(userEntity.getUserHandle()));
-        userForm.setFirstName(userEntity.getFirstName());
-        userForm.setLastName(userEntity.getLastName());
-        userForm.setEmailAddress(userEntity.getEmailAddress());
-
-        // authenticators
-        mapToAuthenticatorFormList(userEntity.getAuthenticators(), userForm.getAuthenticators());
-        userForm.setSingleFactorAuthenticationAllowed(userEntity.isSingleFactorAuthenticationAllowed());
-        userForm.setLocked(userEntity.isLocked());
-
-        return userForm;
-    }
 
     public ProfileForm mapToProfileForm(UserEntity userEntity) {
         ProfileForm profileForm = new ProfileForm();
@@ -117,10 +52,6 @@ public class AppSpecificMapper {
         profileForm.setSingleFactorAuthenticationAllowed(userEntity.isSingleFactorAuthenticationAllowed());
 
         return profileForm;
-    }
-
-    public Page<UserForm> mapToUserPage(Page<UserEntity> users) {
-        return new PageImpl<>(users.stream().map(this::mapToUserForm).collect(Collectors.toList()), users.getPageable(), users.getTotalElements());
     }
 
     private AuthenticatorEntity mapForCreate(AuthenticatorForm authenticatorForm) {
