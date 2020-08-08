@@ -4,12 +4,14 @@
 
 ==== Maven依存関係
 
-[line-through]#ライブラリとその依存関係を導入するために、以下をpom.xmlファイルに追加してください。# 現在、まだカスタムビルドのSpring Securityを必要とする事情から、Maven Centralへの公開は行っていません。
+[line-through]#ライブラリとその依存関係を導入するために、以下をpom.xmlファイルに追加してください。#
+
+現在、まだMaven Centralへの公開は行っていません。
 
 [source,xml]
 ----
 <dependency>
-	<groupId>com.webauthn4j.springframework.security.registrationExtensions</groupId>
+	<groupId>com.webauthn4j</groupId>
 	<artifactId>webauthn4j-spring-security-core</artifactId>
 	<version>${version}</version>
 </dependency>

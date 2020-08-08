@@ -26,18 +26,13 @@ WebAuthn4J Spring Security is a Spring Security extension module to provide Web 
 ** Google Chrome 70 or later
 ** Mozilla Firefox 60 or later
 ** Microsoft Edge bundled with Windows 10 October 2018 Update or later
+** Safari 14 or later
 
 ===== SecureContext
 
 Web Authentication API is only available in SecureContext, which means only HTTPS connection is permitted while a user accessing web sites.
 Browsers rejects Web Authentication API call if the web site is served through HTTP connection except `localhost`.
 For more details about SecureContext, please see https://developer.mozilla.org/ja/docs/Web/Security/Secure_Contexts[MDN].
-
-===== Browsers
-
-As of Jul. 2018, Google Chrome Desktop edition 67 or later and Mozilla Firefox Desktop edition 60 or later supports Web Authentication.
-Since these browsers only supports FIDO-U2F tokens, user-verifying authenticators like fingerprint reader is not supported, they can't be used for password-less authentication.
-Meanwhile Microsoft Edge only supports Web Authentication with Insider Preview Build 17682 or later, it supports not only FIDO-U2F token but also FIDO-CTAP2 roaming authenticators, and Windows Hello as platform authenticators, so Edge supports password-less authentication.
 
 === Source code
 

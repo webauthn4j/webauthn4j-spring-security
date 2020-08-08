@@ -4,12 +4,14 @@
 
 ==== Maven dependency
 
-[line-through]#Please add following to pom.xml to introduce WebAuthn4J Spring Security and its dependencies.# For now, it is not published to Maven Central.
+[line-through]#Please add following to pom.xml to introduce WebAuthn4J Spring Security and its dependencies.#
+
+For now, it is not published to Maven Central.
 
 [source,xml]
 ----
 <dependency>
-	<groupId>com.webauthn4j.springframework.security.registrationExtensions</groupId>
+	<groupId>com.webauthn4j</groupId>
 	<artifactId>webauthn4j-spring-security-core</artifactId>
 	<version>${version}</version>
 </dependency>
