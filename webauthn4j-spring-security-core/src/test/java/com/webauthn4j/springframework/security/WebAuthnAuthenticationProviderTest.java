@@ -34,6 +34,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsChecker;
 import test.TestUserDetailsImpl;
 
 import java.util.Collections;
@@ -194,21 +195,21 @@ public class WebAuthnAuthenticationProviderTest {
         authenticationProvider.retrieveAuthenticator(credentialId);
     }
 
-//    @Test
-//    public void getter_setter_test() {
-//        UserDetailsChecker preAuthenticationChecker = mock(UserDetailsChecker.class);
-//        UserDetailsChecker postAuthenticationChecker = mock(UserDetailsChecker.class);
-//
-//        authenticationProvider.setHideCredentialIdNotFoundExceptions(true);
-//        assertThat(authenticationProvider.isHideCredentialIdNotFoundExceptions()).isTrue();
-//
-//
+    @Test
+    public void getter_setter_test() {
+        UserDetailsChecker preAuthenticationChecker = mock(UserDetailsChecker.class);
+        UserDetailsChecker postAuthenticationChecker = mock(UserDetailsChecker.class);
+
+        authenticationProvider.setHideCredentialIdNotFoundExceptions(true);
+        assertThat(authenticationProvider.isHideCredentialIdNotFoundExceptions()).isTrue();
+
+
 //        authenticationProvider.setPreAuthenticationChecks(preAuthenticationChecker);
 //        assertThat(authenticationProvider.getPreAuthenticationChecks()).isEqualTo(preAuthenticationChecker);
 //        authenticationProvider.setPostAuthenticationChecks(postAuthenticationChecker);
 //        assertThat(authenticationProvider.getPostAuthenticationChecks()).isEqualTo(postAuthenticationChecker);
-//
-//    }
+
+    }
 //
 //    @Test
 //    public void userDetailsChecker_check_test() {

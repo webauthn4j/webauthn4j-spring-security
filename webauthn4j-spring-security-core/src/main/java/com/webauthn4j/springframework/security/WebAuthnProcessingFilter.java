@@ -192,6 +192,7 @@ public class WebAuthnProcessingFilter extends UsernamePasswordAuthenticationFilt
     }
 
     public void setCredentialIdParameter(String credentialIdParameter) {
+        Assert.hasText(credentialIdParameter, "credentialId parameter must not be empty or null");
         this.credentialIdParameter = credentialIdParameter;
     }
 
@@ -200,6 +201,7 @@ public class WebAuthnProcessingFilter extends UsernamePasswordAuthenticationFilt
     }
 
     public void setClientDataJSONParameter(String clientDataJSONParameter) {
+        Assert.hasText(clientDataJSONParameter, "clientDataJSON parameter must not be empty or null");
         this.clientDataJSONParameter = clientDataJSONParameter;
     }
 
@@ -208,6 +210,7 @@ public class WebAuthnProcessingFilter extends UsernamePasswordAuthenticationFilt
     }
 
     public void setAuthenticatorDataParameter(String authenticatorDataParameter) {
+        Assert.hasText(authenticatorDataParameter, "authenticatorData parameter must not be empty or null");
         this.authenticatorDataParameter = authenticatorDataParameter;
     }
 
@@ -216,6 +219,7 @@ public class WebAuthnProcessingFilter extends UsernamePasswordAuthenticationFilt
     }
 
     public void setSignatureParameter(String signatureParameter) {
+        Assert.hasText(signatureParameter, "signature parameter must not be empty or null");
         this.signatureParameter = signatureParameter;
     }
 
@@ -224,6 +228,7 @@ public class WebAuthnProcessingFilter extends UsernamePasswordAuthenticationFilt
     }
 
     public void setClientExtensionsJSONParameter(String clientExtensionsJSONParameter) {
+        Assert.hasText(clientExtensionsJSONParameter, "clientExtensionsJSON parameter must not be empty or null");
         this.clientExtensionsJSONParameter = clientExtensionsJSONParameter;
     }
 
