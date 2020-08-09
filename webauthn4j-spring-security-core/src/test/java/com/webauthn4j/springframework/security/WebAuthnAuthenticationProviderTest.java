@@ -87,7 +87,7 @@ public class WebAuthnAuthenticationProviderTest {
         GrantedAuthority grantedAuthority = new SimpleGrantedAuthority("ROLE_ADMIN");
         UserDetails webAuthnPrincipal = new TestUserDetailsImpl("dummy", Collections.singletonList(grantedAuthority));
         WebAuthnAuthenticator webAuthnAuthenticator = mock(WebAuthnAuthenticator.class, RETURNS_DEEP_STUBS);
-        when(webAuthnAuthenticator.getUserDetails()).thenReturn(webAuthnPrincipal);
+        when(webAuthnAuthenticator.getUserPrincipal()).thenReturn(webAuthnPrincipal);
         when(webAuthnAuthenticator.getAttestedCredentialData().getCredentialId()).thenReturn(credentialId);
 
         //When
@@ -104,32 +104,6 @@ public class WebAuthnAuthenticationProviderTest {
 
 
         assertThat(authenticatedToken.getPrincipal()).isEqualTo(webAuthnPrincipal);
-        assertThat(authenticatedToken.getCredentials()).isEqualTo(request);
-        assertThat(authenticatedToken.getAuthorities().toArray()).containsExactly(grantedAuthority);
-    }
-
-    /**
-     * Verifies that authentication process passes successfully if input is correct.
-     */
-    @Test
-    public void authenticate_with_forcePrincipalAsString_option_test() {
-        //Given
-        byte[] credentialId = new byte[32];
-        GrantedAuthority grantedAuthority = new SimpleGrantedAuthority("ROLE_ADMIN");
-        WebAuthnAuthenticatorImpl webAuthnAuthenticator = mock(WebAuthnAuthenticatorImpl.class, RETURNS_DEEP_STUBS);
-        when(webAuthnAuthenticator.getAttestedCredentialData().getCredentialId()).thenReturn(credentialId);
-        when(webAuthnAuthenticator.getUserDetails()).thenReturn(new TestUserDetailsImpl("dummy", Collections.singletonList(grantedAuthority)));
-
-        //When
-        WebAuthnAuthenticationRequest request = mock(WebAuthnAuthenticationRequest.class);
-        WebAuthnAuthenticationParameters parameters = mock(WebAuthnAuthenticationParameters.class);
-        when(request.getCredentialId()).thenReturn(credentialId);
-        when(authenticatorService.loadAuthenticatorByCredentialId(credentialId)).thenReturn(webAuthnAuthenticator);
-        Authentication token = new WebAuthnAssertionAuthenticationToken(request, parameters, null);
-        authenticationProvider.setForcePrincipalAsString(true);
-        Authentication authenticatedToken = authenticationProvider.authenticate(token);
-
-        assertThat(authenticatedToken.getPrincipal()).isInstanceOf(String.class);
         assertThat(authenticatedToken.getCredentials()).isEqualTo(request);
         assertThat(authenticatedToken.getAuthorities().toArray()).containsExactly(grantedAuthority);
     }

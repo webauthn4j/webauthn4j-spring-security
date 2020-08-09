@@ -55,7 +55,7 @@ public class AuthenticatorManagerImpl implements AuthenticatorManager {
     }
 
     @Override
-    public List<WebAuthnAuthenticator> loadAuthenticatorsByPrincipal(Object principal) {
+    public List<WebAuthnAuthenticator> loadAuthenticatorsByUserPrincipal(Object principal) {
         String username = principal == null ? null : ((UserDetails) principal).getUsername();
         return new ArrayList<>(authenticatorEntityRepository.findAllByEmailAddress(username));
     }

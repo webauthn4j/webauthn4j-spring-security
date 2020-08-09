@@ -19,9 +19,7 @@ package com.webauthn4j.springframework.security;
 import com.webauthn4j.server.ServerProperty;
 import com.webauthn4j.springframework.security.server.ServerPropertyProvider;
 import org.springframework.http.HttpMethod;
-import org.springframework.security.authentication.AbstractAuthenticationToken;
-import org.springframework.security.authentication.AuthenticationServiceException;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.authentication.*;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;
@@ -76,6 +74,7 @@ public class WebAuthnProcessingFilter extends UsernamePasswordAuthenticationFilt
     private String clientExtensionsJSONParameter = SPRING_SECURITY_FORM_CLIENT_EXTENSIONS_JSON_KEY;
 
     private ServerPropertyProvider serverPropertyProvider;
+    private UserVerificationStrategy userVerificationStrategy = new DefaultUserVerificationStrategy();
 
     private boolean postOnly = true;
 
@@ -159,7 +158,7 @@ public class WebAuthnProcessingFilter extends UsernamePasswordAuthenticationFilt
             );
             WebAuthnAuthenticationParameters webAuthnAuthenticationParameters = new WebAuthnAuthenticationParameters(
                     serverProperty,
-                    requiresUserVerification(),
+                    userVerificationStrategy.isUserVerificationRequired(),
                     true
             );
             AbstractAuthenticationToken authenticationToken = new WebAuthnAssertionAuthenticationToken(webAuthnAuthenticationRequest, webAuthnAuthenticationParameters, authorities);
@@ -169,14 +168,6 @@ public class WebAuthnProcessingFilter extends UsernamePasswordAuthenticationFilt
 
             return this.getAuthenticationManager().authenticate(authenticationToken);
         }
-    }
-
-    private boolean requiresUserVerification() {
-        Authentication currentAuthentication = SecurityContextHolder.getContext().getAuthentication();
-        if(currentAuthentication == null){
-            return true;
-        }
-        return !currentAuthentication.isAuthenticated();
     }
 
     /**
@@ -268,4 +259,17 @@ public class WebAuthnProcessingFilter extends UsernamePasswordAuthenticationFilt
         return request.getParameter(clientExtensionsJSONParameter);
     }
 
+    private static class DefaultUserVerificationStrategy implements UserVerificationStrategy {
+
+        private AuthenticationTrustResolver authenticationTrustResolver = new AuthenticationTrustResolverImpl();
+
+        @Override
+        public boolean isUserVerificationRequired() {
+            Authentication currentAuthentication = SecurityContextHolder.getContext().getAuthentication();
+            if(currentAuthentication == null){
+                return true;
+            }
+            return authenticationTrustResolver.isAnonymous(currentAuthentication);
+        }
+    }
 }

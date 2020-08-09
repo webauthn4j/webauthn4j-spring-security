@@ -26,6 +26,7 @@ import com.webauthn4j.springframework.security.challenge.ChallengeRepository;
 import org.assertj.core.util.Lists;
 import org.junit.Test;
 import org.springframework.mock.web.MockHttpServletRequest;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 
 import java.util.Collections;
 import java.util.List;
@@ -49,7 +50,7 @@ public class OptionsProviderImplTest {
 
         MockHttpServletRequest mockRequest = new MockHttpServletRequest();
 
-        when(authenticatorService.loadAuthenticatorsByPrincipal(any())).thenReturn(authenticators);
+        when(authenticatorService.loadAuthenticatorsByUserPrincipal(any())).thenReturn(authenticators);
         when(authenticator.getAttestedCredentialData().getCredentialId()).thenReturn(credentialId);
         when(challengeRepository.loadOrGenerateChallenge(mockRequest)).thenReturn(challenge);
 
@@ -58,7 +59,7 @@ public class OptionsProviderImplTest {
         optionsProvider.setRpName("rpName");
         optionsProvider.setRpIcon("data://dummy");
 
-        PublicKeyCredentialCreationOptions attestationOptions = optionsProvider.getAttestationOptions(mockRequest, "dummy");
+        PublicKeyCredentialCreationOptions attestationOptions = optionsProvider.getAttestationOptions(mockRequest, new UsernamePasswordAuthenticationToken("username", null));
         assertThat(attestationOptions.getRp().getId()).isEqualTo("example.com");
         assertThat(attestationOptions.getRp().getName()).isEqualTo("rpName");
         assertThat(attestationOptions.getRp().getIcon()).isEqualTo("data://dummy");

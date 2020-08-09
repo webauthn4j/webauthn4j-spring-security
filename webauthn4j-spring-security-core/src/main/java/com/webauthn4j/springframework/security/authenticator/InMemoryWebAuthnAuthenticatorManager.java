@@ -18,12 +18,13 @@ package com.webauthn4j.springframework.security.authenticator;
 
 import com.webauthn4j.springframework.security.exception.CredentialIdNotFoundException;
 import com.webauthn4j.springframework.security.exception.PrincipalNotFoundException;
+import com.webauthn4j.util.Base64UrlUtil;
 
 import java.util.*;
 
 public class InMemoryWebAuthnAuthenticatorManager implements WebAuthnAuthenticatorManager {
 
-    private Map<Object, Map<byte[], WebAuthnAuthenticator>> map = new HashMap<>();
+    private Map<Object, Map<String, WebAuthnAuthenticator>> map = new HashMap<>();
 
     @SuppressWarnings("squid:RedundantThrowsDeclarationCheck")
     @Override
@@ -36,13 +37,15 @@ public class InMemoryWebAuthnAuthenticatorManager implements WebAuthnAuthenticat
     @Override
     public WebAuthnAuthenticator loadAuthenticatorByCredentialId(byte[] credentialId) throws CredentialIdNotFoundException{
         return map.values().stream().
-                map(innerMap -> innerMap.get(credentialId))
+                map(innerMap ->
+                        innerMap.get(Base64UrlUtil.encodeToString(credentialId))
+                ).filter(Objects::nonNull)
                 .findFirst().orElseThrow(()-> new CredentialIdNotFoundException("credentialId not found."));
     }
 
     @Override
-    public List<WebAuthnAuthenticator> loadAuthenticatorsByPrincipal(Object userPrincipal) {
-        Map<byte[], WebAuthnAuthenticator> innerMap = map.get(userPrincipal);
+    public List<WebAuthnAuthenticator> loadAuthenticatorsByUserPrincipal(Object userPrincipal) {
+        Map<String, WebAuthnAuthenticator> innerMap = map.get(userPrincipal);
         if(innerMap == null || innerMap.isEmpty()){
             throw new PrincipalNotFoundException("principal not found.");
         }
@@ -50,20 +53,21 @@ public class InMemoryWebAuthnAuthenticatorManager implements WebAuthnAuthenticat
     }
 
     @Override
-    public void createAuthenticator(Object userPrincipal, WebAuthnAuthenticator webAuthnAuthenticator) {
+    public void createAuthenticator(WebAuthnAuthenticator webAuthnAuthenticator) {
+        Object userPrincipal = webAuthnAuthenticator.getUserPrincipal();
         if(!map.containsKey(userPrincipal)){
             map.put(userPrincipal, new HashMap<>());
         }
-        map.get(userPrincipal).put(webAuthnAuthenticator.getAttestedCredentialData().getCredentialId(), webAuthnAuthenticator);
+        map.get(userPrincipal).put(Base64UrlUtil.encodeToString(webAuthnAuthenticator.getAttestedCredentialData().getCredentialId()), webAuthnAuthenticator);
     }
 
     @Override
     public void deleteAuthenticator(byte[] credentialId) {
-        for (Map.Entry<Object, Map<byte[], WebAuthnAuthenticator>> entry : map.entrySet()){
-            WebAuthnAuthenticator webAuthnAuthenticator = entry.getValue().get(credentialId);
+        for (Map.Entry<Object, Map<String, WebAuthnAuthenticator>> entry : map.entrySet()){
+            WebAuthnAuthenticator webAuthnAuthenticator = entry.getValue().get(Base64UrlUtil.encodeToString(credentialId));
             if(webAuthnAuthenticator != null){
-                entry.getValue().remove(credentialId);
-                break;
+                entry.getValue().remove(Base64UrlUtil.encodeToString(credentialId));
+                return;
             }
         }
         throw new CredentialIdNotFoundException("credentialId not found.");
@@ -71,6 +75,6 @@ public class InMemoryWebAuthnAuthenticatorManager implements WebAuthnAuthenticat
 
     @Override
     public boolean authenticatorExists(byte[] credentialId) {
-        return map.values().stream().anyMatch(innerMap -> innerMap.get(credentialId) != null);
+        return map.values().stream().anyMatch(innerMap -> innerMap.get(Base64UrlUtil.encodeToString(credentialId)) != null);
     }
 }

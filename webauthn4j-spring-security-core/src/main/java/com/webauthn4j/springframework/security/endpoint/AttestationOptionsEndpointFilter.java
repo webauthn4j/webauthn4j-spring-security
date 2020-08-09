@@ -104,8 +104,7 @@ public class AttestationOptionsEndpointFilter extends GenericFilterBean {
         }
 
         try {
-            Object principal = getPrincipal();
-            PublicKeyCredentialCreationOptions attestationOptions = optionsProvider.getAttestationOptions(fi.getRequest(), principal);
+            PublicKeyCredentialCreationOptions attestationOptions = optionsProvider.getAttestationOptions(fi.getRequest(), getAuthentication());
             writeResponse(fi.getResponse(), attestationOptions);
         } catch (RuntimeException e) {
             logger.debug(e);
@@ -155,13 +154,8 @@ public class AttestationOptionsEndpointFilter extends GenericFilterBean {
         httpServletResponse.setStatus(statusCode);
     }
 
-    Object getPrincipal() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication == null || trustResolver.isAnonymous(authentication)) {
-            return null;
-        } else {
-            return authentication.getPrincipal();
-        }
+    private Authentication getAuthentication() {
+        return SecurityContextHolder.getContext().getAuthentication();
     }
 
     public void setFilterProcessesUrl(String filterProcessesUrl) {

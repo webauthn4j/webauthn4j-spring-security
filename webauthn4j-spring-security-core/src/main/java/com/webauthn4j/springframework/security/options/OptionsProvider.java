@@ -18,6 +18,7 @@ package com.webauthn4j.springframework.security.options;
 
 import com.webauthn4j.data.PublicKeyCredentialCreationOptions;
 import com.webauthn4j.data.PublicKeyCredentialRequestOptions;
+import org.springframework.security.core.Authentication;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -31,19 +32,19 @@ public interface OptionsProvider {
      * provides {@link PublicKeyCredentialCreationOptions}. If <code>username</code> is <code>null</code>, <code>user</code>, <code>credentials</code> are not populated.
      *
      * @param request   request
-     * @param principal principal
+     * @param authentication authentication
      * @return {@link PublicKeyCredentialCreationOptions} instance
      */
-    PublicKeyCredentialCreationOptions getAttestationOptions(HttpServletRequest request, Object principal);
+    PublicKeyCredentialCreationOptions getAttestationOptions(HttpServletRequest request, Authentication authentication);
 
     /**
      * provides {@link PublicKeyCredentialRequestOptions}. If <code>username</code> is <code>null</code>, <code>credentials</code> are not populated.
      *
      * @param request   request
-     * @param principal principal
+     * @param authentication authentication
      * @return {@link PublicKeyCredentialRequestOptions} instance
      */
-    PublicKeyCredentialRequestOptions getAssertionOptions(HttpServletRequest request, Object principal);
+    PublicKeyCredentialRequestOptions getAssertionOptions(HttpServletRequest request, Authentication authentication);
 
     /**
      * returns effective rpId based on request origin and configured <code>rpId</code>.

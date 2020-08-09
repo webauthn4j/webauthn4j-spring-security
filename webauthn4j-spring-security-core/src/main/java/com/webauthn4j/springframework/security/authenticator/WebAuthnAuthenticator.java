@@ -17,7 +17,6 @@
 package com.webauthn4j.springframework.security.authenticator;
 
 import com.webauthn4j.authenticator.Authenticator;
-import org.springframework.security.core.userdetails.UserDetails;
 
 /**
  * Models core authenticator information retrieved by a {@link WebAuthnAuthenticatorService}
@@ -26,6 +25,10 @@ import org.springframework.security.core.userdetails.UserDetails;
  */
 public interface WebAuthnAuthenticator extends Authenticator {
 
-    UserDetails getUserDetails();
+    /**
+     * Return a principal that represents user
+     * @return principal that represents user
+     */
+    Object getUserPrincipal();
 
 }

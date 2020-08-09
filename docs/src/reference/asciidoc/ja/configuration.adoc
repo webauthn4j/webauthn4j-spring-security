@@ -46,10 +46,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 ===== WebAuthnAuthenticationProviderの組込
 
 Web Authentication用の `AuthenticationProvider` である `WebAuthnAuthenticationProvider` もJavaConfigで設定可能です。
-`WebSecurityConfigurerAdapter` を継承したクラスで `WebAuthnAuthenticationProviderConfigurer` を適用して下さい。 また、パスワード＋認証デバイスによる多要素認証をサポートする場合は、 `MultiFactorAuthenticationProvider` の設定が 必要ですが、こちらは `MultiFactorAuthenticationProviderConfigurer` を適用することで可能です。
-`MultiFactorAuthenticationProvider` を使用する上での注意点として、 委譲先の `AuthenticationProvider` は
-`AuthenticationManager` に登録してはならないというものがあります。 例えば、 `DaoAuthenticationProvider` に対して 委譲する場合、 `DaoAuthenticationProvider` を `AuthenticationManager` に登録する `DaoAuthenticationConfigurer` や、
-`AuthenticationManagerBuilder#userDetailsService` は使用しないで下さい。
+`WebSecurityConfigurerAdapter` を継承したクラスで `WebAuthnAuthenticationProviderConfigurer` を適用して下さい。
 
 [source,java]
 ----
@@ -57,16 +54,14 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     public void configure(AuthenticationManagerBuilder builder) throws Exception {
         builder.apply(new WebAuthnAuthenticationConfigurer<>(userDetailsService));
-        builder.apply(new MultiFactorAuthenticationProviderConfigurer<>(daoAuthenticationProvider));
     }
 }
 ----
 
-==== ユーザーディレクトリとの統合
+==== 永続化層との統合
 
-WebAuthn4J Spring Securityは `WebAuthnUserDetailsService` インタフェースを通じてユーザーを検索します。
-`WebAuthnUserDetailsService` を実装したクラスを `WebAuthnAuthenticationProvider` および
-`MultiFactorAuthenticationProvider` の委譲先の `AuthenticationProvider` にセットして下さい。
+WebAuthn4J Spring Securityは `WebAuthnAuthenticatorService` インタフェースを通じて認証デバイスを検索します。
+`WebAuthnAuthenticatorService` を実装したクラスを `WebAuthnAuthenticationProvider` にセットして下さい。
 
 ==== 認証デバイス登録時の検証
 
@@ -78,14 +73,15 @@ WebAuthn4J Spring Securityは `WebAuthnUserDetailsService` インタフェース
 
 ==== クライアントサイドとのインタフェース仕様
 
-WebAuthentication仕様では、ブラウザのJavaScript APIが規定されており、取得したCredentialをサーバーに対して送信する インタフェースについては規定がありません。WebAuthn4J Spring Securityでは、ログインURLに対して送信されたリクエストから
+Web Authentication仕様では、ブラウザのJavaScript APIが規定されており、取得したCredentialをサーバーに対して送信する インタフェースについては規定がありません。WebAuthn4J Spring Securityでは、ログインURLに対して送信されたリクエストから
 `WebAuthnProcessingFilter` がリクエストパラメータとして `credentialId` 、`clientData` 、 `authenticatorData` 、
 `signature` 、`clientExtensionsJSON` を取得して認証を行います。 `credentialId` 、`clientData` 、 `authenticatorData` 、
 `signature` はバイナリデータの為、Base64URLエンコードして送信して下さい。
 
 ===== オプションエンドポイント仕様
 
-WebAuthentication仕様では、認証に先立ってサーバーからチャレンジを取得する必要があります。 また、FIDO-U2Fトークンを認証デバイスとして使用する場合は、第一認証要素によって特定されたユーザーに紐づけられた CredentialIdをサーバーから取得する必要があります。これらのデータを取得するためのエンドポイントとして、 WebAuthn4J Spring Securityでは`OptionsEndpointFilter`を用意しています。
+Web Authentication仕様では、認証に先立ってサーバーからチャレンジを取得する必要があります。 また、FIDO-U2Fトークンを認証デバイスとして使用する場合は、第一認証要素によって特定されたユーザーに紐づけられた CredentialIdをサーバーから取得する必要があります。
+これらのデータを取得するためのエンドポイントとして、 WebAuthn4J Spring Securityでは `AttestationOptionsEndpointFilter` と `AssertionOptionsEndpointFilter` を用意しています。
 
 === カスタマイズ
 
@@ -93,61 +89,53 @@ WebAuthentication仕様では、認証に先立ってサーバーからチャレ
 
 WebAuthn4J Spring Securityでは、認証方法として「ユーザー検証機能付き認証デバイスによるパスワードレス多要素認証」、 「パスワード＋認証デバイスによる多要素認証」、「パスワード等による単一要素認証」をサポートしています。 パスワード認証をサポートし、ユーザーへの間口を広げることも出来ますし、パスワード認証を制限することで、 セキュリティを高めることも出来ます。
 
-===== パスワード認証を制限する方法
-
-パスワード等による単一要素認証の許可・制限は、ユーザー単位で行うことが可能です。`WebAuthnUserDetails` の 基底インタフェースである `MFAUserDetails` インタフェースには、`isSingleFactorAuthenticationAllowed` メソッドが存在し、 実装クラスで `true` を返却すれば、そのユーザーはパスワードなどの第一認証要素だけで認証をパスすることが出来ます。
-
-===== MultiFactorAuthenticationProvider
-
-WebAuthn4J Spring Securityは、多要素認証の実現に `MultiFactorAuthenticationProvider` を使用します。
-`MultiFactorAuthenticationProvider` はSpring Securityで多要素認証を実現するための `AuthenticationProvider`
-インタフェースの実装で、認証処理自体は別の `AuthenticationProvider` に委譲します。 委譲先の `AuthenticationProvider` での認証処理が成功し、単一要素認証が許可されていない場合、
-`MultiFactorAuthenticationProvider` は委譲先の `AuthenticationProvider` の返却した `Authentication` の代わりに
-`MultiFactorAuthenticationToken` を返却します。
-
-`MultiFactorAuthenticationToken` は多要素認証における複数の認証要素の内、一部が完了し、一部が未完了であることを示す
-`Authentication` インタフェースの実装です。`AnonymousAuthenticationToken` と同様に、 認証が完了していないPrincipalとして扱われます。
-
-WebAuthn4J Spring Securityでパスワード＋認証デバイスによる多要素認証を実現するには、パスワード認証のための
-`DaoAuthenticationProvider` を委譲先とした `MultiFactorAuthenticationProvider` を用意し、
-`MultiFactorAuthenticationProvider` のみ `AuthenticationManager` に登録する必要があります。 委譲先である `DaoAuthenticationProvider` は `AuthenticationManager` にセットしてはいけません。 これは、委譲先の `AuthenticationProvider` が `MultiFactorAuthenticationProvider` を経由せずに `Authentication` を 処理してしまうと、 `MultiFactorAuthenticationToken` が返却されず、パスワードのみによる単一要素認証となってしまうためです。
-
 ===== WebAuthnAuthenticationProvider
 
 `WebAuthnAuthenticationProvider` は `WebAuthnAssertionAuthenticationToken` を処理するための `AuthenticationProvider`
 インタフェースの実装です。WebAuthnのアサーションの検証には `WebAuthnAuthenticationContextValidator` を使用します。
 `WebAuthnAuthenticationContextValidator` については https://webauthn4j.github.io/webauthn4j/ja/[WebAuthn4Jのリファレンス] を参照して下さい。
 
+===== パスワード認証の実装
+
+「パスワード＋認証デバイスによる多要素認証」、「パスワード等による単一要素認証」をサポートする場合、 `WebAuthnAuthenticationProvider` に加えて、 `DaoAuthenticationProvider` を構成し、 `UsernamePasswordAuthenticationToken` を処理できるようにする必要があります。
+パスワード認証に加えてWebAuthnの認証デバイスによる追加の認証が必要なページは、WebAuthnで認証されているかを認可要件に含めることで実装出来ます。
+
+WebAuthnで認証されているかは、 `WebAuthnSecurityExpression#isWebAuthnAuthenticated` メソッドでチェック可能です。WebAuthnSecurityExpressionのインスタンスをBean登録し、JavaConfigから呼び出してください。
+WebAuthn4J Spring Security Sample MPA で実装例を示しているので、参考にして下さい。
+
 === 高度なトピック
 
 ==== 多要素認証で第一要素のみ認証完了したユーザーの識別
 
-多要素認証で第一要素のみ認証完了しているユーザーに対して、認証デバイスを要求する画面など、異なるログインページを 表示したい場合、以下のように現在の `Authentication` インスタンスが `MultiFactorAuthenticationToken` か否かで 判断することが出来ます。
+多要素認証で第一要素のみ認証完了しているユーザーに対して認証デバイスを要求する画面など、異なるログインページを表示したい場合があります。
+以下のように現在の `Authentication` インスタンスが未ログインか否かで画面を切り替えるのが一つの方法です。
 
 [source,java]
 ----
 @RequestMapping(value = "/login", method = RequestMethod.GET)
 public String login() {
-    Authentication authentication =
-            SecurityContextHolder.getContext().getAuthentication();
-    if (authentication instanceof MultiFactorAuthenticationToken) {
-        return ViewNames.VIEW_LOGIN_AUTHENTICATOR_LOGIN;
+    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+    if (authenticationTrustResolver.isAnonymous(authentication)) {
+        return VIEW_LOGIN_LOGIN;
     } else {
-        return ViewNames.VIEW_LOGIN_LOGIN;
+        return VIEW_LOGIN_AUTHENTICATOR_LOGIN;
     }
 }
 ----
 
 ==== Credentialの有効範囲（RpId）設定
 
-Web Authentication仕様では、Credentialの作成時、即ち認証デバイスの登録時、そのCredentialの有効範囲を制限するための パラメータとして、 `rpId` を指定します。 `rpId` には、 https://html.spec.whatwg.org/multipage/origin.html#concept-origin-effective-domain[effective domain] を指定することが出来ます。例えば、Credentialの作成を行った ページのドメインが `dev.example.com` だった場合に、RpIdを `dev.example.com` と指定すれば、そのCredentialは
-`dev.example.com` とそのサブドメインの範囲だけで利用できますが、 `rpId` を `example.com` とすることで、 Credentialが利用可能な範囲を `example.com` およびそのサブドメインに広げることが出来ます。
+Web Authentication仕様では、Credentialの作成時、即ち認証デバイスの登録時、そのCredentialの有効範囲を制限するための パラメータとして、 `rpId` を指定します。
+`rpId` には、 https://html.spec.whatwg.org/multipage/origin.html#concept-origin-effective-domain[effective domain] を指定することが出来ます。
+例えば、Credentialの作成を行った ページのドメインが `dev.example.com` だった場合に、RpIdを `dev.example.com` と指定すれば、そのCredentialは `dev.example.com` とそのサブドメインの範囲だけで利用できますが、 `rpId` を `example.com` とすることで、 Credentialが利用可能な範囲を `example.com` およびそのサブドメインに広げることが出来ます。
 
-WebAuthn4J Spring Securityでは、 `rpId` は `ServerPropertyProviderImpl` のプロパティとして設定可能です。
+WebAuthn4J Spring Securityでは、 `rpId` は `ServerPropertyProviderImpl` のプロパティとして設定可能で、JavaConfigでは、 `WebAuthnConfigurer` を通じて設定可能です。
 
 ==== 構成証明ステートメントの検証
 
-Web Authentication仕様では、認証デバイスの登録時に要求すれば認証デバイスの構成証明ステートメントを取得することが出来ます。 Relying Partyは取得した構成証明ステートメントを検証することで、セキュリティ要件に合致しない認証デバイスを除外する ことが可能です。 但し、構成証明ステートメントにはユーザーのサイトを跨いだトラッキングに利用できる情報が含まれていることから、無闇に 要求するべきではありません。また、構成証明ステートメントを要求した場合、ブラウザはユーザーに対して追加のダイアログを 表示するため、ユーザビリティが低下することも注意が必要です。認証デバイスの厳密な検証が必要なエンタープライズ用途以外、 通常のB2Cサイトでは、構成証明ステートメントの要求を行うべきではないでしょう。
+Web Authentication仕様では、認証デバイスの登録時に要求すれば認証デバイスの構成証明ステートメントを取得することが出来ます。
+Relying Partyは取得した構成証明ステートメントを検証することで、セキュリティ要件に合致しない認証デバイスの受け入れを拒否することが可能です。
+但し、構成証明ステートメントにはユーザーのサイトを跨いだトラッキングに利用できる情報が含まれていることから、無闇に 要求するべきではありません。また、構成証明ステートメントを要求した場合、ブラウザはユーザーに対して追加のダイアログを 表示するため、ユーザビリティが低下することも注意が必要です。認証デバイスの厳密な検証が必要なエンタープライズ用途以外、 通常のB2Cサイトでは、構成証明ステートメントの要求を行うべきではないでしょう。
 
 WebAuthn4Jでは、`WebAuthnRegistrationContextValidator` が認証デバイスの登録要求の検証を行いますが、 取得した構成証明ステートメントの署名と信頼性の検証は、それぞれ `AttestationStatementValidator` と
 `CertPathTrustworthinessValidator` インタフェースの実装に委譲します。

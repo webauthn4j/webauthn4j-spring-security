@@ -14,20 +14,10 @@
  * limitations under the License.
  */
 
-package com.webauthn4j.springframework.security.options;
+package com.webauthn4j.springframework.security;
 
-import com.webauthn4j.data.PublicKeyCredentialUserEntity;
-import org.springframework.security.core.Authentication;
+public interface UserVerificationStrategy {
 
-/**
- * Core interface to load {@link PublicKeyCredentialUserEntity}
- */
-public interface PublicKeyCredentialUserEntityService {
+    boolean isUserVerificationRequired();
 
-    /**
-     * Load {@link PublicKeyCredentialUserEntity}
-     * @param authentication authentication
-     * @return {@link PublicKeyCredentialUserEntity}
-     */
-    PublicKeyCredentialUserEntity loadUserByAuthentication(Authentication authentication);
 }

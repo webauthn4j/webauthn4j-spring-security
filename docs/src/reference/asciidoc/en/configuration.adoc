@@ -47,14 +47,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 ===== Integrating WebAuthnAuthenticationProvider
 
 `WebAuthnAuthenticationProvider`, which is a `AuthenticationProvider` for Web Authentication, can also be configured with JavaConfig.
-Please apply `WebAuthnAuthenticationProviderConfigurer` to a configuration class inherits
-`WebSecurityConfigurerAdapter`.
-To support multi-factor authentication with password and authenticator, `MultiFactorAuthenticationProvider` is what you need, and `MultiFactorAuthenticationProviderConfigurer` configures it for you.
-
-There are some points to be kept in mind when using `MultiFactorAuthenticationProvider`.
-`AuthenticationProvider` to be delegated cannot to be registered to `AuthenticationManager`.
-If you delegate authentication to `DaoAuthenticationProvider`, it is important not to use `DaoAuthenticationConfigurer` or
-`AuthenticationManagerBuilder#userDetailsService`.
+Please apply `WebAuthnAuthenticationProviderConfigurer` to a configuration class inherits `WebSecurityConfigurerAdapter`.
 
 [source,java]
 ----
@@ -62,16 +55,14 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     public void configure(AuthenticationManagerBuilder builder) throws Exception {
         builder.apply(new WebAuthnAuthenticationConfigurer<>(userDetailsService));
-        builder.apply(new MultiFactorAuthenticationProviderConfigurer<>(daoAuthenticationProvider));
     }
 }
 ----
 
-==== User directory integration
+==== Persistence layer integration
 
-WebAuthn4J Spring Security looks up a user through the `WebAuthnUserDetailsService` interface.
-Please set a class implementing `WebAuthnUserDetailsService` to the `WebAuthnAuthenticationProvider` and the delegated
-`AuthenticationProvider`.
+WebAuthn4J Spring Security looks up a user through the `WebAuthnAuthenticatorService` interface.
+Please set a class implementing `WebAuthnAuthenticatorService` to the `WebAuthnAuthenticationProvider`.
 
 ==== Validation on an authenticator registration
 
@@ -93,7 +84,7 @@ Regarding WebAuthn4J Spring Security, `WebAuthnProcessingFilter` retrieves `cred
 
 Web Authentication requests to obtain a challenge from the server prior to authentication.
 When using the FIDO-U2F token as an authentication device, the CredentialIds associated with the user identified by the first authentication factor are also need to be obtained from the server.
-To retrieve these data, WebAuthn4J Spring Security offers `AttestationOptionsEndpointFilter`.
+To retrieve these data, WebAuthn4J Spring Security offers `AttestationOptionsEndpointFilter` and `AssertionOptionsEndpointFilter`.
 
 === Customization
 
@@ -101,28 +92,6 @@ To retrieve these data, WebAuthn4J Spring Security offers `AttestationOptionsEnd
 
 WebAuthn4J Spring Security supports "Password-less multi-factor authentication with a user-verifying authenticator", "Multi-factor authentication with password and authenticator" and "Single-factor authentication like password".
 If you put value on adoption, you may allow password authentication in your web system, or if you give greater importance to security, you may restrict password authentication.
-
-===== How to restrict password authentication
-
-Restriction of single-factor authentication like password can be configured per user basis.
-`MFAUserDetails` interface, which is a base interface of `WebAuthnUserDetails` has `isSingleFactorAuthenticationAllowed`
-method.
-If an implementing class returns `true` by the method, the user can pass the authentication with only a single-factor like password.
-
-===== MultiFactorAuthenticationProvider
-
-WebAuthn4J Spring Security utilizes `MultiFactorAuthenticationProvider` to realize multi-factor authentication.
-`MultiFactorAuthenticationProvider` is an `AuthenticationProvider` interface implementation, which delegates authentication decision itself to another `AuthenticationProvider`.
-If authentication succeeds in the delegated `AuthenticationProvider`
-and single-factor authentication is not permitted, `MultiFactorAuthenticationProvider` returns a `MultiFactorAuthenticationToken`
-instead of the `Authentication` returned from `AuthenticationProvider`.
-
-`MultiFactorAuthenticationToken` is an `Authentication` interface implementation represents partial finish of multi-factor authentication.
-It is treated as a principal that has not authenticated like `AnonymousAuthenticationToken`.
-
-To realize multi-factor authentication with password and authenticator, setup a `MultiFactorAuthenticationProvider`, delegate password authentication to a `DaoAuthenticationProvider`, and register the `MultiFactorAuthenticationProvider`
-to the `AuthenticationManager`.
-The `DaoAuthenticationProvider`, which is delegated to, must not to be registered to the `AuthenticationManager` to avoid it processes an `Authentication` directly, and finishes authentication without second-factor verification.
 
 ===== WebAuthnAuthenticationProvider
 
@@ -132,23 +101,35 @@ For WebAuthn assertion verification, `WebAuthnAuthenticationContextValidator` is
 See https://webauthn4j.github.io/webauthn4j/ja/[WebAuthn4J reference] for more details of
 `WebAuthnAuthenticationContextValidator`.
 
+===== How to realize password authentication
+
+Restriction of single-factor authentication like password can be configured per user basis.
+`MFAUserDetails` interface, which is a base interface of `WebAuthnUserDetails` has `isSingleFactorAuthenticationAllowed`
+method.
+If an implementing class returns `true` by the method, the user can pass the authentication with only a single-factor like password.
+
+To realize "Multi-factor authentication with password and authenticator" and "Single-factor authentication like password", configure not only `WebAuthnAuthenticationProvider` but also `DaoAuthenticationProvider` to process `UsernamePasswordAuthenticationToken`.
+"Multi-factor authentication with password and authenticator" can be realized by including additional authorization requirement to check a user is authenticated by WebAuthn.
+
+Whether it is authenticated by WebAuthn can be checked with the `WebAuthnSecurityExpression#isWebAuthnAuthenticated` method.
+Register a bean of WebAuthnSecurityExpression instance and call it from JavaConfig. WebAuthn4J Spring Security Sample MPA is a good example for it.
+
 === Advanced topics
 
 ==== Distinction of a user in the middle of multi-factor authentication
 
-In the case where it is needed to show a different login view like the one asks an authenticator for the user whose first factor is verified but second factor is not provided yet, the distinction can be made by checking the type of
-`Authentication` instance is a descendant of `MultiFactorAuthenticationToken` or not.
+In the case where it is needed to show a different login view like one asks an authenticator for the user whose first factor is verified but second factor is not provided yet.
+One way is to switch the view depending on whether the current `Authentication` instance is anonymous or not.
 
 [source,java]
 ----
 @RequestMapping(value = "/login", method = RequestMethod.GET)
 public String login() {
-    Authentication authentication =
-            SecurityContextHolder.getContext().getAuthentication();
-    if (authentication instanceof MultiFactorAuthenticationToken) {
-        return ViewNames.VIEW_LOGIN_AUTHENTICATOR_LOGIN;
+    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+    if (authenticationTrustResolver.isAnonymous(authentication)) {
+        return VIEW_LOGIN_LOGIN;
     } else {
-        return ViewNames.VIEW_LOGIN_LOGIN;
+        return VIEW_LOGIN_AUTHENTICATOR_LOGIN;
     }
 }
 ----
@@ -161,7 +142,7 @@ For example, in the case where the domain of the site is `webauthn.example.com`,
 `rpId`, the credential is only available in `webauthn.example.com` and its sub-domain, but if `example.com`
 is set to `rpId`, the scope of the credential is relaxed to `example.com` and its sub-domain.
 
-WebAuthn4J Spring Security supports `rpId` configuration through the `rpId` property of `ServerPropertyProviderImpl`.
+WebAuthn4J Spring Security supports `rpId` configuration through the `rpId` property of `ServerPropertyProviderImpl`, which can be configured through `WebAuthnConfigurer` in JavaConfig.
 
 ==== Attestation statement verification
 

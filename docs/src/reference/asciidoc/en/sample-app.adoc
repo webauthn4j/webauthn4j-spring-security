@@ -1,6 +1,8 @@
 == Sample application
 
 WebAuthn4J Spring Security contains a sample application demonstrates its major functionality.
+Sample SPA is a demo of Single Page Application. Sample MPA is a demo of traditional Multi Page Application.
+Sample SPA is explained below.
 
 === Sample application execution
 

@@ -24,8 +24,8 @@ import com.webauthn4j.data.extension.authenticator.AuthenticationExtensionsAuthe
 import com.webauthn4j.data.extension.authenticator.RegistrationExtensionAuthenticatorOutput;
 import com.webauthn4j.data.extension.client.AuthenticationExtensionsClientOutputs;
 import com.webauthn4j.data.extension.client.RegistrationExtensionClientOutput;
-import org.springframework.security.core.userdetails.UserDetails;
 
+import java.io.Serializable;
 import java.util.Objects;
 import java.util.Set;
 
@@ -37,7 +37,7 @@ public class WebAuthnAuthenticatorImpl extends AuthenticatorImpl implements WebA
     // ~ Instance fields
     // ================================================================================================
     private String name;
-    private UserDetails userDetails;
+    private Serializable userPrincipal;
 
     // ~ Constructor
     // ========================================================================================================
@@ -46,7 +46,7 @@ public class WebAuthnAuthenticatorImpl extends AuthenticatorImpl implements WebA
      * Constructor
      *
      * @param name                    authenticator's friendly name
-     * @param userDetails             userDetails
+     * @param userPrincipal           principal that represents user
      * @param attestedCredentialData  attested credential data
      * @param attestationStatement    attestation statement
      * @param counter                 counter
@@ -57,7 +57,7 @@ public class WebAuthnAuthenticatorImpl extends AuthenticatorImpl implements WebA
     @SuppressWarnings("java:S107")
     public WebAuthnAuthenticatorImpl(
             String name,
-            UserDetails userDetails,
+            Serializable userPrincipal,
             AttestedCredentialData attestedCredentialData,
             AttestationStatement attestationStatement,
             long counter,
@@ -66,25 +66,25 @@ public class WebAuthnAuthenticatorImpl extends AuthenticatorImpl implements WebA
             AuthenticationExtensionsAuthenticatorOutputs<RegistrationExtensionAuthenticatorOutput> authenticatorExtensions) {
         super(attestedCredentialData, attestationStatement, counter, transports, clientExtensions, authenticatorExtensions);
         this.setName(name);
-        this.userDetails = userDetails;
+        this.userPrincipal = userPrincipal;
     }
 
     /**
      * Constructor
      *
      * @param name                    authenticator's friendly name
-     * @param userDetails             userDetails
+     * @param userPrincipal           principal that represents user
      * @param attestedCredentialData  attested credential data
      * @param attestationStatement    attestation statement
      * @param counter                 counter
      */
     public WebAuthnAuthenticatorImpl(
             String name,
-            UserDetails userDetails,
+            Serializable userPrincipal,
             AttestedCredentialData attestedCredentialData,
             AttestationStatement attestationStatement,
             long counter) {
-        this(name, userDetails, attestedCredentialData, attestationStatement, counter, null, null, null);
+        this(name, userPrincipal, attestedCredentialData, attestationStatement, counter, null, null, null);
     }
 
     // ~ Methods
@@ -101,9 +101,12 @@ public class WebAuthnAuthenticatorImpl extends AuthenticatorImpl implements WebA
         this.name = name;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public UserDetails getUserDetails() {
-        return userDetails;
+    public Serializable getUserPrincipal() {
+        return userPrincipal;
     }
 
     /**

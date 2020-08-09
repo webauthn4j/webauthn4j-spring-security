@@ -99,7 +99,7 @@ public class AuthenticatorEntity implements WebAuthnAuthenticator {
     }
 
     @Override
-    public UserDetails getUserDetails() {
+    public UserDetails getUserPrincipal() {
         return getUser();
     }
 

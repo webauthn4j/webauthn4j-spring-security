@@ -19,6 +19,7 @@ package com.webauthn4j.springframework.security.webauthn.sample.domain.component
 import com.webauthn4j.data.PublicKeyCredentialUserEntity;
 import com.webauthn4j.springframework.security.options.PublicKeyCredentialUserEntityService;
 import com.webauthn4j.springframework.security.webauthn.sample.domain.entity.UserEntity;
+import org.springframework.security.core.Authentication;
 
 public class PublicKeyCredentialUserEntityServiceImpl implements PublicKeyCredentialUserEntityService {
 
@@ -29,8 +30,9 @@ public class PublicKeyCredentialUserEntityServiceImpl implements PublicKeyCreden
     }
 
     @Override
-    public PublicKeyCredentialUserEntity loadUserByPrincipal(Object principal) {
-        UserEntity userEntity = userManager.loadUserByUsername((String) principal);
+    public PublicKeyCredentialUserEntity loadUserByAuthentication(Authentication authentication) {
+        String username = authentication.getName();
+        UserEntity userEntity = userManager.loadUserByUsername(username);
         return new PublicKeyCredentialUserEntity(
                 userEntity.getUserHandle(),
                 userEntity.getUsername(),

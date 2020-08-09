@@ -26,6 +26,8 @@ import com.webauthn4j.data.extension.client.RegistrationExtensionClientInput;
 import com.webauthn4j.springframework.security.challenge.ChallengeRepository;
 import com.webauthn4j.springframework.security.options.OptionsProvider;
 import com.webauthn4j.util.Base64UrlUtil;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.util.Assert;
 
 import javax.servlet.http.HttpServletRequest;
@@ -83,11 +85,12 @@ public class FidoServerAttestationOptionsEndpointFilter extends ServerEndpointFi
         try {
             ServerPublicKeyCredentialCreationOptionsRequest serverRequest = objectConverter.getJsonConverter()
                     .readValue(inputStream, ServerPublicKeyCredentialCreationOptionsRequest.class);
-            String username = serverRequest.getUsername();
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            String username = authentication.getName();
             String displayName = serverRequest.getDisplayName();
             Challenge challenge = serverEndpointFilterUtil.encodeUsername(new DefaultChallenge(), username);
             challengeRepository.saveChallenge(challenge, request);
-            PublicKeyCredentialCreationOptions attestationOptions = optionsProvider.getAttestationOptions(request, username);
+            PublicKeyCredentialCreationOptions attestationOptions = optionsProvider.getAttestationOptions(request, authentication);
             String userHandle;
             if (attestationOptions.getUser() == null) {
                 userHandle = Base64UrlUtil.encodeToString(generateUserHandle());

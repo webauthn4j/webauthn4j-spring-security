@@ -1,6 +1,7 @@
 == サンプルアプリケーション
 
 webauthn4j-spring-securityは主要機能をデモするサンプルアプリケーションを含みます。
+Single Page Applicationのデモである、Sample SPAと、従来型のMulti Page Applicationである、Sample MPAです。以下ではSample SPAについて説明します。
 
 === サンプルアプリケーションの実行
 
@@ -58,4 +59,3 @@ image::images/login-with-edge.png[ログイン画面（パスワードレスロ�
 image::images/login.png[ログイン画面]
 
 ログイン画面でユーザー名とパスワードを入力し、「ログイン」ボタンを押下して認証を完了してください。 認証に成功すると、画面は自動的に遷移します。
-
