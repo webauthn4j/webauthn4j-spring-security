@@ -59,5 +59,6 @@ public class WebAuthnRegistrationRequestValidationResponseTest {
         assertThat(instance.getCollectedClientData()).isEqualTo(clientData);
         assertThat(instance.getAttestationObject()).isEqualTo(attestationObject);
         assertThat(instance.getRegistrationExtensionsClientOutputs()).isEqualTo(clientExtensions);
+        assertThat(instance.getTransports()).isEqualTo(transports);
     }
 }
