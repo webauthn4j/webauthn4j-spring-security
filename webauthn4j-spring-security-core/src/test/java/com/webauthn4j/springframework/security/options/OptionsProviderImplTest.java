@@ -17,6 +17,7 @@
 package com.webauthn4j.springframework.security.options;
 
 import com.webauthn4j.data.*;
+import com.webauthn4j.data.attestation.statement.COSEAlgorithmIdentifier;
 import com.webauthn4j.data.client.challenge.Challenge;
 import com.webauthn4j.data.client.challenge.DefaultChallenge;
 import com.webauthn4j.data.extension.client.AuthenticationExtensionsClientInputs;
@@ -58,13 +59,55 @@ public class OptionsProviderImplTest {
         optionsProvider.setRpId("example.com");
         optionsProvider.setRpName("rpName");
         optionsProvider.setRpIcon("data://dummy");
+        optionsProvider.setPubKeyCredParams(Collections.singletonList(new PublicKeyCredentialParameters(PublicKeyCredentialType.PUBLIC_KEY, COSEAlgorithmIdentifier.ES256)));
+        optionsProvider.setRegistrationTimeout(10000L);
+        optionsProvider.setRegistrationExtensions(new AuthenticationExtensionsClientInputs<>());
 
         PublicKeyCredentialCreationOptions attestationOptions = optionsProvider.getAttestationOptions(mockRequest, new UsernamePasswordAuthenticationToken("username", null));
         assertThat(attestationOptions.getRp().getId()).isEqualTo("example.com");
         assertThat(attestationOptions.getRp().getName()).isEqualTo("rpName");
         assertThat(attestationOptions.getRp().getIcon()).isEqualTo("data://dummy");
+        assertThat(attestationOptions.getUser()).isEqualTo(new PublicKeyCredentialUserEntity("username".getBytes(), "username", "username"));
         assertThat(attestationOptions.getChallenge()).isEqualTo(challenge);
+        assertThat(attestationOptions.getPubKeyCredParams()).isEqualTo(Collections.singletonList(new PublicKeyCredentialParameters(PublicKeyCredentialType.PUBLIC_KEY, COSEAlgorithmIdentifier.ES256)));
+        assertThat(attestationOptions.getTimeout()).isEqualTo(10000L);
         assertThat(attestationOptions.getExcludeCredentials()).containsExactly(new PublicKeyCredentialDescriptor(PublicKeyCredentialType.PUBLIC_KEY, credentialId, transports));
+        assertThat(attestationOptions.getExtensions()).isEqualTo(new AuthenticationExtensionsClientInputs<>());
+
+    }
+
+    @Test
+    public void getAssertionOptions_test() {
+        Challenge challenge = new DefaultChallenge();
+        byte[] credentialId = new byte[]{0x01, 0x23, 0x45};
+        Set<AuthenticatorTransport> transports = Collections.singleton(AuthenticatorTransport.INTERNAL);
+        WebAuthnAuthenticatorService authenticatorService = mock(WebAuthnAuthenticatorService.class);
+        WebAuthnAuthenticator authenticator = mock(WebAuthnAuthenticator.class, RETURNS_DEEP_STUBS);
+        when(authenticator.getTransports()).thenReturn(transports);
+        List<WebAuthnAuthenticator> authenticators = Collections.singletonList(authenticator);
+        ChallengeRepository challengeRepository = mock(ChallengeRepository.class);
+
+        MockHttpServletRequest mockRequest = new MockHttpServletRequest();
+
+        when(authenticatorService.loadAuthenticatorsByUserPrincipal(any())).thenReturn(authenticators);
+        when(authenticator.getAttestedCredentialData().getCredentialId()).thenReturn(credentialId);
+        when(challengeRepository.loadOrGenerateChallenge(mockRequest)).thenReturn(challenge);
+
+        OptionsProviderImpl optionsProvider = new OptionsProviderImpl(authenticatorService, challengeRepository);
+        optionsProvider.setRpId("example.com");
+        optionsProvider.setRpName("rpName");
+        optionsProvider.setRpIcon("data://dummy");
+        optionsProvider.setAuthenticationTimeout(10000L);
+        optionsProvider.setAuthenticationUserVerification(UserVerificationRequirement.REQUIRED);
+        optionsProvider.setAuthenticationExtensions(new AuthenticationExtensionsClientInputs<>());
+
+        PublicKeyCredentialRequestOptions assertionOptions = optionsProvider.getAssertionOptions(mockRequest, new UsernamePasswordAuthenticationToken("username", null));
+        assertThat(assertionOptions.getChallenge()).isEqualTo(challenge);
+        assertThat(assertionOptions.getTimeout()).isEqualTo(10000L);
+        assertThat(assertionOptions.getRpId()).isEqualTo("example.com");
+        assertThat(assertionOptions.getAllowCredentials()).containsExactly(new PublicKeyCredentialDescriptor(PublicKeyCredentialType.PUBLIC_KEY, credentialId, transports));
+        assertThat(assertionOptions.getUserVerification()).isEqualTo(UserVerificationRequirement.REQUIRED);
+        assertThat(assertionOptions.getExtensions()).isEqualTo(new AuthenticationExtensionsClientInputs<>());
 
     }
 

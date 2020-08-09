@@ -22,11 +22,12 @@ import com.webauthn4j.springframework.security.webauthn.sample.domain.entity.Aut
 import com.webauthn4j.springframework.security.webauthn.sample.domain.repository.AuthenticatorEntityRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 @Transactional
@@ -56,7 +57,19 @@ public class AuthenticatorManagerImpl implements AuthenticatorManager {
 
     @Override
     public List<WebAuthnAuthenticator> loadAuthenticatorsByUserPrincipal(Object principal) {
-        String username = principal == null ? null : ((UserDetails) principal).getUsername();
+        String username;
+        if(principal == null){
+            return Collections.emptyList();
+        }
+        else if(principal instanceof String){
+            username = (String) principal;
+        }
+        else if(principal instanceof Authentication){
+            username = ((Authentication) principal).getName();
+        }
+        else {
+            throw new IllegalArgumentException("unexpected principal is specified.");
+        }
         return new ArrayList<>(authenticatorEntityRepository.findAllByEmailAddress(username));
     }
 

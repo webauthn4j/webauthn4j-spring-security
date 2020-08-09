@@ -203,7 +203,7 @@ public class OptionsProviderImpl implements OptionsProvider {
 
     public void setAuthenticationTimeout(Long authenticationTimeout) {
         Assert.notNull(authenticationTimeout, "authenticationTimeout must not be null.");
-        Assert.isTrue(registrationTimeout >= 0, "registrationTimeout must be within unsigned long.");
+        Assert.isTrue(authenticationTimeout >= 0, "registrationTimeout must be within unsigned long.");
         this.authenticationTimeout = authenticationTimeout;
     }
 
@@ -259,6 +259,9 @@ public class OptionsProviderImpl implements OptionsProvider {
     }
 
     protected List<PublicKeyCredentialDescriptor> getCredentials(Authentication authentication){
+        if(authentication == null){
+            return Collections.emptyList();
+        }
         Collection<? extends WebAuthnAuthenticator> authenticators;
         try {
             authenticators = authenticatorService.loadAuthenticatorsByUserPrincipal(authentication.getName());
@@ -277,6 +280,9 @@ public class OptionsProviderImpl implements OptionsProvider {
 
         @Override
         public PublicKeyCredentialUserEntity loadUserByAuthentication(Authentication authentication) {
+            if(authentication == null){
+                return null;
+            }
             String username = authentication.getName();
             return new PublicKeyCredentialUserEntity(
                     username.getBytes(StandardCharsets.UTF_8),

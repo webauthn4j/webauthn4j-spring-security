@@ -75,6 +75,7 @@ public class WebAuthnProcessingFilter extends UsernamePasswordAuthenticationFilt
 
     private ServerPropertyProvider serverPropertyProvider;
     private UserVerificationStrategy userVerificationStrategy = new DefaultUserVerificationStrategy();
+    private AuthenticationTrustResolver trustResolver = new AuthenticationTrustResolverImpl();
 
     private boolean postOnly = true;
 
@@ -259,9 +260,7 @@ public class WebAuthnProcessingFilter extends UsernamePasswordAuthenticationFilt
         return request.getParameter(clientExtensionsJSONParameter);
     }
 
-    private static class DefaultUserVerificationStrategy implements UserVerificationStrategy {
-
-        private AuthenticationTrustResolver authenticationTrustResolver = new AuthenticationTrustResolverImpl();
+    private class DefaultUserVerificationStrategy implements UserVerificationStrategy {
 
         @Override
         public boolean isUserVerificationRequired() {
@@ -269,7 +268,10 @@ public class WebAuthnProcessingFilter extends UsernamePasswordAuthenticationFilt
             if(currentAuthentication == null){
                 return true;
             }
-            return authenticationTrustResolver.isAnonymous(currentAuthentication);
+            if(trustResolver.isAnonymous(currentAuthentication)){
+                return true;
+            }
+            return !currentAuthentication.isAuthenticated();
         }
     }
 }
