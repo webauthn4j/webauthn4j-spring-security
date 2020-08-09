@@ -37,7 +37,7 @@ public class WebAuthnAuthenticatorImplTest {
     public void get_set_userPrincipal_test() {
         UserDetails userDetails = mock(UserDetails.class);
         WebAuthnAuthenticatorImpl instance = new WebAuthnAuthenticatorImpl("authenticator", userDetails, null, null, 0);
-        assertThat(instance.getUserDetails()).isEqualTo(userDetails);
+        assertThat(instance.getUserPrincipal()).isEqualTo(userDetails);
     }
 
     @Test

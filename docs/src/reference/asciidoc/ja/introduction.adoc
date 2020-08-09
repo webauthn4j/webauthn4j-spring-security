@@ -25,14 +25,11 @@ WebAuthn4J Spring Securityの動作環境は、以下の要件を満たす必要
 ** Google Chrome 70以降
 ** Mozilla Firefox 60以降
 ** Microsoft Edge Windows 10 October 2018 Update同梱版 以降
+** Safari 14以降
 
 ===== SecureContext
 
 Web Authentication仕様では、動作環境がSecureContextであることを要求しています。 これは、ユーザーがサイトに接続する際、HTTPS接続でなければならないことを意味します。HTTP接続環境下では、ブラウザはWebAuthnに関連した要求を拒否するため、利用できません。 但し、 `localhost` では例外的にHTTP接続が認められています。SecureContextについて詳しくは https://developer.mozilla.org/ja/docs/Web/Security/Secure_Contexts[MDN] を参照ください。
-
-===== ブラウザ
-
-2018年12月現在、デスクトップ版Google Chrome 70以降およびデスクトップ版Mozilla Firefox 60以降でWebAuthnは利用可能です。 但し、認証デバイスのサポートはFIDO-U2Fの認証トークンに限定されており、指紋認証などによるユーザー検証機能がついた 認証デバイスはサポートしていないため、パスワードレス認証は利用できません。 Microsoft Edgeでは、Windows 10 October 2018 Update以降でWebAuthnが利用可能です。EdgeではFIDO-U2Fの認証トークンだけでなく、 Windows Helloを認証デバイスとして使用できるため、パスワードレス認証をサポートしています。
 
 === ソースコード
 

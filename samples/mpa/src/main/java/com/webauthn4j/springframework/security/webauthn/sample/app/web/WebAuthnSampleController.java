@@ -165,7 +165,7 @@ public class WebAuthnSampleController {
 
 			try {
 				userDetailsManager.createUser(user);
-				webAuthnAuthenticatorManager.createAuthenticator(user, authenticator);
+				webAuthnAuthenticatorManager.createAuthenticator(authenticator);
 			} catch (IllegalArgumentException ex) {
 				model.addAttribute("errorMessage", "Registration failed. The user may already be registered.");
 				logger.debug("Registration failed.", ex);
@@ -199,7 +199,7 @@ public class WebAuthnSampleController {
 			return Collections.emptyList();
 		} else {
 			try {
-				List<WebAuthnAuthenticator> webAuthnAuthenticators = webAuthnAuthenticatorManager.loadAuthenticatorsByPrincipal(principal);
+				List<WebAuthnAuthenticator> webAuthnAuthenticators = webAuthnAuthenticatorManager.loadAuthenticatorsByUserPrincipal(principal);
 				return webAuthnAuthenticators.stream()
 						.map(webAuthnAuthenticator -> Base64UrlUtil.encodeToString(webAuthnAuthenticator.getAttestedCredentialData().getCredentialId()))
 						.collect(Collectors.toList());

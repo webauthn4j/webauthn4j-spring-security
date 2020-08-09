@@ -49,6 +49,6 @@ public interface WebAuthnAuthenticatorService {
      * @param principal user principal
      * @return {@link WebAuthnAuthenticator} list
      */
-    List<WebAuthnAuthenticator> loadAuthenticatorsByPrincipal(Object principal);
+    List<WebAuthnAuthenticator> loadAuthenticatorsByUserPrincipal(Object principal);
 
 }

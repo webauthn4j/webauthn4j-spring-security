@@ -22,10 +22,9 @@ public interface WebAuthnAuthenticatorManager extends WebAuthnAuthenticatorServi
 
     /**
      * Create a new user with the supplied details.
-     * @param userPrincipal user principal
      * @param webAuthnAuthenticator authenticator
      */
-    void createAuthenticator(Object userPrincipal, WebAuthnAuthenticator webAuthnAuthenticator);
+    void createAuthenticator(WebAuthnAuthenticator webAuthnAuthenticator);
 
     /**
      * Remove the authenticator with the given credentialId

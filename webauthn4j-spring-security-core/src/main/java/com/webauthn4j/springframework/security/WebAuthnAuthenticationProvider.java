@@ -32,11 +32,11 @@ import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.InternalAuthenticationServiceException;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.authority.mapping.GrantedAuthoritiesMapper;
-import org.springframework.security.core.authority.mapping.NullAuthoritiesMapper;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.util.Assert;
 
-import java.io.Serializable;
+import java.util.Collection;
 
 /**
  * An {@link AuthenticationProvider} implementation for processing {@link WebAuthnAssertionAuthenticationToken}
@@ -52,8 +52,6 @@ public class WebAuthnAuthenticationProvider implements AuthenticationProvider {
     private final WebAuthnAuthenticatorService authenticatorService;
     private final WebAuthnManager webAuthnManager;
     private boolean hideCredentialIdNotFoundExceptions = true;
-    private final GrantedAuthoritiesMapper authoritiesMapper = new NullAuthoritiesMapper();
-    private boolean forcePrincipalAsString;
 
     // ~ Constructor
     // ========================================================================================================
@@ -98,21 +96,21 @@ public class WebAuthnAuthenticationProvider implements AuthenticationProvider {
         doAuthenticate(authenticationToken, webAuthnAuthenticator);
         authenticatorService.updateCounter(credentialId, webAuthnAuthenticator.getCounter());
 
-        Serializable principalToReturn;
-        if(forcePrincipalAsString){
-            principalToReturn = webAuthnAuthenticator.getUserDetails().getUsername();
-        }
-        else {
-            principalToReturn = webAuthnAuthenticator.getUserDetails();
-        }
+        return createSuccessAuthentication(authenticationToken, webAuthnAuthenticator);
+    }
 
+    protected Authentication createSuccessAuthentication(WebAuthnAssertionAuthenticationToken authenticationToken, WebAuthnAuthenticator webAuthnAuthenticator) {
+        Object principal = webAuthnAuthenticator.getUserPrincipal();
+        Collection<? extends GrantedAuthority> authorities = null;
+        if(principal instanceof UserDetails){
+            authorities = ((UserDetails)principal).getAuthorities();
+        }
 
         WebAuthnAuthenticationToken webAuthnAuthenticationToken = new WebAuthnAuthenticationToken(
-                principalToReturn,
+                principal,
                 authenticationToken.getCredentials(),
-                authoritiesMapper.mapAuthorities(webAuthnAuthenticator.getUserDetails().getAuthorities()));
+                authorities);
         webAuthnAuthenticationToken.setDetails(authenticationToken.getDetails());
-
         return webAuthnAuthenticationToken;
     }
 
@@ -155,16 +153,6 @@ public class WebAuthnAuthenticationProvider implements AuthenticationProvider {
             throw ExceptionUtil.wrapWithAuthenticationException(e);
         }
 
-    }
-
-
-
-    public void setForcePrincipalAsString(boolean forcePrincipalAsString) {
-        this.forcePrincipalAsString = forcePrincipalAsString;
-    }
-
-    public boolean isForcePrincipalAsString() {
-        return forcePrincipalAsString;
     }
 
     public boolean isHideCredentialIdNotFoundExceptions() {

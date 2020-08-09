@@ -18,7 +18,6 @@ package com.webauthn4j.springframework.security.endpoint;
 
 import com.webauthn4j.converter.util.ObjectConverter;
 import com.webauthn4j.data.PublicKeyCredentialCreationOptions;
-import com.webauthn4j.data.PublicKeyCredentialRequestOptions;
 import com.webauthn4j.springframework.security.options.OptionsProvider;
 import org.junit.Test;
 import org.springframework.http.HttpStatus;
@@ -33,11 +32,10 @@ import javax.servlet.ServletException;
 import java.io.IOException;
 import java.util.Collections;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatCode;
+import static org.assertj.core.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
-public class OptionsEndpointFilterTest {
+public class AttestationOptionsEndpointFilterTest {
 
     private final ObjectConverter objectConverter = new ObjectConverter();
 
@@ -60,14 +58,28 @@ public class OptionsEndpointFilterTest {
         OptionsProvider optionsProvider = mock(OptionsProvider.class);
         PublicKeyCredentialCreationOptions attestationOptions = new PublicKeyCredentialCreationOptions(null, null, null, null, null, Collections.emptyList(), null, null, null);
         when(optionsProvider.getAttestationOptions(any(), any())).thenReturn(attestationOptions);
-        PublicKeyCredentialRequestOptions assertionOptions = new PublicKeyCredentialRequestOptions(null, null, null, null, null,null);
-        when(optionsProvider.getAssertionOptions(any(), any())).thenReturn(assertionOptions);
         AttestationOptionsEndpointFilter optionsEndpointFilter = new AttestationOptionsEndpointFilter(optionsProvider, objectConverter);
         AuthenticationTrustResolver trustResolver = new AuthenticationTrustResolverImpl();
         optionsEndpointFilter.setTrustResolver(trustResolver);
 
         MockHttpServletRequest request = new MockHttpServletRequest();
         request.setRequestURI(AttestationOptionsEndpointFilter.FILTER_URL);
+        MockHttpServletResponse response = new MockHttpServletResponse();
+        MockFilterChain filterChain = new MockFilterChain();
+
+        optionsEndpointFilter.doFilter(request, response, filterChain);
+        assertThat(response.getStatus()).isEqualTo(HttpStatus.OK.value());
+    }
+
+    @Test
+    public void doFilter_with_unmatched_url_test() throws IOException, ServletException {
+        OptionsProvider optionsProvider = mock(OptionsProvider.class);
+        AttestationOptionsEndpointFilter optionsEndpointFilter = new AttestationOptionsEndpointFilter(optionsProvider, objectConverter);
+        AuthenticationTrustResolver trustResolver = new AuthenticationTrustResolverImpl();
+        optionsEndpointFilter.setTrustResolver(trustResolver);
+
+        MockHttpServletRequest request = new MockHttpServletRequest();
+        request.setRequestURI("/unmatched_url");
         MockHttpServletResponse response = new MockHttpServletResponse();
         MockFilterChain filterChain = new MockFilterChain();
 

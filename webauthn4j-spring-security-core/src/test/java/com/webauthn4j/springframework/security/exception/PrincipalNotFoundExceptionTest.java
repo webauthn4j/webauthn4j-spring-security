@@ -14,20 +14,23 @@
  * limitations under the License.
  */
 
-package com.webauthn4j.springframework.security.options;
+package com.webauthn4j.springframework.security.exception;
 
-import com.webauthn4j.data.PublicKeyCredentialUserEntity;
-import org.springframework.security.core.Authentication;
+import org.junit.Test;
 
-/**
- * Core interface to load {@link PublicKeyCredentialUserEntity}
- */
-public interface PublicKeyCredentialUserEntityService {
+import static org.assertj.core.api.Assertions.assertThatCode;
 
-    /**
-     * Load {@link PublicKeyCredentialUserEntity}
-     * @param authentication authentication
-     * @return {@link PublicKeyCredentialUserEntity}
-     */
-    PublicKeyCredentialUserEntity loadUserByAuthentication(Authentication authentication);
+@SuppressWarnings("ThrowableNotThrown")
+public class PrincipalNotFoundExceptionTest {
+
+    private final RuntimeException cause = new RuntimeException();
+
+    @Test
+    public void test() {
+        assertThatCode(() -> {
+            new PrincipalNotFoundException("dummy", cause);
+            new PrincipalNotFoundException("dummy");
+        }).doesNotThrowAnyException();
+    }
+
 }

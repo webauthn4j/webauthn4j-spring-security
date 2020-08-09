@@ -26,8 +26,7 @@ import com.webauthn4j.springframework.security.authenticator.WebAuthnAuthenticat
 import com.webauthn4j.springframework.security.challenge.ChallengeRepository;
 import com.webauthn4j.springframework.security.exception.PrincipalNotFoundException;
 import com.webauthn4j.springframework.security.util.internal.ServletUtil;
-import com.webauthn4j.util.exception.WebAuthnException;
-import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.Authentication;
 import org.springframework.util.Assert;
 
 import javax.servlet.http.HttpServletRequest;
@@ -81,12 +80,12 @@ public class OptionsProviderImpl implements OptionsProvider {
     /**
      * {@inheritDoc}
      */
-    public PublicKeyCredentialCreationOptions getAttestationOptions(HttpServletRequest request, Object principal) {
+    public PublicKeyCredentialCreationOptions getAttestationOptions(HttpServletRequest request, Authentication authentication) {
 
         PublicKeyCredentialRpEntity relyingParty = new PublicKeyCredentialRpEntity(getEffectiveRpId(request), rpName, rpIcon);
         PublicKeyCredentialUserEntity user;
         try {
-            user = publicKeyCredentialUserEntityService.loadUserByPrincipal(principal);
+            user = publicKeyCredentialUserEntityService.loadUserByAuthentication(authentication);
         } catch (PrincipalNotFoundException e) {
             user = null;
         }
@@ -97,7 +96,7 @@ public class OptionsProviderImpl implements OptionsProvider {
                 getChallengeRepository().loadOrGenerateChallenge(request),
                 getPubKeyCredParams(),
                 getRegistrationTimeout(),
-                getCredentials(principal),
+                getCredentials(authentication),
                 getRegistrationAuthenticatorSelection(),
                 getAttestation(),
                 getRegistrationExtensionsProvider().provide(request));
@@ -106,12 +105,12 @@ public class OptionsProviderImpl implements OptionsProvider {
     /**
      * {@inheritDoc}
      */
-    public PublicKeyCredentialRequestOptions getAssertionOptions(HttpServletRequest request, Object principal) {
+    public PublicKeyCredentialRequestOptions getAssertionOptions(HttpServletRequest request, Authentication authentication) {
         return new PublicKeyCredentialRequestOptions(
                 getChallengeRepository().loadOrGenerateChallenge(request),
                 getAuthenticationTimeout(),
                 getEffectiveRpId(request),
-                getCredentials(principal),
+                getCredentials(authentication),
                 getAuthenticationUserVerification(),
                 getAuthenticationExtensionsProvider().provide(request));
     }
@@ -204,7 +203,7 @@ public class OptionsProviderImpl implements OptionsProvider {
 
     public void setAuthenticationTimeout(Long authenticationTimeout) {
         Assert.notNull(authenticationTimeout, "authenticationTimeout must not be null.");
-        Assert.isTrue(registrationTimeout >= 0, "registrationTimeout must be within unsigned long.");
+        Assert.isTrue(authenticationTimeout >= 0, "registrationTimeout must be within unsigned long.");
         this.authenticationTimeout = authenticationTimeout;
     }
 
@@ -259,10 +258,13 @@ public class OptionsProviderImpl implements OptionsProvider {
         return challengeRepository;
     }
 
-    protected List<PublicKeyCredentialDescriptor> getCredentials(Object principal){
+    protected List<PublicKeyCredentialDescriptor> getCredentials(Authentication authentication){
+        if(authentication == null){
+            return Collections.emptyList();
+        }
         Collection<? extends WebAuthnAuthenticator> authenticators;
         try {
-            authenticators = authenticatorService.loadAuthenticatorsByPrincipal(principal);
+            authenticators = authenticatorService.loadAuthenticatorsByUserPrincipal(authentication.getName());
         } catch (PrincipalNotFoundException e) {
             authenticators = Collections.emptyList();
         }
@@ -277,20 +279,11 @@ public class OptionsProviderImpl implements OptionsProvider {
     static class DefaultPublicKeyCredentialUserEntityService implements PublicKeyCredentialUserEntityService {
 
         @Override
-        public PublicKeyCredentialUserEntity loadUserByPrincipal(Object principal) {
-            String username;
-            if(principal == null){
+        public PublicKeyCredentialUserEntity loadUserByAuthentication(Authentication authentication) {
+            if(authentication == null){
                 return null;
             }
-            else if(principal instanceof UserDetails){
-                username = ((UserDetails)principal).getUsername();
-            }
-            else if(principal instanceof String){
-                username = (String) principal;
-            }
-            else {
-                throw new WebAuthnException("Could not determine username from principal. Please use custom PublicKeyCredentialUserEntityService instead.");
-            }
+            String username = authentication.getName();
             return new PublicKeyCredentialUserEntity(
                     username.getBytes(StandardCharsets.UTF_8),
                     username,
