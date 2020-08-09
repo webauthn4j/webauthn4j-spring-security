@@ -17,6 +17,7 @@
 package com.webauthn4j.springframework.security.webauthn.sample.domain.component;
 
 import com.webauthn4j.springframework.security.authenticator.WebAuthnAuthenticator;
+import com.webauthn4j.springframework.security.authenticator.WebAuthnAuthenticatorService;
 import com.webauthn4j.springframework.security.exception.CredentialIdNotFoundException;
 import com.webauthn4j.springframework.security.webauthn.sample.domain.entity.AuthenticatorEntity;
 import com.webauthn4j.springframework.security.webauthn.sample.domain.repository.AuthenticatorEntityRepository;
@@ -32,7 +33,7 @@ import java.util.List;
 
 @Transactional
 @Component
-public class AuthenticatorManagerImpl implements AuthenticatorManager {
+public class AuthenticatorManagerImpl implements WebAuthnAuthenticatorService {
 
     private final Logger logger = LoggerFactory.getLogger(AuthenticatorManagerImpl.class);
 
@@ -72,5 +73,4 @@ public class AuthenticatorManagerImpl implements AuthenticatorManager {
         }
         return new ArrayList<>(authenticatorEntityRepository.findAllByEmailAddress(username));
     }
-
 }

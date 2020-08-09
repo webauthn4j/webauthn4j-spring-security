@@ -25,7 +25,7 @@ import com.webauthn4j.data.attestation.AttestationObject;
 import com.webauthn4j.data.client.CollectedClientData;
 import com.webauthn4j.springframework.security.WebAuthnRegistrationRequestValidator;
 import com.webauthn4j.springframework.security.authenticator.WebAuthnAuthenticatorImpl;
-import com.webauthn4j.springframework.security.fido.authenticator.WebAuthnAuthenticatorManager;
+import com.webauthn4j.springframework.security.authenticator.WebAuthnAuthenticatorManager;
 import com.webauthn4j.springframework.security.fido.server.validator.ServerPublicKeyCredentialValidator;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -123,7 +123,7 @@ public class FidoServerAttestationResultEndpointFilter extends ServerEndpointFil
                             attestationObject.getAttestationStatement(),
                             attestationObject.getAuthenticatorData().getSignCount()
                     );
-            webAuthnAuthenticatorManager.addAuthenticator(webAuthnAuthenticator);
+            webAuthnAuthenticatorManager.createAuthenticator(webAuthnAuthenticator);
             return new AttestationResultSuccessResponse();
         }
         catch (DataConversionException e){

@@ -18,6 +18,7 @@ package com.webauthn4j.springframework.security.webauthn.sample.domain.component
 
 import com.webauthn4j.springframework.security.authenticator.WebAuthnAuthenticator;
 import com.webauthn4j.springframework.security.authenticator.WebAuthnAuthenticatorImpl;
+import com.webauthn4j.springframework.security.authenticator.WebAuthnAuthenticatorManager;
 import com.webauthn4j.springframework.security.exception.CredentialIdNotFoundException;
 import com.webauthn4j.springframework.security.webauthn.sample.domain.entity.AuthenticatorEntity;
 import com.webauthn4j.springframework.security.webauthn.sample.domain.exception.WebAuthnSampleBusinessException;
@@ -31,10 +32,11 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Transactional
 @Component
-public class AuthenticatorManagerImpl implements AuthenticatorManager {
+public class AuthenticatorManagerImpl implements WebAuthnAuthenticatorManager {
 
     private final Logger logger = LoggerFactory.getLogger(AuthenticatorManagerImpl.class);
 
@@ -46,6 +48,7 @@ public class AuthenticatorManagerImpl implements AuthenticatorManager {
         this.userEntityRepository = userEntityRepository;
     }
 
+    @SuppressWarnings("java:S1130")
     @Override
     public void updateCounter(byte[] credentialId, long counter) throws CredentialIdNotFoundException {
         AuthenticatorEntity authenticatorEntity = authenticatorEntityRepository.findOneByCredentialId(credentialId)
@@ -65,11 +68,11 @@ public class AuthenticatorManagerImpl implements AuthenticatorManager {
     }
 
     @Override
-    public void addAuthenticator(WebAuthnAuthenticator webAuthnAuthenticator) {
+    public void createAuthenticator(WebAuthnAuthenticator webAuthnAuthenticator) {
         authenticatorEntityRepository.findOneByCredentialId(webAuthnAuthenticator.getAttestedCredentialData().getCredentialId())
                 .ifPresent((retrievedAuthenticatorEntity) -> {
-            throw new WebAuthnSampleBusinessException("Authenticator is not found.");
-        });
+                    throw new WebAuthnSampleBusinessException("Authenticator is not found.");
+                });
 
         AuthenticatorEntity authenticatorEntity = new AuthenticatorEntity();
 
@@ -93,5 +96,22 @@ public class AuthenticatorManagerImpl implements AuthenticatorManager {
         authenticatorEntity.setClientExtensions(webAuthnAuthenticator.getClientExtensions());
         authenticatorEntity.setAuthenticatorExtensions(webAuthnAuthenticator.getAuthenticatorExtensions());
         authenticatorEntityRepository.save(authenticatorEntity);
+    }
+
+    @SuppressWarnings("java:S1130")
+    @Override
+    public void deleteAuthenticator(byte[] credentialId) throws CredentialIdNotFoundException {
+        Optional<AuthenticatorEntity> optional = authenticatorEntityRepository.findOneByCredentialId(credentialId);
+        if(optional.isPresent()){
+            authenticatorEntityRepository.deleteById(optional.get().getId());
+        }
+        else {
+            throw new CredentialIdNotFoundException("Authenticator is not found.");
+        }
+    }
+
+    @Override
+    public boolean authenticatorExists(byte[] credentialId) {
+        return authenticatorEntityRepository.findOneByCredentialId(credentialId).isPresent();
     }
 }
