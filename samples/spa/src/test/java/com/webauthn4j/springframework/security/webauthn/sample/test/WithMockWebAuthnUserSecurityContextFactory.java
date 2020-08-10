@@ -71,7 +71,6 @@ public class WithMockWebAuthnUserSecurityContextFactory implements WithSecurityC
         principal.setAuthorities(authorities);
         principal.setAuthenticators(authenticatorEntities);
         principal.setLocked(user.locked());
-        principal.setSingleFactorAuthenticationAllowed(user.singleFactorAuthenticationAllowed());
 
         WebAuthnAuthenticationRequest request = mock(WebAuthnAuthenticationRequest.class);
 

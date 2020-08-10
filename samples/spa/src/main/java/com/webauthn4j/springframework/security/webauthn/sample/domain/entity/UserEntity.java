@@ -43,19 +43,18 @@ public class UserEntity implements UserDetails {
     @LazyCollection(LazyCollectionOption.FALSE)
     @JoinTable(
             name = "r_user_group",
-            joinColumns = {@JoinColumn(name = "group_id", referencedColumnName = "id")},
-            inverseJoinColumns = {@JoinColumn(name = "user_id", referencedColumnName = "id")}
+            joinColumns = {@JoinColumn(name = "user_id", referencedColumnName = "id")},
+            inverseJoinColumns = {@JoinColumn(name = "group_id", referencedColumnName = "id")}
 
     )
     private List<GroupEntity> groups;
 
-    @ManyToMany
+    @ManyToMany(cascade = CascadeType.ALL)
     @LazyCollection(LazyCollectionOption.FALSE)
     @JoinTable(
             name = "r_user_authority",
-            joinColumns = {@JoinColumn(name = "authority_id", referencedColumnName = "id")},
-            inverseJoinColumns = {@JoinColumn(name = "user_id", referencedColumnName = "id")}
-
+            joinColumns = {@JoinColumn(name = "user_id", referencedColumnName = "id")},
+            inverseJoinColumns = {@JoinColumn(name = "authority_id", referencedColumnName = "id")}
     )
     private List<AuthorityEntity> authorities;
 
@@ -65,9 +64,6 @@ public class UserEntity implements UserDetails {
     private String password;
 
     private boolean locked;
-
-    @Column(name = "pwauth_allowed")
-    private boolean singleFactorAuthenticationAllowed;
 
     public Integer getId() {
         return id;
@@ -147,14 +143,6 @@ public class UserEntity implements UserDetails {
 
     public void setLocked(boolean locked) {
         this.locked = locked;
-    }
-
-    public boolean isSingleFactorAuthenticationAllowed() {
-        return singleFactorAuthenticationAllowed;
-    }
-
-    public void setSingleFactorAuthenticationAllowed(boolean singleFactorAuthenticationAllowed) {
-        this.singleFactorAuthenticationAllowed = singleFactorAuthenticationAllowed;
     }
 
     public String getUsername() {

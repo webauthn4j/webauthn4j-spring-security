@@ -14,4 +14,4 @@
  * limitations under the License.
  */
 
-export type AuthenticationStatus = "NOT_AUTHENTICATED" | "AUTHENTICATED" | "MULTI_FACTOR_AUTHENTICATED";
+export type AuthenticationStatus = "NOT_AUTHENTICATED" | "AUTHENTICATING" | "AUTHENTICATED";

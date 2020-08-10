@@ -19,6 +19,7 @@ package com.webauthn4j.springframework.security.webauthn.sample.app.api;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.webauthn4j.springframework.security.webauthn.sample.app.config.AppConfig;
 import com.webauthn4j.springframework.security.webauthn.sample.app.service.ProfileAppService;
+import com.webauthn4j.springframework.security.webauthn.sample.domain.entity.AuthorityEntity;
 import com.webauthn4j.springframework.security.webauthn.sample.domain.entity.UserEntity;
 import com.webauthn4j.springframework.security.webauthn.sample.test.WithMockWebAuthnUser;
 import com.webauthn4j.springframework.security.webauthn.sample.test.app.config.TestSecurityConfig;
@@ -76,7 +77,7 @@ public class ProfileControllerTest {
         userEntity.setLastName("Doe");
         userEntity.setEmailAddress("john.doe@example.com");
         userEntity.setAuthenticators(Collections.emptyList());
-        userEntity.setSingleFactorAuthenticationAllowed(true);
+        userEntity.setAuthorities(Collections.singletonList(new AuthorityEntity(0, "SINGLE_FACTOR_AUTHN_ALLOWED")));
 
         when(profileAppService.findOne(userId)).thenReturn(userEntity);
 
@@ -114,7 +115,7 @@ public class ProfileControllerTest {
         userEntity.setLastName("Doe");
         userEntity.setEmailAddress("john.doe@example.com");
         userEntity.setAuthenticators(Collections.emptyList());
-        userEntity.setSingleFactorAuthenticationAllowed(true);
+        userEntity.setAuthorities(Collections.singletonList(new AuthorityEntity(0, "SINGLE_FACTOR_AUTHN_ALLOWED")));
 
         when(profileAppService.create(any())).thenReturn(userEntity);
 
@@ -143,15 +144,15 @@ public class ProfileControllerTest {
     public void update_test() throws Exception {
         int userId = 1;
 
+        byte[] userHandle = UUIDUtil.convertUUIDToBytes(UUID.randomUUID());
+
         ProfileUpdateForm userUpdateForm = new ProfileUpdateForm();
-        userUpdateForm.setUserHandle("");
+        userUpdateForm.setUserHandle(Base64UrlUtil.encodeToString(userHandle));
         userUpdateForm.setFirstName("John");
         userUpdateForm.setLastName("Smith");
         userUpdateForm.setEmailAddress("john.smith@example.com");
         userUpdateForm.setAuthenticators(Collections.emptyList());
         userUpdateForm.setSingleFactorAuthenticationAllowed(true);
-
-        byte[] userHandle = UUIDUtil.convertUUIDToBytes(UUID.randomUUID());
 
         UserEntity userEntity = new UserEntity();
         userEntity.setId(userId);
@@ -161,7 +162,7 @@ public class ProfileControllerTest {
         userEntity.setLastName("Smith");
         userEntity.setEmailAddress("john.smith@example.com");
         userEntity.setAuthenticators(Collections.emptyList());
-        userEntity.setSingleFactorAuthenticationAllowed(true);
+        userEntity.setAuthorities(Collections.singletonList(new AuthorityEntity(0, "SINGLE_FACTOR_AUTHN_ALLOWED")));
 
         when(profileAppService.update(anyInt(), any())).thenReturn(userEntity);
 
@@ -169,7 +170,7 @@ public class ProfileControllerTest {
         mvc.perform(
                 put("/api/profile")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(userEntity))
+                        .content(objectMapper.writeValueAsString(userUpdateForm))
                         .with(SecurityMockMvcRequestPostProcessors.csrf())
         )
                 //Then

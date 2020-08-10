@@ -43,8 +43,8 @@ public class UserEntity implements UserDetails {
     @LazyCollection(LazyCollectionOption.FALSE)
     @JoinTable(
             name = "r_user_group",
-            joinColumns = {@JoinColumn(name = "group_id", referencedColumnName = "id")},
-            inverseJoinColumns = {@JoinColumn(name = "user_id", referencedColumnName = "id")}
+            joinColumns = {@JoinColumn(name = "user_id", referencedColumnName = "id")},
+            inverseJoinColumns = {@JoinColumn(name = "group_id", referencedColumnName = "id")}
 
     )
     private List<GroupEntity> groups;
@@ -53,8 +53,8 @@ public class UserEntity implements UserDetails {
     @LazyCollection(LazyCollectionOption.FALSE)
     @JoinTable(
             name = "r_user_authority",
-            joinColumns = {@JoinColumn(name = "authority_id", referencedColumnName = "id")},
-            inverseJoinColumns = {@JoinColumn(name = "user_id", referencedColumnName = "id")}
+            joinColumns = {@JoinColumn(name = "user_id", referencedColumnName = "id")},
+            inverseJoinColumns = {@JoinColumn(name = "authority_id", referencedColumnName = "id")}
 
     )
     private List<AuthorityEntity> authorities;
