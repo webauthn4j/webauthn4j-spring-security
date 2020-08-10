@@ -82,8 +82,12 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .attestation(AttestationConveyancePreference.DIRECT)
                 .registrationExtensions()
-                .credProps(true)
-                .and();
+                    .uvm(true)
+                    .credProps(true)
+                    .extensionProviders()
+                .and()
+                .authenticationExtensions()
+                    .extensionProviders();
 
         // WebAuthn Login
         http.apply(WebAuthnLoginConfigurer.webAuthnLogin())

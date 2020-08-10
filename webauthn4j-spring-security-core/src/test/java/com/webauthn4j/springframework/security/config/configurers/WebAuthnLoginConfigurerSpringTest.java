@@ -18,6 +18,7 @@ package com.webauthn4j.springframework.security.config.configurers;
 
 
 import com.webauthn4j.converter.util.ObjectConverter;
+import com.webauthn4j.data.AttestationConveyancePreference;
 import com.webauthn4j.data.PublicKeyCredentialType;
 import com.webauthn4j.data.attestation.statement.COSEAlgorithmIdentifier;
 import com.webauthn4j.data.client.challenge.DefaultChallenge;
@@ -91,7 +92,7 @@ public class WebAuthnLoginConfigurerSpringTest {
         mvc
                 .perform(get("/webauthn/attestation/options").with(anonymous()))
                 .andExpect(unauthenticated())
-                .andExpect(content().json("{\"rp\":{\"id\":\"example.com\",\"name\":\"example\",\"icon\":\"dummy\"},\"challenge\":\"aFglXMZdQTKD4krvNzJBzA\",\"pubKeyCredParams\":[{\"type\":\"public-key\",\"alg\":-7},{\"type\":\"public-key\",\"alg\":-65535}],\"timeout\":10000,\"excludeCredentials\":[],\"extensions\":{\"credProps\":true}}"))
+                .andExpect(content().json("{\"rp\":{\"id\":\"example.com\",\"name\":\"example\",\"icon\":\"dummy\"},\"challenge\":\"aFglXMZdQTKD4krvNzJBzA\",\"pubKeyCredParams\":[{\"type\":\"public-key\",\"alg\":-7},{\"type\":\"public-key\",\"alg\":-65535}], \"attestation\": \"direct\", \"timeout\":10000,\"excludeCredentials\":[],\"extensions\":{\"credProps\":true, \"uvm\":true, \"unknown\": true, \"extensionProvider\":\"/webauthn/attestation/options\" }}", true))
                 .andExpect(status().isOk());
     }
 
@@ -104,7 +105,7 @@ public class WebAuthnLoginConfigurerSpringTest {
         mvc
                 .perform(get("/webauthn/assertion/options").with(anonymous()))
                 .andExpect(unauthenticated())
-                .andExpect(content().json("{\"challenge\":\"aFglXMZdQTKD4krvNzJBzA\",\"timeout\":20000,\"rpId\":\"example.com\",\"allowCredentials\":[],\"extensions\":{\"appid\":\"\"}}"))
+                .andExpect(content().json("{\"challenge\":\"aFglXMZdQTKD4krvNzJBzA\",\"timeout\":20000,\"rpId\":\"example.com\",\"allowCredentials\":[],\"extensions\":{\"appid\":\"appid\",\"appidExclude\":\"appidExclude\",\"uvm\":true,\"unknown\":true, \"extensionProvider\":\"/webauthn/assertion/options\"}}", true))
                 .andExpect(status().isOk());
     }
 
@@ -131,7 +132,7 @@ public class WebAuthnLoginConfigurerSpringTest {
         mvc
                 .perform(get("/webauthn/attestation/options").with(user("john")))
                 .andExpect(authenticated())
-                .andExpect(content().json("{\"rp\":{\"id\":\"example.com\",\"name\":\"example\",\"icon\":\"dummy\"},\"user\":{\"id\":\"am9obg==\",\"name\":\"john\",\"displayName\":\"john\"},\"challenge\":\"aFglXMZdQTKD4krvNzJBzA\",\"pubKeyCredParams\":[{\"type\":\"public-key\",\"alg\":-7},{\"type\":\"public-key\",\"alg\":-65535}],\"timeout\":10000,\"excludeCredentials\":[],\"extensions\":{\"credProps\":true}}"))
+                .andExpect(content().json("{\"rp\":{\"id\":\"example.com\",\"name\":\"example\",\"icon\":\"dummy\"},\"user\":{\"id\":\"am9obg==\",\"name\":\"john\",\"displayName\":\"john\"},\"challenge\":\"aFglXMZdQTKD4krvNzJBzA\",\"pubKeyCredParams\":[{\"type\":\"public-key\",\"alg\":-7},{\"type\":\"public-key\",\"alg\":-65535}], \"attestation\":\"direct\", \"timeout\":10000,\"excludeCredentials\":[],\"extensions\":{\"credProps\":true, \"uvm\":true, \"unknown\": true, \"extensionProvider\":\"/webauthn/attestation/options\"}}", true))
                 .andExpect(status().isOk());
     }
 
@@ -144,7 +145,7 @@ public class WebAuthnLoginConfigurerSpringTest {
         mvc
                 .perform(get("/webauthn/assertion/options").with(user("john")))
                 .andExpect(authenticated())
-                .andExpect(content().json("{\"challenge\":\"aFglXMZdQTKD4krvNzJBzA\",\"timeout\":20000,\"rpId\":\"example.com\",\"allowCredentials\":[],\"extensions\":{\"appid\":\"\"}}"))
+                .andExpect(content().json("{\"challenge\":\"aFglXMZdQTKD4krvNzJBzA\",\"timeout\":20000,\"rpId\":\"example.com\",\"allowCredentials\":[],\"extensions\":{\"appid\":\"appid\",\"appidExclude\":\"appidExclude\",\"uvm\":true,\"unknown\":true, \"extensionProvider\":\"/webauthn/assertion/options\"}}", true))
                 .andExpect(status().isOk());
     }
 
@@ -172,13 +173,25 @@ public class WebAuthnLoginConfigurerSpringTest {
                     .addPublicKeyCredParams(PublicKeyCredentialType.PUBLIC_KEY, COSEAlgorithmIdentifier.ES256)
                     .addPublicKeyCredParams(PublicKeyCredentialType.PUBLIC_KEY, COSEAlgorithmIdentifier.RS1)
                     .and()
+                    .attestation(AttestationConveyancePreference.DIRECT)
                     .registrationTimeout(10000L)
                     .authenticationTimeout(20000L)
                     .registrationExtensions()
                         .credProps(true)
+                        .uvm(true)
+                        .entry("unknown", true)
+                        .extensionProviders((builder, httpServletRequest) -> {
+                            builder.set("extensionProvider", httpServletRequest.getRequestURI());
+                        })
                     .and()
                     .authenticationExtensions()
-                        .appid("")
+                        .appid("appid")
+                        .appidExclude("appidExclude")
+                        .uvm(true)
+                        .entry("unknown", true)
+                        .extensionProviders((builder, httpServletRequest) -> {
+                            builder.set("extensionProvider", httpServletRequest.getRequestURI());
+                        })
                     .and();
 
             http.apply(WebAuthnLoginConfigurer.webAuthnLogin())
