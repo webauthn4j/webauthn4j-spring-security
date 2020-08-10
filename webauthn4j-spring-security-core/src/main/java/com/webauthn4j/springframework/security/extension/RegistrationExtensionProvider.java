@@ -14,14 +14,14 @@
  * limitations under the License.
  */
 
-package com.webauthn4j.springframework.security.options;
+package com.webauthn4j.springframework.security.extension;
 
 import com.webauthn4j.data.extension.client.AuthenticationExtensionsClientInputs;
-import com.webauthn4j.data.extension.client.ExtensionClientInput;
 
 import javax.servlet.http.HttpServletRequest;
 
-public interface AuthenticationExtensionsClientInputsProvider<T extends ExtensionClientInput> {
+public interface RegistrationExtensionProvider {
 
-    AuthenticationExtensionsClientInputs<T> provide(HttpServletRequest httpServletRequest);
+    void provide(AuthenticationExtensionsClientInputs.BuilderForRegistration builder, HttpServletRequest httpServletRequest);
+
 }

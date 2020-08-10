@@ -20,7 +20,12 @@ import com.webauthn4j.data.AttestationConveyancePreference;
 import com.webauthn4j.data.PublicKeyCredentialParameters;
 import com.webauthn4j.data.PublicKeyCredentialType;
 import com.webauthn4j.data.attestation.statement.COSEAlgorithmIdentifier;
+import com.webauthn4j.data.extension.client.AuthenticationExtensionClientInput;
 import com.webauthn4j.data.extension.client.AuthenticationExtensionsClientInputs;
+import com.webauthn4j.data.extension.client.RegistrationExtensionClientInput;
+import com.webauthn4j.springframework.security.extension.AuthenticationExtensionProvider;
+import com.webauthn4j.springframework.security.extension.RegistrationExtensionProvider;
+import com.webauthn4j.springframework.security.extension.AuthenticationExtensionsClientInputsProvider;
 import com.webauthn4j.springframework.security.options.OptionsProvider;
 import com.webauthn4j.springframework.security.options.OptionsProviderImpl;
 import org.springframework.security.config.annotation.web.HttpSecurityBuilder;
@@ -30,6 +35,8 @@ import org.springframework.util.Assert;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -112,8 +119,8 @@ public class WebAuthnConfigurer<H extends HttpSecurityBuilder<H>> extends Abstra
             if (authenticationTimeout != null) {
                 optionsProviderImpl.setAuthenticationTimeout(authenticationTimeout);
             }
-            optionsProviderImpl.setRegistrationExtensions(registrationExtensions.builder.build());
-            optionsProviderImpl.setAuthenticationExtensions(authenticationExtensions.builder.build());
+            optionsProviderImpl.setRegistrationExtensionsProvider(registrationExtensions.getExtensionsProvider());
+            optionsProviderImpl.setAuthenticationExtensionsProvider(authenticationExtensions.getExtensionsProvider());
         }
     }
 
@@ -256,8 +263,17 @@ public class WebAuthnConfigurer<H extends HttpSecurityBuilder<H>> extends Abstra
     public class RegistrationExtensionsClientInputsConfig {
 
         private final AuthenticationExtensionsClientInputs.BuilderForRegistration builder = new AuthenticationExtensionsClientInputs.BuilderForRegistration();
+        @SuppressWarnings("java:S1450")
+        private List<RegistrationExtensionProvider> providers = Collections.emptyList();
 
         private RegistrationExtensionsClientInputsConfig() {
+        }
+
+        private AuthenticationExtensionsClientInputsProvider<RegistrationExtensionClientInput> getExtensionsProvider() {
+            return httpServletRequest -> {
+                providers.forEach(provider -> provider.provide(builder, httpServletRequest));
+                return builder.build();
+            };
         }
 
         /**
@@ -298,6 +314,11 @@ public class WebAuthnConfigurer<H extends HttpSecurityBuilder<H>> extends Abstra
             return this;
         }
 
+        public RegistrationExtensionsClientInputsConfig extensionProviders(RegistrationExtensionProvider... providers){
+            this.providers = Arrays.asList(providers);
+            return this;
+        }
+
         /**
          * Returns the {@link WebAuthnConfigurer} for further configuration.
          *
@@ -306,6 +327,7 @@ public class WebAuthnConfigurer<H extends HttpSecurityBuilder<H>> extends Abstra
         public WebAuthnConfigurer<H> and() {
             return WebAuthnConfigurer.this;
         }
+
     }
 
     /**
@@ -314,8 +336,17 @@ public class WebAuthnConfigurer<H extends HttpSecurityBuilder<H>> extends Abstra
     public class AuthenticationExtensionsClientInputsConfig {
 
         private final AuthenticationExtensionsClientInputs.BuilderForAuthentication builder = new AuthenticationExtensionsClientInputs.BuilderForAuthentication();
+        @SuppressWarnings("java:S1450")
+        private List<AuthenticationExtensionProvider> providers = Collections.emptyList();
 
         private AuthenticationExtensionsClientInputsConfig() {
+        }
+
+        private AuthenticationExtensionsClientInputsProvider<AuthenticationExtensionClientInput> getExtensionsProvider() {
+            return httpServletRequest -> {
+                providers.forEach(provider -> provider.provide(builder, httpServletRequest));
+                return builder.build();
+            };
         }
 
         /**
@@ -368,6 +399,11 @@ public class WebAuthnConfigurer<H extends HttpSecurityBuilder<H>> extends Abstra
             return this;
         }
 
+        public AuthenticationExtensionsClientInputsConfig extensionProviders(AuthenticationExtensionProvider... providers){
+            this.providers = Arrays.asList(providers);
+            return this;
+        }
+
         /**
          * Returns the {@link WebAuthnConfigurer} for further configuration.
          *
@@ -376,6 +412,7 @@ public class WebAuthnConfigurer<H extends HttpSecurityBuilder<H>> extends Abstra
         public WebAuthnConfigurer<H> and() {
             return WebAuthnConfigurer.this;
         }
+
     }
 
 }

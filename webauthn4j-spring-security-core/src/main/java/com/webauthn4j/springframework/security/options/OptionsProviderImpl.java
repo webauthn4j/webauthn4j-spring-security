@@ -25,6 +25,7 @@ import com.webauthn4j.springframework.security.authenticator.WebAuthnAuthenticat
 import com.webauthn4j.springframework.security.authenticator.WebAuthnAuthenticatorService;
 import com.webauthn4j.springframework.security.challenge.ChallengeRepository;
 import com.webauthn4j.springframework.security.exception.PrincipalNotFoundException;
+import com.webauthn4j.springframework.security.extension.AuthenticationExtensionsClientInputsProvider;
 import com.webauthn4j.springframework.security.util.internal.ServletUtil;
 import org.springframework.security.core.Authentication;
 import org.springframework.util.Assert;
