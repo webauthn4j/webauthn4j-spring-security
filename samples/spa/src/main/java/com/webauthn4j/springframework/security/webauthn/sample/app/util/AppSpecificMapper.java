@@ -21,6 +21,7 @@ import com.webauthn4j.springframework.security.webauthn.sample.app.api.ProfileCr
 import com.webauthn4j.springframework.security.webauthn.sample.app.api.ProfileForm;
 import com.webauthn4j.springframework.security.webauthn.sample.app.api.ProfileUpdateForm;
 import com.webauthn4j.springframework.security.webauthn.sample.domain.entity.AuthenticatorEntity;
+import com.webauthn4j.springframework.security.webauthn.sample.domain.entity.AuthorityEntity;
 import com.webauthn4j.springframework.security.webauthn.sample.domain.entity.UserEntity;
 import com.webauthn4j.springframework.security.webauthn.sample.domain.exception.WebAuthnSampleEntityNotFoundException;
 import com.webauthn4j.util.Base64UrlUtil;
@@ -49,7 +50,7 @@ public class AppSpecificMapper {
         // authenticators
         profileForm.setAuthenticators(new ArrayList<>());
         mapToAuthenticatorFormList(userEntity.getAuthenticators(), profileForm.getAuthenticators());
-        profileForm.setSingleFactorAuthenticationAllowed(userEntity.isSingleFactorAuthenticationAllowed());
+        profileForm.setSingleFactorAuthenticationAllowed(userEntity.getAuthorities().stream().anyMatch(authorityEntity -> authorityEntity.getAuthority().equals("SINGLE_FACTOR_AUTHN_ALLOWED")));
 
         return profileForm;
     }
@@ -89,7 +90,13 @@ public class AppSpecificMapper {
         userEntity.setAuthenticators(new ArrayList<>());
         mapToAuthenticatorListForCreate(profileCreateForm.getAuthenticators(), userEntity.getAuthenticators());
         userEntity.getAuthenticators().forEach(authenticatorEntity -> authenticatorEntity.setUser(userEntity));
-        userEntity.setSingleFactorAuthenticationAllowed(profileCreateForm.isSingleFactorAuthenticationAllowed());
+
+        // authorities
+        List<AuthorityEntity> authorities = new ArrayList<>();
+        if(profileCreateForm.isSingleFactorAuthenticationAllowed() == true){
+            authorities.add(new AuthorityEntity(null, "SINGLE_FACTOR_AUTHN_ALLOWED"));
+        }
+        userEntity.setAuthorities(authorities);
 
         return userEntity;
     }
@@ -105,8 +112,19 @@ public class AppSpecificMapper {
         mapToAuthenticatorListForUpdate(authenticatorForms, userEntity.getAuthenticators());
         userEntity.getAuthenticators().forEach(authenticatorEntity -> authenticatorEntity.setUser(userEntity));
 
-
-        userEntity.setSingleFactorAuthenticationAllowed(profileUpdateForm.isSingleFactorAuthenticationAllowed());
+        // authorities
+        List<AuthorityEntity> authorities = userEntity.getAuthorities();
+        if(profileUpdateForm.isSingleFactorAuthenticationAllowed() == true){
+            if(authorities.stream().anyMatch(authorityEntity -> authorityEntity.getAuthority().equals("SINGLE_FACTOR_AUTHN_ALLOWED"))){
+                //nop
+            }
+            else {
+                authorities.add(new AuthorityEntity(null, "SINGLE_FACTOR_AUTHN_ALLOWED"));
+            }
+        }
+        else {
+            authorities.clear();
+        }
 
         return userEntity;
     }

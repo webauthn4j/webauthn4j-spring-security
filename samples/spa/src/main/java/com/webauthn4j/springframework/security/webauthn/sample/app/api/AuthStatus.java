@@ -18,6 +18,6 @@ package com.webauthn4j.springframework.security.webauthn.sample.app.api;
 
 public enum AuthStatus {
     NOT_AUTHENTICATED,
-    AUTHENTICATED,
-    MULTI_FACTOR_AUTHENTICATED
+    AUTHENTICATING,
+    AUTHENTICATED
 }

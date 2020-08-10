@@ -38,10 +38,11 @@ public class AuthController {
         AuthStatus status;
         if (authentication == null || trustResolver.isAnonymous(authentication)) {
             status = AuthStatus.NOT_AUTHENTICATED;
-        } else if (WebAuthnAuthenticationToken.class.isAssignableFrom(authentication.getClass())) {
-            status = AuthStatus.MULTI_FACTOR_AUTHENTICATED;
-        } else {
+        } else if (WebAuthnAuthenticationToken.class.isAssignableFrom(authentication.getClass()) ||
+                authentication.getAuthorities().stream().anyMatch(authority -> authority.getAuthority().equals("SINGLE_FACTOR_AUTHN_ALLOWED"))) {
             status = AuthStatus.AUTHENTICATED;
+        } else {
+            status = AuthStatus.AUTHENTICATING;
         }
         return new AuthResponse(status);
     }

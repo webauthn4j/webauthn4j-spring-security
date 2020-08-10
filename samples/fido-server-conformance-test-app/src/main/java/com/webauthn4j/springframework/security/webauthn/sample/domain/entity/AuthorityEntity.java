@@ -39,8 +39,8 @@ public class AuthorityEntity implements GrantedAuthority {
     @LazyCollection(LazyCollectionOption.FALSE)
     @JoinTable(
             name = "r_user_authority",
-            joinColumns = {@JoinColumn(name = "user_id", referencedColumnName = "id")},
-            inverseJoinColumns = {@JoinColumn(name = "authority_id", referencedColumnName = "id")}
+            joinColumns = {@JoinColumn(name = "authority_id", referencedColumnName = "id")},
+            inverseJoinColumns = {@JoinColumn(name = "user_id", referencedColumnName = "id")}
     )
     private List<UserEntity> users;
 
@@ -48,8 +48,8 @@ public class AuthorityEntity implements GrantedAuthority {
     @LazyCollection(LazyCollectionOption.FALSE)
     @JoinTable(
             name = "r_group_authority",
-            joinColumns = {@JoinColumn(name = "group_id", referencedColumnName = "id")},
-            inverseJoinColumns = {@JoinColumn(name = "authority_id", referencedColumnName = "id")}
+            joinColumns = {@JoinColumn(name = "authority_id", referencedColumnName = "id")},
+            inverseJoinColumns = {@JoinColumn(name = "group_id", referencedColumnName = "id")}
 
     )
     private List<GroupEntity> groups;

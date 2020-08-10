@@ -47,8 +47,8 @@ public class GroupEntity implements Serializable {
     @LazyCollection(LazyCollectionOption.FALSE)
     @JoinTable(
             name = "r_user_group",
-            joinColumns = {@JoinColumn(name = "user_id", referencedColumnName = "id")},
-            inverseJoinColumns = {@JoinColumn(name = "group_id", referencedColumnName = "id")}
+            joinColumns = {@JoinColumn(name = "group_id", referencedColumnName = "id")},
+            inverseJoinColumns = {@JoinColumn(name = "user_id", referencedColumnName = "id")}
     )
     private List<UserEntity> users;
 
@@ -56,8 +56,8 @@ public class GroupEntity implements Serializable {
     @LazyCollection(LazyCollectionOption.FALSE)
     @JoinTable(
             name = "r_group_authority",
-            joinColumns = {@JoinColumn(name = "authority_id", referencedColumnName = "id")},
-            inverseJoinColumns = {@JoinColumn(name = "group_id", referencedColumnName = "id")}
+            joinColumns = {@JoinColumn(name = "group_id", referencedColumnName = "id")},
+            inverseJoinColumns = {@JoinColumn(name = "authority_id", referencedColumnName = "id")}
     )
     private List<AuthorityEntity> authorities;
 

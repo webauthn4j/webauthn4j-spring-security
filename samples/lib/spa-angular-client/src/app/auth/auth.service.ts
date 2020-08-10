@@ -32,7 +32,6 @@ import {AuthenticationStatus} from "./authentication-status";
 export class AuthService {
 
   private loginUrl: string = "/login";
-  private webAuthnLoginUrl: string = "/webAuthnLogin";
   private logoutUrl: string = "/logout";
   private authStatusUrl: string = "/api/auth/status";
 
@@ -62,7 +61,7 @@ export class AuthService {
         formData.set("signature", base64url.encodeBase64url(new Uint8Array(signature)));
         formData.set("clientExtensionsJSON", JSON.stringify(clientExtensions));
 
-        return this.http.post(this.webAuthnLoginUrl, formData, {responseType: 'text'});
+        return this.http.post(this.loginUrl, formData, {responseType: 'text'});
       }
     }));
   }

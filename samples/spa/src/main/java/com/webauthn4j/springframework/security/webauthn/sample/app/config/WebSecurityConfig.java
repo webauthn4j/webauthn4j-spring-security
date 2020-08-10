@@ -111,18 +111,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                     .credProps(true)
                 .and();
 
-        // Password Login
-        http.formLogin()
-                .loginPage("/login")
-                .usernameParameter("username")
-                .passwordParameter("password")
-                .loginProcessingUrl("/login")
-                .successHandler(authenticationSuccessHandler)
-                .failureHandler(authenticationFailureHandler);
-
         // WebAuthn Login
-        http.apply(WebAuthnLoginConfigurer.webAuthnLogin()) //FIXME: duplicated feature
-                .loginPage("/login")
+        http.apply(WebAuthnLoginConfigurer.webAuthnLogin())
                 .usernameParameter("username")
                 .passwordParameter("password")
                 .credentialIdParameter("credentialId")
@@ -130,7 +120,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .authenticatorDataParameter("authenticatorData")
                 .signatureParameter("signature")
                 .clientExtensionsJSONParameter("clientExtensionsJSON")
-                .loginProcessingUrl("/webAuthnLogin")
+                .loginProcessingUrl("/login")
                 .successHandler(authenticationSuccessHandler)
                 .failureHandler(authenticationFailureHandler);
 
@@ -149,7 +139,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .mvcMatchers("/info/**").permitAll()
                 .mvcMatchers("/h2-console/**").denyAll()
                 .mvcMatchers("/api/admin/**").access("hasRole('ADMIN_ROLE') and isAuthenticated()")
-                .anyRequest().access("@webAuthnSecurityExpression.isWebAuthnAuthenticated(authentication)");
+                .anyRequest().access("@webAuthnSecurityExpression.isWebAuthnAuthenticated(authentication) || hasAuthority('SINGLE_FACTOR_AUTHN_ALLOWED')");
 
         http.sessionManagement()
                 .sessionAuthenticationFailureHandler(authenticationFailureHandler);

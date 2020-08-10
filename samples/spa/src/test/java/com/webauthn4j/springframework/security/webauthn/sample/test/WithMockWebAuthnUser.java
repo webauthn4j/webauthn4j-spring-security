@@ -46,6 +46,4 @@ public @interface WithMockWebAuthnUser {
 
     boolean locked() default false;
 
-    boolean singleFactorAuthenticationAllowed() default false;
-
 }

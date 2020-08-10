@@ -50,7 +50,7 @@ public class ProfileUpdateFormValidator implements Validator {
 
         if (form.getAuthenticators() == null || form.getAuthenticators().isEmpty()) {
 
-            if (!form.isSingleFactorAuthenticationAllowed()) {
+            if (form.isSingleFactorAuthenticationAllowed() != true) {
                 errors.rejectValue("authenticators",
                         "e.ProfileUpdateFormValidator.noAuthenticator",
                         "To disable password authentication, at least one authenticator must be registered.");
