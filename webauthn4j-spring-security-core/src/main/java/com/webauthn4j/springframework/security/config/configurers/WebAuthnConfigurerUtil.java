@@ -24,6 +24,8 @@ import com.webauthn4j.springframework.security.authenticator.WebAuthnAuthenticat
 import com.webauthn4j.springframework.security.challenge.ChallengeRepository;
 import com.webauthn4j.springframework.security.challenge.HttpSessionChallengeRepository;
 import com.webauthn4j.springframework.security.converter.jackson.WebAuthn4JSpringSecurityJSONModule;
+import com.webauthn4j.springframework.security.endpoint.AssertionOptionsEndpointFilter;
+import com.webauthn4j.springframework.security.endpoint.AttestationOptionsEndpointFilter;
 import com.webauthn4j.springframework.security.options.OptionsProvider;
 import com.webauthn4j.springframework.security.options.OptionsProviderImpl;
 import com.webauthn4j.springframework.security.server.ServerPropertyProvider;
@@ -40,23 +42,34 @@ class WebAuthnConfigurerUtil {
     }
 
     static <H extends HttpSecurityBuilder<H>> ChallengeRepository getChallengeRepository(H http) {
+        ChallengeRepository challengeRepository = http.getSharedObject(ChallengeRepository.class);
+        if (challengeRepository != null) {
+            return challengeRepository;
+        }
         ApplicationContext applicationContext = http.getSharedObject(ApplicationContext.class);
-        ChallengeRepository challengeRepository;
         String[] beanNames = applicationContext.getBeanNamesForType(ChallengeRepository.class);
         if (beanNames.length == 0) {
-            challengeRepository = new HttpSessionChallengeRepository();
+            return new HttpSessionChallengeRepository();
         } else {
-            challengeRepository = applicationContext.getBean(ChallengeRepository.class);
+            return applicationContext.getBean(ChallengeRepository.class);
         }
-        return challengeRepository;
     }
 
     public static <H extends HttpSecurityBuilder<H>> WebAuthnAuthenticatorService getWebAuthnAuthenticatorService(H http){
+        WebAuthnAuthenticatorService webAuthnAuthenticatorService = http.getSharedObject(WebAuthnAuthenticatorService.class);
+        if (webAuthnAuthenticatorService != null) {
+            return webAuthnAuthenticatorService;
+        }
         ApplicationContext applicationContext = http.getSharedObject(ApplicationContext.class);
+        // WebAuthnAuthenticatorService must be provided manually. If not, let it throw exception.
         return applicationContext.getBean(WebAuthnAuthenticatorService.class);
     }
 
     public static <H extends HttpSecurityBuilder<H>> OptionsProvider getOptionsProvider(H http) {
+        OptionsProvider optionsProvider = http.getSharedObject(OptionsProvider.class);
+        if (optionsProvider != null) {
+            return optionsProvider;
+        }
         ApplicationContext applicationContext = http.getSharedObject(ApplicationContext.class);
         String[] beanNames = applicationContext.getBeanNamesForType(OptionsProvider.class);
         if(beanNames.length == 0){
@@ -68,31 +81,64 @@ class WebAuthnConfigurerUtil {
     }
 
     public static <H extends HttpSecurityBuilder<H>> ObjectConverter getObjectConverter(H http) {
+        ObjectConverter objectConverter = http.getSharedObject(ObjectConverter.class);
+        if (objectConverter != null) {
+            return objectConverter;
+        }
         ApplicationContext applicationContext = http.getSharedObject(ApplicationContext.class);
-        ObjectConverter objectConverter;
         String[] beanNames = applicationContext.getBeanNamesForType(ObjectConverter.class);
         if (beanNames.length == 0) {
             ObjectMapper jsonMapper = new ObjectMapper();
             jsonMapper.registerModule(new WebAuthnMetadataJSONModule());
             jsonMapper.registerModule(new WebAuthn4JSpringSecurityJSONModule());
             ObjectMapper cborMapper = new ObjectMapper(new CBORFactory());
-            objectConverter = new ObjectConverter(jsonMapper, cborMapper);
+            return new ObjectConverter(jsonMapper, cborMapper);
         } else {
-            objectConverter = applicationContext.getBean(ObjectConverter.class);
+            return applicationContext.getBean(ObjectConverter.class);
         }
-        return objectConverter;
     }
 
     public static <H extends HttpSecurityBuilder<H>> ServerPropertyProvider getServerPropertyProvider(H http) {
+        ServerPropertyProvider serverPropertyProvider = http.getSharedObject(ServerPropertyProvider.class);
+        if (serverPropertyProvider != null) {
+            return serverPropertyProvider;
+        }
         ApplicationContext applicationContext = http.getSharedObject(ApplicationContext.class);
-        ServerPropertyProvider serverPropertyProvider;
         String[] beanNames = applicationContext.getBeanNamesForType(ServerPropertyProvider.class);
         if (beanNames.length == 0) {
-            serverPropertyProvider = new ServerPropertyProviderImpl(getOptionsProvider(http), getChallengeRepository(http));
+            return new ServerPropertyProviderImpl(getOptionsProvider(http), getChallengeRepository(http));
         } else {
-            serverPropertyProvider = applicationContext.getBean(ServerPropertyProvider.class);
+            return applicationContext.getBean(ServerPropertyProvider.class);
         }
-        return serverPropertyProvider;
     }
+
+    public static <H extends HttpSecurityBuilder<H>> AttestationOptionsEndpointFilter getAttestationOptionsEndpointFilter(H http) {
+        AttestationOptionsEndpointFilter attestationOptionsEndpointFilter = http.getSharedObject(AttestationOptionsEndpointFilter.class);
+        if (attestationOptionsEndpointFilter != null) {
+            return attestationOptionsEndpointFilter;
+        }
+        ApplicationContext applicationContext = http.getSharedObject(ApplicationContext.class);
+        String[] beanNames = applicationContext.getBeanNamesForType(AttestationOptionsEndpointFilter.class);
+        if (beanNames.length == 0) {
+            return new AttestationOptionsEndpointFilter(getOptionsProvider(http), getObjectConverter(http));
+        } else {
+            return applicationContext.getBean(AttestationOptionsEndpointFilter.class);
+        }
+    }
+
+    public static <H extends HttpSecurityBuilder<H>> AssertionOptionsEndpointFilter getAssertionOptionsEndpointFilter(H http) {
+        AssertionOptionsEndpointFilter assertionOptionsEndpointFilter = http.getSharedObject(AssertionOptionsEndpointFilter.class);
+        if (assertionOptionsEndpointFilter != null) {
+            return assertionOptionsEndpointFilter;
+        }
+        ApplicationContext applicationContext = http.getSharedObject(ApplicationContext.class);
+        String[] beanNames = applicationContext.getBeanNamesForType(AssertionOptionsEndpointFilter.class);
+        if (beanNames.length == 0) {
+            return new AssertionOptionsEndpointFilter(getOptionsProvider(http), getObjectConverter(http));
+        } else {
+            return applicationContext.getBean(AssertionOptionsEndpointFilter.class);
+        }
+    }
+
 
 }

@@ -23,7 +23,6 @@ import com.webauthn4j.springframework.security.endpoint.AssertionOptionsEndpoint
 import com.webauthn4j.springframework.security.endpoint.AttestationOptionsEndpointFilter;
 import com.webauthn4j.springframework.security.options.OptionsProvider;
 import com.webauthn4j.springframework.security.server.ServerPropertyProvider;
-import org.springframework.context.ApplicationContext;
 import org.springframework.security.config.annotation.web.HttpSecurityBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
@@ -365,15 +364,8 @@ public final class WebAuthnLoginConfigurer<H extends HttpSecurityBuilder<H>> ext
         }
 
         private void configure(H http) {
-            AttestationOptionsEndpointFilter optionsEndpointFilter;
-            ApplicationContext applicationContext = http.getSharedObject(ApplicationContext.class);
-            String[] beanNames = applicationContext.getBeanNamesForType(AttestationOptionsEndpointFilter.class);
-            if (beanNames.length == 0) {
-                optionsEndpointFilter = new AttestationOptionsEndpointFilter(optionsProvider, objectConverter);
-                optionsEndpointFilter.setFilterProcessesUrl(processingUrl);
-            } else {
-                optionsEndpointFilter = applicationContext.getBean(AttestationOptionsEndpointFilter.class);
-            }
+            AttestationOptionsEndpointFilter optionsEndpointFilter = WebAuthnConfigurerUtil.getAttestationOptionsEndpointFilter(http);
+            optionsEndpointFilter.setFilterProcessesUrl(processingUrl);
 
             http.addFilterAfter(optionsEndpointFilter, SessionManagementFilter.class);
         }
@@ -411,15 +403,8 @@ public final class WebAuthnLoginConfigurer<H extends HttpSecurityBuilder<H>> ext
         }
 
         private void configure(H http) {
-            AssertionOptionsEndpointFilter optionsEndpointFilter;
-            ApplicationContext applicationContext = http.getSharedObject(ApplicationContext.class);
-            String[] beanNames = applicationContext.getBeanNamesForType(AssertionOptionsEndpointFilter.class);
-            if (beanNames.length == 0) {
-                optionsEndpointFilter = new AssertionOptionsEndpointFilter(optionsProvider, objectConverter);
-                optionsEndpointFilter.setFilterProcessesUrl(processingUrl);
-            } else {
-                optionsEndpointFilter = applicationContext.getBean(AssertionOptionsEndpointFilter.class);
-            }
+            AssertionOptionsEndpointFilter optionsEndpointFilter = WebAuthnConfigurerUtil.getAssertionOptionsEndpointFilter(http);
+            optionsEndpointFilter.setFilterProcessesUrl(processingUrl);
 
             http.addFilterAfter(optionsEndpointFilter, SessionManagementFilter.class);
         }
