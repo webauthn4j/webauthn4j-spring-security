@@ -18,11 +18,11 @@ package com.webauthn4j.springframework.security.webauthn.sample.app.config;
 
 import com.webauthn4j.WebAuthnManager;
 import com.webauthn4j.data.AttestationConveyancePreference;
+import com.webauthn4j.data.PublicKeyCredentialParameters;
 import com.webauthn4j.data.PublicKeyCredentialType;
 import com.webauthn4j.data.attestation.statement.COSEAlgorithmIdentifier;
 import com.webauthn4j.springframework.security.authenticator.WebAuthnAuthenticatorService;
 import com.webauthn4j.springframework.security.config.configurers.WebAuthnAuthenticationProviderConfigurer;
-import com.webauthn4j.springframework.security.config.configurers.WebAuthnConfigurer;
 import com.webauthn4j.springframework.security.config.configurers.WebAuthnLoginConfigurer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
@@ -73,26 +73,31 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
      */
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-                // WebAuthn Config
-        http.apply(WebAuthnConfigurer.webAuthn())
-                .rpName("WebAuthn4J Spring Security Sample MPA")
-                .publicKeyCredParams()
-                .addPublicKeyCredParams(PublicKeyCredentialType.PUBLIC_KEY, COSEAlgorithmIdentifier.RS256)  // Windows Hello
-                .addPublicKeyCredParams(PublicKeyCredentialType.PUBLIC_KEY, COSEAlgorithmIdentifier.ES256) // FIDO U2F Key, etc
-                .and()
-                .attestation(AttestationConveyancePreference.DIRECT)
-                .registrationExtensions()
-                    .uvm(true)
-                    .credProps(true)
-                    .extensionProviders()
-                .and()
-                .authenticationExtensions()
-                    .extensionProviders();
 
         // WebAuthn Login
         http.apply(WebAuthnLoginConfigurer.webAuthnLogin())
                 .defaultSuccessUrl("/", true)
-                .failureUrl("/login");
+                .failureUrl("/login")
+                .attestationOptionsEndpoint()
+                    .rp()
+                        .name("WebAuthn4J Spring Security Sample MPA")
+                        .and()
+                    .pubKeyCredParams(
+                        new PublicKeyCredentialParameters(PublicKeyCredentialType.PUBLIC_KEY, COSEAlgorithmIdentifier.ES256),
+                        new PublicKeyCredentialParameters(PublicKeyCredentialType.PUBLIC_KEY, COSEAlgorithmIdentifier.RS1)
+                    )
+                    .attestation(AttestationConveyancePreference.DIRECT)
+                    .extensions()
+                        .uvm(true)
+                        .credProps(true)
+                        .extensionProviders()
+                    .and()
+                .assertionOptionsEndpoint()
+                    .extensions()
+                        .extensionProviders();
+
+
+
 
         // Authorization
         http.authorizeRequests()

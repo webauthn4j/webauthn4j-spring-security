@@ -58,7 +58,7 @@ public class OptionsProviderImpl implements OptionsProvider {
 
     private final WebAuthnAuthenticatorService authenticatorService;
     private final ChallengeRepository challengeRepository;
-    private PublicKeyCredentialUserEntityService publicKeyCredentialUserEntityService = new DefaultPublicKeyCredentialUserEntityService();
+    private PublicKeyCredentialUserEntityProvider publicKeyCredentialUserEntityProvider = new DefaultPublicKeyCredentialUserEntityProvider();
     private AuthenticationExtensionsClientInputsProvider<RegistrationExtensionClientInput> registrationExtensionsProvider = new DefaultRegistrationExtensionsProvider();
     private AuthenticationExtensionsClientInputsProvider<AuthenticationExtensionClientInput> authenticationExtensionsProvider = new DefaultAuthenticationExtensionsProvider();
 
@@ -86,7 +86,7 @@ public class OptionsProviderImpl implements OptionsProvider {
         PublicKeyCredentialRpEntity relyingParty = new PublicKeyCredentialRpEntity(getEffectiveRpId(request), rpName, rpIcon);
         PublicKeyCredentialUserEntity user;
         try {
-            user = publicKeyCredentialUserEntityService.loadUserByAuthentication(authentication);
+            user = publicKeyCredentialUserEntityProvider.provide(authentication);
         } catch (PrincipalNotFoundException e) {
             user = null;
         }
@@ -246,13 +246,13 @@ public class OptionsProviderImpl implements OptionsProvider {
         return authenticatorService;
     }
 
-    public void setPublicKeyCredentialUserEntityService(PublicKeyCredentialUserEntityService publicKeyCredentialUserEntityService) {
-        Assert.notNull(publicKeyCredentialUserEntityService, "webAuthnUserHandleProvider must not be null");
-        this.publicKeyCredentialUserEntityService = publicKeyCredentialUserEntityService;
+    public void setPublicKeyCredentialUserEntityProvider(PublicKeyCredentialUserEntityProvider publicKeyCredentialUserEntityProvider) {
+        Assert.notNull(publicKeyCredentialUserEntityProvider, "webAuthnUserHandleProvider must not be null");
+        this.publicKeyCredentialUserEntityProvider = publicKeyCredentialUserEntityProvider;
     }
 
-    public PublicKeyCredentialUserEntityService getPublicKeyCredentialUserEntityService() {
-        return publicKeyCredentialUserEntityService;
+    public PublicKeyCredentialUserEntityProvider getPublicKeyCredentialUserEntityProvider() {
+        return publicKeyCredentialUserEntityProvider;
     }
 
     protected ChallengeRepository getChallengeRepository() {
@@ -277,10 +277,10 @@ public class OptionsProviderImpl implements OptionsProvider {
     }
 
 
-    static class DefaultPublicKeyCredentialUserEntityService implements PublicKeyCredentialUserEntityService {
+    static class DefaultPublicKeyCredentialUserEntityProvider implements PublicKeyCredentialUserEntityProvider {
 
         @Override
-        public PublicKeyCredentialUserEntity loadUserByAuthentication(Authentication authentication) {
+        public PublicKeyCredentialUserEntity provide(Authentication authentication) {
             if(authentication == null){
                 return null;
             }

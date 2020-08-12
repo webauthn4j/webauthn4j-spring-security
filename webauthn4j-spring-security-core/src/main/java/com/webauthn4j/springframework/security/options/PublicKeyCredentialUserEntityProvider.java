@@ -22,12 +22,12 @@ import org.springframework.security.core.Authentication;
 /**
  * Core interface to load {@link PublicKeyCredentialUserEntity}
  */
-public interface PublicKeyCredentialUserEntityService {
+public interface PublicKeyCredentialUserEntityProvider {
 
     /**
      * Load {@link PublicKeyCredentialUserEntity}
      * @param authentication authentication
      * @return {@link PublicKeyCredentialUserEntity}
      */
-    PublicKeyCredentialUserEntity loadUserByAuthentication(Authentication authentication);
+    PublicKeyCredentialUserEntity provide(Authentication authentication);
 }

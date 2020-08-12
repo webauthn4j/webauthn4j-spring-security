@@ -23,7 +23,7 @@ import com.webauthn4j.converter.util.ObjectConverter;
 import com.webauthn4j.metadata.converter.jackson.WebAuthnMetadataJSONModule;
 import com.webauthn4j.springframework.security.WebAuthnRegistrationRequestValidator;
 import com.webauthn4j.springframework.security.WebAuthnSecurityExpression;
-import com.webauthn4j.springframework.security.options.PublicKeyCredentialUserEntityService;
+import com.webauthn4j.springframework.security.options.PublicKeyCredentialUserEntityProvider;
 import com.webauthn4j.springframework.security.authenticator.WebAuthnAuthenticatorService;
 import com.webauthn4j.springframework.security.challenge.ChallengeRepository;
 import com.webauthn4j.springframework.security.challenge.HttpSessionChallengeRepository;
@@ -33,7 +33,7 @@ import com.webauthn4j.springframework.security.options.OptionsProviderImpl;
 import com.webauthn4j.springframework.security.server.ServerPropertyProvider;
 import com.webauthn4j.springframework.security.server.ServerPropertyProviderImpl;
 import com.webauthn4j.springframework.security.webauthn.sample.domain.component.UserManager;
-import com.webauthn4j.springframework.security.webauthn.sample.domain.component.PublicKeyCredentialUserEntityServiceImpl;
+import com.webauthn4j.springframework.security.webauthn.sample.domain.component.PublicKeyCredentialUserEntityProviderImpl;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.access.AccessDeniedException;
@@ -68,8 +68,8 @@ public class WebSecurityBeanConfig {
     }
 
     @Bean
-    public PublicKeyCredentialUserEntityService webAuthnUserEntityProvider(UserManager userManager){
-        return new PublicKeyCredentialUserEntityServiceImpl(userManager);
+    public PublicKeyCredentialUserEntityProvider webAuthnUserEntityProvider(UserManager userManager){
+        return new PublicKeyCredentialUserEntityProviderImpl(userManager);
     }
 
     @Bean
@@ -78,9 +78,9 @@ public class WebSecurityBeanConfig {
     }
 
     @Bean
-    public OptionsProvider optionsProvider(WebAuthnAuthenticatorService webAuthnAuthenticatorService, PublicKeyCredentialUserEntityService publicKeyCredentialUserEntityService, ChallengeRepository challengeRepository) {
+    public OptionsProvider optionsProvider(WebAuthnAuthenticatorService webAuthnAuthenticatorService, PublicKeyCredentialUserEntityProvider publicKeyCredentialUserEntityProvider, ChallengeRepository challengeRepository) {
         OptionsProviderImpl optionsProviderImpl = new OptionsProviderImpl(webAuthnAuthenticatorService, challengeRepository);
-        optionsProviderImpl.setPublicKeyCredentialUserEntityService(publicKeyCredentialUserEntityService);
+        optionsProviderImpl.setPublicKeyCredentialUserEntityProvider(publicKeyCredentialUserEntityProvider);
         return optionsProviderImpl;
     }
 

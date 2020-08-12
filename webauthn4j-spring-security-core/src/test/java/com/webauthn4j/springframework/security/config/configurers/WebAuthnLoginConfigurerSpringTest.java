@@ -18,8 +18,7 @@ package com.webauthn4j.springframework.security.config.configurers;
 
 
 import com.webauthn4j.converter.util.ObjectConverter;
-import com.webauthn4j.data.AttestationConveyancePreference;
-import com.webauthn4j.data.PublicKeyCredentialType;
+import com.webauthn4j.data.*;
 import com.webauthn4j.data.attestation.statement.COSEAlgorithmIdentifier;
 import com.webauthn4j.data.client.challenge.DefaultChallenge;
 import com.webauthn4j.springframework.security.WebAuthnProcessingFilter;
@@ -164,37 +163,10 @@ public class WebAuthnLoginConfigurerSpringTest {
         @Override
         protected void configure(HttpSecurity http) throws Exception {
 
-            // Authentication
-            http.apply(WebAuthnConfigurer.webAuthn())
-                    .rpId("example.com")
-                    .rpIcon("dummy")
-                    .rpName("example")
-                    .publicKeyCredParams()
-                    .addPublicKeyCredParams(PublicKeyCredentialType.PUBLIC_KEY, COSEAlgorithmIdentifier.ES256)
-                    .addPublicKeyCredParams(PublicKeyCredentialType.PUBLIC_KEY, COSEAlgorithmIdentifier.RS1)
-                    .and()
-                    .attestation(AttestationConveyancePreference.DIRECT)
-                    .registrationTimeout(10000L)
-                    .authenticationTimeout(20000L)
-                    .registrationExtensions()
-                        .credProps(true)
-                        .uvm(true)
-                        .entry("unknown", true)
-                        .extensionProviders((builder, httpServletRequest) -> {
-                            builder.set("extensionProvider", httpServletRequest.getRequestURI());
-                        })
-                    .and()
-                    .authenticationExtensions()
-                        .appid("appid")
-                        .appidExclude("appidExclude")
-                        .uvm(true)
-                        .entry("unknown", true)
-                        .extensionProviders((builder, httpServletRequest) -> {
-                            builder.set("extensionProvider", httpServletRequest.getRequestURI());
-                        })
-                    .and();
-
             http.apply(WebAuthnLoginConfigurer.webAuthnLogin())
+                    .objectConverter(objectConverter)
+                    .optionsProvider(optionsProvider)
+                    .serverPropertyProvider(serverPropertyProvider)
                     .usernameParameter("username")
                     .passwordParameter("password")
                     .credentialIdParameter("credentialId")
@@ -202,18 +174,48 @@ public class WebAuthnLoginConfigurerSpringTest {
                     .authenticatorDataParameter("authenticatorData")
                     .signatureParameter("signature")
                     .clientExtensionsJSONParameter("clientExtensionsJSON")
+                    .loginProcessingUrl("/login")
                     .successForwardUrl("/")
                     .failureForwardUrl("/login")
                     .loginPage("/login")
                     .attestationOptionsEndpoint()
                         .processingUrl("/webauthn/attestation/options")
+                        .rp()
+                            .id("example.com")
+                            .icon("dummy")
+                            .name("example")
+                            .and()
+                        .pubKeyCredParams(
+                                new PublicKeyCredentialParameters(PublicKeyCredentialType.PUBLIC_KEY, COSEAlgorithmIdentifier.ES256),
+                                new PublicKeyCredentialParameters(PublicKeyCredentialType.PUBLIC_KEY, COSEAlgorithmIdentifier.RS1)
+                        )
+                        .timeout(10000L)
+                        .authenticatorSelection()
+                            .authenticatorAttachment(AuthenticatorAttachment.CROSS_PLATFORM)
+                            .residentKey(ResidentKeyRequirement.PREFERRED)
+                            .userVerification(UserVerificationRequirement.PREFERRED)
+                            .and()
+                        .attestation(AttestationConveyancePreference.DIRECT)
+                        .extensions()
+                            .credProps(true)
+                            .uvm(true)
+                            .entry("unknown", true)
+                            .extensionProviders((builder, httpServletRequest) -> builder.set("extensionProvider", httpServletRequest.getRequestURI()))
                         .and()
                     .assertionOptionsEndpoint()
                         .processingUrl("/webauthn/assertion/options")
+                        .timeout(20000L)
+                        .userVerification(UserVerificationRequirement.PREFERRED)
+                        .extensions()
+                            .appid("appid")
+                            .appidExclude("appidExclude")
+                            .uvm(true)
+                            .entry("unknown", true)
+                            .extensionProviders((builder, httpServletRequest) -> {
+                                builder.set("extensionProvider", httpServletRequest.getRequestURI());
+                            })
                         .and()
-                    .objectConverter(objectConverter)
-                    .optionsProvider(optionsProvider)
-                    .serverPropertyProvider(serverPropertyProvider);
+                    .and();
 
             // Authorization
             http.authorizeRequests()

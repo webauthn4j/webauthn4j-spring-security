@@ -17,11 +17,20 @@
 package com.webauthn4j.springframework.security.config.configurers;
 
 import com.webauthn4j.converter.util.ObjectConverter;
+import com.webauthn4j.data.*;
+import com.webauthn4j.data.extension.client.AuthenticationExtensionClientInput;
+import com.webauthn4j.data.extension.client.AuthenticationExtensionsClientInputs;
+import com.webauthn4j.data.extension.client.RegistrationExtensionClientInput;
 import com.webauthn4j.springframework.security.WebAuthnProcessingFilter;
 import com.webauthn4j.springframework.security.challenge.ChallengeRepository;
 import com.webauthn4j.springframework.security.endpoint.AssertionOptionsEndpointFilter;
 import com.webauthn4j.springframework.security.endpoint.AttestationOptionsEndpointFilter;
+import com.webauthn4j.springframework.security.extension.AuthenticationExtensionProvider;
+import com.webauthn4j.springframework.security.extension.AuthenticationExtensionsClientInputsProvider;
+import com.webauthn4j.springframework.security.extension.RegistrationExtensionProvider;
 import com.webauthn4j.springframework.security.options.OptionsProvider;
+import com.webauthn4j.springframework.security.options.OptionsProviderImpl;
+import com.webauthn4j.springframework.security.options.PublicKeyCredentialUserEntityProvider;
 import com.webauthn4j.springframework.security.server.ServerPropertyProvider;
 import org.springframework.security.config.annotation.web.HttpSecurityBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -33,6 +42,11 @@ import org.springframework.security.web.session.SessionManagementFilter;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.security.web.util.matcher.RequestMatcher;
 import org.springframework.util.Assert;
+
+import java.io.Serializable;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * Adds WebAuthn authentication. All attributes have reasonable defaults making all
@@ -65,7 +79,6 @@ import org.springframework.util.Assert;
  * <li>{@link org.springframework.security.authentication.AuthenticationManager}</li>
  * </ul>
  *
- * @see WebAuthnConfigurer
  * @see WebAuthnAuthenticationProviderConfigurer
  */
 public final class WebAuthnLoginConfigurer<H extends HttpSecurityBuilder<H>> extends
@@ -360,12 +373,45 @@ public final class WebAuthnLoginConfigurer<H extends HttpSecurityBuilder<H>> ext
 
         private String processingUrl = AttestationOptionsEndpointFilter.FILTER_URL;
 
+        private PublicKeyCredentialUserEntityProvider userProvider;
+        private final RpConfig rpConfig = new RpConfig();
+        private PublicKeyCredentialParameters[] pubKeyCredParams = null;
+        private final AuthenticatorSelectionConfig authenticatorSelectionConfig = new AuthenticatorSelectionConfig();
+        private AttestationConveyancePreference attestation = null;
+        private Long timeout;
+        private final RegistrationExtensionsClientInputsConfig extensions = new RegistrationExtensionsClientInputsConfig();
+
         private AttestationOptionsEndpointConfig() {
         }
 
         private void configure(H http) {
             AttestationOptionsEndpointFilter optionsEndpointFilter = WebAuthnConfigurerUtil.getAttestationOptionsEndpointFilter(http);
             optionsEndpointFilter.setFilterProcessesUrl(processingUrl);
+
+            if(optionsProvider instanceof OptionsProviderImpl){
+                OptionsProviderImpl optionsProviderImpl = (OptionsProviderImpl)optionsProvider;
+                if (userProvider != null){
+                    optionsProviderImpl.setPublicKeyCredentialUserEntityProvider(userProvider);
+                }
+                if (rpConfig.id != null) {
+                    optionsProviderImpl.setRpId(rpConfig.id);
+                }
+                if (rpConfig.name != null) {
+                    optionsProviderImpl.setRpName(rpConfig.name);
+                }
+                if (rpConfig.icon != null) {
+                    optionsProviderImpl.setRpIcon(rpConfig.icon);
+                }
+                optionsProviderImpl.setPubKeyCredParams(pubKeyCredParams == null ? null : Arrays.asList(pubKeyCredParams));
+                if (timeout != null) {
+                    optionsProviderImpl.setRegistrationTimeout(timeout);
+                }
+                optionsProviderImpl.setRegistrationAuthenticatorSelection(authenticatorSelectionConfig.getAuthenticatorSelectionCriteria());
+                if (attestation != null){
+                    optionsProviderImpl.setAttestation(attestation);
+                }
+                optionsProviderImpl.setRegistrationExtensionsProvider(extensions.getExtensionsProvider());
+            }
 
             http.addFilterAfter(optionsEndpointFilter, SessionManagementFilter.class);
         }
@@ -382,12 +428,278 @@ public final class WebAuthnLoginConfigurer<H extends HttpSecurityBuilder<H>> ext
         }
 
         /**
+         * Sets the relying party name
+         *
+         * @param name the relying party name
+         * @return the {@link AttestationOptionsEndpointConfig} for additional customization
+         */
+        public AttestationOptionsEndpointConfig rp(String name) {
+            this.rpConfig.name = name;
+            return this;
+        }
+
+        /**
+         * Returns the {@link RpConfig} for configuring PublicKeyCredParams
+         *
+         * @return the {@link RpConfig}
+         */
+        public RpConfig rp(){
+            return this.rpConfig;
+        }
+
+        public AttestationOptionsEndpointConfig userProvider(PublicKeyCredentialUserEntityProvider userProvider) {
+            this.userProvider = userProvider;
+            return this;
+        }
+
+        /**
+         * Returns the {@link AttestationOptionsEndpointConfig} for configuring PublicKeyCredParams
+         *
+         * @return the {@link AttestationOptionsEndpointConfig}
+         */
+        public AttestationOptionsEndpointConfig pubKeyCredParams(PublicKeyCredentialParameters... pubKeyCredParams) {
+            this.pubKeyCredParams = pubKeyCredParams;
+            return this;
+        }
+
+        /**
+         * The timeout for registration ceremony
+         *
+         * @param timeout the timeout for registration ceremony
+         * @return the {@link AttestationOptionsEndpointConfig} for additional customization
+         */
+        public AttestationOptionsEndpointConfig timeout(Long timeout) {
+            this.timeout = timeout;
+            return this;
+        }
+
+
+        public AuthenticatorSelectionConfig authenticatorSelection() {
+            return authenticatorSelectionConfig;
+        }
+
+        /**
+         * The attestation conveyance preference
+         *
+         * @param attestation the attestation conveyance preference
+         * @return the {@link AttestationOptionsEndpointConfig} for additional customization
+         */
+        public AttestationOptionsEndpointConfig attestation(AttestationConveyancePreference attestation) {
+            this.attestation = attestation;
+            return this;
+        }
+
+        /**
+         * Returns the {@link RegistrationExtensionsClientInputsConfig } for configuring registration extensions
+         *
+         * @return the {@link RegistrationExtensionsClientInputsConfig}
+         */
+        public RegistrationExtensionsClientInputsConfig extensions() {
+            return this.extensions;
+        }
+
+        /**
          * Returns the {@link WebAuthnLoginConfigurer} for further configuration.
          *
          * @return the {@link WebAuthnLoginConfigurer}
          */
         public WebAuthnLoginConfigurer<H> and() {
             return WebAuthnLoginConfigurer.this;
+        }
+
+
+        /**
+         * Configuration options for PublicKeyCredParams
+         */
+        public class RpConfig {
+
+            private String id = null;
+            private String name = null;
+            private String icon = null;
+
+            private RpConfig() {
+            }
+
+            /**
+             * The relying party id for credential scoping
+             *
+             * @param id the relying party id
+             * @return the {@link RpConfig} for additional customization
+             */
+            public RpConfig id(String id) {
+                Assert.hasText(id, "id parameter must not be null or empty");
+                this.id = id;
+                return this;
+            }
+
+            /**
+             * The relying party name
+             *
+             * @param name the relying party name
+             * @return the {@link RpConfig} for additional customization
+             */
+            public RpConfig name(String name) {
+                Assert.hasText(name, "name parameter must not be null or empty");
+                this.name = name;
+                return this;
+            }
+
+            /**
+             * The relying party icon
+             *
+             * @param icon the relying party icon
+             * @return the {@link RpConfig} for additional customization
+             */
+            public RpConfig icon(String icon) {
+                Assert.hasText(icon, "icon parameter must not be null or empty");
+                this.icon = icon;
+                return this;
+            }
+
+            /**
+             * Returns the {@link AttestationOptionsEndpointConfig} for further configuration.
+             *
+             * @return the {@link AttestationOptionsEndpointConfig}
+             */
+            public AttestationOptionsEndpointConfig and() {
+                return AttestationOptionsEndpointConfig.this;
+            }
+
+        }
+
+
+        public class AuthenticatorSelectionConfig {
+
+            private AuthenticatorAttachment authenticatorAttachment;
+            private ResidentKeyRequirement residentKey;
+            private UserVerificationRequirement userVerification;
+
+            private AuthenticatorSelectionConfig() {
+            }
+
+            /**
+             * Authenticator attachment requirement for authenticator filtering
+             *
+             * @param authenticatorAttachment authenticator attachment requirement
+             * @return the {@link AuthenticatorSelectionConfig} for additional customization
+             */
+            public AuthenticatorSelectionConfig authenticatorAttachment(AuthenticatorAttachment authenticatorAttachment) {
+                Assert.notNull(authenticatorAttachment, "authenticatorAttachment parameter must not be null or empty");
+                this.authenticatorAttachment = authenticatorAttachment;
+                return this;
+            }
+
+            /**
+             * Requirement for client-side discoverable credentials filtering
+             *
+             * @param residentKey requirement for client-side discoverable credentials
+             * @return the {@link AuthenticatorSelectionConfig} for additional customization
+             */
+            public AuthenticatorSelectionConfig residentKey(ResidentKeyRequirement residentKey) {
+                Assert.notNull(residentKey, "residentKey parameter must not be null or empty");
+                this.residentKey = residentKey;
+                return this;
+            }
+
+            /**
+             * user verification requirement for authenticator filtering
+             *
+             * @param userVerification user verification requirement
+             * @return the {@link AuthenticatorSelectionConfig} for additional customization
+             */
+            public AuthenticatorSelectionConfig userVerification(UserVerificationRequirement userVerification) {
+                Assert.notNull(userVerification, "userVerification parameter must not be null or empty");
+                this.userVerification = userVerification;
+                return this;
+            }
+
+            /**
+             * Returns the {@link AttestationOptionsEndpointConfig} for further configuration.
+             *
+             * @return the {@link AttestationOptionsEndpointConfig}
+             */
+            public AttestationOptionsEndpointConfig and() {
+                return AttestationOptionsEndpointConfig.this;
+            }
+
+
+            private AuthenticatorSelectionCriteria getAuthenticatorSelectionCriteria() {
+                return new AuthenticatorSelectionCriteria(authenticatorAttachment, residentKey == ResidentKeyRequirement.REQUIRED, residentKey, userVerification);
+            }
+        }
+
+
+        /**
+         * Configuration options for AuthenticationExtensionsClientInputs
+         */
+        public class RegistrationExtensionsClientInputsConfig {
+
+            private final AuthenticationExtensionsClientInputs.BuilderForRegistration builder = new AuthenticationExtensionsClientInputs.BuilderForRegistration();
+            @SuppressWarnings("java:S1450")
+            private List<RegistrationExtensionProvider> providers = Collections.emptyList();
+
+            private RegistrationExtensionsClientInputsConfig() {
+            }
+
+            private AuthenticationExtensionsClientInputsProvider<RegistrationExtensionClientInput> getExtensionsProvider() {
+                return httpServletRequest -> {
+                    providers.forEach(provider -> provider.provide(builder, httpServletRequest));
+                    return builder.build();
+                };
+            }
+
+            /**
+             * Configure uvm extension
+             *
+             * @param uvm flag to enable uvm extension
+             * @return the {@link RegistrationExtensionsClientInputsConfig}
+             */
+            public RegistrationExtensionsClientInputsConfig uvm(Boolean uvm) {
+                Assert.notNull(uvm, "uvm must not be null");
+                builder.setUvm(uvm);
+                return this;
+            }
+
+            /**
+             * Configure credProps extension
+             *
+             * @param credProps flag to enable uvm extension
+             * @return the {@link RegistrationExtensionsClientInputsConfig}
+             */
+            public RegistrationExtensionsClientInputsConfig credProps(Boolean credProps){
+                Assert.notNull(credProps, "credProps must not be null");
+                builder.setCredProps(credProps);
+                return this;
+            }
+
+            /**
+             * Add custom entry
+             *
+             * @param key key
+             * @param value value
+             * @return the {@link RegistrationExtensionsClientInputsConfig}
+             */
+            public RegistrationExtensionsClientInputsConfig entry(String key, Serializable value) {
+                Assert.notNull(key, "key must not be null");
+                Assert.notNull(value, "value must not be null");
+                builder.set(key, value);
+                return this;
+            }
+
+            public RegistrationExtensionsClientInputsConfig extensionProviders(RegistrationExtensionProvider... providers){
+                this.providers = Arrays.asList(providers);
+                return this;
+            }
+
+            /**
+             * Returns the {@link WebAuthnLoginConfigurer} for further configuration.
+             *
+             * @return the {@link WebAuthnLoginConfigurer}
+             */
+            public WebAuthnLoginConfigurer<H> and() {
+                return WebAuthnLoginConfigurer.this;
+            }
+
         }
 
     }
@@ -398,6 +710,9 @@ public final class WebAuthnLoginConfigurer<H extends HttpSecurityBuilder<H>> ext
     public class AssertionOptionsEndpointConfig {
 
         private String processingUrl = AssertionOptionsEndpointFilter.FILTER_URL;
+        private Long timeout;
+        private final AuthenticationExtensionsClientInputsConfig extensions = new AuthenticationExtensionsClientInputsConfig();
+        private UserVerificationRequirement userVerification;
 
         private AssertionOptionsEndpointConfig() {
         }
@@ -405,6 +720,15 @@ public final class WebAuthnLoginConfigurer<H extends HttpSecurityBuilder<H>> ext
         private void configure(H http) {
             AssertionOptionsEndpointFilter optionsEndpointFilter = WebAuthnConfigurerUtil.getAssertionOptionsEndpointFilter(http);
             optionsEndpointFilter.setFilterProcessesUrl(processingUrl);
+
+            if(optionsProvider instanceof OptionsProviderImpl){
+                OptionsProviderImpl optionsProviderImpl = (OptionsProviderImpl)optionsProvider;
+                if (timeout != null) {
+                    optionsProviderImpl.setAuthenticationTimeout(timeout);
+                }
+                optionsProviderImpl.setAuthenticationUserVerification(userVerification);
+                optionsProviderImpl.setAuthenticationExtensionsProvider(extensions.getExtensionsProvider());
+            }
 
             http.addFilterAfter(optionsEndpointFilter, SessionManagementFilter.class);
         }
@@ -421,6 +745,37 @@ public final class WebAuthnLoginConfigurer<H extends HttpSecurityBuilder<H>> ext
         }
 
         /**
+         * timeout for authentication ceremony
+         *
+         * @param timeout timeout for authentication ceremony
+         * @return the {@link AssertionOptionsEndpointConfig} for additional customization
+         */
+        public AssertionOptionsEndpointConfig timeout(Long timeout) {
+            this.timeout = timeout;
+            return this;
+        }
+
+        /**
+         * user verification requirement for authentication ceremony
+         *
+         * @param userVerification user verification requirement for authentication ceremony
+         * @return the {@link AssertionOptionsEndpointConfig} for additional customization
+         */
+        public AssertionOptionsEndpointConfig userVerification(UserVerificationRequirement userVerification) {
+            this.userVerification = userVerification;
+            return this;
+        }
+
+        /**
+         * Returns the {@link AuthenticationExtensionsClientInputsConfig} for configuring authentication extensions
+         *
+         * @return the {@link AuthenticationExtensionsClientInputsConfig}
+         */
+        public AuthenticationExtensionsClientInputsConfig extensions() {
+            return extensions;
+        }
+
+        /**
          * Returns the {@link WebAuthnLoginConfigurer} for further configuration.
          *
          * @return the {@link WebAuthnLoginConfigurer}
@@ -429,7 +784,94 @@ public final class WebAuthnLoginConfigurer<H extends HttpSecurityBuilder<H>> ext
             return WebAuthnLoginConfigurer.this;
         }
 
-    }
 
+
+        /**
+         * Configuration options for AuthenticationExtensionsClientInputs
+         */
+        public class AuthenticationExtensionsClientInputsConfig {
+
+            private final AuthenticationExtensionsClientInputs.BuilderForAuthentication builder = new AuthenticationExtensionsClientInputs.BuilderForAuthentication();
+            @SuppressWarnings("java:S1450")
+            private List<AuthenticationExtensionProvider> providers = Collections.emptyList();
+
+            private AuthenticationExtensionsClientInputsConfig() {
+            }
+
+            private AuthenticationExtensionsClientInputsProvider<AuthenticationExtensionClientInput> getExtensionsProvider() {
+                return httpServletRequest -> {
+                    providers.forEach(provider -> provider.provide(builder, httpServletRequest));
+                    return builder.build();
+                };
+            }
+
+            /**
+             * Configure appid extension
+             *
+             * @param appid appid
+             * @return the {@link AuthenticationExtensionsClientInputsConfig}
+             */
+            public AuthenticationExtensionsClientInputsConfig appid(String appid) {
+                Assert.notNull(appid, "appid must not be null");
+                builder.setAppid(appid);
+                return this;
+            }
+
+            /**
+             * Configure appidExclude extension
+             *
+             * @param appidExclude appid
+             * @return the {@link AuthenticationExtensionsClientInputsConfig}
+             */
+            public AuthenticationExtensionsClientInputsConfig appidExclude(String appidExclude) {
+                Assert.notNull(appidExclude, "appidExclude must not be null");
+                builder.setAppidExclude(appidExclude);
+                return this;
+            }
+
+            /**
+             * Configure uvm extension
+             *
+             * @param uvm flag to enable uvm extension
+             * @return the {@link AuthenticationExtensionsClientInputsConfig}
+             */
+            public AuthenticationExtensionsClientInputsConfig uvm(Boolean uvm) {
+                Assert.notNull(uvm, "uvm must not be null");
+                builder.setUvm(uvm);
+                return this;
+            }
+
+            /**
+             * Add custom entry
+             *
+             * @param key key
+             * @param value value
+             * @return the {@link AuthenticationExtensionsClientInputsConfig}
+             */
+            public AuthenticationExtensionsClientInputsConfig entry(String key, Serializable value) {
+                Assert.notNull(key, "key must not be null");
+                Assert.notNull(value, "value must not be null");
+                builder.set(key, value);
+                return this;
+            }
+
+            public AuthenticationExtensionsClientInputsConfig extensionProviders(AuthenticationExtensionProvider... providers){
+                this.providers = Arrays.asList(providers);
+                return this;
+            }
+
+            /**
+             * Returns the {@link AssertionOptionsEndpointConfig} for further configuration.
+             *
+             * @return the {@link AssertionOptionsEndpointConfig}
+             */
+            public WebAuthnLoginConfigurer<H>.AssertionOptionsEndpointConfig and() {
+                return WebAuthnLoginConfigurer.AssertionOptionsEndpointConfig.this;
+            }
+
+        }
+
+
+    }
 
 }
