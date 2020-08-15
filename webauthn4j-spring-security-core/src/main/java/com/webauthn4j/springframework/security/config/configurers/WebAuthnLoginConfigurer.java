@@ -421,6 +421,7 @@ public final class WebAuthnLoginConfigurer<H extends HttpSecurityBuilder<H>> ext
             if (attestationOptionsProvider == null) {
                 attestationOptionsProvider = WebAuthnConfigurerUtil.getAttestationOptionsProviderOrCreateNew(http);
             }
+            http.setSharedObject(AttestationOptionsProvider.class, attestationOptionsProvider);
 
             if(attestationOptionsProvider instanceof AttestationOptionsProviderImpl){
                 AttestationOptionsProviderImpl attestationOptionsProviderImpl = (AttestationOptionsProviderImpl)attestationOptionsProvider;
@@ -813,6 +814,11 @@ public final class WebAuthnLoginConfigurer<H extends HttpSecurityBuilder<H>> ext
         private void configure(H http) {
             AssertionOptionsEndpointFilter optionsEndpointFilter = WebAuthnConfigurerUtil.getAssertionOptionsEndpointFilterOrCreateNew(http);
             optionsEndpointFilter.setFilterProcessesUrl(processingUrl);
+
+            if (assertionOptionsProvider == null) {
+                assertionOptionsProvider = WebAuthnConfigurerUtil.getAssertionOptionsProviderOrCreateNew(http);
+            }
+            http.setSharedObject(AssertionOptionsProvider.class, assertionOptionsProvider);
 
             if(assertionOptionsProvider instanceof AssertionOptionsProviderImpl){
                 AssertionOptionsProviderImpl optionsProviderImpl = (AssertionOptionsProviderImpl)assertionOptionsProvider;
