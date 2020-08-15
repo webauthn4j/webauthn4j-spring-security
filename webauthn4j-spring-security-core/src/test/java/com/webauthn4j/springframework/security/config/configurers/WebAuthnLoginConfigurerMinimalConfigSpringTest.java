@@ -66,9 +66,6 @@ public class WebAuthnLoginConfigurerMinimalConfigSpringTest {
         @Override
         protected void configure(HttpSecurity http) throws Exception {
 
-            // Authentication
-            http.apply(WebAuthnConfigurer.webAuthn());
-
             http.apply(WebAuthnLoginConfigurer.webAuthnLogin());
 
             // Authorization

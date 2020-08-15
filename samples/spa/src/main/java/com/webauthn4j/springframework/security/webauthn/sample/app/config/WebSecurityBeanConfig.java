@@ -23,17 +23,15 @@ import com.webauthn4j.converter.util.ObjectConverter;
 import com.webauthn4j.metadata.converter.jackson.WebAuthnMetadataJSONModule;
 import com.webauthn4j.springframework.security.WebAuthnRegistrationRequestValidator;
 import com.webauthn4j.springframework.security.WebAuthnSecurityExpression;
-import com.webauthn4j.springframework.security.options.PublicKeyCredentialUserEntityService;
 import com.webauthn4j.springframework.security.authenticator.WebAuthnAuthenticatorService;
 import com.webauthn4j.springframework.security.challenge.ChallengeRepository;
 import com.webauthn4j.springframework.security.challenge.HttpSessionChallengeRepository;
 import com.webauthn4j.springframework.security.converter.jackson.WebAuthn4JSpringSecurityJSONModule;
-import com.webauthn4j.springframework.security.options.OptionsProvider;
-import com.webauthn4j.springframework.security.options.OptionsProviderImpl;
+import com.webauthn4j.springframework.security.options.*;
 import com.webauthn4j.springframework.security.server.ServerPropertyProvider;
 import com.webauthn4j.springframework.security.server.ServerPropertyProviderImpl;
+import com.webauthn4j.springframework.security.webauthn.sample.domain.component.PublicKeyCredentialUserEntityProviderImpl;
 import com.webauthn4j.springframework.security.webauthn.sample.domain.component.UserManager;
-import com.webauthn4j.springframework.security.webauthn.sample.domain.component.PublicKeyCredentialUserEntityServiceImpl;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.access.AccessDeniedException;
@@ -68,8 +66,8 @@ public class WebSecurityBeanConfig {
     }
 
     @Bean
-    public PublicKeyCredentialUserEntityService webAuthnUserEntityProvider(UserManager userManager){
-        return new PublicKeyCredentialUserEntityServiceImpl(userManager);
+    public PublicKeyCredentialUserEntityProvider webAuthnUserEntityProvider(UserManager userManager){
+        return new PublicKeyCredentialUserEntityProviderImpl(userManager);
     }
 
     @Bean
@@ -78,15 +76,25 @@ public class WebSecurityBeanConfig {
     }
 
     @Bean
-    public OptionsProvider optionsProvider(WebAuthnAuthenticatorService webAuthnAuthenticatorService, PublicKeyCredentialUserEntityService publicKeyCredentialUserEntityService, ChallengeRepository challengeRepository) {
-        OptionsProviderImpl optionsProviderImpl = new OptionsProviderImpl(webAuthnAuthenticatorService, challengeRepository);
-        optionsProviderImpl.setPublicKeyCredentialUserEntityService(publicKeyCredentialUserEntityService);
+    public AttestationOptionsProvider attestationOptionsProvider(RpIdProvider rpIdProvider, WebAuthnAuthenticatorService webAuthnAuthenticatorService, ChallengeRepository challengeRepository, PublicKeyCredentialUserEntityProvider publicKeyCredentialUserEntityProvider){
+        AttestationOptionsProviderImpl optionsProviderImpl = new AttestationOptionsProviderImpl(rpIdProvider, webAuthnAuthenticatorService, challengeRepository);
+        optionsProviderImpl.setPublicKeyCredentialUserEntityProvider(publicKeyCredentialUserEntityProvider);
         return optionsProviderImpl;
     }
 
     @Bean
-    public ServerPropertyProvider serverPropertyProvider(OptionsProvider optionsProvider, ChallengeRepository challengeRepository) {
-        return new ServerPropertyProviderImpl(optionsProvider, challengeRepository);
+    public AssertionOptionsProvider assertionOptionsProvider(RpIdProvider rpIdProvider, WebAuthnAuthenticatorService webAuthnAuthenticatorService, ChallengeRepository challengeRepository) {
+        return new AssertionOptionsProviderImpl(rpIdProvider, webAuthnAuthenticatorService, challengeRepository);
+    }
+
+    @Bean
+    public RpIdProvider rpIdProvider(){
+        return new RpIdProviderImpl();
+    }
+
+    @Bean
+    public ServerPropertyProvider serverPropertyProvider(RpIdProvider rpIdProvider, ChallengeRepository challengeRepository) {
+        return new ServerPropertyProviderImpl(rpIdProvider, challengeRepository);
     }
 
     @Bean

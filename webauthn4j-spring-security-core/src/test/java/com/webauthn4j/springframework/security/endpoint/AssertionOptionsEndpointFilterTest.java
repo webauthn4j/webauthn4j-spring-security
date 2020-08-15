@@ -18,7 +18,7 @@ package com.webauthn4j.springframework.security.endpoint;
 
 import com.webauthn4j.converter.util.ObjectConverter;
 import com.webauthn4j.data.PublicKeyCredentialRequestOptions;
-import com.webauthn4j.springframework.security.options.OptionsProvider;
+import com.webauthn4j.springframework.security.options.AssertionOptionsProvider;
 import org.junit.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.mock.web.MockFilterChain;
@@ -40,7 +40,7 @@ public class AssertionOptionsEndpointFilterTest {
 
     @Test
     public void doFilter_test() throws IOException, ServletException {
-        OptionsProvider optionsProvider = mock(OptionsProvider.class);
+        AssertionOptionsProvider optionsProvider = mock(AssertionOptionsProvider.class);
         PublicKeyCredentialRequestOptions assertionOptions = new PublicKeyCredentialRequestOptions(null, null, null, null, null,null);
         when(optionsProvider.getAssertionOptions(any(), any())).thenReturn(assertionOptions);
         AssertionOptionsEndpointFilter optionsEndpointFilter = new AssertionOptionsEndpointFilter(optionsProvider, objectConverter);
@@ -58,7 +58,7 @@ public class AssertionOptionsEndpointFilterTest {
 
     @Test
     public void doFilter_with_unmatched_url_test() throws IOException, ServletException {
-        OptionsProvider optionsProvider = mock(OptionsProvider.class);
+        AssertionOptionsProvider optionsProvider = mock(AssertionOptionsProvider.class);
         AssertionOptionsEndpointFilter optionsEndpointFilter = new AssertionOptionsEndpointFilter(optionsProvider, objectConverter);
         AuthenticationTrustResolver trustResolver = new AuthenticationTrustResolverImpl();
         optionsEndpointFilter.setTrustResolver(trustResolver);
@@ -74,7 +74,7 @@ public class AssertionOptionsEndpointFilterTest {
 
     @Test
     public void doFilter_with_error_test() throws IOException, ServletException {
-        OptionsProvider optionsProvider = mock(OptionsProvider.class);
+        AssertionOptionsProvider optionsProvider = mock(AssertionOptionsProvider.class);
         doThrow(new RuntimeException()).when(optionsProvider).getAssertionOptions(any(), any());
         AssertionOptionsEndpointFilter optionsEndpointFilter = new AssertionOptionsEndpointFilter(optionsProvider, objectConverter);
         AuthenticationTrustResolver trustResolver = new AuthenticationTrustResolverImpl();

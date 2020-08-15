@@ -17,11 +17,11 @@
 package com.webauthn4j.springframework.security.webauthn.sample.app.config;
 
 import com.webauthn4j.WebAuthnManager;
+import com.webauthn4j.data.PublicKeyCredentialParameters;
 import com.webauthn4j.data.PublicKeyCredentialType;
 import com.webauthn4j.data.attestation.statement.COSEAlgorithmIdentifier;
 import com.webauthn4j.springframework.security.authenticator.WebAuthnAuthenticatorService;
 import com.webauthn4j.springframework.security.config.configurers.WebAuthnAuthenticationProviderConfigurer;
-import com.webauthn4j.springframework.security.config.configurers.WebAuthnConfigurer;
 import com.webauthn4j.springframework.security.config.configurers.WebAuthnLoginConfigurer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
@@ -100,17 +100,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
 
-        // WebAuthn Config
-        http.apply(WebAuthnConfigurer.webAuthn())
-                .rpName("WebAuthn4J Spring Security Sample")
-                .publicKeyCredParams()
-                .addPublicKeyCredParams(PublicKeyCredentialType.PUBLIC_KEY, COSEAlgorithmIdentifier.RS256)  // Windows Hello
-                .addPublicKeyCredParams(PublicKeyCredentialType.PUBLIC_KEY, COSEAlgorithmIdentifier.ES256) // FIDO U2F Key, etc
-                .and()
-                .registrationExtensions()
-                    .credProps(true)
-                .and();
-
         // WebAuthn Login
         http.apply(WebAuthnLoginConfigurer.webAuthnLogin())
                 .usernameParameter("username")
@@ -121,6 +110,19 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .signatureParameter("signature")
                 .clientExtensionsJSONParameter("clientExtensionsJSON")
                 .loginProcessingUrl("/login")
+                .attestationOptionsEndpoint()
+                    .rp()
+                        .name("WebAuthn4J Spring Security Sample")
+                        .and()
+                    .pubKeyCredParams(
+                        new PublicKeyCredentialParameters(PublicKeyCredentialType.PUBLIC_KEY, COSEAlgorithmIdentifier.RS256), // Windows Hello
+                        new PublicKeyCredentialParameters(PublicKeyCredentialType.PUBLIC_KEY, COSEAlgorithmIdentifier.ES256) // FIDO U2F Key, etc
+                    )
+                    .extensions()
+                        .credProps(true)
+                .and()
+                .assertionOptionsEndpoint()
+                    .and()
                 .successHandler(authenticationSuccessHandler)
                 .failureHandler(authenticationFailureHandler);
 

@@ -24,8 +24,9 @@ import com.webauthn4j.springframework.security.authenticator.WebAuthnAuthenticat
 import com.webauthn4j.springframework.security.challenge.ChallengeRepository;
 import com.webauthn4j.springframework.security.challenge.HttpSessionChallengeRepository;
 import com.webauthn4j.springframework.security.converter.jackson.WebAuthn4JSpringSecurityJSONModule;
-import com.webauthn4j.springframework.security.options.OptionsProvider;
-import com.webauthn4j.springframework.security.options.OptionsProviderImpl;
+import com.webauthn4j.springframework.security.endpoint.AssertionOptionsEndpointFilter;
+import com.webauthn4j.springframework.security.endpoint.AttestationOptionsEndpointFilter;
+import com.webauthn4j.springframework.security.options.*;
 import com.webauthn4j.springframework.security.server.ServerPropertyProvider;
 import com.webauthn4j.springframework.security.server.ServerPropertyProviderImpl;
 import org.springframework.context.ApplicationContext;
@@ -39,60 +40,166 @@ class WebAuthnConfigurerUtil {
     private WebAuthnConfigurerUtil() {
     }
 
-    static <H extends HttpSecurityBuilder<H>> ChallengeRepository getChallengeRepository(H http) {
+    /**
+     * Get {@link ChallengeRepository} from SharedObject or ApplicationContext. if nothing hit, create new instance
+     */
+    static <H extends HttpSecurityBuilder<H>> ChallengeRepository getChallengeRepositoryOrCreateNew(H http) {
+        ChallengeRepository challengeRepository = http.getSharedObject(ChallengeRepository.class);
+        if (challengeRepository != null) {
+            return challengeRepository;
+        }
         ApplicationContext applicationContext = http.getSharedObject(ApplicationContext.class);
-        ChallengeRepository challengeRepository;
         String[] beanNames = applicationContext.getBeanNamesForType(ChallengeRepository.class);
         if (beanNames.length == 0) {
-            challengeRepository = new HttpSessionChallengeRepository();
+            return new HttpSessionChallengeRepository();
         } else {
-            challengeRepository = applicationContext.getBean(ChallengeRepository.class);
+            return applicationContext.getBean(ChallengeRepository.class);
         }
-        return challengeRepository;
     }
 
-    public static <H extends HttpSecurityBuilder<H>> WebAuthnAuthenticatorService getWebAuthnAuthenticatorService(H http){
+    /**
+     * Get {@link RpIdProvider} from SharedObject or ApplicationContext. if nothing hit, throw exception
+     */
+    static <H extends HttpSecurityBuilder<H>> WebAuthnAuthenticatorService getWebAuthnAuthenticatorServiceOrThrowException(H http){
+        WebAuthnAuthenticatorService webAuthnAuthenticatorService = http.getSharedObject(WebAuthnAuthenticatorService.class);
+        if (webAuthnAuthenticatorService != null) {
+            return webAuthnAuthenticatorService;
+        }
         ApplicationContext applicationContext = http.getSharedObject(ApplicationContext.class);
+        // WebAuthnAuthenticatorService must be provided manually. If not, let it throw exception.
         return applicationContext.getBean(WebAuthnAuthenticatorService.class);
     }
 
-    public static <H extends HttpSecurityBuilder<H>> OptionsProvider getOptionsProvider(H http) {
+    /**
+     * Get {@link RpIdProvider} from SharedObject or ApplicationContext. if nothing hit, return null
+     */
+    static <H extends HttpSecurityBuilder<H>> RpIdProvider getRpIdProviderOrNull(H http) {
+        RpIdProvider rpIdProvider = http.getSharedObject(RpIdProvider.class);
+        if (rpIdProvider != null) {
+            return rpIdProvider;
+        }
         ApplicationContext applicationContext = http.getSharedObject(ApplicationContext.class);
-        String[] beanNames = applicationContext.getBeanNamesForType(OptionsProvider.class);
+        String[] beanNames = applicationContext.getBeanNamesForType(RpIdProvider.class);
         if(beanNames.length == 0){
-            return new OptionsProviderImpl(getWebAuthnAuthenticatorService(http), getChallengeRepository(http));
+            rpIdProvider = null;
         }
         else {
-            return applicationContext.getBean(OptionsProvider.class);
+            rpIdProvider = applicationContext.getBean(RpIdProvider.class);
+        }
+        http.setSharedObject(RpIdProvider.class, rpIdProvider);
+        return rpIdProvider;
+    }
+
+    /**
+     * Get {@link AttestationOptionsProvider} from SharedObject or ApplicationContext. if nothing hit, create new
+     */
+    static <H extends HttpSecurityBuilder<H>> AttestationOptionsProvider getAttestationOptionsProviderOrCreateNew(H http) {
+        AttestationOptionsProvider optionsProvider = http.getSharedObject(AttestationOptionsProvider.class);
+        if (optionsProvider != null) {
+            return optionsProvider;
+        }
+        AttestationOptionsProvider attestationOptionsProvider;
+        ApplicationContext applicationContext = http.getSharedObject(ApplicationContext.class);
+        String[] beanNames = applicationContext.getBeanNamesForType(AttestationOptionsProvider.class);
+        if(beanNames.length == 0){
+            attestationOptionsProvider = new AttestationOptionsProviderImpl(getRpIdProviderOrNull(http), getWebAuthnAuthenticatorServiceOrThrowException(http), getChallengeRepositoryOrCreateNew(http));
+        }
+        else {
+            attestationOptionsProvider = applicationContext.getBean(AttestationOptionsProvider.class);
+        }
+        http.setSharedObject(AttestationOptionsProvider.class, attestationOptionsProvider);
+        return attestationOptionsProvider;
+    }
+
+    /**
+     * Get {@link AssertionOptionsProvider} from SharedObject or ApplicationContext. if nothing hit, create new
+     */
+    static <H extends HttpSecurityBuilder<H>> AssertionOptionsProvider getAssertionOptionsProviderOrCreateNew(H http) {
+        AssertionOptionsProvider optionsProvider = http.getSharedObject(AssertionOptionsProvider.class);
+        if (optionsProvider != null) {
+            return optionsProvider;
+        }
+        ApplicationContext applicationContext = http.getSharedObject(ApplicationContext.class);
+        String[] beanNames = applicationContext.getBeanNamesForType(AssertionOptionsProvider.class);
+        if(beanNames.length == 0){
+            return new AssertionOptionsProviderImpl(getRpIdProviderOrNull(http), getWebAuthnAuthenticatorServiceOrThrowException(http), getChallengeRepositoryOrCreateNew(http));
+        }
+        else {
+            return applicationContext.getBean(AssertionOptionsProvider.class);
         }
     }
 
-    public static <H extends HttpSecurityBuilder<H>> ObjectConverter getObjectConverter(H http) {
+    /**
+     * Get {@link ObjectConverter} from SharedObject or ApplicationContext. if nothing hit, create new
+     */
+    public static <H extends HttpSecurityBuilder<H>> ObjectConverter getObjectConverterOrCreateNew(H http) {
+        ObjectConverter objectConverter = http.getSharedObject(ObjectConverter.class);
+        if (objectConverter != null) {
+            return objectConverter;
+        }
         ApplicationContext applicationContext = http.getSharedObject(ApplicationContext.class);
-        ObjectConverter objectConverter;
         String[] beanNames = applicationContext.getBeanNamesForType(ObjectConverter.class);
         if (beanNames.length == 0) {
             ObjectMapper jsonMapper = new ObjectMapper();
             jsonMapper.registerModule(new WebAuthnMetadataJSONModule());
             jsonMapper.registerModule(new WebAuthn4JSpringSecurityJSONModule());
             ObjectMapper cborMapper = new ObjectMapper(new CBORFactory());
-            objectConverter = new ObjectConverter(jsonMapper, cborMapper);
+            return new ObjectConverter(jsonMapper, cborMapper);
         } else {
-            objectConverter = applicationContext.getBean(ObjectConverter.class);
+            return applicationContext.getBean(ObjectConverter.class);
         }
-        return objectConverter;
     }
 
-    public static <H extends HttpSecurityBuilder<H>> ServerPropertyProvider getServerPropertyProvider(H http) {
+    /**
+     * Get {@link ServerPropertyProvider} from SharedObject or ApplicationContext. if nothing hit, create new
+     */
+    static <H extends HttpSecurityBuilder<H>> ServerPropertyProvider getServerPropertyProviderOrCreateNew(H http) {
+        ServerPropertyProvider serverPropertyProvider = http.getSharedObject(ServerPropertyProvider.class);
+        if (serverPropertyProvider != null) {
+            return serverPropertyProvider;
+        }
         ApplicationContext applicationContext = http.getSharedObject(ApplicationContext.class);
-        ServerPropertyProvider serverPropertyProvider;
         String[] beanNames = applicationContext.getBeanNamesForType(ServerPropertyProvider.class);
         if (beanNames.length == 0) {
-            serverPropertyProvider = new ServerPropertyProviderImpl(getOptionsProvider(http), getChallengeRepository(http));
+            return new ServerPropertyProviderImpl(getChallengeRepositoryOrCreateNew(http));
         } else {
-            serverPropertyProvider = applicationContext.getBean(ServerPropertyProvider.class);
+            return applicationContext.getBean(ServerPropertyProvider.class);
         }
-        return serverPropertyProvider;
     }
+
+    /**
+     * Get {@link AssertionOptionsProvider} from SharedObject or ApplicationContext. if nothing hit, create new
+     */
+    public static <H extends HttpSecurityBuilder<H>> AttestationOptionsEndpointFilter getAttestationOptionsEndpointFilterOrCreateNew(H http) {
+        AttestationOptionsEndpointFilter attestationOptionsEndpointFilter = http.getSharedObject(AttestationOptionsEndpointFilter.class);
+        if (attestationOptionsEndpointFilter != null) {
+            return attestationOptionsEndpointFilter;
+        }
+        ApplicationContext applicationContext = http.getSharedObject(ApplicationContext.class);
+        String[] beanNames = applicationContext.getBeanNamesForType(AttestationOptionsEndpointFilter.class);
+        if (beanNames.length == 0) {
+            return new AttestationOptionsEndpointFilter(getAttestationOptionsProviderOrCreateNew(http), getObjectConverterOrCreateNew(http));
+        } else {
+            return applicationContext.getBean(AttestationOptionsEndpointFilter.class);
+        }
+    }
+
+    /**
+     * Get {@link AssertionOptionsProvider} from SharedObject or ApplicationContext. if nothing hit, create new
+     */
+    public static <H extends HttpSecurityBuilder<H>> AssertionOptionsEndpointFilter getAssertionOptionsEndpointFilterOrCreateNew(H http) {
+        AssertionOptionsEndpointFilter assertionOptionsEndpointFilter = http.getSharedObject(AssertionOptionsEndpointFilter.class);
+        if (assertionOptionsEndpointFilter != null) {
+            return assertionOptionsEndpointFilter;
+        }
+        ApplicationContext applicationContext = http.getSharedObject(ApplicationContext.class);
+        String[] beanNames = applicationContext.getBeanNamesForType(AssertionOptionsEndpointFilter.class);
+        if (beanNames.length == 0) {
+            return new AssertionOptionsEndpointFilter(getAssertionOptionsProviderOrCreateNew(http), getObjectConverterOrCreateNew(http));
+        } else {
+            return applicationContext.getBean(AssertionOptionsEndpointFilter.class);
+        }
+    }
+
 
 }

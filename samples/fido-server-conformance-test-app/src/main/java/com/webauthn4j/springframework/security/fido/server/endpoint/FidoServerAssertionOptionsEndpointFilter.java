@@ -24,7 +24,7 @@ import com.webauthn4j.data.client.challenge.DefaultChallenge;
 import com.webauthn4j.data.extension.client.AuthenticationExtensionClientInput;
 import com.webauthn4j.data.extension.client.AuthenticationExtensionsClientInputs;
 import com.webauthn4j.springframework.security.challenge.ChallengeRepository;
-import com.webauthn4j.springframework.security.options.OptionsProvider;
+import com.webauthn4j.springframework.security.options.AssertionOptionsProvider;
 import com.webauthn4j.util.Base64UrlUtil;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -51,10 +51,10 @@ public class FidoServerAssertionOptionsEndpointFilter extends ServerEndpointFilt
     //~ Instance fields
     // ================================================================================================
 
-    private final OptionsProvider optionsProvider;
+    private final AssertionOptionsProvider optionsProvider;
     private final ChallengeRepository challengeRepository;
 
-    public FidoServerAssertionOptionsEndpointFilter(ObjectConverter objectConverter, OptionsProvider optionsProvider, ChallengeRepository challengeRepository) {
+    public FidoServerAssertionOptionsEndpointFilter(ObjectConverter objectConverter, AssertionOptionsProvider optionsProvider, ChallengeRepository challengeRepository) {
         super(FILTER_URL, objectConverter);
         this.optionsProvider = optionsProvider;
         this.challengeRepository = challengeRepository;

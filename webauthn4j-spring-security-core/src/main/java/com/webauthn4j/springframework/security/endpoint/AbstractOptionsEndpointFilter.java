@@ -18,7 +18,6 @@ package com.webauthn4j.springframework.security.endpoint;
 
 import com.webauthn4j.converter.util.JsonConverter;
 import com.webauthn4j.converter.util.ObjectConverter;
-import com.webauthn4j.springframework.security.options.OptionsProvider;
 import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.security.authentication.AuthenticationTrustResolver;
 import org.springframework.security.authentication.AuthenticationTrustResolverImpl;
@@ -47,13 +46,11 @@ public abstract class AbstractOptionsEndpointFilter extends GenericFilterBean {
     protected MessageSourceAccessor messages = SpringSecurityMessageSource.getAccessor();
     protected JsonConverter jsonConverter;
     private AuthenticationTrustResolver trustResolver;
-    protected OptionsProvider optionsProvider;
 
     // ~ Constructors
     // ===================================================================================================
 
-    public AbstractOptionsEndpointFilter(OptionsProvider optionsProvider, ObjectConverter objectConverter) {
-        this.optionsProvider = optionsProvider;
+    public AbstractOptionsEndpointFilter(ObjectConverter objectConverter) {
         this.jsonConverter = objectConverter.getJsonConverter();
         this.trustResolver = new AuthenticationTrustResolverImpl();
     }
@@ -70,7 +67,6 @@ public abstract class AbstractOptionsEndpointFilter extends GenericFilterBean {
         Assert.notNull(getFilterProcessesUrl(), "filterProcessesUrl must not be null");
         Assert.notNull(jsonConverter, "jsonConverter must not be null");
         Assert.notNull(trustResolver, "trustResolver must not be null");
-        Assert.notNull(optionsProvider, "optionsProvider must not be null");
     }
 
     public AuthenticationTrustResolver getTrustResolver() {

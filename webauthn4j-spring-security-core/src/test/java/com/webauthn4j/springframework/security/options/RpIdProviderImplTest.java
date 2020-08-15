@@ -16,18 +16,22 @@
 
 package com.webauthn4j.springframework.security.options;
 
-import com.webauthn4j.data.PublicKeyCredentialUserEntity;
-import org.springframework.security.core.Authentication;
+import org.junit.Test;
+import org.springframework.mock.web.MockHttpServletRequest;
 
-/**
- * Core interface to load {@link PublicKeyCredentialUserEntity}
- */
-public interface PublicKeyCredentialUserEntityService {
+import static org.assertj.core.api.Assertions.assertThat;
 
-    /**
-     * Load {@link PublicKeyCredentialUserEntity}
-     * @param authentication authentication
-     * @return {@link PublicKeyCredentialUserEntity}
-     */
-    PublicKeyCredentialUserEntity loadUserByAuthentication(Authentication authentication);
+public class RpIdProviderImplTest {
+
+    @Test
+    public void getEffectiveRpId() {
+        RpIdProviderImpl rpIdProvider = new RpIdProviderImpl();
+        MockHttpServletRequest httpServletRequest = new MockHttpServletRequest();
+        httpServletRequest.setScheme("https");
+        httpServletRequest.setServerName("example.com");
+        httpServletRequest.setServerPort(8080);
+        assertThat(rpIdProvider.provide(httpServletRequest)).isEqualTo("example.com");
+
+    }
+
 }

@@ -18,6 +18,7 @@ package com.webauthn4j.springframework.security.webauthn.sample.app.config;
 
 import com.webauthn4j.WebAuthnManager;
 import com.webauthn4j.converter.util.ObjectConverter;
+import com.webauthn4j.data.PublicKeyCredentialParameters;
 import com.webauthn4j.data.PublicKeyCredentialType;
 import com.webauthn4j.data.attestation.statement.COSEAlgorithmIdentifier;
 import com.webauthn4j.springframework.security.WebAuthnRegistrationRequestValidator;
@@ -25,12 +26,13 @@ import com.webauthn4j.springframework.security.authenticator.WebAuthnAuthenticat
 import com.webauthn4j.springframework.security.authenticator.WebAuthnAuthenticatorService;
 import com.webauthn4j.springframework.security.challenge.ChallengeRepository;
 import com.webauthn4j.springframework.security.config.configurers.WebAuthnAuthenticationProviderConfigurer;
-import com.webauthn4j.springframework.security.config.configurers.WebAuthnConfigurer;
+import com.webauthn4j.springframework.security.config.configurers.WebAuthnLoginConfigurer;
 import com.webauthn4j.springframework.security.fido.server.endpoint.FidoServerAssertionOptionsEndpointFilter;
 import com.webauthn4j.springframework.security.fido.server.endpoint.FidoServerAssertionResultEndpointFilter;
 import com.webauthn4j.springframework.security.fido.server.endpoint.FidoServerAttestationOptionsEndpointFilter;
 import com.webauthn4j.springframework.security.fido.server.endpoint.FidoServerAttestationResultEndpointFilter;
-import com.webauthn4j.springframework.security.options.OptionsProvider;
+import com.webauthn4j.springframework.security.options.AssertionOptionsProvider;
+import com.webauthn4j.springframework.security.options.AttestationOptionsProvider;
 import com.webauthn4j.springframework.security.server.ServerPropertyProvider;
 import com.webauthn4j.springframework.security.webauthn.sample.app.security.SampleUsernameNotFoundHandler;
 import com.webauthn4j.springframework.security.webauthn.sample.domain.component.UserManager;
@@ -100,7 +102,10 @@ WebSecurityConfig extends WebSecurityConfigurerAdapter {
     private ObjectConverter objectConverter;
 
     @Autowired
-    private OptionsProvider optionsProvider;
+    private AttestationOptionsProvider attestationOptionsProvider;
+
+    @Autowired
+    private AssertionOptionsProvider assertionOptionsProvider;
 
     @Autowired
     private ServerPropertyProvider serverPropertyProvider;
@@ -140,24 +145,28 @@ WebSecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
 
         // WebAuthn Config
-        http.apply(WebAuthnConfigurer.webAuthn())
-                .rpName("WebAuthn4J Spring Security Sample")
-                .publicKeyCredParams()
-                .addPublicKeyCredParams(PublicKeyCredentialType.PUBLIC_KEY, COSEAlgorithmIdentifier.RS256)  // Windows Hello
-                .addPublicKeyCredParams(PublicKeyCredentialType.PUBLIC_KEY, COSEAlgorithmIdentifier.ES256)  // FIDO U2F Key, etc
-                .and()
-                .registrationExtensions()
-                    .entry("example.extension", "test")
-                .and()
-                .authenticationExtensions()
-                    .entry("example.extension", "test")
-                .and();
+        http.apply(WebAuthnLoginConfigurer.webAuthnLogin())
+                .attestationOptionsEndpoint()
+                    .rp()
+                        .name("WebAuthn4J Spring Security Sample")
+                        .and()
+                    .pubKeyCredParams(
+                            new PublicKeyCredentialParameters(PublicKeyCredentialType.PUBLIC_KEY, COSEAlgorithmIdentifier.ES256),
+                            new PublicKeyCredentialParameters(PublicKeyCredentialType.PUBLIC_KEY, COSEAlgorithmIdentifier.RS1)
+                    )
+                    .extensions()
+                        .entry("example.extension", "test")
+                    .and()
+                .assertionOptionsEndpoint()
+                    .extensions()
+                        .entry("example.extension", "test")
+                    .and();
 
 
-        FidoServerAttestationOptionsEndpointFilter fidoServerAttestationOptionsEndpointFilter = new FidoServerAttestationOptionsEndpointFilter(objectConverter, optionsProvider, challengeRepository);
+        FidoServerAttestationOptionsEndpointFilter fidoServerAttestationOptionsEndpointFilter = new FidoServerAttestationOptionsEndpointFilter(objectConverter, attestationOptionsProvider, challengeRepository);
         FidoServerAttestationResultEndpointFilter fidoServerAttestationResultEndpointFilter = new FidoServerAttestationResultEndpointFilter(objectConverter, userManager, webAuthnAuthenticatorManager, webAuthnRegistrationRequestValidator);
         fidoServerAttestationResultEndpointFilter.setUsernameNotFoundHandler(new SampleUsernameNotFoundHandler(userManager));
-        FidoServerAssertionOptionsEndpointFilter fidoServerAssertionOptionsEndpointFilter = new FidoServerAssertionOptionsEndpointFilter(objectConverter, optionsProvider, challengeRepository);
+        FidoServerAssertionOptionsEndpointFilter fidoServerAssertionOptionsEndpointFilter = new FidoServerAssertionOptionsEndpointFilter(objectConverter, assertionOptionsProvider, challengeRepository);
         FidoServerAssertionResultEndpointFilter fidoServerAssertionResultEndpointFilter = new FidoServerAssertionResultEndpointFilter(objectConverter, serverPropertyProvider);
         fidoServerAssertionResultEndpointFilter.setAuthenticationManager(authenticationManagerBean());
 
