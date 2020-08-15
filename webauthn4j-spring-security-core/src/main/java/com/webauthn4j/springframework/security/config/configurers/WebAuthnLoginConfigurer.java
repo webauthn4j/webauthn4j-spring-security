@@ -28,10 +28,9 @@ import com.webauthn4j.springframework.security.endpoint.AttestationOptionsEndpoi
 import com.webauthn4j.springframework.security.extension.AuthenticationExtensionProvider;
 import com.webauthn4j.springframework.security.extension.AuthenticationExtensionsClientInputsProvider;
 import com.webauthn4j.springframework.security.extension.RegistrationExtensionProvider;
-import com.webauthn4j.springframework.security.options.OptionsProvider;
-import com.webauthn4j.springframework.security.options.OptionsProviderImpl;
-import com.webauthn4j.springframework.security.options.PublicKeyCredentialUserEntityProvider;
+import com.webauthn4j.springframework.security.options.*;
 import com.webauthn4j.springframework.security.server.ServerPropertyProvider;
+import com.webauthn4j.springframework.security.server.ServerPropertyProviderImpl;
 import org.springframework.security.config.annotation.web.HttpSecurityBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
@@ -67,7 +66,7 @@ import java.util.List;
  * The following shared objects are populated
  * <ul>
  * <li>{@link ChallengeRepository}</li>
- * <li>{@link OptionsProvider}</li>
+ * <li>{@link AssertionOptionsProvider}</li>
  * <li>{@link ServerPropertyProvider}</li>
  * </ul>
  *
@@ -84,13 +83,17 @@ import java.util.List;
 public final class WebAuthnLoginConfigurer<H extends HttpSecurityBuilder<H>> extends
         AbstractAuthenticationFilterConfigurer<H, WebAuthnLoginConfigurer<H>, WebAuthnProcessingFilter> {
 
-    private final AttestationOptionsEndpointConfig attestationOptionsEndpointConfig = new AttestationOptionsEndpointConfig();
-    private final AssertionOptionsEndpointConfig assertionOptionsEndpointConfig = new AssertionOptionsEndpointConfig();
     //~ Instance fields
     // ================================================================================================
-    private OptionsProvider optionsProvider = null;
+    private RpIdProvider rpIdProvider = null;
     private ObjectConverter objectConverter = null;
     private ServerPropertyProvider serverPropertyProvider = null;
+
+    private final AttestationOptionsEndpointConfig attestationOptionsEndpointConfig = new AttestationOptionsEndpointConfig();
+    private final AssertionOptionsEndpointConfig assertionOptionsEndpointConfig = new AssertionOptionsEndpointConfig();
+
+    private String rpId = null;
+
     private String usernameParameter = null;
     private String passwordParameter = null;
     private String credentialIdParameter = null;
@@ -118,25 +121,38 @@ public final class WebAuthnLoginConfigurer<H extends HttpSecurityBuilder<H>> ext
     public void configure(H http) throws Exception {
         super.configure(http);
 
-        if (optionsProvider == null) {
-            optionsProvider = WebAuthnConfigurerUtil.getOptionsProvider(http);
-        }
-        http.setSharedObject(OptionsProvider.class, optionsProvider);
         if (objectConverter == null) {
-            objectConverter = WebAuthnConfigurerUtil.getObjectConverter(http);
+            objectConverter = WebAuthnConfigurerUtil.getObjectConverterOrCreateNew(http);
         }
         http.setSharedObject(ObjectConverter.class, objectConverter);
+
+        if(rpIdProvider == null){
+            rpIdProvider = WebAuthnConfigurerUtil.getRpIdProviderOrNull(http);
+        }
+        http.setSharedObject(RpIdProvider.class, rpIdProvider);
+
         if (serverPropertyProvider == null) {
-            serverPropertyProvider = WebAuthnConfigurerUtil.getServerPropertyProvider(http);
+            serverPropertyProvider = WebAuthnConfigurerUtil.getServerPropertyProviderOrCreateNew(http);
+        }
+        if(serverPropertyProvider instanceof ServerPropertyProviderImpl){
+            ServerPropertyProviderImpl serverPropertyProviderImpl = (ServerPropertyProviderImpl)serverPropertyProvider;
+            if(rpId != null){
+                serverPropertyProviderImpl.setRpId(rpId);
+            }
+            if(rpIdProvider != null){
+                serverPropertyProviderImpl.setRpIdProvider(rpIdProvider);
+            }
         }
         http.setSharedObject(ServerPropertyProvider.class, serverPropertyProvider);
 
+        // Configure AuthenticationFilter
         this.getAuthenticationFilter().setServerPropertyProvider(serverPropertyProvider);
+        configureParameters();
 
+        // Configure OptionsEndPointFilters
         this.attestationOptionsEndpointConfig.configure(http);
         this.assertionOptionsEndpointConfig.configure(http);
 
-        configureParameters();
     }
 
     private void configureParameters() {
@@ -164,19 +180,7 @@ public final class WebAuthnLoginConfigurer<H extends HttpSecurityBuilder<H>> ext
     }
 
     /**
-     * Specifies the {@link OptionsProvider} to be used.
-     *
-     * @param optionsProvider the {@link OptionsProvider}
-     * @return the {@link WebAuthnLoginConfigurer} for additional customization
-     */
-    public WebAuthnLoginConfigurer<H> optionsProvider(OptionsProvider optionsProvider) {
-        Assert.notNull(optionsProvider, "optionsProvider must not be null");
-        this.optionsProvider = optionsProvider;
-        return this;
-    }
-
-    /**
-     * Specifies the {@link ObjectConverter} to be used.
+     * Sets the {@link ObjectConverter} to be used.
      *
      * @param objectConverter the {@link ObjectConverter}
      * @return the {@link WebAuthnLoginConfigurer} for additional customization
@@ -188,7 +192,7 @@ public final class WebAuthnLoginConfigurer<H extends HttpSecurityBuilder<H>> ext
     }
 
     /**
-     * Specifies the {@link ServerPropertyProvider} to be used.
+     * Sets the {@link ServerPropertyProvider} to be used.
      *
      * @param serverPropertyProvider the {@link ServerPropertyProvider}
      * @return the {@link WebAuthnLoginConfigurer} for additional customization
@@ -199,6 +203,30 @@ public final class WebAuthnLoginConfigurer<H extends HttpSecurityBuilder<H>> ext
         return this;
     }
 
+    /**
+     * Sets the {@link ServerPropertyProvider} to be used.
+     * If both rpId and rpIdProvider are set, value from rpIdProvider is used.
+     *
+     * @param rpId the relying party Id
+     * @return the {@link WebAuthnLoginConfigurer} for additional customization
+     */
+    public WebAuthnLoginConfigurer<H> rpId(String rpId) {
+        this.rpId = rpId;
+        return this;
+    }
+
+    /**
+     * Sets the {@link RpIdProvider} to be used.
+     * If both rpId and rpIdProvider are set, value from rpIdProvider is used.
+     *
+     * @param rpIdProvider the relying party id provider
+     * @return the {@link WebAuthnLoginConfigurer} for additional customization
+     */
+    public WebAuthnLoginConfigurer<H> rpIdProvider(RpIdProvider rpIdProvider) {
+        Assert.notNull(rpIdProvider, "rpIdProvider must not be null");
+        this.rpIdProvider = rpIdProvider;
+        return this;
+    }
 
     /**
      * Returns the {@link AttestationOptionsEndpointConfig} for configuring the {@link AttestationOptionsEndpointFilter}
@@ -373,6 +401,8 @@ public final class WebAuthnLoginConfigurer<H extends HttpSecurityBuilder<H>> ext
 
         private String processingUrl = AttestationOptionsEndpointFilter.FILTER_URL;
 
+        private AttestationOptionsProvider attestationOptionsProvider = null;
+
         private PublicKeyCredentialUserEntityProvider userProvider;
         private final RpConfig rpConfig = new RpConfig();
         private PublicKeyCredentialParameters[] pubKeyCredParams = null;
@@ -385,35 +415,48 @@ public final class WebAuthnLoginConfigurer<H extends HttpSecurityBuilder<H>> ext
         }
 
         private void configure(H http) {
-            AttestationOptionsEndpointFilter optionsEndpointFilter = WebAuthnConfigurerUtil.getAttestationOptionsEndpointFilter(http);
+            AttestationOptionsEndpointFilter optionsEndpointFilter = WebAuthnConfigurerUtil.getAttestationOptionsEndpointFilterOrCreateNew(http);
             optionsEndpointFilter.setFilterProcessesUrl(processingUrl);
 
-            if(optionsProvider instanceof OptionsProviderImpl){
-                OptionsProviderImpl optionsProviderImpl = (OptionsProviderImpl)optionsProvider;
+            if (attestationOptionsProvider == null) {
+                attestationOptionsProvider = WebAuthnConfigurerUtil.getAttestationOptionsProviderOrCreateNew(http);
+            }
+
+            if(attestationOptionsProvider instanceof AttestationOptionsProviderImpl){
+                AttestationOptionsProviderImpl attestationOptionsProviderImpl = (AttestationOptionsProviderImpl)attestationOptionsProvider;
+
                 if (userProvider != null){
-                    optionsProviderImpl.setPublicKeyCredentialUserEntityProvider(userProvider);
+                    attestationOptionsProviderImpl.setPublicKeyCredentialUserEntityProvider(userProvider);
                 }
-                if (rpConfig.id != null) {
-                    optionsProviderImpl.setRpId(rpConfig.id);
-                }
-                if (rpConfig.name != null) {
-                    optionsProviderImpl.setRpName(rpConfig.name);
-                }
-                if (rpConfig.icon != null) {
-                    optionsProviderImpl.setRpIcon(rpConfig.icon);
-                }
-                optionsProviderImpl.setPubKeyCredParams(pubKeyCredParams == null ? null : Arrays.asList(pubKeyCredParams));
+
+                this.rpConfig.configure(http);
+
+                attestationOptionsProviderImpl.setPubKeyCredParams(pubKeyCredParams == null ? null : Arrays.asList(pubKeyCredParams));
+
                 if (timeout != null) {
-                    optionsProviderImpl.setRegistrationTimeout(timeout);
+                    attestationOptionsProviderImpl.setRegistrationTimeout(timeout);
                 }
-                optionsProviderImpl.setRegistrationAuthenticatorSelection(authenticatorSelectionConfig.getAuthenticatorSelectionCriteria());
+
+                attestationOptionsProviderImpl.setRegistrationAuthenticatorSelection(authenticatorSelectionConfig.getAuthenticatorSelectionCriteria());
                 if (attestation != null){
-                    optionsProviderImpl.setAttestation(attestation);
+                    attestationOptionsProviderImpl.setAttestation(attestation);
                 }
-                optionsProviderImpl.setRegistrationExtensionsProvider(extensions.getExtensionsProvider());
+                attestationOptionsProviderImpl.setRegistrationExtensionsProvider(extensions.getExtensionsProvider());
             }
 
             http.addFilterAfter(optionsEndpointFilter, SessionManagementFilter.class);
+        }
+
+        /**
+         * Specifies the {@link AttestationOptionsProvider} to be used.
+         *
+         * @param attestationOptionsProvider the {@link AttestationOptionsProvider}
+         * @return the {@link WebAuthnLoginConfigurer} for additional customization
+         */
+        public AttestationOptionsEndpointConfig attestationOptionsProvider(AttestationOptionsProvider attestationOptionsProvider) {
+            Assert.notNull(attestationOptionsProvider, "attestationOptionsProvider must not be null");
+            this.attestationOptionsProvider = attestationOptionsProvider;
+            return this;
         }
 
         /**
@@ -517,11 +560,42 @@ public final class WebAuthnLoginConfigurer<H extends HttpSecurityBuilder<H>> ext
             private String name = null;
             private String icon = null;
 
+            private RpIdProvider idProvider = null;
+
             private RpConfig() {
             }
 
+            @SuppressWarnings("unused")
+            private void configure(H http) {
+                if(attestationOptionsProvider instanceof AttestationOptionsProviderImpl){
+                    AttestationOptionsProviderImpl attestationOptionsProviderImpl = (AttestationOptionsProviderImpl)attestationOptionsProvider;
+
+                    if (rpConfig.id != null) {
+                        attestationOptionsProviderImpl.setRpId(rpConfig.id);
+                    }
+                    else if(WebAuthnLoginConfigurer.this.rpId != null){
+                        attestationOptionsProviderImpl.setRpId(WebAuthnLoginConfigurer.this.rpId);
+                    }
+                    if (rpConfig.name != null) {
+                        attestationOptionsProviderImpl.setRpName(rpConfig.name);
+                    }
+                    if (rpConfig.icon != null) {
+                        attestationOptionsProviderImpl.setRpIcon(rpConfig.icon);
+                    }
+
+                    if(rpConfig.idProvider != null){
+                        attestationOptionsProviderImpl.setRpIdProvider(rpConfig.idProvider);
+                    }
+                    else if(WebAuthnLoginConfigurer.this.rpIdProvider != null){
+                        attestationOptionsProviderImpl.setRpIdProvider(WebAuthnLoginConfigurer.this.rpIdProvider);
+                    }
+
+                }
+            }
+
             /**
-             * The relying party id for credential scoping
+             * Sets relying party id for credential scoping. If both id and idProvider are set, value from idProvider is used.
+             * If neither of them are set, inherits value from {@link WebAuthnLoginConfigurer#rpId} or {@link WebAuthnLoginConfigurer#rpIdProvider}
              *
              * @param id the relying party id
              * @return the {@link RpConfig} for additional customization
@@ -533,7 +607,7 @@ public final class WebAuthnLoginConfigurer<H extends HttpSecurityBuilder<H>> ext
             }
 
             /**
-             * The relying party name
+             * Sets relying party name
              *
              * @param name the relying party name
              * @return the {@link RpConfig} for additional customization
@@ -545,7 +619,7 @@ public final class WebAuthnLoginConfigurer<H extends HttpSecurityBuilder<H>> ext
             }
 
             /**
-             * The relying party icon
+             * Sets relying party icon
              *
              * @param icon the relying party icon
              * @return the {@link RpConfig} for additional customization
@@ -555,6 +629,19 @@ public final class WebAuthnLoginConfigurer<H extends HttpSecurityBuilder<H>> ext
                 this.icon = icon;
                 return this;
             }
+
+            /**
+             * Sets relying party id provider for credential scoping
+             *
+             * @param idProvider the relying party id provider
+             * @return the {@link RpConfig} for additional customization
+             */
+            public RpConfig idProvider(RpIdProvider idProvider) {
+                Assert.notNull(idProvider, "idProvider parameter must not be null");
+                this.idProvider = idProvider;
+                return this;
+            }
+
 
             /**
              * Returns the {@link AttestationOptionsEndpointConfig} for further configuration.
@@ -710,19 +797,40 @@ public final class WebAuthnLoginConfigurer<H extends HttpSecurityBuilder<H>> ext
     public class AssertionOptionsEndpointConfig {
 
         private String processingUrl = AssertionOptionsEndpointFilter.FILTER_URL;
+
+        private AssertionOptionsProvider assertionOptionsProvider;
+
+        private String rpId = null;
         private Long timeout;
         private final AuthenticationExtensionsClientInputsConfig extensions = new AuthenticationExtensionsClientInputsConfig();
         private UserVerificationRequirement userVerification;
+
+        private RpIdProvider rpIdProvider = null;
 
         private AssertionOptionsEndpointConfig() {
         }
 
         private void configure(H http) {
-            AssertionOptionsEndpointFilter optionsEndpointFilter = WebAuthnConfigurerUtil.getAssertionOptionsEndpointFilter(http);
+            AssertionOptionsEndpointFilter optionsEndpointFilter = WebAuthnConfigurerUtil.getAssertionOptionsEndpointFilterOrCreateNew(http);
             optionsEndpointFilter.setFilterProcessesUrl(processingUrl);
 
-            if(optionsProvider instanceof OptionsProviderImpl){
-                OptionsProviderImpl optionsProviderImpl = (OptionsProviderImpl)optionsProvider;
+            if(assertionOptionsProvider instanceof AssertionOptionsProviderImpl){
+                AssertionOptionsProviderImpl optionsProviderImpl = (AssertionOptionsProviderImpl)assertionOptionsProvider;
+
+                if(rpId != null){
+                    optionsProviderImpl.setRpId(rpId);
+                }
+                else if(WebAuthnLoginConfigurer.this.rpId != null){
+                    optionsProviderImpl.setRpId(WebAuthnLoginConfigurer.this.rpId);
+                }
+
+                if(rpIdProvider != null){
+                    optionsProviderImpl.setRpIdProvider(rpIdProvider);
+                }
+                else if(WebAuthnLoginConfigurer.this.rpIdProvider != null){
+                    optionsProviderImpl.setRpIdProvider(WebAuthnLoginConfigurer.this.rpIdProvider);
+                }
+
                 if (timeout != null) {
                     optionsProviderImpl.setAuthenticationTimeout(timeout);
                 }
@@ -731,6 +839,18 @@ public final class WebAuthnLoginConfigurer<H extends HttpSecurityBuilder<H>> ext
             }
 
             http.addFilterAfter(optionsEndpointFilter, SessionManagementFilter.class);
+        }
+
+        /**
+         * Specifies the {@link AssertionOptionsEndpointConfig} to be used.
+         *
+         * @param assertionOptionsProvider the {@link AssertionOptionsProvider}
+         * @return the {@link WebAuthnLoginConfigurer} for additional customization
+         */
+        public AssertionOptionsEndpointConfig assertionOptionsProvider(AssertionOptionsProvider assertionOptionsProvider) {
+            Assert.notNull(assertionOptionsProvider, "assertionOptionsProvider must not be null");
+            this.assertionOptionsProvider = assertionOptionsProvider;
+            return this;
         }
 
         /**
@@ -744,8 +864,21 @@ public final class WebAuthnLoginConfigurer<H extends HttpSecurityBuilder<H>> ext
             return this;
         }
 
+
         /**
-         * timeout for authentication ceremony
+         * Sets relying party id
+         *
+         * @param rpId  rpId
+         * @return the {@link AssertionOptionsEndpointConfig} for additional customization
+         */
+        public AssertionOptionsEndpointConfig rpId(String rpId) {
+            this.rpId = rpId;
+            return this;
+        }
+
+
+        /**
+         * Sets timeout for authentication ceremony
          *
          * @param timeout timeout for authentication ceremony
          * @return the {@link AssertionOptionsEndpointConfig} for additional customization
@@ -756,7 +889,7 @@ public final class WebAuthnLoginConfigurer<H extends HttpSecurityBuilder<H>> ext
         }
 
         /**
-         * user verification requirement for authentication ceremony
+         * Sets user verification requirement for authentication ceremony
          *
          * @param userVerification user verification requirement for authentication ceremony
          * @return the {@link AssertionOptionsEndpointConfig} for additional customization
@@ -776,6 +909,17 @@ public final class WebAuthnLoginConfigurer<H extends HttpSecurityBuilder<H>> ext
         }
 
         /**
+         * Sets relying party id provider for authentication ceremony
+         *
+         * @param rpIdProvider relying party id provider for authentication ceremony
+         * @return the {@link AssertionOptionsEndpointConfig} for additional customization
+         */
+        public AssertionOptionsEndpointConfig rpIdProvider(RpIdProvider rpIdProvider) {
+            this.rpIdProvider = rpIdProvider;
+            return this;
+        }
+
+        /**
          * Returns the {@link WebAuthnLoginConfigurer} for further configuration.
          *
          * @return the {@link WebAuthnLoginConfigurer}
@@ -783,7 +927,6 @@ public final class WebAuthnLoginConfigurer<H extends HttpSecurityBuilder<H>> ext
         public WebAuthnLoginConfigurer<H> and() {
             return WebAuthnLoginConfigurer.this;
         }
-
 
 
         /**

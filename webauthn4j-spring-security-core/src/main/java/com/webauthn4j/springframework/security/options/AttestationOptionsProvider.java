@@ -25,7 +25,7 @@ import javax.servlet.http.HttpServletRequest;
 /**
  * Provides {@link PublicKeyCredentialCreationOptions} and {@link PublicKeyCredentialRequestOptions} for {@link HttpServletRequest}
  */
-public interface OptionsProvider {
+public interface AttestationOptionsProvider {
 
 
     /**
@@ -37,21 +37,6 @@ public interface OptionsProvider {
      */
     PublicKeyCredentialCreationOptions getAttestationOptions(HttpServletRequest request, Authentication authentication);
 
-    /**
-     * provides {@link PublicKeyCredentialRequestOptions}. If <code>username</code> is <code>null</code>, <code>credentials</code> are not populated.
-     *
-     * @param request   request
-     * @param authentication authentication
-     * @return {@link PublicKeyCredentialRequestOptions} instance
-     */
-    PublicKeyCredentialRequestOptions getAssertionOptions(HttpServletRequest request, Authentication authentication);
 
-    /**
-     * returns effective rpId based on request origin and configured <code>rpId</code>.
-     *
-     * @param request request
-     * @return effective rpId
-     */
-    String getEffectiveRpId(HttpServletRequest request);
 
 }

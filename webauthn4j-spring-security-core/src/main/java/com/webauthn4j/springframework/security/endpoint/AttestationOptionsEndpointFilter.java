@@ -20,7 +20,7 @@ import com.webauthn4j.converter.util.ObjectConverter;
 import com.webauthn4j.data.PublicKeyCredentialCreationOptions;
 import com.webauthn4j.data.PublicKeyCredentialRpEntity;
 import com.webauthn4j.data.client.challenge.Challenge;
-import com.webauthn4j.springframework.security.options.OptionsProvider;
+import com.webauthn4j.springframework.security.options.AttestationOptionsProvider;
 import org.springframework.security.web.FilterInvocation;
 
 import javax.servlet.FilterChain;
@@ -43,8 +43,13 @@ public class AttestationOptionsEndpointFilter extends AbstractOptionsEndpointFil
      */
     public static final String FILTER_URL = "/webauthn/attestation/options";
 
-    public AttestationOptionsEndpointFilter(OptionsProvider optionsProvider, ObjectConverter objectConverter) {
-        super(optionsProvider, objectConverter);
+    //~ Instance fields
+    // ================================================================================================
+    private final AttestationOptionsProvider attestationOptionsProvider;
+
+    public AttestationOptionsEndpointFilter(AttestationOptionsProvider attestationOptionsProvider, ObjectConverter objectConverter) {
+        super(objectConverter);
+        this.attestationOptionsProvider = attestationOptionsProvider;
         setFilterProcessesUrl(FILTER_URL);
     }
 
@@ -60,7 +65,7 @@ public class AttestationOptionsEndpointFilter extends AbstractOptionsEndpointFil
         }
 
         try {
-            PublicKeyCredentialCreationOptions attestationOptions = optionsProvider.getAttestationOptions(fi.getRequest(), getAuthentication());
+            PublicKeyCredentialCreationOptions attestationOptions = attestationOptionsProvider.getAttestationOptions(fi.getRequest(), getAuthentication());
             writeResponse(fi.getResponse(), attestationOptions);
         } catch (RuntimeException e) {
             logger.debug(e);

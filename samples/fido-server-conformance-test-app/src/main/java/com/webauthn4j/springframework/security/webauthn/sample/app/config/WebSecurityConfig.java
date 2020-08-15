@@ -31,7 +31,8 @@ import com.webauthn4j.springframework.security.fido.server.endpoint.FidoServerAs
 import com.webauthn4j.springframework.security.fido.server.endpoint.FidoServerAssertionResultEndpointFilter;
 import com.webauthn4j.springframework.security.fido.server.endpoint.FidoServerAttestationOptionsEndpointFilter;
 import com.webauthn4j.springframework.security.fido.server.endpoint.FidoServerAttestationResultEndpointFilter;
-import com.webauthn4j.springframework.security.options.OptionsProvider;
+import com.webauthn4j.springframework.security.options.AssertionOptionsProvider;
+import com.webauthn4j.springframework.security.options.AttestationOptionsProvider;
 import com.webauthn4j.springframework.security.server.ServerPropertyProvider;
 import com.webauthn4j.springframework.security.webauthn.sample.app.security.SampleUsernameNotFoundHandler;
 import com.webauthn4j.springframework.security.webauthn.sample.domain.component.UserManager;
@@ -101,7 +102,10 @@ WebSecurityConfig extends WebSecurityConfigurerAdapter {
     private ObjectConverter objectConverter;
 
     @Autowired
-    private OptionsProvider optionsProvider;
+    private AttestationOptionsProvider attestationOptionsProvider;
+
+    @Autowired
+    private AssertionOptionsProvider assertionOptionsProvider;
 
     @Autowired
     private ServerPropertyProvider serverPropertyProvider;
@@ -159,10 +163,10 @@ WebSecurityConfig extends WebSecurityConfigurerAdapter {
                     .and();
 
 
-        FidoServerAttestationOptionsEndpointFilter fidoServerAttestationOptionsEndpointFilter = new FidoServerAttestationOptionsEndpointFilter(objectConverter, optionsProvider, challengeRepository);
+        FidoServerAttestationOptionsEndpointFilter fidoServerAttestationOptionsEndpointFilter = new FidoServerAttestationOptionsEndpointFilter(objectConverter, attestationOptionsProvider, challengeRepository);
         FidoServerAttestationResultEndpointFilter fidoServerAttestationResultEndpointFilter = new FidoServerAttestationResultEndpointFilter(objectConverter, userManager, webAuthnAuthenticatorManager, webAuthnRegistrationRequestValidator);
         fidoServerAttestationResultEndpointFilter.setUsernameNotFoundHandler(new SampleUsernameNotFoundHandler(userManager));
-        FidoServerAssertionOptionsEndpointFilter fidoServerAssertionOptionsEndpointFilter = new FidoServerAssertionOptionsEndpointFilter(objectConverter, optionsProvider, challengeRepository);
+        FidoServerAssertionOptionsEndpointFilter fidoServerAssertionOptionsEndpointFilter = new FidoServerAssertionOptionsEndpointFilter(objectConverter, assertionOptionsProvider, challengeRepository);
         FidoServerAssertionResultEndpointFilter fidoServerAssertionResultEndpointFilter = new FidoServerAssertionResultEndpointFilter(objectConverter, serverPropertyProvider);
         fidoServerAssertionResultEndpointFilter.setAuthenticationManager(authenticationManagerBean());
 

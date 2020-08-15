@@ -17,30 +17,26 @@
 package com.webauthn4j.springframework.security.options;
 
 import com.webauthn4j.data.*;
-import com.webauthn4j.data.client.Origin;
-import com.webauthn4j.data.extension.client.AuthenticationExtensionClientInput;
 import com.webauthn4j.data.extension.client.AuthenticationExtensionsClientInputs;
 import com.webauthn4j.data.extension.client.RegistrationExtensionClientInput;
-import com.webauthn4j.springframework.security.authenticator.WebAuthnAuthenticator;
 import com.webauthn4j.springframework.security.authenticator.WebAuthnAuthenticatorService;
 import com.webauthn4j.springframework.security.challenge.ChallengeRepository;
 import com.webauthn4j.springframework.security.exception.PrincipalNotFoundException;
 import com.webauthn4j.springframework.security.extension.AuthenticationExtensionsClientInputsProvider;
-import com.webauthn4j.springframework.security.util.internal.ServletUtil;
 import org.springframework.security.core.Authentication;
 import org.springframework.util.Assert;
 
 import javax.servlet.http.HttpServletRequest;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
- * An {@link OptionsProvider} implementation
+ * An {@link AssertionOptionsProvider} implementation
  */
-public class OptionsProviderImpl implements OptionsProvider {
+public class AttestationOptionsProviderImpl implements AttestationOptionsProvider {
 
     //~ Instance fields
     // ================================================================================================
@@ -50,29 +46,32 @@ public class OptionsProviderImpl implements OptionsProvider {
     private List<PublicKeyCredentialParameters> pubKeyCredParams = new ArrayList<>();
     private AuthenticatorSelectionCriteria registrationAuthenticatorSelection;
     private AttestationConveyancePreference attestation;
-    private UserVerificationRequirement authenticationUserVerification;
     private Long registrationTimeout = null;
-    private Long authenticationTimeout = null;
     private AuthenticationExtensionsClientInputs<RegistrationExtensionClientInput> registrationExtensions;
-    private AuthenticationExtensionsClientInputs<AuthenticationExtensionClientInput> authenticationExtensions;
 
+    private RpIdProvider rpIdProvider;
     private final WebAuthnAuthenticatorService authenticatorService;
     private final ChallengeRepository challengeRepository;
     private PublicKeyCredentialUserEntityProvider publicKeyCredentialUserEntityProvider = new DefaultPublicKeyCredentialUserEntityProvider();
     private AuthenticationExtensionsClientInputsProvider<RegistrationExtensionClientInput> registrationExtensionsProvider = new DefaultRegistrationExtensionsProvider();
-    private AuthenticationExtensionsClientInputsProvider<AuthenticationExtensionClientInput> authenticationExtensionsProvider = new DefaultAuthenticationExtensionsProvider();
 
     // ~ Constructors
     // ===================================================================================================
 
-    public OptionsProviderImpl(WebAuthnAuthenticatorService authenticatorService, ChallengeRepository challengeRepository) {
+    public AttestationOptionsProviderImpl(RpIdProvider rpIdProvider, WebAuthnAuthenticatorService authenticatorService, ChallengeRepository challengeRepository) {
 
         Assert.notNull(authenticatorService, "authenticatorService must not be null");
         Assert.notNull(challengeRepository, "challengeRepository must not be null");
 
+        this.rpIdProvider = rpIdProvider;
         this.authenticatorService = authenticatorService;
         this.challengeRepository = challengeRepository;
     }
+
+    public AttestationOptionsProviderImpl(WebAuthnAuthenticatorService authenticatorService, ChallengeRepository challengeRepository) {
+        this(null, authenticatorService, challengeRepository);
+    }
+
 
 
     // ~ Methods
@@ -83,10 +82,10 @@ public class OptionsProviderImpl implements OptionsProvider {
      */
     public PublicKeyCredentialCreationOptions getAttestationOptions(HttpServletRequest request, Authentication authentication) {
 
-        PublicKeyCredentialRpEntity relyingParty = new PublicKeyCredentialRpEntity(getEffectiveRpId(request), rpName, rpIcon);
+        PublicKeyCredentialRpEntity relyingParty = new PublicKeyCredentialRpEntity(getRpId(request), rpName, rpIcon);
         PublicKeyCredentialUserEntity user;
         try {
-            user = publicKeyCredentialUserEntityProvider.provide(authentication);
+            user = getPublicKeyCredentialUserEntityProvider().provide(authentication);
         } catch (PrincipalNotFoundException e) {
             user = null;
         }
@@ -103,32 +102,6 @@ public class OptionsProviderImpl implements OptionsProvider {
                 getRegistrationExtensionsProvider().provide(request));
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public PublicKeyCredentialRequestOptions getAssertionOptions(HttpServletRequest request, Authentication authentication) {
-        return new PublicKeyCredentialRequestOptions(
-                getChallengeRepository().loadOrGenerateChallenge(request),
-                getAuthenticationTimeout(),
-                getEffectiveRpId(request),
-                getCredentials(authentication),
-                getAuthenticationUserVerification(),
-                getAuthenticationExtensionsProvider().provide(request));
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public String getEffectiveRpId(HttpServletRequest request) {
-        String effectiveRpId;
-        if (this.rpId != null) {
-            effectiveRpId = this.rpId;
-        } else {
-            Origin origin = ServletUtil.getOrigin(request);
-            effectiveRpId = origin.getHost();
-        }
-        return effectiveRpId;
-    }
 
     public String getRpId() {
         return rpId;
@@ -136,6 +109,7 @@ public class OptionsProviderImpl implements OptionsProvider {
 
     public void setRpId(String rpId) {
         this.rpId = rpId;
+        this.rpIdProvider = null;
     }
 
     public String getRpName() {
@@ -180,14 +154,6 @@ public class OptionsProviderImpl implements OptionsProvider {
         this.attestation = attestation;
     }
 
-    public UserVerificationRequirement getAuthenticationUserVerification() {
-        return authenticationUserVerification;
-    }
-
-    public void setAuthenticationUserVerification(UserVerificationRequirement authenticationUserVerification) {
-        this.authenticationUserVerification = authenticationUserVerification;
-    }
-
     public Long getRegistrationTimeout() {
         return registrationTimeout;
     }
@@ -198,16 +164,6 @@ public class OptionsProviderImpl implements OptionsProvider {
         this.registrationTimeout = registrationTimeout;
     }
 
-    public Long getAuthenticationTimeout() {
-        return authenticationTimeout;
-    }
-
-    public void setAuthenticationTimeout(Long authenticationTimeout) {
-        Assert.notNull(authenticationTimeout, "authenticationTimeout must not be null.");
-        Assert.isTrue(authenticationTimeout >= 0, "registrationTimeout must be within unsigned long.");
-        this.authenticationTimeout = authenticationTimeout;
-    }
-
     public AuthenticationExtensionsClientInputs<RegistrationExtensionClientInput> getRegistrationExtensions() {
         return registrationExtensions;
     }
@@ -216,12 +172,13 @@ public class OptionsProviderImpl implements OptionsProvider {
         this.registrationExtensions = registrationExtensions;
     }
 
-    public AuthenticationExtensionsClientInputs<AuthenticationExtensionClientInput> getAuthenticationExtensions() {
-        return authenticationExtensions;
+    public RpIdProvider getRpIdProvider() {
+        return rpIdProvider;
     }
 
-    public void setAuthenticationExtensions(AuthenticationExtensionsClientInputs<AuthenticationExtensionClientInput> authenticationExtensions) {
-        this.authenticationExtensions = authenticationExtensions;
+    public void setRpIdProvider(RpIdProvider rpIdProvider) {
+        this.rpId = null;
+        this.rpIdProvider = rpIdProvider;
     }
 
     public AuthenticationExtensionsClientInputsProvider<RegistrationExtensionClientInput> getRegistrationExtensionsProvider() {
@@ -231,15 +188,6 @@ public class OptionsProviderImpl implements OptionsProvider {
     public void setRegistrationExtensionsProvider(AuthenticationExtensionsClientInputsProvider<RegistrationExtensionClientInput> registrationExtensionsProvider) {
         Assert.notNull(registrationExtensionsProvider, "registrationExtensionsProvider must not be null");
         this.registrationExtensionsProvider = registrationExtensionsProvider;
-    }
-
-    public AuthenticationExtensionsClientInputsProvider<AuthenticationExtensionClientInput> getAuthenticationExtensionsProvider() {
-        return authenticationExtensionsProvider;
-    }
-
-    public void setAuthenticationExtensionsProvider(AuthenticationExtensionsClientInputsProvider<AuthenticationExtensionClientInput> authenticationExtensionsProvider) {
-        Assert.notNull(registrationExtensionsProvider, "registrationExtensionsProvider must not be null");
-        this.authenticationExtensionsProvider = authenticationExtensionsProvider;
     }
 
     public WebAuthnAuthenticatorService getAuthenticatorService() {
@@ -263,19 +211,23 @@ public class OptionsProviderImpl implements OptionsProvider {
         if(authentication == null){
             return Collections.emptyList();
         }
-        Collection<? extends WebAuthnAuthenticator> authenticators;
         try {
-            authenticators = authenticatorService.loadAuthenticatorsByUserPrincipal(authentication.getName());
+            return getAuthenticatorService().loadAuthenticatorsByUserPrincipal(authentication.getName()).stream()
+                    .map(authenticator -> new PublicKeyCredentialDescriptor(PublicKeyCredentialType.PUBLIC_KEY, authenticator.getAttestedCredentialData().getCredentialId(), authenticator.getTransports()))
+                    .collect(Collectors.toList());
         } catch (PrincipalNotFoundException e) {
-            authenticators = Collections.emptyList();
+            return Collections.emptyList();
         }
-        List<PublicKeyCredentialDescriptor> credentials = new ArrayList<>();
-        for (WebAuthnAuthenticator authenticator : authenticators) {
-            credentials.add(new PublicKeyCredentialDescriptor(PublicKeyCredentialType.PUBLIC_KEY, authenticator.getAttestedCredentialData().getCredentialId(), authenticator.getTransports()));
-        }
-        return credentials;
     }
 
+    String getRpId(HttpServletRequest request) {
+        if(rpIdProvider != null){
+            return rpIdProvider.provide(request);
+        }
+        else {
+            return rpId;
+        }
+    }
 
     static class DefaultPublicKeyCredentialUserEntityProvider implements PublicKeyCredentialUserEntityProvider {
 
@@ -297,13 +249,6 @@ public class OptionsProviderImpl implements OptionsProvider {
         @Override
         public AuthenticationExtensionsClientInputs<RegistrationExtensionClientInput> provide(HttpServletRequest httpServletRequest) {
             return registrationExtensions;
-        }
-    }
-
-    class DefaultAuthenticationExtensionsProvider implements AuthenticationExtensionsClientInputsProvider<AuthenticationExtensionClientInput> {
-        @Override
-        public AuthenticationExtensionsClientInputs<AuthenticationExtensionClientInput> provide(HttpServletRequest httpServletRequest) {
-            return authenticationExtensions;
         }
     }
 

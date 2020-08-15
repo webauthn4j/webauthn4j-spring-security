@@ -20,7 +20,7 @@ import com.webauthn4j.converter.util.ObjectConverter;
 import com.webauthn4j.data.PublicKeyCredentialRequestOptions;
 import com.webauthn4j.data.PublicKeyCredentialRpEntity;
 import com.webauthn4j.data.client.challenge.Challenge;
-import com.webauthn4j.springframework.security.options.OptionsProvider;
+import com.webauthn4j.springframework.security.options.AssertionOptionsProvider;
 import org.springframework.security.web.FilterInvocation;
 
 import javax.servlet.FilterChain;
@@ -43,11 +43,17 @@ public class AssertionOptionsEndpointFilter extends AbstractOptionsEndpointFilte
      */
     public static final String FILTER_URL = "/webauthn/assertion/options";
 
+    //~ Instance fields
+    // ================================================================================================
+    private final AssertionOptionsProvider assertionOptionsProvider;
+
+
     // ~ Constructors
     // ===================================================================================================
 
-    public AssertionOptionsEndpointFilter(OptionsProvider optionsProvider, ObjectConverter objectConverter) {
-        super(optionsProvider, objectConverter);
+    public AssertionOptionsEndpointFilter(AssertionOptionsProvider assertionOptionsProvider, ObjectConverter objectConverter) {
+        super(objectConverter);
+        this.assertionOptionsProvider = assertionOptionsProvider;
         setFilterProcessesUrl(FILTER_URL);
     }
 
@@ -63,7 +69,7 @@ public class AssertionOptionsEndpointFilter extends AbstractOptionsEndpointFilte
         }
 
         try {
-            PublicKeyCredentialRequestOptions assertionOptions = optionsProvider.getAssertionOptions(fi.getRequest(), getAuthentication());
+            PublicKeyCredentialRequestOptions assertionOptions = assertionOptionsProvider.getAssertionOptions(fi.getRequest(), getAuthentication());
             writeResponse(fi.getResponse(), assertionOptions);
         } catch (RuntimeException e) {
             logger.debug(e);

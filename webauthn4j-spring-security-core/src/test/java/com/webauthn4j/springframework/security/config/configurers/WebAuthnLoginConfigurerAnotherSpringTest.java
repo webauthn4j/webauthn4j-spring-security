@@ -28,8 +28,7 @@ import com.webauthn4j.springframework.security.challenge.ChallengeRepository;
 import com.webauthn4j.springframework.security.converter.jackson.WebAuthn4JSpringSecurityJSONModule;
 import com.webauthn4j.springframework.security.endpoint.AssertionOptionsEndpointFilter;
 import com.webauthn4j.springframework.security.endpoint.AttestationOptionsEndpointFilter;
-import com.webauthn4j.springframework.security.options.OptionsProvider;
-import com.webauthn4j.springframework.security.options.OptionsProviderImpl;
+import com.webauthn4j.springframework.security.options.*;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -113,17 +112,27 @@ public class WebAuthnLoginConfigurerAnotherSpringTest {
             }
 
             @Bean
-            public OptionsProvider optionsProvider(WebAuthnAuthenticatorService webAuthnAuthenticatorService, ChallengeRepository challengeRepository){
-                return new OptionsProviderImpl(webAuthnAuthenticatorService, challengeRepository);
+            public RpIdProvider rpIdProvider(){
+                return new RpIdProviderImpl();
             }
 
             @Bean
-            public AttestationOptionsEndpointFilter attestationOptionsEndpointFilter(OptionsProvider optionsProvider, ObjectConverter objectConverter){
+            public AttestationOptionsProvider attestationOptionsProvider(RpIdProvider rpIdProvider, WebAuthnAuthenticatorService webAuthnAuthenticatorService, ChallengeRepository challengeRepository){
+                return new AttestationOptionsProviderImpl(rpIdProvider, webAuthnAuthenticatorService, challengeRepository);
+            }
+
+            @Bean
+            public AssertionOptionsProvider assertionOptionsProvider(RpIdProvider rpIdProvider, WebAuthnAuthenticatorService webAuthnAuthenticatorService, ChallengeRepository challengeRepository){
+                return new AssertionOptionsProviderImpl(rpIdProvider, webAuthnAuthenticatorService, challengeRepository);
+            }
+
+            @Bean
+            public AttestationOptionsEndpointFilter attestationOptionsEndpointFilter(AttestationOptionsProvider optionsProvider, ObjectConverter objectConverter){
                 return new AttestationOptionsEndpointFilter(optionsProvider, objectConverter);
             }
 
             @Bean
-            public AssertionOptionsEndpointFilter assertionOptionsEndpointFilter(OptionsProvider optionsProvider, ObjectConverter objectConverter){
+            public AssertionOptionsEndpointFilter assertionOptionsEndpointFilter(AssertionOptionsProvider optionsProvider, ObjectConverter objectConverter){
                 return new AssertionOptionsEndpointFilter(optionsProvider, objectConverter);
             }
 

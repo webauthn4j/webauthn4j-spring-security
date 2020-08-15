@@ -32,8 +32,7 @@ import com.webauthn4j.springframework.security.challenge.ChallengeRepository;
 import com.webauthn4j.springframework.security.challenge.HttpSessionChallengeRepository;
 import com.webauthn4j.springframework.security.metadata.JsonFileResourceMetadataStatementsProvider;
 import com.webauthn4j.springframework.security.metadata.RestTemplateAdaptorHttpClient;
-import com.webauthn4j.springframework.security.options.OptionsProvider;
-import com.webauthn4j.springframework.security.options.OptionsProviderImpl;
+import com.webauthn4j.springframework.security.options.*;
 import com.webauthn4j.springframework.security.server.ServerPropertyProvider;
 import com.webauthn4j.springframework.security.server.ServerPropertyProviderImpl;
 import com.webauthn4j.springframework.security.webauthn.sample.app.security.ExampleExtensionAuthenticatorOutput;
@@ -100,13 +99,23 @@ public class WebSecurityBeanConfig {
     }
 
     @Bean
-    public OptionsProvider optionsProvider(WebAuthnAuthenticatorService webAuthnAuthenticatorService, ChallengeRepository challengeRepository) {
-        return new OptionsProviderImpl(webAuthnAuthenticatorService, challengeRepository);
+    public RpIdProvider rpIdProvider(){
+        return new RpIdProviderImpl();
     }
 
     @Bean
-    public ServerPropertyProvider serverPropertyProvider(OptionsProvider optionsProvider, ChallengeRepository challengeRepository) {
-        return new ServerPropertyProviderImpl(optionsProvider, challengeRepository);
+    public AttestationOptionsProvider attestationOptionsProvider(RpIdProvider rpIdProvider, WebAuthnAuthenticatorService webAuthnAuthenticatorService, ChallengeRepository challengeRepository) {
+        return new AttestationOptionsProviderImpl(rpIdProvider, webAuthnAuthenticatorService, challengeRepository);
+    }
+
+    @Bean
+    public AssertionOptionsProvider assertionOptionsProvider(RpIdProvider rpIdProvider, WebAuthnAuthenticatorService webAuthnAuthenticatorService, ChallengeRepository challengeRepository) {
+        return new AssertionOptionsProviderImpl(rpIdProvider, webAuthnAuthenticatorService, challengeRepository);
+    }
+
+    @Bean
+    public ServerPropertyProvider serverPropertyProvider(ChallengeRepository challengeRepository) {
+        return new ServerPropertyProviderImpl(challengeRepository);
     }
 
     @Bean
