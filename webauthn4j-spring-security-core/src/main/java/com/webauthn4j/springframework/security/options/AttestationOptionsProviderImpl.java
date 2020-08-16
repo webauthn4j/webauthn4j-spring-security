@@ -50,9 +50,9 @@ public class AttestationOptionsProviderImpl implements AttestationOptionsProvide
     private AuthenticationExtensionsClientInputs<RegistrationExtensionClientInput> registrationExtensions;
 
     private RpIdProvider rpIdProvider;
+    private PublicKeyCredentialUserEntityProvider publicKeyCredentialUserEntityProvider = new DefaultPublicKeyCredentialUserEntityProvider();
     private final WebAuthnAuthenticatorService authenticatorService;
     private final ChallengeRepository challengeRepository;
-    private PublicKeyCredentialUserEntityProvider publicKeyCredentialUserEntityProvider = new DefaultPublicKeyCredentialUserEntityProvider();
     private AuthenticationExtensionsClientInputsProvider<RegistrationExtensionClientInput> registrationExtensionsProvider = new DefaultRegistrationExtensionsProvider();
 
     // ~ Constructors

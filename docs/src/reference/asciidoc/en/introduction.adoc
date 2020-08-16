@@ -11,13 +11,23 @@ Initially, the specification was developed as "FIDO 2.0: Web API for accessing F
 
 WebAuthn4J Spring Security is a Spring Security extension module to provide Web Authentication specification support for your Spring web application.
 
+==== WebAuthn4J
+
+WebAuthn4J Spring Security uses https://github.com/webauthn4j/webauthn4j[WebAuthn4J] for WebAuthn attestation and assertion verification.
+WebAuthn4J is a portable Java library that supports all the attestation statements, but has minimal dependencies on external libraries.
+
+==== Spring Security WebAuthn
+
+There is also a sister project called Spring Security WebAuthn. Spring Security WebAuthn is developed according to Spring Security project's policy, aiming to be merged into Spring Security upstream.
+WebAuthn4J Spring Security is developed as a WebAuthn4J project with the aim of maximizing the functions of the WebAuthn4J library.
+
 === Requirements
 
 ==== Language & Framework
 
 * Java8 or later
-* Spring Framework 5.0 or later
-* Spring Security 5.0 or later
+* Spring Framework 5 or later
+* Spring Security 5 or later
 
 ==== Environment
 
@@ -45,9 +55,3 @@ git clone https://github.com/webauthn4j/webauthn4j-spring-security
 === License
 
 WebAuthn4J Spring Security is an open source software licensed under http://www.apache.org/licenses/LICENSE-2.0.html[Apache 2.0 license].
-
-=== Related Project
-
-https://github.com/webauthn4j/webauthn4j[WebAuthn4J] is a portable Java library for WebAuthn assertion and attestation verification.
-Spring Security is built on the top of it.
-
