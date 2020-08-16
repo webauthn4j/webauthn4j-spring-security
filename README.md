@@ -28,23 +28,61 @@ self-contained bootstrap mechanism for the build.
 
 ### Checkout sources
 
-```
+```bash
 git clone https://github.com/webauthn4j/webauthn4j-spring-security
 ```
 
 ### Build all jars
 
-```
+```bash
 ./gradlew build
 ```
 
 ### Execute sample application
 
-```
+```bash
 ./gradlew samples:spa:bootRun
 ```
 
 ![Login view](./docs/src/reference/asciidoc/en/images/login.png "Login view")
+
+## Configuration
+
+WebAuthn4J Spring Security can be configured through Spring Security Java Config.
+
+```java
+@Configuration
+@EnableWebSecurity
+public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
+
+    @Override
+    public void configure(AuthenticationManagerBuilder builder) throws Exception {
+        builder.apply(new WebAuthnAuthenticationProviderConfigurer<>(webAuthnAuthenticatorService, webAuthnManager));
+        builder.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder);
+    }
+
+    @Override
+    protected void configure(HttpSecurity http) throws Exception {
+
+        // WebAuthn Login
+        http.apply(WebAuthnLoginConfigurer.webAuthnLogin())
+                .defaultSuccessUrl("/", true)
+                .rpId("example.com")
+                .attestationOptionsEndpoint()
+                    .rp()
+                        .name("WebAuthn4J Spring Security Sample MPA")
+                        .and()
+                    .pubKeyCredParams(
+                        new PublicKeyCredentialParameters(PublicKeyCredentialType.PUBLIC_KEY, COSEAlgorithmIdentifier.ES256),
+                        new PublicKeyCredentialParameters(PublicKeyCredentialType.PUBLIC_KEY, COSEAlgorithmIdentifier.RS1)
+                    )
+                    .attestation(AttestationConveyancePreference.DIRECT)
+                    .extensions()
+                        .uvm(true)
+                        .credProps(true);
+    }
+}
+```
 
 
 ## License
