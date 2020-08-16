@@ -43,10 +43,10 @@ public class WebAuthnAuthenticationRequest implements Serializable {
                                          byte[] signature,
                                          String clientExtensionsJSON) {
 
-        this.credentialId = credentialId;
-        this.clientDataJSON = clientDataJSON;
-        this.authenticatorData = authenticatorData;
-        this.signature = signature;
+        this.credentialId = ArrayUtil.clone(credentialId);
+        this.clientDataJSON = ArrayUtil.clone(clientDataJSON);
+        this.authenticatorData = ArrayUtil.clone(authenticatorData);
+        this.signature = ArrayUtil.clone(signature);
         this.clientExtensionsJSON = clientExtensionsJSON;
     }
 
