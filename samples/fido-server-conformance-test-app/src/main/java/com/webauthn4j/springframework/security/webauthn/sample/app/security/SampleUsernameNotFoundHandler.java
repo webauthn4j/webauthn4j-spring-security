@@ -17,32 +17,22 @@
 package com.webauthn4j.springframework.security.webauthn.sample.app.security;
 
 import com.webauthn4j.springframework.security.fido.server.endpoint.UsernameNotFoundHandler;
-import com.webauthn4j.springframework.security.webauthn.sample.domain.component.UserManager;
-import com.webauthn4j.springframework.security.webauthn.sample.domain.entity.UserEntity;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.provisioning.UserDetailsManager;
 
 import java.util.Collections;
 
 public class SampleUsernameNotFoundHandler implements UsernameNotFoundHandler {
 
-    private final UserManager userManager;
+    private final UserDetailsManager userDetailsManager;
 
-    public SampleUsernameNotFoundHandler(UserManager userManager) {
-        this.userManager = userManager;
+    public SampleUsernameNotFoundHandler(UserDetailsManager userDetailsManager) {
+        this.userDetailsManager = userDetailsManager;
     }
 
     @Override
     public void onUsernameNotFound(String loginUsername) {
-        byte[] userHandle = new byte[0]; //TODO
-        UserEntity userEntity = new UserEntity();
-        userEntity.setUserHandle(userHandle);
-        userEntity.setEmailAddress(loginUsername);
-        userEntity.setLastName("dummy");
-        userEntity.setFirstName("dummy");
-        userEntity.setSingleFactorAuthenticationAllowed(false);
-        userEntity.setPassword("dummy");
-        userEntity.setGroups(Collections.emptyList());
-        userEntity.setAuthorities(Collections.emptyList());
-        userEntity.setAuthenticators(Collections.emptyList());
-        userManager.createUser(userEntity);
+        User user = new User(loginUsername, "dummy", Collections.emptyList());
+        userDetailsManager.createUser(user);
     }
 }
