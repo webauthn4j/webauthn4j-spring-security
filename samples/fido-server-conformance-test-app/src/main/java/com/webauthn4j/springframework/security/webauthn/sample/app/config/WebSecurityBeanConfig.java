@@ -27,6 +27,8 @@ import com.webauthn4j.converter.util.ObjectConverter;
 import com.webauthn4j.metadata.*;
 import com.webauthn4j.metadata.converter.jackson.WebAuthnMetadataJSONModule;
 import com.webauthn4j.springframework.security.WebAuthnRegistrationRequestValidator;
+import com.webauthn4j.springframework.security.authenticator.InMemoryWebAuthnAuthenticatorManager;
+import com.webauthn4j.springframework.security.authenticator.WebAuthnAuthenticatorManager;
 import com.webauthn4j.springframework.security.authenticator.WebAuthnAuthenticatorService;
 import com.webauthn4j.springframework.security.challenge.ChallengeRepository;
 import com.webauthn4j.springframework.security.challenge.HttpSessionChallengeRepository;
@@ -53,34 +55,34 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.core.io.support.ResourcePatternUtils;
-import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.AuthenticationTrustResolver;
 import org.springframework.security.authentication.AuthenticationTrustResolverImpl;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
-import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.web.AuthenticationEntryPoint;
-import org.springframework.security.web.access.AccessDeniedHandler;
-import org.springframework.security.web.access.AccessDeniedHandlerImpl;
-import org.springframework.security.web.access.DelegatingAccessDeniedHandler;
-import org.springframework.security.web.authentication.*;
-import org.springframework.security.web.authentication.logout.ForwardLogoutSuccessHandler;
-import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
-import org.springframework.security.web.csrf.InvalidCsrfTokenException;
-import org.springframework.security.web.csrf.MissingCsrfTokenException;
+import org.springframework.security.provisioning.InMemoryUserDetailsManager;
+import org.springframework.security.provisioning.UserDetailsManager;
 import org.springframework.web.client.RestTemplate;
 
 import java.io.IOException;
 import java.security.cert.X509Certificate;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.LinkedHashMap;
 import java.util.List;
 
 @Configuration
 public class WebSecurityBeanConfig {
+
+    @Bean
+    public WebAuthnAuthenticatorManager webAuthnAuthenticatorManager(){
+        return new InMemoryWebAuthnAuthenticatorManager();
+    }
+
+    @Bean
+    public UserDetailsManager userDetailsManager(){
+        return new InMemoryUserDetailsManager();
+    }
 
     @Bean
     public WebAuthnRegistrationRequestValidator webAuthnRegistrationRequestValidator(WebAuthnManager webAuthnManager, ServerPropertyProvider serverPropertyProvider) {
@@ -240,59 +242,6 @@ public class WebSecurityBeanConfig {
         ObjectMapper cborMapper = new ObjectMapper(new CBORFactory());
         cborMapper.registerSubtypes(new NamedType(ExampleExtensionAuthenticatorOutput.class, ExampleExtensionAuthenticatorOutput.ID));
         return new ObjectConverter(jsonMapper, cborMapper);
-    }
-
-
-    @Bean
-    public AuthenticationSuccessHandler authenticationSuccessHandler() {
-        return new ForwardAuthenticationSuccessHandler("/api/status/200");
-    }
-
-    @Bean
-    public AuthenticationFailureHandler authenticationFailureHandler() {
-        LinkedHashMap<Class<? extends AuthenticationException>, AuthenticationFailureHandler> authenticationFailureHandlers = new LinkedHashMap<>();
-
-        // authenticator error handler
-        ForwardAuthenticationFailureHandler authenticationFailureHandler = new ForwardAuthenticationFailureHandler("/api/status/401");
-        authenticationFailureHandlers.put(AuthenticationException.class, authenticationFailureHandler);
-
-        // default error handler
-        AuthenticationFailureHandler defaultAuthenticationFailureHandler = new ForwardAuthenticationFailureHandler("/api/status/401");
-
-        return new DelegatingAuthenticationFailureHandler(authenticationFailureHandlers, defaultAuthenticationFailureHandler);
-    }
-
-    @Bean
-    public LogoutSuccessHandler logoutSuccessHandler() {
-        return new ForwardLogoutSuccessHandler("/api/status/200");
-    }
-
-    @Bean
-    public AccessDeniedHandler accessDeniedHandler() {
-        LinkedHashMap<Class<? extends AccessDeniedException>, AccessDeniedHandler> errorHandlers = new LinkedHashMap<>();
-
-        // invalid csrf authenticator error handler
-        AccessDeniedHandlerImpl invalidCsrfTokenErrorHandler = new AccessDeniedHandlerImpl();
-        invalidCsrfTokenErrorHandler.setErrorPage("/api/status/403");
-        errorHandlers.put(InvalidCsrfTokenException.class, invalidCsrfTokenErrorHandler);
-
-        // missing csrf authenticator error handler
-        AccessDeniedHandlerImpl missingCsrfTokenErrorHandler = new AccessDeniedHandlerImpl();
-        missingCsrfTokenErrorHandler.setErrorPage("/api/status/403");
-        errorHandlers.put(MissingCsrfTokenException.class, missingCsrfTokenErrorHandler);
-
-        // default error handler
-        AccessDeniedHandlerImpl defaultErrorHandler = new AccessDeniedHandlerImpl();
-        defaultErrorHandler.setErrorPage("/api/status/403");
-
-        return new DelegatingAccessDeniedHandler(errorHandlers, defaultErrorHandler);
-    }
-
-    @Bean
-    public AuthenticationEntryPoint authenticationEntryPoint() {
-        LoginUrlAuthenticationEntryPoint authenticationEntryPoint = new LoginUrlAuthenticationEntryPoint("/api/status/401");
-        authenticationEntryPoint.setUseForward(true);
-        return authenticationEntryPoint;
     }
 
 }

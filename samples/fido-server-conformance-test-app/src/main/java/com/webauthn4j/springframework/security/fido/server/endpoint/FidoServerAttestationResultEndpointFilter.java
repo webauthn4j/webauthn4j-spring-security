@@ -118,7 +118,7 @@ public class FidoServerAttestationResultEndpointFilter extends ServerEndpointFil
             WebAuthnAuthenticatorImpl webAuthnAuthenticator =
                     new WebAuthnAuthenticatorImpl(
                             "Authenticator",
-                            userDetails,
+                            loginUsername,
                             attestationObject.getAuthenticatorData().getAttestedCredentialData(),
                             attestationObject.getAttestationStatement(),
                             attestationObject.getAuthenticatorData().getSignCount()

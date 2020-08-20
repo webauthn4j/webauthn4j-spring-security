@@ -35,24 +35,18 @@ import com.webauthn4j.springframework.security.options.AssertionOptionsProvider;
 import com.webauthn4j.springframework.security.options.AttestationOptionsProvider;
 import com.webauthn4j.springframework.security.server.ServerPropertyProvider;
 import com.webauthn4j.springframework.security.webauthn.sample.app.security.SampleUsernameNotFoundHandler;
-import com.webauthn4j.springframework.security.webauthn.sample.domain.component.UserManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.web.AuthenticationEntryPoint;
-import org.springframework.security.web.access.AccessDeniedHandler;
-import org.springframework.security.web.authentication.AuthenticationFailureHandler;
-import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
-import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
+import org.springframework.security.provisioning.UserDetailsManager;
 import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 import org.springframework.security.web.session.SessionManagementFilter;
 
@@ -69,24 +63,6 @@ WebSecurityConfig extends WebSecurityConfigurerAdapter {
     private static final String ADMIN_ROLE = "ADMIN";
 
     @Autowired
-    private AuthenticationSuccessHandler authenticationSuccessHandler;
-
-    @Autowired
-    private AuthenticationFailureHandler authenticationFailureHandler;
-
-    @Autowired
-    private AccessDeniedHandler accessDeniedHandler;
-
-    @Autowired
-    private LogoutSuccessHandler logoutSuccessHandler;
-
-    @Autowired
-    private AuthenticationEntryPoint authenticationEntryPoint;
-
-    @Autowired
-    private DaoAuthenticationProvider daoAuthenticationProvider;
-
-    @Autowired
     private WebAuthnAuthenticatorService authenticatorService;
 
     @Autowired
@@ -96,7 +72,7 @@ WebSecurityConfig extends WebSecurityConfigurerAdapter {
     private WebAuthnRegistrationRequestValidator webAuthnRegistrationRequestValidator;
 
     @Autowired
-    private UserManager userManager;
+    private UserDetailsManager userDetailsManager;
 
     @Autowired
     private ObjectConverter objectConverter;
@@ -164,8 +140,8 @@ WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
 
         FidoServerAttestationOptionsEndpointFilter fidoServerAttestationOptionsEndpointFilter = new FidoServerAttestationOptionsEndpointFilter(objectConverter, attestationOptionsProvider, challengeRepository);
-        FidoServerAttestationResultEndpointFilter fidoServerAttestationResultEndpointFilter = new FidoServerAttestationResultEndpointFilter(objectConverter, userManager, webAuthnAuthenticatorManager, webAuthnRegistrationRequestValidator);
-        fidoServerAttestationResultEndpointFilter.setUsernameNotFoundHandler(new SampleUsernameNotFoundHandler(userManager));
+        FidoServerAttestationResultEndpointFilter fidoServerAttestationResultEndpointFilter = new FidoServerAttestationResultEndpointFilter(objectConverter, userDetailsManager, webAuthnAuthenticatorManager, webAuthnRegistrationRequestValidator);
+        fidoServerAttestationResultEndpointFilter.setUsernameNotFoundHandler(new SampleUsernameNotFoundHandler(userDetailsManager));
         FidoServerAssertionOptionsEndpointFilter fidoServerAssertionOptionsEndpointFilter = new FidoServerAssertionOptionsEndpointFilter(objectConverter, assertionOptionsProvider, challengeRepository);
         FidoServerAssertionResultEndpointFilter fidoServerAssertionResultEndpointFilter = new FidoServerAssertionResultEndpointFilter(objectConverter, serverPropertyProvider);
         fidoServerAssertionResultEndpointFilter.setAuthenticationManager(authenticationManagerBean());
@@ -174,19 +150,6 @@ WebSecurityConfig extends WebSecurityConfigurerAdapter {
         http.addFilterAfter(fidoServerAttestationResultEndpointFilter, SessionManagementFilter.class);
         http.addFilterAfter(fidoServerAssertionOptionsEndpointFilter, SessionManagementFilter.class);
         http.addFilterAfter(fidoServerAssertionResultEndpointFilter, SessionManagementFilter.class);
-
-
-//        // FIDO Server Endpoints
-//        http.apply(fidoServer())
-//                .fidoServerAttestationOptionsEndpoint()
-//                .and()
-//                .fidoServerAttestationResultEndpointConfig()
-//                .webAuthnRegistrationRequestValidator(webAuthnRegistrationRequestValidator)
-//                .usernameNotFoundHandler(new SampleUsernameNotFoundHandler(userManager))
-//                .and()
-//                .fidoServerAssertionOptionsEndpointConfig()
-//                .and()
-//                .fidoServerAssertionResultEndpoint();
 
         // Authorization
         http.authorizeRequests()
@@ -199,13 +162,6 @@ WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .mvcMatchers("/h2-console/**").denyAll()
                 .mvcMatchers("/api/admin/**").hasRole(ADMIN_ROLE)
                 .anyRequest().fullyAuthenticated();
-
-        http.sessionManagement()
-                .sessionAuthenticationFailureHandler(authenticationFailureHandler);
-
-        http.exceptionHandling()
-                .authenticationEntryPoint(authenticationEntryPoint)
-                .accessDeniedHandler(accessDeniedHandler);
 
         //TODO:
         http.csrf().csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse());

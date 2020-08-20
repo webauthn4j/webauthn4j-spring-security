@@ -17,8 +17,6 @@
 package com.webauthn4j.springframework.security.webauthn.sample;
 
 import com.webauthn4j.springframework.security.webauthn.sample.app.config.AppConfig;
-import com.webauthn4j.springframework.security.webauthn.sample.domain.config.DomainConfig;
-import com.webauthn4j.springframework.security.webauthn.sample.infrastructure.config.InfrastructureConfig;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.SpringBootConfiguration;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
@@ -27,7 +25,7 @@ import org.springframework.context.annotation.Import;
 /**
  * SampleWebApplication
  */
-@Import({AppConfig.class, DomainConfig.class, InfrastructureConfig.class})
+@Import({AppConfig.class})
 @SpringBootConfiguration
 @EnableAutoConfiguration
 public class SampleWebApplication {
