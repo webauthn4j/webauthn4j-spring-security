@@ -26,8 +26,7 @@ import com.webauthn4j.data.extension.client.RegistrationExtensionClientInput;
 import com.webauthn4j.springframework.security.challenge.ChallengeRepository;
 import com.webauthn4j.springframework.security.options.AttestationOptionsProvider;
 import com.webauthn4j.util.Base64UrlUtil;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.util.Assert;
 
 import javax.servlet.http.HttpServletRequest;
@@ -35,6 +34,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.UncheckedIOException;
 import java.nio.ByteBuffer;
+import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -85,12 +85,12 @@ public class FidoServerAttestationOptionsEndpointFilter extends ServerEndpointFi
         try {
             ServerPublicKeyCredentialCreationOptionsRequest serverRequest = objectConverter.getJsonConverter()
                     .readValue(inputStream, ServerPublicKeyCredentialCreationOptionsRequest.class);
-            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-            String username = authentication.getName();
+            String username = serverRequest.getUsername();
             String displayName = serverRequest.getDisplayName();
             Challenge challenge = serverEndpointFilterUtil.encodeUsername(new DefaultChallenge(), username);
             challengeRepository.saveChallenge(challenge, request);
-            PublicKeyCredentialCreationOptions attestationOptions = optionsProvider.getAttestationOptions(request, authentication);
+            //TODO: UsernamePasswordAuthenticationToken should not be used here in this way
+            PublicKeyCredentialCreationOptions attestationOptions = optionsProvider.getAttestationOptions(request, new UsernamePasswordAuthenticationToken(username, null, Collections.emptyList()));
             String userHandle;
             if (attestationOptions.getUser() == null) {
                 userHandle = Base64UrlUtil.encodeToString(generateUserHandle());

@@ -26,14 +26,14 @@ import com.webauthn4j.data.extension.client.AuthenticationExtensionsClientInputs
 import com.webauthn4j.springframework.security.challenge.ChallengeRepository;
 import com.webauthn4j.springframework.security.options.AssertionOptionsProvider;
 import com.webauthn4j.util.Base64UrlUtil;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.util.Assert;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UncheckedIOException;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -86,8 +86,8 @@ public class FidoServerAssertionOptionsEndpointFilter extends ServerEndpointFilt
                     objectConverter.getJsonConverter().readValue(inputStream, ServerPublicKeyCredentialGetOptionsRequest.class);
             Challenge challenge = serverEndpointFilterUtil.encodeUserVerification(new DefaultChallenge(), serverRequest.getUserVerification());
             challengeRepository.saveChallenge(challenge, request);
-            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-            PublicKeyCredentialRequestOptions options = optionsProvider.getAssertionOptions(request, authentication);
+            //TODO: UsernamePasswordAuthenticationToken should not be used here in this way
+            PublicKeyCredentialRequestOptions options = optionsProvider.getAssertionOptions(request, new UsernamePasswordAuthenticationToken(serverRequest.getUsername(), null, Collections.emptyList()));
             List<ServerPublicKeyCredentialDescriptor> credentials = options.getAllowCredentials().stream()
                     .map(credential -> new ServerPublicKeyCredentialDescriptor(credential.getType(), Base64UrlUtil.encodeToString(credential.getId()), credential.getTransports()))
                     .collect(Collectors.toList());

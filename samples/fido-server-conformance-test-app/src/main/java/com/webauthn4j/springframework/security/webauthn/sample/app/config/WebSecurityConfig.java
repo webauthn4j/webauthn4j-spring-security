@@ -175,19 +175,6 @@ WebSecurityConfig extends WebSecurityConfigurerAdapter {
         http.addFilterAfter(fidoServerAssertionOptionsEndpointFilter, SessionManagementFilter.class);
         http.addFilterAfter(fidoServerAssertionResultEndpointFilter, SessionManagementFilter.class);
 
-
-//        // FIDO Server Endpoints
-//        http.apply(fidoServer())
-//                .fidoServerAttestationOptionsEndpoint()
-//                .and()
-//                .fidoServerAttestationResultEndpointConfig()
-//                .webAuthnRegistrationRequestValidator(webAuthnRegistrationRequestValidator)
-//                .usernameNotFoundHandler(new SampleUsernameNotFoundHandler(userManager))
-//                .and()
-//                .fidoServerAssertionOptionsEndpointConfig()
-//                .and()
-//                .fidoServerAssertionResultEndpoint();
-
         // Authorization
         http.authorizeRequests()
                 .mvcMatchers("/").permitAll()

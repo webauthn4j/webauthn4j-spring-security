@@ -16,8 +16,6 @@
 
 package com.webauthn4j.springframework.security.webauthn.sample.domain.component;
 
-import com.webauthn4j.authenticator.Authenticator;
-import com.webauthn4j.springframework.security.webauthn.sample.domain.entity.AuthenticatorEntity;
 import com.webauthn4j.springframework.security.webauthn.sample.domain.entity.UserEntity;
 import com.webauthn4j.springframework.security.webauthn.sample.domain.exception.WebAuthnSampleBusinessException;
 import com.webauthn4j.springframework.security.webauthn.sample.domain.exception.WebAuthnSampleEntityNotFoundException;
@@ -30,8 +28,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.Arrays;
 
 /**
  * {@inheritDoc}
@@ -143,32 +139,4 @@ public class UserManagerImpl implements UserManager {
     private UserEntity getCurrentUser() {
         return (UserEntity) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
     }
-
-
-    public void addAuthenticator(String username, Authenticator authenticator) {
-        UserEntity userEntity = userEntityRepository.findOneByEmailAddress(username)
-                .orElseThrow(() -> new WebAuthnSampleEntityNotFoundException("User not found."));
-        AuthenticatorEntity authenticatorEntity = modelMapper.map(authenticator, AuthenticatorEntity.class);
-        authenticatorEntity.setUser(userEntity);
-        userEntity.getAuthenticators().add(authenticatorEntity);
-    }
-
-    public void removeAuthenticator(String username, Authenticator authenticator) {
-        UserEntity userEntity = userEntityRepository.findOneByEmailAddress(username)
-                .orElseThrow(() -> new WebAuthnSampleEntityNotFoundException("User not found."));
-        boolean found = userEntity.getAuthenticators().remove(authenticator);
-        if (!found) {
-            throw new WebAuthnSampleEntityNotFoundException("Authenticator not found.");
-        }
-    }
-
-    public void removeAuthenticator(String username, byte[] credentialId) {
-        UserEntity userEntity = userEntityRepository.findOneByEmailAddress(username)
-                .orElseThrow(() -> new WebAuthnSampleEntityNotFoundException("User not found."));
-        boolean found = userEntity.getAuthenticators().removeIf(item -> Arrays.equals(item.getAttestedCredentialData().getCredentialId(), credentialId));
-        if (!found) {
-            throw new WebAuthnSampleEntityNotFoundException("Authenticator not found.");
-        }
-    }
-
 }
