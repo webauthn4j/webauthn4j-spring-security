@@ -186,7 +186,7 @@ configure(allJavaProjects) {
         maven { url "https://oss.jfrog.org/artifactory/libs-snapshot" }
     }
 
-    def webauthn4jVersion = '0.13.0-SNAPSHOT'
+    def webauthn4jVersion = '0.13.0.RELEASE'
     def springSecurityVersion = '5.3.4.RELEASE'
     def springBootVersion = '2.3.1.RELEASE'
     def hibernateValidatorVersion = '6.1.5.Final'
