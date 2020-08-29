@@ -1,0 +1,17 @@
+releasenotes:
+  github:
+    organization: "webauthn4j"
+    repository: "webauthn4j-spring-security"
+  sections:
+    - title: "Breaking Changes"
+      emoji: ":warning:"
+      labels: ["breaking change"]
+    - title: "Enhancements"
+      emoji: ":star:"
+      labels: ["enhancement"]
+    - title: "Dependency Upgrades"
+      emoji: ":package:"
+      labels: ["dependencies"]
+    - title: "Bugs"
+      emoji: ":beetle:"
+      labels: ["bug"]

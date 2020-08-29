@@ -15,6 +15,25 @@ This project is under active development. API signature may change.
 
 You can find out more details from the [reference](https://webauthn4j.github.io/webauthn4j-spring-security/en/).
 
+## Getting from Maven Central
+
+If you are using Maven, just add the webauthn4j-spring-security as a dependency:
+
+```xml
+<properties>
+  ...
+  <!-- Use the latest version whenever possible. -->
+  <webauthn4j-spring-security.version>0.7.0-SNAPSHOT</webauthn4j-spring-security.version>
+  ...
+</properties>
+
+<dependency>
+	<groupId>com.webauthn4j</groupId>
+	<artifactId>webauthn4j-spring-security-core</artifactId>
+	<version>${webauthn4j-spring-security.version}</version>
+</dependency>
+```
+
 ## Build
 
 WebAuthn4J Spring Security uses a Gradle based build system.

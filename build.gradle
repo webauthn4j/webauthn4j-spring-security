@@ -282,6 +282,26 @@ configure(allJavaProjects) {
 
 }
 
+task updateVersionsInDocuments() {
+    group = "documentation"
+    String regex = "<webauthn4j-spring-security\\.version>.*</webauthn4j-spring-security\\.version>";
+    String replacement = "<webauthn4j-spring-security\\.version>" + latestReleasedWebAuthn4JSpringSecurityVersion + "</webauthn4j-spring-security.version>";
+
+    def files = [file('README.md'), file('docs/src/reference/asciidoc/en/introduction.adoc'), file('docs/src/reference/asciidoc/ja/introduction.adoc')]
+    files.each { file ->
+        String updated = file.getText('UTF-8').replaceFirst(regex, replacement)
+        file.setText(updated, 'UTF-8')
+    }
+}
+
+task generateReleaseNote(type: JavaExec) {
+    group = "documentation"
+    classpath = files('gradle/lib/github-release-notes-generator.jar')
+
+    args(latestReleasedWebAuthn4JSpringSecurityVersion, file("build/release-note.md").absolutePath, "--spring.config.location=file:" + file("github-release-notes-generator.yml").absolutePath)
+
+}
+
 asciidoctorj {
     version = asciidoctorVersion
 }

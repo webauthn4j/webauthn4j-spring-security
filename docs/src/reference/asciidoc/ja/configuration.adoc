@@ -11,10 +11,17 @@
 
 [source,xml]
 ----
+<properties>
+  ...
+  <!-- Use the latest version whenever possible. -->
+  <webauthn4j-spring-security.version>0.7.0.RELEASE</webauthn4j-spring-security.version>
+  ...
+</properties>
+
 <dependency>
 	<groupId>com.webauthn4j</groupId>
 	<artifactId>webauthn4j-spring-security-core</artifactId>
-	<version>${version}</version>
+	<version>${webauthn4j-spring-security.version}</version>
 </dependency>
 ----
 
