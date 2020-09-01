@@ -2,6 +2,7 @@
 
 [![Actions Status](https://github.com/webauthn4j/webauthn4j-spring-security/workflows/CI/badge.svg)](https://github.com/webauthn4j/webauthn4j-spring-security/actions)
 [![Coverage](https://sonarcloud.io/api/project_badges/measure?project=webauthn4j-spring-security&metric=coverage)](https://sonarcloud.io/dashboard?id=webauthn4j-spring-security)
+[![Maven Central](https://img.shields.io/maven-central/v/com.webauthn4j/webauthn4j-spring-security-core.svg)](https://search.maven.org/search?q=webauthn4j-spring-security)
 [![license](https://img.shields.io/github/license/webauthn4j/webauthn4j-spring-security.svg)](https://github.com/webauthn4j/webauthn4j-spring-security/blob/master/LICENSE.txt)
 
 WebAuthn4J Spring Security provides [Web Authentication specification](https://www.w3.org/TR/2019/REC-webauthn-1-20190304/) support for your Spring application by using [WebAuthn4J library](https://github.com/webauthn4j/webauthn4j).
