@@ -36,6 +36,7 @@ public class ServletUtil {
      * @return the {@link Origin}
      */
     public static Origin getOrigin(ServletRequest request) {
-        return new Origin(request.getScheme(), request.getServerName(), request.getServerPort());
+        String url = String.format("%s://%s:%s", request.getScheme(), request.getServerName(), request.getServerPort());
+        return new Origin(url);
     }
 }

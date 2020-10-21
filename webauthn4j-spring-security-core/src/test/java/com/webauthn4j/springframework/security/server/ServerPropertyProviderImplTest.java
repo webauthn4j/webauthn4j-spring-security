@@ -49,7 +49,7 @@ public class ServerPropertyProviderImplTest {
         ServerProperty serverProperty = target.provide(request);
 
         assertThat(serverProperty.getRpId()).isEqualTo("rpid.example.com");
-        assertThat(serverProperty.getOrigin()).isEqualTo(new Origin("https://origin.example.com"));
+        assertThat(serverProperty.getOrigins()).containsExactly(new Origin("https://origin.example.com"));
         assertThat(serverProperty.getChallenge()).isEqualTo(mockChallenge);
     }
 
