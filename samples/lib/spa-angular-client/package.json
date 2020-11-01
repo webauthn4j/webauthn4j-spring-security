@@ -31,7 +31,7 @@
     "core-js": "^3.6.5",
     "bowser": "^2.11.0",
     "rxjs": "~6.6.3",
-    "tslib": "^2.0.1",
+    "tslib": "^2.0.3",
     "zone.js": "~0.10.2"
   },
   "devDependencies": {
