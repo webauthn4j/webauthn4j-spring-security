@@ -16,8 +16,12 @@
 
 package com.webauthn4j.springframework.security.authenticator;
 
+import com.webauthn4j.data.attestation.authenticator.AttestedCredentialData;
+import com.webauthn4j.data.attestation.statement.AttestationStatement;
 import org.junit.Test;
 import org.springframework.security.core.userdetails.UserDetails;
+
+import java.io.Serializable;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
@@ -26,8 +30,11 @@ public class WebAuthnAuthenticatorImplTest {
 
     @Test
     public void equals_hashCode_test() {
-        WebAuthnAuthenticatorImpl instanceA = new WebAuthnAuthenticatorImpl("authenticator", null, null, null, 0);
-        WebAuthnAuthenticatorImpl instanceB = new WebAuthnAuthenticatorImpl("authenticator", null, null, null, 0);
+        Serializable userPrincipal = mock(Serializable.class);
+        AttestedCredentialData attestedCredentialData = mock(AttestedCredentialData.class);
+        AttestationStatement attestationStatement = mock(AttestationStatement.class);
+        WebAuthnAuthenticatorImpl instanceA = new WebAuthnAuthenticatorImpl("authenticator", userPrincipal, attestedCredentialData, attestationStatement, 0);
+        WebAuthnAuthenticatorImpl instanceB = new WebAuthnAuthenticatorImpl("authenticator", userPrincipal, attestedCredentialData, attestationStatement, 0);
         assertThat(instanceA)
                 .isEqualTo(instanceB)
                 .hasSameHashCodeAs(instanceB);
@@ -36,13 +43,13 @@ public class WebAuthnAuthenticatorImplTest {
     @Test
     public void get_set_userPrincipal_test() {
         UserDetails userDetails = mock(UserDetails.class);
-        WebAuthnAuthenticatorImpl instance = new WebAuthnAuthenticatorImpl("authenticator", userDetails, null, null, 0);
+        WebAuthnAuthenticatorImpl instance = new WebAuthnAuthenticatorImpl("authenticator", userDetails, mock(AttestedCredentialData.class), mock(AttestationStatement.class), 0);
         assertThat(instance.getUserPrincipal()).isEqualTo(userDetails);
     }
 
     @Test
     public void get_set_name_test() {
-        WebAuthnAuthenticatorImpl instance = new WebAuthnAuthenticatorImpl("authenticator", null, null, null, 0);
+        WebAuthnAuthenticatorImpl instance = new WebAuthnAuthenticatorImpl("authenticator", mock(Serializable.class), mock(AttestedCredentialData.class), mock(AttestationStatement.class), 0);
         assertThat(instance.getName()).isEqualTo("authenticator");
         instance.setName("newName");
         assertThat(instance.getName()).isEqualTo("newName");
