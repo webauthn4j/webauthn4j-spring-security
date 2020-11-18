@@ -19,7 +19,6 @@ package com.webauthn4j.springframework.security;
 import com.webauthn4j.WebAuthnManager;
 import com.webauthn4j.data.AuthenticationParameters;
 import com.webauthn4j.data.AuthenticationRequest;
-import com.webauthn4j.server.ServerProperty;
 import com.webauthn4j.springframework.security.authenticator.WebAuthnAuthenticator;
 import com.webauthn4j.springframework.security.authenticator.WebAuthnAuthenticatorImpl;
 import com.webauthn4j.springframework.security.authenticator.WebAuthnAuthenticatorService;
@@ -97,7 +96,6 @@ public class WebAuthnAuthenticationProviderTest {
         WebAuthnAuthenticationParameters parameters = mock(WebAuthnAuthenticationParameters.class);
         when(request.getCredentialId()).thenReturn(credentialId);
         when(authenticatorService.loadAuthenticatorByCredentialId(credentialId)).thenReturn(webAuthnAuthenticator);
-        when(parameters.getServerProperty()).thenReturn(mock(ServerProperty.class));
         Authentication token = new WebAuthnAssertionAuthenticationToken(request, parameters, null);
         Authentication authenticatedToken = authenticationProvider.authenticate(token);
 
@@ -129,7 +127,6 @@ public class WebAuthnAuthenticationProviderTest {
         WebAuthnAuthenticationParameters parameters = mock(WebAuthnAuthenticationParameters.class);
         when(request.getCredentialId()).thenReturn(credentialId);
         when(authenticatorService.loadAuthenticatorByCredentialId(credentialId)).thenReturn(webAuthnAuthenticator);
-        when(parameters.getServerProperty()).thenReturn(mock(ServerProperty.class));
         Authentication token = new WebAuthnAssertionAuthenticationToken(request, parameters, null);
         authenticationProvider.authenticate(token);
     }
