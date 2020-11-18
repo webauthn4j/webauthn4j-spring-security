@@ -134,6 +134,10 @@ public class WebAuthnRegistrationRequestValidatorTest {
 
     @Test(expected = BadAttestationStatementException.class)
     public void validate_caught_exception_test() {
+
+        ServerProperty serverProperty = mock(ServerProperty.class);
+        when(serverPropertyProvider.provide(any())).thenReturn(serverProperty);
+
         WebAuthnRegistrationRequestValidator target = new WebAuthnRegistrationRequestValidator(
                 webAuthnManager, serverPropertyProvider
         );
