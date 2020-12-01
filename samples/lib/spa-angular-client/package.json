@@ -36,7 +36,7 @@
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "~0.1002.0",
-    "@angular/cli": "~10.2.0",
+    "@angular/cli": "~11.0.2",
     "@angular/compiler-cli": "^10.0.7",
     "@angular/language-service": "^10.2.1",
     "@types/base64-arraybuffer": "^0.1.0",
