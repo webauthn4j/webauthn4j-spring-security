@@ -28,7 +28,7 @@
     "@fortawesome/fontawesome-free": "^5.15.1",
     "@ng-bootstrap/ng-bootstrap": "^8.0.0",
     "bootstrap": "^4.5.3",
-    "core-js": "^3.6.5",
+    "core-js": "^3.8.0",
     "bowser": "^2.11.0",
     "rxjs": "~6.6.3",
     "tslib": "^2.0.3",
