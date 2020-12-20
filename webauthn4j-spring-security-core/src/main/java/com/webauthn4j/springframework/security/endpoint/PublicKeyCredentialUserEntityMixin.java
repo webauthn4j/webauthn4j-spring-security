@@ -36,7 +36,7 @@ public abstract class PublicKeyCredentialUserEntityMixin {
     abstract String getId();
 
     @JsonCreator
-    public PublicKeyCredentialUserEntityMixin(
+    protected PublicKeyCredentialUserEntityMixin(
             @NonNull @JsonProperty("id") byte[] id,
             @NonNull @JsonProperty("name") String name,
             @NonNull @JsonProperty("displayName") String displayName){}
