@@ -18,12 +18,12 @@ package com.webauthn4j.springframework.security.fido.server.endpoint;
 
 import com.webauthn4j.converter.exception.DataConversionException;
 import com.webauthn4j.converter.util.ObjectConverter;
-import com.webauthn4j.data.PublicKeyCredentialRequestOptions;
 import com.webauthn4j.data.client.challenge.Challenge;
 import com.webauthn4j.data.client.challenge.DefaultChallenge;
 import com.webauthn4j.data.extension.client.AuthenticationExtensionClientInput;
 import com.webauthn4j.data.extension.client.AuthenticationExtensionsClientInputs;
 import com.webauthn4j.springframework.security.challenge.ChallengeRepository;
+import com.webauthn4j.springframework.security.options.AssertionOptions;
 import com.webauthn4j.springframework.security.options.AssertionOptionsProvider;
 import com.webauthn4j.util.Base64UrlUtil;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -87,7 +87,7 @@ public class FidoServerAssertionOptionsEndpointFilter extends ServerEndpointFilt
             Challenge challenge = serverEndpointFilterUtil.encodeUserVerification(new DefaultChallenge(), serverRequest.getUserVerification());
             challengeRepository.saveChallenge(challenge, request);
             //TODO: UsernamePasswordAuthenticationToken should not be used here in this way
-            PublicKeyCredentialRequestOptions options = optionsProvider.getAssertionOptions(request, new UsernamePasswordAuthenticationToken(serverRequest.getUsername(), null, Collections.emptyList()));
+            AssertionOptions options = optionsProvider.getAssertionOptions(request, new UsernamePasswordAuthenticationToken(serverRequest.getUsername(), null, Collections.emptyList()));
             List<ServerPublicKeyCredentialDescriptor> credentials = options.getAllowCredentials().stream()
                     .map(credential -> new ServerPublicKeyCredentialDescriptor(credential.getType(), Base64UrlUtil.encodeToString(credential.getId()), credential.getTransports()))
                     .collect(Collectors.toList());

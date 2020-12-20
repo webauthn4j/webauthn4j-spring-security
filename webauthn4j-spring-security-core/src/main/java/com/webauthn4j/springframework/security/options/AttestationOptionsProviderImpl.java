@@ -42,7 +42,6 @@ public class AttestationOptionsProviderImpl implements AttestationOptionsProvide
     // ================================================================================================
     private String rpId = null;
     private String rpName = null;
-    private String rpIcon = null;
     private List<PublicKeyCredentialParameters> pubKeyCredParams = new ArrayList<>();
     private AuthenticatorSelectionCriteria registrationAuthenticatorSelection;
     private AttestationConveyancePreference attestation;
@@ -80,9 +79,9 @@ public class AttestationOptionsProviderImpl implements AttestationOptionsProvide
     /**
      * {@inheritDoc}
      */
-    public PublicKeyCredentialCreationOptions getAttestationOptions(HttpServletRequest request, Authentication authentication) {
+    public AttestationOptions getAttestationOptions(HttpServletRequest request, Authentication authentication) {
 
-        PublicKeyCredentialRpEntity relyingParty = new PublicKeyCredentialRpEntity(getRpId(request), rpName, rpIcon);
+        PublicKeyCredentialRpEntity relyingParty = new PublicKeyCredentialRpEntity(getRpId(request), rpName);
         PublicKeyCredentialUserEntity user;
         try {
             user = getPublicKeyCredentialUserEntityProvider().provide(authentication);
@@ -90,7 +89,7 @@ public class AttestationOptionsProviderImpl implements AttestationOptionsProvide
             user = null;
         }
 
-        return new PublicKeyCredentialCreationOptions(
+        return new AttestationOptions(
                 relyingParty,
                 user,
                 getChallengeRepository().loadOrGenerateChallenge(request),
@@ -119,15 +118,6 @@ public class AttestationOptionsProviderImpl implements AttestationOptionsProvide
     public void setRpName(String rpName) {
         Assert.hasText(rpName, "rpName parameter must not be empty or null");
         this.rpName = rpName;
-    }
-
-    public String getRpIcon() {
-        return rpIcon;
-    }
-
-    public void setRpIcon(String rpIcon) {
-        Assert.hasText(rpIcon, "rpIcon parameter must not be empty or null");
-        this.rpIcon = rpIcon;
     }
 
     public List<PublicKeyCredentialParameters> getPubKeyCredParams() {

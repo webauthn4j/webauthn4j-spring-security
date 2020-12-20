@@ -16,24 +16,22 @@
 
 package com.webauthn4j.springframework.security.options;
 
-import com.webauthn4j.data.PublicKeyCredentialCreationOptions;
-import com.webauthn4j.data.PublicKeyCredentialRequestOptions;
 import org.springframework.security.core.Authentication;
 
 import javax.servlet.http.HttpServletRequest;
 
 /**
- * Provides {@link PublicKeyCredentialCreationOptions} and {@link PublicKeyCredentialRequestOptions} for {@link HttpServletRequest}
+ * Provides {@link AssertionOptions} for {@link HttpServletRequest}
  */
 public interface AssertionOptionsProvider {
 
     /**
-     * provides {@link PublicKeyCredentialRequestOptions}. If <code>username</code> is <code>null</code>, <code>credentials</code> are not populated.
+     * provides {@link AssertionOptions}. If <code>username</code> is <code>null</code>, <code>credentials</code> are not populated.
      *
      * @param request   request
      * @param authentication authentication
-     * @return {@link PublicKeyCredentialRequestOptions} instance
+     * @return {@link AssertionOptions} instance
      */
-    PublicKeyCredentialRequestOptions getAssertionOptions(HttpServletRequest request, Authentication authentication);
+    AssertionOptions getAssertionOptions(HttpServletRequest request, Authentication authentication);
 
 }

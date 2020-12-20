@@ -31,15 +31,13 @@ public class PublicKeyCredentialUserEntityMixinTest {
     public void serialize_deserialize_test(){
         ObjectMapper jsonMapper = new ObjectMapper();
         jsonMapper.addMixIn(PublicKeyCredentialDescriptor.class, PublicKeyCredentialDescriptorMixin.class);
+        jsonMapper.addMixIn(PublicKeyCredentialUserEntity.class, PublicKeyCredentialUserEntityMixin.class);
         ObjectMapper cborMapper = new ObjectMapper(new CBORFactory());
         ObjectConverter objectConverter = new ObjectConverter(jsonMapper, cborMapper);
 
-        PublicKeyCredentialUserEntity publicKeyCredentialUserEntity = new PublicKeyCredentialUserEntity(new byte[32], "name", "displayName", "icon");
+        PublicKeyCredentialUserEntity publicKeyCredentialUserEntity = new PublicKeyCredentialUserEntity(new byte[32], "name", "displayName");
         String json = objectConverter.getJsonConverter().writeValueAsString(publicKeyCredentialUserEntity);
-        assertThat(json).isEqualTo("{\"id\":\"AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=\",\"name\":\"name\",\"displayName\":\"displayName\",\"icon\":\"icon\"}");
+        assertThat(json).isEqualTo("{\"id\":\"AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\",\"name\":\"name\",\"displayName\":\"displayName\"}");
         assertThat(objectConverter.getJsonConverter().readValue(json, PublicKeyCredentialUserEntity.class)).isEqualTo(publicKeyCredentialUserEntity);
     }
-
-
-
 }

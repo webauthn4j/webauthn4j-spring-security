@@ -18,12 +18,12 @@ package com.webauthn4j.springframework.security.fido.server.endpoint;
 
 import com.webauthn4j.converter.exception.DataConversionException;
 import com.webauthn4j.converter.util.ObjectConverter;
-import com.webauthn4j.data.PublicKeyCredentialCreationOptions;
 import com.webauthn4j.data.client.challenge.Challenge;
 import com.webauthn4j.data.client.challenge.DefaultChallenge;
 import com.webauthn4j.data.extension.client.AuthenticationExtensionsClientInputs;
 import com.webauthn4j.data.extension.client.RegistrationExtensionClientInput;
 import com.webauthn4j.springframework.security.challenge.ChallengeRepository;
+import com.webauthn4j.springframework.security.options.AttestationOptions;
 import com.webauthn4j.springframework.security.options.AttestationOptionsProvider;
 import com.webauthn4j.util.Base64UrlUtil;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -90,14 +90,14 @@ public class FidoServerAttestationOptionsEndpointFilter extends ServerEndpointFi
             Challenge challenge = serverEndpointFilterUtil.encodeUsername(new DefaultChallenge(), username);
             challengeRepository.saveChallenge(challenge, request);
             //TODO: UsernamePasswordAuthenticationToken should not be used here in this way
-            PublicKeyCredentialCreationOptions attestationOptions = optionsProvider.getAttestationOptions(request, new UsernamePasswordAuthenticationToken(username, null, Collections.emptyList()));
+            AttestationOptions attestationOptions = optionsProvider.getAttestationOptions(request, new UsernamePasswordAuthenticationToken(username, null, Collections.emptyList()));
             String userHandle;
             if (attestationOptions.getUser() == null) {
                 userHandle = Base64UrlUtil.encodeToString(generateUserHandle());
             } else {
                 userHandle = Base64UrlUtil.encodeToString(attestationOptions.getUser().getId());
             }
-            ServerPublicKeyCredentialUserEntity user = new ServerPublicKeyCredentialUserEntity(userHandle, username, displayName, null);
+            ServerPublicKeyCredentialUserEntity user = new ServerPublicKeyCredentialUserEntity(userHandle, username, displayName);
             List<ServerPublicKeyCredentialDescriptor> credentials =
                     attestationOptions.getExcludeCredentials().stream()
                             .map(credential -> new ServerPublicKeyCredentialDescriptor(credential.getType(), Base64UrlUtil.encodeToString(credential.getId()), credential.getTransports()))

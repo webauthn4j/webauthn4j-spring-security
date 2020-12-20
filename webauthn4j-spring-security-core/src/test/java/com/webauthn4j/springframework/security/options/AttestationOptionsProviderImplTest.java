@@ -59,15 +59,13 @@ public class AttestationOptionsProviderImplTest {
 
         AttestationOptionsProviderImpl optionsProvider = new AttestationOptionsProviderImpl(rpIdProvider, authenticatorService, challengeRepository);
         optionsProvider.setRpName("rpName");
-        optionsProvider.setRpIcon("data://dummy");
         optionsProvider.setPubKeyCredParams(Collections.singletonList(new PublicKeyCredentialParameters(PublicKeyCredentialType.PUBLIC_KEY, COSEAlgorithmIdentifier.ES256)));
         optionsProvider.setRegistrationTimeout(10000L);
         optionsProvider.setRegistrationExtensions(new AuthenticationExtensionsClientInputs<>());
 
-        PublicKeyCredentialCreationOptions attestationOptions = optionsProvider.getAttestationOptions(mockRequest, new UsernamePasswordAuthenticationToken("username", null));
+        AttestationOptions attestationOptions = optionsProvider.getAttestationOptions(mockRequest, new UsernamePasswordAuthenticationToken("username", null));
         assertThat(attestationOptions.getRp().getId()).isEqualTo("example.com");
         assertThat(attestationOptions.getRp().getName()).isEqualTo("rpName");
-        assertThat(attestationOptions.getRp().getIcon()).isEqualTo("data://dummy");
         assertThat(attestationOptions.getUser()).isEqualTo(new PublicKeyCredentialUserEntity("username".getBytes(), "username", "username"));
         assertThat(attestationOptions.getChallenge()).isEqualTo(challenge);
         assertThat(attestationOptions.getPubKeyCredParams()).isEqualTo(Collections.singletonList(new PublicKeyCredentialParameters(PublicKeyCredentialType.PUBLIC_KEY, COSEAlgorithmIdentifier.ES256)));
@@ -91,15 +89,13 @@ public class AttestationOptionsProviderImplTest {
 
         AttestationOptionsProviderImpl optionsProvider = new AttestationOptionsProviderImpl(rpIdProvider, authenticatorService, challengeRepository);
         optionsProvider.setRpName("rpName");
-        optionsProvider.setRpIcon("data://dummy");
         optionsProvider.setPubKeyCredParams(Collections.singletonList(new PublicKeyCredentialParameters(PublicKeyCredentialType.PUBLIC_KEY, COSEAlgorithmIdentifier.ES256)));
         optionsProvider.setRegistrationTimeout(10000L);
         optionsProvider.setRegistrationExtensions(new AuthenticationExtensionsClientInputs<>());
 
-        PublicKeyCredentialCreationOptions attestationOptions = optionsProvider.getAttestationOptions(mockRequest, new UsernamePasswordAuthenticationToken("username", null));
+        AttestationOptions attestationOptions = optionsProvider.getAttestationOptions(mockRequest, new UsernamePasswordAuthenticationToken("username", null));
         assertThat(attestationOptions.getRp().getId()).isEqualTo("example.com");
         assertThat(attestationOptions.getRp().getName()).isEqualTo("rpName");
-        assertThat(attestationOptions.getRp().getIcon()).isEqualTo("data://dummy");
         assertThat(attestationOptions.getUser()).isEqualTo(new PublicKeyCredentialUserEntity("username".getBytes(), "username", "username"));
         assertThat(attestationOptions.getChallenge()).isEqualTo(challenge);
         assertThat(attestationOptions.getPubKeyCredParams()).isEqualTo(Collections.singletonList(new PublicKeyCredentialParameters(PublicKeyCredentialType.PUBLIC_KEY, COSEAlgorithmIdentifier.ES256)));
@@ -142,8 +138,6 @@ public class AttestationOptionsProviderImplTest {
         assertThat(optionsProvider.getRpId()).isEqualTo("example.com");
         optionsProvider.setRpName("example");
         assertThat(optionsProvider.getRpName()).isEqualTo("example");
-        optionsProvider.setRpIcon("data://dummy");
-        assertThat(optionsProvider.getRpIcon()).isEqualTo("data://dummy");
         List<PublicKeyCredentialParameters> publicKeyCredParams = Lists.emptyList();
         optionsProvider.setPubKeyCredParams(publicKeyCredParams);
         assertThat(optionsProvider.getPubKeyCredParams()).isEqualTo(publicKeyCredParams);

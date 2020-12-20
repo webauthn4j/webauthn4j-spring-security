@@ -17,7 +17,6 @@
 package com.webauthn4j.springframework.security.options;
 
 import com.webauthn4j.data.PublicKeyCredentialDescriptor;
-import com.webauthn4j.data.PublicKeyCredentialRequestOptions;
 import com.webauthn4j.data.PublicKeyCredentialType;
 import com.webauthn4j.data.UserVerificationRequirement;
 import com.webauthn4j.data.extension.client.AuthenticationExtensionClientInput;
@@ -74,8 +73,8 @@ public class AssertionOptionsProviderImpl implements AssertionOptionsProvider {
     /**
      * {@inheritDoc}
      */
-    public PublicKeyCredentialRequestOptions getAssertionOptions(HttpServletRequest request, Authentication authentication) {
-        return new PublicKeyCredentialRequestOptions(
+    public AssertionOptions getAssertionOptions(HttpServletRequest request, Authentication authentication) {
+        return new AssertionOptions(
                 getChallengeRepository().loadOrGenerateChallenge(request),
                 getAuthenticationTimeout(),
                 getRpId(request),

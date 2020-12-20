@@ -498,7 +498,7 @@ public final class WebAuthnLoginConfigurer<H extends HttpSecurityBuilder<H>> ext
 
         /**
          * Returns the {@link AttestationOptionsEndpointConfig} for configuring PublicKeyCredParams
-         *
+         * @param pubKeyCredParams Desired properties of the credential to be created
          * @return the {@link AttestationOptionsEndpointConfig}
          */
         public AttestationOptionsEndpointConfig pubKeyCredParams(PublicKeyCredentialParameters... pubKeyCredParams) {
@@ -559,7 +559,6 @@ public final class WebAuthnLoginConfigurer<H extends HttpSecurityBuilder<H>> ext
 
             private String id = null;
             private String name = null;
-            private String icon = null;
 
             private RpIdProvider idProvider = null;
 
@@ -579,9 +578,6 @@ public final class WebAuthnLoginConfigurer<H extends HttpSecurityBuilder<H>> ext
                     }
                     if (rpConfig.name != null) {
                         attestationOptionsProviderImpl.setRpName(rpConfig.name);
-                    }
-                    if (rpConfig.icon != null) {
-                        attestationOptionsProviderImpl.setRpIcon(rpConfig.icon);
                     }
 
                     if(rpConfig.idProvider != null){
@@ -616,18 +612,6 @@ public final class WebAuthnLoginConfigurer<H extends HttpSecurityBuilder<H>> ext
             public RpConfig name(String name) {
                 Assert.hasText(name, "name parameter must not be null or empty");
                 this.name = name;
-                return this;
-            }
-
-            /**
-             * Sets relying party icon
-             *
-             * @param icon the relying party icon
-             * @return the {@link RpConfig} for additional customization
-             */
-            public RpConfig icon(String icon) {
-                Assert.hasText(icon, "icon parameter must not be null or empty");
-                this.icon = icon;
                 return this;
             }
 
