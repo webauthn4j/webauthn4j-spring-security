@@ -25,19 +25,10 @@ public class ServerPublicKeyCredentialUserEntity extends PublicKeyCredentialEnti
     private String id;
     private String displayName;
 
-    public ServerPublicKeyCredentialUserEntity(String id, String name, String displayName, String icon) {
-        super(name, icon);
-        this.id = id;
-        this.displayName = displayName;
-    }
-
     public ServerPublicKeyCredentialUserEntity(String id, String name, String displayName) {
         super(name);
         this.id = id;
         this.displayName = displayName;
-    }
-
-    public ServerPublicKeyCredentialUserEntity() {
     }
 
     public String getId() {

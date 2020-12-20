@@ -20,6 +20,7 @@ import com.webauthn4j.converter.util.ObjectConverter;
 import com.webauthn4j.data.PublicKeyCredentialCreationOptions;
 import com.webauthn4j.data.PublicKeyCredentialRpEntity;
 import com.webauthn4j.data.client.challenge.Challenge;
+import com.webauthn4j.springframework.security.options.AttestationOptions;
 import com.webauthn4j.springframework.security.options.AttestationOptionsProvider;
 import org.springframework.security.web.FilterInvocation;
 
@@ -65,7 +66,7 @@ public class AttestationOptionsEndpointFilter extends AbstractOptionsEndpointFil
         }
 
         try {
-            PublicKeyCredentialCreationOptions attestationOptions = attestationOptionsProvider.getAttestationOptions(fi.getRequest(), getAuthentication());
+            AttestationOptions attestationOptions = attestationOptionsProvider.getAttestationOptions(fi.getRequest(), getAuthentication());
             writeResponse(fi.getResponse(), attestationOptions);
         } catch (RuntimeException e) {
             logger.debug(e);

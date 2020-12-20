@@ -20,6 +20,7 @@ import com.webauthn4j.converter.util.ObjectConverter;
 import com.webauthn4j.data.PublicKeyCredentialRequestOptions;
 import com.webauthn4j.data.PublicKeyCredentialRpEntity;
 import com.webauthn4j.data.client.challenge.Challenge;
+import com.webauthn4j.springframework.security.options.AssertionOptions;
 import com.webauthn4j.springframework.security.options.AssertionOptionsProvider;
 import org.springframework.security.web.FilterInvocation;
 
@@ -69,7 +70,7 @@ public class AssertionOptionsEndpointFilter extends AbstractOptionsEndpointFilte
         }
 
         try {
-            PublicKeyCredentialRequestOptions assertionOptions = assertionOptionsProvider.getAssertionOptions(fi.getRequest(), getAuthentication());
+            AssertionOptions assertionOptions = assertionOptionsProvider.getAssertionOptions(fi.getRequest(), getAuthentication());
             writeResponse(fi.getResponse(), assertionOptions);
         } catch (RuntimeException e) {
             logger.debug(e);

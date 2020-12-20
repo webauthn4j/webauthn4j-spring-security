@@ -17,7 +17,7 @@
 package com.webauthn4j.springframework.security.endpoint;
 
 import com.webauthn4j.converter.util.ObjectConverter;
-import com.webauthn4j.data.PublicKeyCredentialRequestOptions;
+import com.webauthn4j.springframework.security.options.AssertionOptions;
 import com.webauthn4j.springframework.security.options.AssertionOptionsProvider;
 import org.junit.Test;
 import org.springframework.http.HttpStatus;
@@ -41,7 +41,7 @@ public class AssertionOptionsEndpointFilterTest {
     @Test
     public void doFilter_test() throws IOException, ServletException {
         AssertionOptionsProvider optionsProvider = mock(AssertionOptionsProvider.class);
-        PublicKeyCredentialRequestOptions assertionOptions = new PublicKeyCredentialRequestOptions(null, null, null, null, null,null);
+        AssertionOptions assertionOptions = new AssertionOptions(null, null, null, null, null,null);
         when(optionsProvider.getAssertionOptions(any(), any())).thenReturn(assertionOptions);
         AssertionOptionsEndpointFilter optionsEndpointFilter = new AssertionOptionsEndpointFilter(optionsProvider, objectConverter);
         AuthenticationTrustResolver trustResolver = new AuthenticationTrustResolverImpl();

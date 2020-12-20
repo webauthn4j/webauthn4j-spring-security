@@ -60,7 +60,7 @@ public class AssertionOptionsProviderImplTest {
         assertionOptionsProvider.setAuthenticationUserVerification(UserVerificationRequirement.REQUIRED);
         assertionOptionsProvider.setAuthenticationExtensions(new AuthenticationExtensionsClientInputs<>());
 
-        PublicKeyCredentialRequestOptions assertionOptions = assertionOptionsProvider.getAssertionOptions(mockRequest, new UsernamePasswordAuthenticationToken("username", null));
+        AssertionOptions assertionOptions = assertionOptionsProvider.getAssertionOptions(mockRequest, new UsernamePasswordAuthenticationToken("username", null));
         assertThat(assertionOptions.getChallenge()).isEqualTo(challenge);
         assertThat(assertionOptions.getTimeout()).isEqualTo(10000L);
         assertThat(assertionOptions.getRpId()).isEqualTo("example.com");

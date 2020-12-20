@@ -72,8 +72,7 @@ export class WebAuthnService {
         user: serverOptions.user ? {
           id: base64url.decodeBase64url(serverOptions.user.id),
           name: serverOptions.user.name,
-          displayName: serverOptions.user.displayName,
-          icon: serverOptions.user.icon
+          displayName: serverOptions.user.displayName
         } : null,
         challenge: base64url.decodeBase64url(serverOptions.challenge),
         pubKeyCredParams: serverOptions.pubKeyCredParams,

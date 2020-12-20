@@ -137,7 +137,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                         .processingUrl("/webauthn/attestation/options")
                         .rp()
                             .id("example.com")
-                            .icon("dummy")
                             .name("example")
                             .and()
                         .pubKeyCredParams(

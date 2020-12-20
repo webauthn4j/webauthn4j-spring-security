@@ -16,8 +16,13 @@
 
 package com.webauthn4j.springframework.security.endpoint;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.webauthn4j.springframework.security.converter.jackson.deserializer.ByteArraySerializer;
+import com.webauthn4j.springframework.security.converter.jackson.serializer.ByteArrayDeserializer;
+import org.springframework.lang.NonNull;
 
 /**
  * A mix-in for {@link com.webauthn4j.data.PublicKeyCredentialUserEntity} not to fix
@@ -26,6 +31,14 @@ import com.webauthn4j.springframework.security.converter.jackson.deserializer.By
 @SuppressWarnings("java:S1610")
 public abstract class PublicKeyCredentialUserEntityMixin {
 
+    @JsonDeserialize(using = ByteArrayDeserializer.class)
     @JsonSerialize(using = ByteArraySerializer.class)
     abstract String getId();
+
+    @JsonCreator
+    public PublicKeyCredentialUserEntityMixin(
+            @NonNull @JsonProperty("id") byte[] id,
+            @NonNull @JsonProperty("name") String name,
+            @NonNull @JsonProperty("displayName") String displayName){}
+
 }
