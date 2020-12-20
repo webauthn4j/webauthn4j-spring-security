@@ -50,7 +50,7 @@ public abstract class AbstractOptionsEndpointFilter extends GenericFilterBean {
     // ~ Constructors
     // ===================================================================================================
 
-    public AbstractOptionsEndpointFilter(ObjectConverter objectConverter) {
+    protected AbstractOptionsEndpointFilter(ObjectConverter objectConverter) {
         this.jsonConverter = objectConverter.getJsonConverter();
         this.trustResolver = new AuthenticationTrustResolverImpl();
     }
