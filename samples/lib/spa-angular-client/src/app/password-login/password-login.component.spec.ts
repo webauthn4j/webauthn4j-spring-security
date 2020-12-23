@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import {async, ComponentFixture, TestBed} from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import {PasswordLoginComponent} from './password-login.component';
 import {AuthService} from "../auth/auth.service";
@@ -27,7 +27,7 @@ describe('PasswordLoginComponent', () => {
   let component: PasswordLoginComponent;
   let fixture: ComponentFixture<PasswordLoginComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [PasswordLoginComponent],
       imports: [

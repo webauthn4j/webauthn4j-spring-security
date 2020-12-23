@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import {async, TestBed} from '@angular/core/testing';
+import { TestBed, waitForAsync } from '@angular/core/testing';
 import {AppComponent} from './app.component';
 import {RouterTestingModule} from "@angular/router/testing";
 import {HeaderComponent} from "./header/header.component";
@@ -22,7 +22,7 @@ import {of} from "rxjs/internal/observable/of";
 import {AuthService} from "./auth/auth.service";
 
 describe('AppComponent', () => {
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [
         AppComponent,
@@ -47,12 +47,12 @@ describe('AppComponent', () => {
       }
     }).compileComponents();
   }));
-  it('should create the app', async(() => {
+  it('should create the app', waitForAsync(() => {
     const fixture = TestBed.createComponent(AppComponent);
     const app = fixture.debugElement.componentInstance;
     expect(app).toBeTruthy();
   }));
-  it(`should have as title 'WebAuthn4J Spring Security Sample SPA'`, async(() => {
+  it(`should have as title 'WebAuthn4J Spring Security Sample SPA'`, waitForAsync(() => {
     const fixture = TestBed.createComponent(AppComponent);
     const app = fixture.debugElement.componentInstance;
     expect(app.title).toEqual('WebAuthn4J Spring Security Sample SPA');

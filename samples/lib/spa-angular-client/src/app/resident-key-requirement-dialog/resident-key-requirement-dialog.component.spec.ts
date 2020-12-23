@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import {async, ComponentFixture, TestBed} from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import {ResidentKeyRequirementDialogComponent} from './resident-key-requirement-dialog.component';
 import {NgbActiveModal, NgbModalModule} from "@ng-bootstrap/ng-bootstrap";
@@ -24,7 +24,7 @@ describe('ResidentKeyRequirementDialogComponent', () => {
   let component: ResidentKeyRequirementDialogComponent;
   let fixture: ComponentFixture<ResidentKeyRequirementDialogComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [ResidentKeyRequirementDialogComponent],
       imports: [
