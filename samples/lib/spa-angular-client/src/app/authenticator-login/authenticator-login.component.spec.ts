@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import {async, ComponentFixture, TestBed} from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import {AuthenticatorLoginComponent} from './authenticator-login.component';
 import {NgbAlertModule} from "@ng-bootstrap/ng-bootstrap";
@@ -28,7 +28,7 @@ describe('AuthenticatorLoginComponent', () => {
   let component: AuthenticatorLoginComponent;
   let fixture: ComponentFixture<AuthenticatorLoginComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [
         AuthenticatorLoginComponent,

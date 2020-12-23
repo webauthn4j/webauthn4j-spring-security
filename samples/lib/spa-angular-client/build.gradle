@@ -43,6 +43,17 @@ npm_run_test {
   group = 'verification'
 }
 
+
+npm_install {
+  group = 'other'
+}
+
+npm_outdated {
+  group = 'other'
+}
+
+// npm tasks start with npm_run executes corresponding npm scripts
+
 npm_run_watchTest {
   group = 'verification'
 }
@@ -55,15 +66,15 @@ npm_run_start {
   group = 'other'
 }
 
-npm_install {
+npm_run_ngUpdate {
   group = 'other'
 }
 
-npm_run_ng_update {
+npm_run_ngUpdateCore {
   group = 'other'
 }
 
-npm_outdated {
+npm_run_ngUpdateCli {
   group = 'other'
 }
 
