@@ -237,7 +237,7 @@ configure(allJavaProjects) {
     def thymeleafVersion = '3.0.4.RELEASE'
     def modelMapperVersion = '2.3.9'
 
-    def bootstrapVersion = '4.5.3'
+    def bootstrapVersion = '4.6.0'
     def jqueryVersion = '3.5.1'
     def fontAwesomeVersion = '5.15.2'
     def webjarsLocatorVersion = '0.40'
