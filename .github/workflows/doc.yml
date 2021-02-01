@@ -35,6 +35,7 @@ jobs:
         run: |
           rm -rf docs
           mv build/asciidoc/html5 docs
+          git add docs
           git commit -m "Update docs"
           git checkout -b gh-pages
           git push origin gh-pages
