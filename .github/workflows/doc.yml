@@ -38,4 +38,4 @@ jobs:
           git add docs
           git commit -m "Update docs"
           git checkout -b gh-pages
-          git push origin gh-pages
+          git push origin gh-pages -f
