@@ -33,7 +33,7 @@ jobs:
           ./gradlew javadoc asciidoc
       - name: Commit & Push pages
         run: |
-          rm docs
+          rm -rf docs
           mv build/asciidoc/html5 docs
           git commit -m "Update docs"
           git checkout -b gh-pages
