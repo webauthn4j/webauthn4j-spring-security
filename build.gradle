@@ -15,7 +15,7 @@
  */
 
 buildscript {
-    def springBootVersion = '2.4.2'
+    def springBootVersion = '2.4.3'
     def sonarqubeVersion = '3.1.1'
     def asciidoctorGradleVersion = '1.6.1'
     def artifactoryVersion = '4.20.0'
