@@ -238,7 +238,7 @@ configure(allJavaProjects) {
     def modelMapperVersion = '2.3.9'
 
     def bootstrapVersion = '4.6.0'
-    def jqueryVersion = '3.5.1'
+    def jqueryVersion = '3.6.0'
     def fontAwesomeVersion = '5.15.2'
     def webjarsLocatorVersion = '0.40'
 
