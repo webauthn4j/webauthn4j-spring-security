@@ -227,7 +227,7 @@ configure(allJavaProjects) {
 
     repositories {
         mavenCentral()
-        maven { url "https://oss.jfrog.org/artifactory/libs-snapshot" }
+        maven { url "https://oss.sonatype.org/content/repositories/snapshots" }
     }
 
     def webauthn4jVersion = '0.15.1.RELEASE'
