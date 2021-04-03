@@ -167,8 +167,8 @@ configure(webAuthn4JSpringSecurityLibraryProjects) {
         sign publishing.publications.standard
     }
 
-    publishStandardPublicationToSnapshotRepository.onlyIf { webauthn4JSpringSecurityVersion.endsWith("-SNAPSHOT") }
-    publishStandardPublicationToMavenCentralRepository.onlyIf { !webauthn4JSpringSecurityVersion.endsWith("-SNAPSHOT") }
+    publishStandardPublicationToSnapshotRepository.onlyIf { webAuthn4JSpringSecurityVersion.endsWith("-SNAPSHOT") }
+    publishStandardPublicationToMavenCentralRepository.onlyIf { !webAuthn4JSpringSecurityVersion.endsWith("-SNAPSHOT") }
 
 
 }
