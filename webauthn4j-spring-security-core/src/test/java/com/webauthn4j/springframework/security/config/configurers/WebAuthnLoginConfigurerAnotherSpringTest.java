@@ -22,6 +22,8 @@ import com.fasterxml.jackson.dataformat.cbor.CBORFactory;
 import com.webauthn4j.converter.util.ObjectConverter;
 import com.webauthn4j.data.client.challenge.DefaultChallenge;
 import com.webauthn4j.metadata.converter.jackson.WebAuthnMetadataJSONModule;
+import com.webauthn4j.springframework.security.DefaultUserVerificationStrategy;
+import com.webauthn4j.springframework.security.UserVerificationStrategy;
 import com.webauthn4j.springframework.security.authenticator.InMemoryWebAuthnAuthenticatorManager;
 import com.webauthn4j.springframework.security.authenticator.WebAuthnAuthenticatorService;
 import com.webauthn4j.springframework.security.challenge.ChallengeRepository;
@@ -102,6 +104,11 @@ public class WebAuthnLoginConfigurerAnotherSpringTest {
             @Bean
             public WebAuthnAuthenticatorService webAuthnAuthenticatorService(){
                 return new InMemoryWebAuthnAuthenticatorManager();
+            }
+
+            @Bean
+            public UserVerificationStrategy userVerificationStrategy(){
+                return new DefaultUserVerificationStrategy();
             }
 
             @Bean

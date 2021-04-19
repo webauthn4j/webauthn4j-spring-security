@@ -21,11 +21,16 @@ import com.webauthn4j.converter.util.ObjectConverter;
 import com.webauthn4j.data.*;
 import com.webauthn4j.data.attestation.statement.COSEAlgorithmIdentifier;
 import com.webauthn4j.data.client.challenge.DefaultChallenge;
+import com.webauthn4j.springframework.security.DefaultUserVerificationStrategy;
+import com.webauthn4j.springframework.security.UserVerificationStrategy;
 import com.webauthn4j.springframework.security.WebAuthnProcessingFilter;
 import com.webauthn4j.springframework.security.authenticator.InMemoryWebAuthnAuthenticatorManager;
 import com.webauthn4j.springframework.security.authenticator.WebAuthnAuthenticatorService;
 import com.webauthn4j.springframework.security.challenge.ChallengeRepository;
-import com.webauthn4j.springframework.security.options.*;
+import com.webauthn4j.springframework.security.options.AssertionOptionsProvider;
+import com.webauthn4j.springframework.security.options.AssertionOptionsProviderImpl;
+import com.webauthn4j.springframework.security.options.AttestationOptionsProvider;
+import com.webauthn4j.springframework.security.options.AttestationOptionsProviderImpl;
 import com.webauthn4j.springframework.security.server.ServerPropertyProvider;
 import com.webauthn4j.springframework.security.server.ServerPropertyProviderImpl;
 import org.assertj.core.api.Assertions;
@@ -34,6 +39,8 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationTrustResolver;
+import org.springframework.security.authentication.AuthenticationTrustResolverImpl;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
@@ -161,6 +168,13 @@ public class WebAuthnLoginConfigurerSpringTest {
 
         @Autowired
         private ServerPropertyProvider serverPropertyProvider;
+
+        @Autowired
+        private AuthenticationTrustResolver trustResolver;
+
+        @Autowired
+        private UserVerificationStrategy userVerificationStrategy;
+
         @Autowired
         private AttestationOptionsProvider attestationOptionsProvider;
         @Autowired
@@ -172,6 +186,8 @@ public class WebAuthnLoginConfigurerSpringTest {
             http.apply(WebAuthnLoginConfigurer.webAuthnLogin())
                     .objectConverter(objectConverter)
                     .serverPropertyProvider(serverPropertyProvider)
+                    .trustResolver(trustResolver)
+                    .userVerificationStrategy(userVerificationStrategy)
                     .usernameParameter("username")
                     .passwordParameter("password")
                     .credentialIdParameter("credentialId")
@@ -264,6 +280,16 @@ public class WebAuthnLoginConfigurerSpringTest {
             @Bean
             public ServerPropertyProvider serverPropertyProvider(ChallengeRepository challengeRepository) {
                 return new ServerPropertyProviderImpl(challengeRepository);
+            }
+
+            @Bean
+            public UserVerificationStrategy userVerificationStrategy(AuthenticationTrustResolver authenticationTrustResolver){
+                return new DefaultUserVerificationStrategy(authenticationTrustResolver);
+            }
+
+            @Bean
+            public AuthenticationTrustResolver authenticationTrustResolver(){
+                return new AuthenticationTrustResolverImpl();
             }
 
         }
