@@ -19,7 +19,6 @@ package com.webauthn4j.springframework.security;
 import com.webauthn4j.server.ServerProperty;
 import com.webauthn4j.springframework.security.server.ServerPropertyProvider;
 import com.webauthn4j.util.Base64UrlUtil;
-import org.assertj.core.api.Assertions;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -46,6 +45,7 @@ public class WebAuthnProcessingFilterTest {
     public MockitoRule mockito = MockitoJUnit.rule();
 
     private ServerPropertyProvider serverPropertyProvider;
+    private UserVerificationStrategy userVerificationStrategy;
     private AuthenticationManager authenticationManager;
     private MockHttpServletRequest mockHttpServletRequest;
     private MockHttpServletResponse mockHttpServletResponse;
@@ -58,12 +58,14 @@ public class WebAuthnProcessingFilterTest {
     @Before
     public void setup() {
         serverPropertyProvider = mock(ServerPropertyProvider.class);
+        userVerificationStrategy = new DefaultUserVerificationStrategy();
         authenticationManager = mock(AuthenticationManager.class);
         mockHttpServletRequest = new MockHttpServletRequest();
         mockHttpServletResponse = new MockHttpServletResponse();
 
         target.setAuthenticationManager(authenticationManager);
         target.setServerPropertyProvider(serverPropertyProvider);
+        target.setUserVerificationStrategy(userVerificationStrategy);
     }
 
     @Test
@@ -213,7 +215,8 @@ public class WebAuthnProcessingFilterTest {
         assertThat(target.getAuthenticatorDataParameter()).isEqualTo(authenticatorDataParameter);
         assertThat(target.getSignatureParameter()).isEqualTo(signatureParameter);
         assertThat(target.getClientExtensionsJSONParameter()).isEqualTo(clientExtensionsJSONParameter);
-        Assertions.assertThat(target.getServerPropertyProvider()).isEqualTo(serverPropertyProvider);
+        assertThat(target.getServerPropertyProvider()).isEqualTo(serverPropertyProvider);
+        assertThat(target.getUserVerificationStrategy()).isEqualTo(userVerificationStrategy);
 
 
         WebAuthnAssertionAuthenticationToken authenticationToken = (WebAuthnAssertionAuthenticationToken) captor.getValue();
@@ -247,7 +250,8 @@ public class WebAuthnProcessingFilterTest {
     public void constructor_test() {
         ServerPropertyProvider serverPropertyProvider = mock(ServerPropertyProvider.class);
         WebAuthnProcessingFilter webAuthnProcessingFilter = new WebAuthnProcessingFilter(AuthorityUtils.NO_AUTHORITIES, serverPropertyProvider);
-        Assertions.assertThat(webAuthnProcessingFilter.getServerPropertyProvider()).isEqualTo(serverPropertyProvider);
+        assertThat(webAuthnProcessingFilter.getServerPropertyProvider()).isEqualTo(serverPropertyProvider);
+        assertThat(webAuthnProcessingFilter.getUserVerificationStrategy()).isNotNull();
     }
 
 

@@ -19,11 +19,12 @@ package com.webauthn4j.springframework.security;
 import com.webauthn4j.server.ServerProperty;
 import com.webauthn4j.springframework.security.server.ServerPropertyProvider;
 import org.springframework.http.HttpMethod;
-import org.springframework.security.authentication.*;
+import org.springframework.security.authentication.AbstractAuthenticationToken;
+import org.springframework.security.authentication.AuthenticationServiceException;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.util.Assert;
 import org.springframework.util.Base64Utils;
@@ -75,7 +76,6 @@ public class WebAuthnProcessingFilter extends UsernamePasswordAuthenticationFilt
 
     private ServerPropertyProvider serverPropertyProvider;
     private UserVerificationStrategy userVerificationStrategy = new DefaultUserVerificationStrategy();
-    private AuthenticationTrustResolver trustResolver = new AuthenticationTrustResolverImpl();
 
     private boolean postOnly = true;
 
@@ -240,6 +240,14 @@ public class WebAuthnProcessingFilter extends UsernamePasswordAuthenticationFilt
         this.serverPropertyProvider = serverPropertyProvider;
     }
 
+    public UserVerificationStrategy getUserVerificationStrategy() {
+        return userVerificationStrategy;
+    }
+
+    public void setUserVerificationStrategy(UserVerificationStrategy userVerificationStrategy) {
+        this.userVerificationStrategy = userVerificationStrategy;
+    }
+
     protected void setDetails(HttpServletRequest request,
                               AbstractAuthenticationToken authRequest) {
         authRequest.setDetails(authenticationDetailsSource.buildDetails(request));
@@ -265,18 +273,5 @@ public class WebAuthnProcessingFilter extends UsernamePasswordAuthenticationFilt
         return request.getParameter(clientExtensionsJSONParameter);
     }
 
-    private class DefaultUserVerificationStrategy implements UserVerificationStrategy {
 
-        @Override
-        public boolean isUserVerificationRequired() {
-            Authentication currentAuthentication = SecurityContextHolder.getContext().getAuthentication();
-            if(currentAuthentication == null){
-                return true;
-            }
-            if(trustResolver.isAnonymous(currentAuthentication)){
-                return true;
-            }
-            return !currentAuthentication.isAuthenticated();
-        }
-    }
 }

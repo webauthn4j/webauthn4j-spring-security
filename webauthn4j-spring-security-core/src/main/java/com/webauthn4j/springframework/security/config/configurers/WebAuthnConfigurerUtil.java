@@ -20,6 +20,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.cbor.CBORFactory;
 import com.webauthn4j.converter.util.ObjectConverter;
 import com.webauthn4j.metadata.converter.jackson.WebAuthnMetadataJSONModule;
+import com.webauthn4j.springframework.security.DefaultUserVerificationStrategy;
+import com.webauthn4j.springframework.security.UserVerificationStrategy;
 import com.webauthn4j.springframework.security.authenticator.WebAuthnAuthenticatorService;
 import com.webauthn4j.springframework.security.challenge.ChallengeRepository;
 import com.webauthn4j.springframework.security.challenge.HttpSessionChallengeRepository;
@@ -30,6 +32,8 @@ import com.webauthn4j.springframework.security.options.*;
 import com.webauthn4j.springframework.security.server.ServerPropertyProvider;
 import com.webauthn4j.springframework.security.server.ServerPropertyProviderImpl;
 import org.springframework.context.ApplicationContext;
+import org.springframework.security.authentication.AuthenticationTrustResolver;
+import org.springframework.security.authentication.AuthenticationTrustResolverImpl;
 import org.springframework.security.config.annotation.web.HttpSecurityBuilder;
 
 /**
@@ -164,6 +168,40 @@ class WebAuthnConfigurerUtil {
             return new ServerPropertyProviderImpl(getChallengeRepositoryOrCreateNew(http));
         } else {
             return applicationContext.getBean(ServerPropertyProvider.class);
+        }
+    }
+
+    /**
+     * Get {@link UserVerificationStrategy} from SharedObject or ApplicationContext. if nothing hit, create new
+     */
+    public static <H extends HttpSecurityBuilder<H>> UserVerificationStrategy getUserVerificationStrategyOrCreateNew(H http) {
+        UserVerificationStrategy userVerificationStrategy = http.getSharedObject(UserVerificationStrategy.class);
+        if (userVerificationStrategy != null) {
+            return userVerificationStrategy;
+        }
+        ApplicationContext applicationContext = http.getSharedObject(ApplicationContext.class);
+        String[] beanNames = applicationContext.getBeanNamesForType(UserVerificationStrategy.class);
+        if (beanNames.length == 0) {
+            return new DefaultUserVerificationStrategy(getAuthenticationTrustResolverOrCreateNew(http));
+        } else {
+            return applicationContext.getBean(UserVerificationStrategy.class);
+        }
+    }
+
+    /**
+     * Get {@link AuthenticationTrustResolver} from SharedObject or ApplicationContext. if nothing hit, create new
+     */
+    public static <H extends HttpSecurityBuilder<H>> AuthenticationTrustResolver getAuthenticationTrustResolverOrCreateNew(H http) {
+        AuthenticationTrustResolver authenticationTrustResolver = http.getSharedObject(AuthenticationTrustResolver.class);
+        if (authenticationTrustResolver != null) {
+            return authenticationTrustResolver;
+        }
+        ApplicationContext applicationContext = http.getSharedObject(ApplicationContext.class);
+        String[] beanNames = applicationContext.getBeanNamesForType(AuthenticationTrustResolver.class);
+        if (beanNames.length == 0) {
+            return new AuthenticationTrustResolverImpl();
+        } else {
+            return applicationContext.getBean(AuthenticationTrustResolver.class);
         }
     }
 

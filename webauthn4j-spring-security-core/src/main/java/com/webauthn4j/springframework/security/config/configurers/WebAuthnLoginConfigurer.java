@@ -21,6 +21,7 @@ import com.webauthn4j.data.*;
 import com.webauthn4j.data.extension.client.AuthenticationExtensionClientInput;
 import com.webauthn4j.data.extension.client.AuthenticationExtensionsClientInputs;
 import com.webauthn4j.data.extension.client.RegistrationExtensionClientInput;
+import com.webauthn4j.springframework.security.UserVerificationStrategy;
 import com.webauthn4j.springframework.security.WebAuthnProcessingFilter;
 import com.webauthn4j.springframework.security.challenge.ChallengeRepository;
 import com.webauthn4j.springframework.security.endpoint.AssertionOptionsEndpointFilter;
@@ -31,6 +32,7 @@ import com.webauthn4j.springframework.security.extension.RegistrationExtensionPr
 import com.webauthn4j.springframework.security.options.*;
 import com.webauthn4j.springframework.security.server.ServerPropertyProvider;
 import com.webauthn4j.springframework.security.server.ServerPropertyProviderImpl;
+import org.springframework.security.authentication.AuthenticationTrustResolver;
 import org.springframework.security.config.annotation.web.HttpSecurityBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
@@ -88,6 +90,8 @@ public final class WebAuthnLoginConfigurer<H extends HttpSecurityBuilder<H>> ext
     private RpIdProvider rpIdProvider = null;
     private ObjectConverter objectConverter = null;
     private ServerPropertyProvider serverPropertyProvider = null;
+    private AuthenticationTrustResolver trustResolver = null;
+    private UserVerificationStrategy userVerificationStrategy = null;
 
     private final AttestationOptionsEndpointConfig attestationOptionsEndpointConfig = new AttestationOptionsEndpointConfig();
     private final AssertionOptionsEndpointConfig assertionOptionsEndpointConfig = new AssertionOptionsEndpointConfig();
@@ -145,8 +149,20 @@ public final class WebAuthnLoginConfigurer<H extends HttpSecurityBuilder<H>> ext
         }
         http.setSharedObject(ServerPropertyProvider.class, serverPropertyProvider);
 
+        if(trustResolver == null){
+            trustResolver = WebAuthnConfigurerUtil.getAuthenticationTrustResolverOrCreateNew(http);
+        }
+        http.setSharedObject(AuthenticationTrustResolver.class, trustResolver);
+
+        if(userVerificationStrategy == null){
+            userVerificationStrategy = WebAuthnConfigurerUtil.getUserVerificationStrategyOrCreateNew(http);
+        }
+        http.setSharedObject(UserVerificationStrategy.class, userVerificationStrategy);
+
+
         // Configure AuthenticationFilter
         this.getAuthenticationFilter().setServerPropertyProvider(serverPropertyProvider);
+        this.getAuthenticationFilter().setUserVerificationStrategy(userVerificationStrategy);
         configureParameters();
 
         // Configure OptionsEndPointFilters
@@ -200,6 +216,30 @@ public final class WebAuthnLoginConfigurer<H extends HttpSecurityBuilder<H>> ext
     public WebAuthnLoginConfigurer<H> serverPropertyProvider(ServerPropertyProvider serverPropertyProvider) {
         Assert.notNull(serverPropertyProvider, "serverPropertyProvider must not be null");
         this.serverPropertyProvider = serverPropertyProvider;
+        return this;
+    }
+
+    /**
+     * Sets the {@link AuthenticationTrustResolver} to be used.
+     *
+     * @param trustResolver the {@link AuthenticationTrustResolver}
+     * @return the {@link WebAuthnLoginConfigurer} for additional customization
+     */
+    public WebAuthnLoginConfigurer<H> trustResolver(AuthenticationTrustResolver trustResolver) {
+        Assert.notNull(trustResolver, "trustResolver must not be null");
+        this.trustResolver = trustResolver;
+        return this;
+    }
+
+    /**
+     * Sets the {@link UserVerificationStrategy} to be used.
+     *
+     * @param userVerificationStrategy the {@link UserVerificationStrategy}
+     * @return the {@link WebAuthnLoginConfigurer} for additional customization
+     */
+    public WebAuthnLoginConfigurer<H> userVerificationStrategy(UserVerificationStrategy userVerificationStrategy) {
+        Assert.notNull(userVerificationStrategy, "userVerificationStrategy must not be null");
+        this.userVerificationStrategy = userVerificationStrategy;
         return this;
     }
 
@@ -422,6 +462,8 @@ public final class WebAuthnLoginConfigurer<H extends HttpSecurityBuilder<H>> ext
                 attestationOptionsProvider = WebAuthnConfigurerUtil.getAttestationOptionsProviderOrCreateNew(http);
             }
             http.setSharedObject(AttestationOptionsProvider.class, attestationOptionsProvider);
+
+            optionsEndpointFilter.setTrustResolver(trustResolver);
 
             if(attestationOptionsProvider instanceof AttestationOptionsProviderImpl){
                 AttestationOptionsProviderImpl attestationOptionsProviderImpl = (AttestationOptionsProviderImpl)attestationOptionsProvider;
@@ -803,6 +845,7 @@ public final class WebAuthnLoginConfigurer<H extends HttpSecurityBuilder<H>> ext
                 assertionOptionsProvider = WebAuthnConfigurerUtil.getAssertionOptionsProviderOrCreateNew(http);
             }
             http.setSharedObject(AssertionOptionsProvider.class, assertionOptionsProvider);
+            optionsEndpointFilter.setTrustResolver(trustResolver);
 
             if(assertionOptionsProvider instanceof AssertionOptionsProviderImpl){
                 AssertionOptionsProviderImpl optionsProviderImpl = (AssertionOptionsProviderImpl)assertionOptionsProvider;
