@@ -1,4 +1,4 @@
-FROM openjdk:8-jdk AS build-env
+FROM gcr.io/distroless/java:11 AS build-env
 
 LABEL maintainer="Yoshikazu Nojima <mail@ynojima.net>"
 
@@ -7,7 +7,7 @@ WORKDIR /workspace
 RUN ./gradlew build -x test
 
 
-FROM openjdk:8-jre
+FROM gcr.io/distroless/java:11
 
 LABEL maintainer="Yoshikazu Nojima <mail@ynojima.net>"
 
