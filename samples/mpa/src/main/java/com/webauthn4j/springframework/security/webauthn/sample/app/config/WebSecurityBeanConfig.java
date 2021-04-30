@@ -20,6 +20,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.cbor.CBORFactory;
 import com.webauthn4j.WebAuthnManager;
 import com.webauthn4j.converter.util.ObjectConverter;
+import com.webauthn4j.data.PublicKeyCredentialUserEntity;
 import com.webauthn4j.metadata.converter.jackson.WebAuthnMetadataJSONModule;
 import com.webauthn4j.springframework.security.WebAuthnRegistrationRequestValidator;
 import com.webauthn4j.springframework.security.WebAuthnSecurityExpression;
@@ -34,6 +35,7 @@ import com.webauthn4j.springframework.security.server.ServerPropertyProvider;
 import com.webauthn4j.springframework.security.server.ServerPropertyProviderImpl;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
@@ -82,10 +84,8 @@ public class WebSecurityBeanConfig {
     }
 
     @Bean
-    public AttestationOptionsProvider attestationOptionsProvider(RpIdProvider rpIdProvider, WebAuthnAuthenticatorService webAuthnAuthenticatorService, ChallengeRepository challengeRepository, PublicKeyCredentialUserEntityProvider publicKeyCredentialUserEntityProvider){
-        AttestationOptionsProviderImpl optionsProviderImpl = new AttestationOptionsProviderImpl(rpIdProvider, webAuthnAuthenticatorService, challengeRepository);
-        optionsProviderImpl.setPublicKeyCredentialUserEntityProvider(publicKeyCredentialUserEntityProvider);
-        return optionsProviderImpl;
+    public AttestationOptionsProvider attestationOptionsProvider(RpIdProvider rpIdProvider, WebAuthnAuthenticatorService webAuthnAuthenticatorService, ChallengeRepository challengeRepository){
+        return new AttestationOptionsProviderImpl(rpIdProvider, webAuthnAuthenticatorService, challengeRepository);
     }
 
     @Bean
