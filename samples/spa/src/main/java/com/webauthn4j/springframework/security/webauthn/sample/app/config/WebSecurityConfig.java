@@ -83,17 +83,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         builder.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder);
     }
 
-    @Override
-    public void configure(WebSecurity web) {
-        // ignore static resources
-        web.ignoring().antMatchers(
-                "/favicon.ico",
-                "/static/**",
-                "/webjars/**",
-                "/angular",
-                "/angular/**");
-    }
-
     /**
      * Configure SecurityFilterChain
      */
@@ -137,6 +126,10 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         // Authorization
         http.authorizeRequests()
                 .mvcMatchers("/").permitAll()
+                .mvcMatchers("/static/**").permitAll()
+                .mvcMatchers("/angular/**").permitAll()
+                .mvcMatchers("/webjars/**").permitAll()
+                .mvcMatchers("/favicon.ico").permitAll()
                 .mvcMatchers("/api/auth/status").permitAll()
                 .mvcMatchers(HttpMethod.GET, "/login").permitAll()
                 .mvcMatchers(HttpMethod.POST, "/api/profile").permitAll()
