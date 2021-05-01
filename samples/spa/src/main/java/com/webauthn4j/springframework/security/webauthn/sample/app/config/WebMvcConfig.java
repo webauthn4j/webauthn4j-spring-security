@@ -16,6 +16,10 @@
 
 package com.webauthn4j.springframework.security.webauthn.sample.app.config;
 
+import org.apache.tomcat.util.http.Rfc6265CookieProcessor;
+import org.springframework.boot.web.embedded.tomcat.TomcatContextCustomizer;
+import org.springframework.boot.web.servlet.ServletContextInitializer;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.Resource;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
@@ -41,6 +45,20 @@ public class WebMvcConfig implements WebMvcConfigurer {
                         return location.exists() && location.isReadable() ? location : null;
                     }
                 });
+    }
+
+    @Bean
+    public ServletContextInitializer servletContextInitializer() {
+        return servletContext -> servletContext.getSessionCookieConfig().setSecure(true);
+    }
+
+    @Bean
+    public TomcatContextCustomizer tomcatContextCustomizer(){
+        return context -> {
+            final Rfc6265CookieProcessor cookieProcessor = new Rfc6265CookieProcessor();
+            cookieProcessor.setSameSiteCookies("None");
+            context.setCookieProcessor(cookieProcessor);
+        };
     }
 
 }
