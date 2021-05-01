@@ -96,8 +96,12 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                     .extensions()
                         .extensionProviders();
 
-        // 'publickey-credentials-get *' allows getting WebAuthn credentials to all nested browsing contexts (iframes) regardless of their origin.
-        http.headers(headers -> headers.featurePolicy("publickey-credentials-get *"));
+        http.headers(headers -> {
+            // 'publickey-credentials-get *' allows getting WebAuthn credentials to all nested browsing contexts (iframes) regardless of their origin.
+            headers.featurePolicy("publickey-credentials-get *");
+            // Disable "X-Frame-Options" to allow cross-origin iframe access
+            headers.frameOptions().disable();
+        });
 
 
         // Authorization
