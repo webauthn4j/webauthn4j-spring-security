@@ -20,4 +20,6 @@ server:
   servlet:
     session:
       tracking-modes: cookie
+#      cookie:
+#        secure: true # true when used over SSL
   forward-headers-strategy: framework
