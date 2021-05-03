@@ -193,7 +193,7 @@ configure(allJavaProjects) {
         maven { url "https://oss.sonatype.org/content/repositories/snapshots" }
     }
 
-    def webauthn4jVersion = '0.16.0-SNAPSHOT'
+    def webauthn4jVersion = '0.16.0.RELEASE'
     def springSecurityVersion = '5.4.6'
     def springBootVersion = '2.3.1.RELEASE'
     def hibernateValidatorVersion = '6.2.0.Final'
