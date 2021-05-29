@@ -194,7 +194,7 @@ configure(allJavaProjects) {
     }
 
     def webauthn4jVersion = '0.16.0.RELEASE'
-    def springSecurityVersion = '5.4.6'
+    def springSecurityVersion = '5.5.0'
     def springBootVersion = '2.3.1.RELEASE'
     def hibernateValidatorVersion = '6.2.0.Final'
     def thymeleafVersion = '3.0.4.RELEASE'

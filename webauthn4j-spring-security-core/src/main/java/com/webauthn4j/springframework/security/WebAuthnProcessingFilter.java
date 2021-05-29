@@ -115,7 +115,7 @@ public class WebAuthnProcessingFilter extends UsernamePasswordAuthenticationFilt
 
         String credentialId = obtainCredentialId(request);
 
-        if(StringUtils.isEmpty(credentialId)){
+        if(!StringUtils.hasText(credentialId)){
             String username = obtainUsername(request);
             String password = obtainPassword(request);
 
