@@ -203,7 +203,7 @@ configure(allJavaProjects) {
     def bootstrapVersion = '5.0.1'
     def jqueryVersion = '3.6.0'
     def fontAwesomeVersion = '5.15.2'
-    def webjarsLocatorVersion = '0.40'
+    def webjarsLocatorVersion = '0.41'
 
     def log4jdbcVersion = '0.2.7'
     def dbunitVersion = '2.7.0'
