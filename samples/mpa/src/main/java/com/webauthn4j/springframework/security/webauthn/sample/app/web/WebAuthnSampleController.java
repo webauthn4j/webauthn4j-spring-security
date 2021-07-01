@@ -154,7 +154,7 @@ public class WebAuthnSampleController {
 
 			WebAuthnAuthenticator authenticator = new WebAuthnAuthenticatorImpl(
 					"authenticator",
-					user,
+					user.getUsername(),
 					registrationRequestValidationResponse.getAttestationObject().getAuthenticatorData().getAttestedCredentialData(),
 					registrationRequestValidationResponse.getAttestationObject().getAttestationStatement(),
 					registrationRequestValidationResponse.getAttestationObject().getAuthenticatorData().getSignCount(),
