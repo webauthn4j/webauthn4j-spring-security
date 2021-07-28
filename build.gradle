@@ -167,6 +167,10 @@ configure(webAuthn4JSpringSecurityLibraryProjects) {
         sign publishing.publications.standard
     }
 
+    tasks.withType(Sign) {
+        onlyIf { pgpSigningKey != null && pgpSigningKeyPassphrase != null }
+    }
+
     publishStandardPublicationToSnapshotRepository.onlyIf { webAuthn4JSpringSecurityVersion.endsWith("-SNAPSHOT") }
     publishStandardPublicationToMavenCentralRepository.onlyIf { !webAuthn4JSpringSecurityVersion.endsWith("-SNAPSHOT") }
 
