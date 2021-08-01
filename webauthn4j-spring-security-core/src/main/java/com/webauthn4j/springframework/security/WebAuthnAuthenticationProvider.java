@@ -143,6 +143,7 @@ public class WebAuthnAuthenticationProvider implements AuthenticationProvider {
                         webAuthnAuthenticator.getTransports(),
                         webAuthnAuthenticator.getClientExtensions(),
                         webAuthnAuthenticator.getAuthenticatorExtensions()),
+                null,
                 parameters.isUserVerificationRequired(),
                 parameters.isUserPresenceRequired()
         );

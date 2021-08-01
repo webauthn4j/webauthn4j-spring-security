@@ -109,6 +109,7 @@ public class WebAuthnRegistrationRequestValidator {
         ServerProperty serverProperty = serverPropertyProvider.provide(request);
         return new RegistrationParameters(
                 serverProperty,
+                null,
                 false,
                 false
         );
