@@ -212,7 +212,7 @@ configure(allJavaProjects) {
     def log4jdbcVersion = '0.2.7'
     def dbunitVersion = '2.7.2'
     def springTestDbunitVersion = '1.3.0'
-    def webDriverManagerVersion = '4.4.3'
+    def webDriverManagerVersion = '5.0.1'
     // To use WebAuthn WebDriver extension, alpha release is used here.
     // When stable version is released, and Spring Boot BOM includes it, this need to be removed.
     def seleniumVersion = '4.0.0-beta-4'
