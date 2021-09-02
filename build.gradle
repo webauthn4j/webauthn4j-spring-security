@@ -215,7 +215,7 @@ configure(allJavaProjects) {
     def webDriverManagerVersion = '5.0.1'
     // To use WebAuthn WebDriver extension, alpha release is used here.
     // When stable version is released, and Spring Boot BOM includes it, this need to be removed.
-    def seleniumVersion = '4.0.0-beta-4'
+    def seleniumVersion = '4.0.0-rc-1'
 
     dependencies {
         // BOM
