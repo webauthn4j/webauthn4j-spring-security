@@ -31,7 +31,7 @@ public class Base64UrlStringToCollectedClientDataConverterTest {
 
     @Test
     public void convert_test() {
-        CollectedClientData expected = TestDataUtil.createClientData(ClientDataType.GET);
+        CollectedClientData expected = TestDataUtil.createClientData(ClientDataType.WEBAUTHN_GET);
         String source = new CollectedClientDataConverter(objectConverter).convertToBase64UrlString(expected);
 
         CollectedClientData result = new Base64UrlStringToCollectedClientDataConverter(objectConverter).convert(source);

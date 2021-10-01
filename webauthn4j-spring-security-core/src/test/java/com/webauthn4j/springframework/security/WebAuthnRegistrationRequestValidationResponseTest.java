@@ -35,7 +35,7 @@ public class WebAuthnRegistrationRequestValidationResponseTest {
 
     @Test
     public void equals_hashCode_test() {
-        CollectedClientData clientData = TestDataUtil.createClientData(ClientDataType.CREATE);
+        CollectedClientData clientData = TestDataUtil.createClientData(ClientDataType.WEBAUTHN_CREATE);
         AttestationObject attestationObject = TestDataUtil.createAttestationObjectWithFIDOU2FAttestationStatement();
         AuthenticationExtensionsClientOutputs<RegistrationExtensionClientOutput> clientExtensions = new AuthenticationExtensionsClientOutputs<>();
         Set<AuthenticatorTransport> transports = new HashSet<>();
@@ -49,7 +49,7 @@ public class WebAuthnRegistrationRequestValidationResponseTest {
 
     @Test
     public void getter_test() {
-        CollectedClientData clientData = TestDataUtil.createClientData(ClientDataType.CREATE);
+        CollectedClientData clientData = TestDataUtil.createClientData(ClientDataType.WEBAUTHN_CREATE);
         AttestationObject attestationObject = TestDataUtil.createAttestationObjectWithFIDOU2FAttestationStatement();
         AuthenticationExtensionsClientOutputs<RegistrationExtensionClientOutput> clientExtensions = new AuthenticationExtensionsClientOutputs<>();
         Set<AuthenticatorTransport> transports = new HashSet<>();
