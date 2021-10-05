@@ -18,7 +18,7 @@ buildscript {
     def springBootVersion = '2.5.5'
     def sonarqubeVersion = '3.3'
     def asciidoctorGradleVersion = '1.6.1'
-    def artifactoryVersion = '4.24.19'
+    def artifactoryVersion = '4.24.20'
     def bintrayVersion = '1.8.5'
     def owaspDependencyCheckVersion = '6.3.2'
     def httpBuilderVersion = '0.7.2'
