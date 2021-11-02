@@ -30,7 +30,7 @@ public class WebAuthnAuthenticationRequestTest {
 
     @Test
     public void getter_test() {
-        byte[] clientDataJSON = TestDataUtil.createClientDataJSON(ClientDataType.GET);
+        byte[] clientDataJSON = TestDataUtil.createClientDataJSON(ClientDataType.WEBAUTHN_GET);
         byte[] authenticatorData = new AuthenticatorDataConverter(objectConverter).convert(TestDataUtil.createAuthenticatorData());
         WebAuthnAuthenticationRequest request = new WebAuthnAuthenticationRequest(
                 new byte[]{0x01, 0x23},
@@ -48,7 +48,7 @@ public class WebAuthnAuthenticationRequestTest {
 
     @Test
     public void equals_hashCode_test() {
-        byte[] clientDataJSON = TestDataUtil.createClientDataJSON(ClientDataType.GET);
+        byte[] clientDataJSON = TestDataUtil.createClientDataJSON(ClientDataType.WEBAUTHN_GET);
         byte[] authenticatorData = new AuthenticatorDataConverter(objectConverter).convert(TestDataUtil.createAuthenticatorData());
         WebAuthnAuthenticationRequest requestA = new WebAuthnAuthenticationRequest(
                 new byte[]{0x01, 0x23},
