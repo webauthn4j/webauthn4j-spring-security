@@ -138,7 +138,7 @@ public class AttestationOptionsProviderImplTest {
         assertThat(optionsProvider.getRpId()).isEqualTo("example.com");
         optionsProvider.setRpName("example");
         assertThat(optionsProvider.getRpName()).isEqualTo("example");
-        List<PublicKeyCredentialParameters> publicKeyCredParams = Lists.emptyList();
+        List<PublicKeyCredentialParameters> publicKeyCredParams = Lists.newArrayList();
         optionsProvider.setPubKeyCredParams(publicKeyCredParams);
         assertThat(optionsProvider.getPubKeyCredParams()).isEqualTo(publicKeyCredParams);
         optionsProvider.setRegistrationTimeout(10000L);
