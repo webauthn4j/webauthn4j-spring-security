@@ -15,13 +15,36 @@
  */
 
 buildscript {
-    def springBootVersion = '2.6.1'
-    def sonarqubeVersion = '3.3'
-    def asciidoctorGradleVersion = '1.6.1'
-    def artifactoryVersion = '4.25.0'
-    def bintrayVersion = '1.8.5'
-    def owaspDependencyCheckVersion = '6.5.0.1'
-    def httpBuilderVersion = '0.7.2'
+    ext{
+        //Plugins
+        springBootVersion = '2.6.1'
+        sonarqubeVersion = '3.3'
+        asciidoctorGradleVersion = '1.6.1'
+        artifactoryVersion = '4.25.0'
+        bintrayVersion = '1.8.5'
+        owaspDependencyCheckVersion = '6.5.0.1'
+        httpBuilderVersion = '0.7.2'
+
+        //Libraries
+        webauthn4jVersion = '0.18.0.RELEASE'
+        springSecurityVersion = '5.6.0'
+        hibernateValidatorVersion = '6.2.0.Final'
+        thymeleafVersion = '3.0.4.RELEASE'
+        modelMapperVersion = '2.4.4'
+
+        bootstrapVersion = '5.1.3'
+        jqueryVersion = '3.6.0'
+        fontAwesomeVersion = '5.15.4'
+        webjarsLocatorVersion = '0.42'
+
+        log4jdbcVersion = '0.2.7'
+        dbunitVersion = '2.7.2'
+        springTestDbunitVersion = '1.3.0'
+        webDriverManagerVersion = '5.0.3'
+        // To use WebAuthn WebDriver extension, alpha release is used here.
+        // When stable version is released, and Spring Boot BOM includes it, this need to be removed.
+        seleniumVersion = '4.1.0'
+    }
 
     repositories {
         mavenCentral()
@@ -181,6 +204,7 @@ configure(sampleAppProjects) {
     apply plugin: 'java'
 }
 
+
 configure(allJavaProjects) {
     apply plugin: 'org.owasp.dependencycheck'
 
@@ -197,25 +221,6 @@ configure(allJavaProjects) {
         maven { url "https://oss.sonatype.org/content/repositories/snapshots" }
     }
 
-    def webauthn4jVersion = '0.18.0.RELEASE'
-    def springSecurityVersion = '5.6.0'
-    def springBootVersion = '2.6.1'
-    def hibernateValidatorVersion = '6.2.0.Final'
-    def thymeleafVersion = '3.0.4.RELEASE'
-    def modelMapperVersion = '2.4.4'
-
-    def bootstrapVersion = '5.1.3'
-    def jqueryVersion = '3.6.0'
-    def fontAwesomeVersion = '5.15.4'
-    def webjarsLocatorVersion = '0.42'
-
-    def log4jdbcVersion = '0.2.7'
-    def dbunitVersion = '2.7.2'
-    def springTestDbunitVersion = '1.3.0'
-    def webDriverManagerVersion = '5.0.3'
-    // To use WebAuthn WebDriver extension, alpha release is used here.
-    // When stable version is released, and Spring Boot BOM includes it, this need to be removed.
-    def seleniumVersion = '4.1.0'
 
     dependencies {
         // BOM
