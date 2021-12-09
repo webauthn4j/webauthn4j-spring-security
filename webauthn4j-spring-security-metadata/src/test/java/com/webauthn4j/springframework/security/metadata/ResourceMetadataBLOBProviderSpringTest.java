@@ -31,25 +31,36 @@ import org.springframework.core.io.support.ResourcePatternUtils;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.io.IOException;
-import java.util.Arrays;
+import java.io.UncheckedIOException;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @RunWith(SpringRunner.class)
-public class JsonFileResourceMetadataStatementsProviderSpringTest {
-
+public class ResourceMetadataBLOBProviderSpringTest {
 
     @Autowired
-    private JsonFileResourceMetadataStatementsProvider target;
+    private ResourceMetadataBLOBProvider target;
+
+    @Autowired
+    private ResourceLoader resourceLoader;
 
     @Test
     public void provide_test() {
-        assertThat(target.provide()).hasSize(19);
+        assertThat(target.provide()).isNotNull();
     }
 
     @Test
     public void getter_test() {
-        assertThat(target.getResources()).hasSize(19);
+        assertThat(target.getResource()).isNotNull();
+    }
+
+    @Test
+    public void invalid_path_test() {
+        ResourceMetadataBLOBProvider provider = new ResourceMetadataBLOBProvider(new ObjectConverter());
+        Resource resource = ResourcePatternUtils.getResourcePatternResolver(resourceLoader).getResource("classpath:invalid.path");
+        provider.setResource(resource);
+        assertThatThrownBy(provider::provide).isInstanceOf(UncheckedIOException.class);
     }
 
     @Configuration
@@ -65,10 +76,10 @@ public class JsonFileResourceMetadataStatementsProviderSpringTest {
         }
 
         @Bean
-        public JsonFileResourceMetadataStatementsProvider jsonFileResourceMetadataItemListProvider(ResourceLoader resourceLoader) throws IOException {
-            JsonFileResourceMetadataStatementsProvider provider = new JsonFileResourceMetadataStatementsProvider(objectConverter);
-            Resource[] resources = ResourcePatternUtils.getResourcePatternResolver(resourceLoader).getResources("classpath:metadata/test-tools/*.json");
-            provider.setResources(Arrays.asList(resources));
+        public ResourceMetadataBLOBProvider resourceMetadataBLOBProvider(ResourceLoader resourceLoader) throws IOException {
+            ResourceMetadataBLOBProvider provider = new ResourceMetadataBLOBProvider(objectConverter);
+            Resource resource = ResourcePatternUtils.getResourcePatternResolver(resourceLoader).getResource("classpath:metadata/blob.jwt");
+            provider.setResource(resource);
             return provider;
         }
     }

@@ -48,7 +48,7 @@ dependencies {
     runtimeOnly("org.lazyluke:log4jdbc-remix")
 
     //Test
-    testImplementation("com.webauthn4j:webauthn4j-test")
+    testImplementation project(':webauthn4j-spring-security-test')
     testImplementation('org.springframework.boot:spring-boot-starter-test')
     testImplementation('org.springframework.security:spring-security-test')
     testImplementation('junit:junit')

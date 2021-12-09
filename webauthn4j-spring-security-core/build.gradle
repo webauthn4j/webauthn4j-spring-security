@@ -37,6 +37,7 @@ dependencies {
     implementation("org.springframework:spring-jdbc")
 
     api('javax.servlet:javax.servlet-api')
+    implementation("org.slf4j:slf4j-api")
 
     implementation("com.fasterxml.jackson.core:jackson-databind")
     implementation("com.fasterxml.jackson.dataformat:jackson-dataformat-cbor")

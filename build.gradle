@@ -26,7 +26,7 @@ buildscript {
         httpBuilderVersion = '0.7.2'
 
         //Libraries
-        webauthn4jVersion = '0.18.2.RELEASE'
+        webauthn4jVersion = '0.19.0.RELEASE'
         springSecurityVersion = '5.6.1'
         hibernateValidatorVersion = '6.2.0.Final'
         thymeleafVersion = '3.0.4.RELEASE'
@@ -81,6 +81,20 @@ configure(webAuthn4JSpringSecurityLibraryProjects) {
     apply plugin: 'jacoco'
     apply plugin: 'signing'
     apply plugin: "maven-publish"
+
+    tasks.withType(JavaCompile) {
+        options.compilerArgs << "-Xlint:unchecked"
+        options.compilerArgs << "-Xlint:cast"
+        options.compilerArgs << "-Xlint:classfile"
+        options.compilerArgs << "-Xlint:dep-ann"
+        options.compilerArgs << "-Xlint:divzero"
+        options.compilerArgs << "-Xlint:fallthrough"
+        options.compilerArgs << "-Xlint:overrides"
+        options.compilerArgs << "-Xlint:rawtypes"
+        options.compilerArgs << "-Xlint:static"
+        options.compilerArgs << "-Xlint:deprecation"
+        options.compilerArgs << "-Werror"
+    }
 
     javadoc {
         options.charSet = 'UTF-8'
@@ -212,13 +226,13 @@ configure(allJavaProjects) {
 
     tasks.withType(JavaCompile) {
         options.compilerArgs << "-Xlint:unchecked"
-        options.compilerArgs << "-Xlint:deprecation"
         options.compilerArgs << "-Werror"
     }
 
     repositories {
         mavenCentral()
         maven { url "https://oss.sonatype.org/content/repositories/snapshots" }
+        maven { url 'https://jitpack.io' }
     }
 
 

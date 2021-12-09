@@ -16,6 +16,7 @@
 
 package com.webauthn4j.springframework.security.fido.server.validator;
 
+import com.webauthn4j.data.PublicKeyCredentialType;
 import com.webauthn4j.springframework.security.exception.BadCredentialIdException;
 import com.webauthn4j.springframework.security.fido.server.endpoint.ServerAuthenticatorResponse;
 import com.webauthn4j.springframework.security.fido.server.endpoint.ServerPublicKeyCredential;
@@ -30,6 +31,10 @@ public class ServerPublicKeyCredentialValidator<T extends ServerAuthenticatorRes
 
         if (!serverPublicKeyCredential.getId().equals(serverPublicKeyCredential.getRawId())) {
             throw new BadCredentialIdException("id and rawId doesn't match");
+        }
+
+        if (!serverPublicKeyCredential.getType().equals(PublicKeyCredentialType.PUBLIC_KEY)) {
+            throw new BadCredentialIdException("type must be 'public-key'");
         }
 
         try {

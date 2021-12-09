@@ -32,6 +32,7 @@ import java.util.Collections;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+@Deprecated
 @RunWith(SpringRunner.class)
 public class CertFileResourcesTrustAnchorsProviderSpringTest {
 
