@@ -20,7 +20,7 @@ buildscript {
         springBootVersion = '2.6.2'
         sonarqubeVersion = '3.3'
         asciidoctorGradleVersion = '1.6.1'
-        artifactoryVersion = '4.25.4'
+        artifactoryVersion = '4.26.0'
         bintrayVersion = '1.8.5'
         owaspDependencyCheckVersion = '6.5.1'
         httpBuilderVersion = '0.7.2'
