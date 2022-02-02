@@ -29,6 +29,7 @@ import java.util.Set;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatCode;
 
+@Deprecated
 public class KeyStoreResourceTrustAnchorProviderTest {
 
     private KeyStoreResourceTrustAnchorProvider target;

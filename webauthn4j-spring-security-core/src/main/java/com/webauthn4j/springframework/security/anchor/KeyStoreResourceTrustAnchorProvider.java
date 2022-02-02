@@ -16,9 +16,7 @@
 
 package com.webauthn4j.springframework.security.anchor;
 
-import com.webauthn4j.anchor.CachingTrustAnchorsProviderBase;
 import com.webauthn4j.anchor.KeyStoreException;
-import com.webauthn4j.anchor.TrustAnchorsProvider;
 import com.webauthn4j.data.attestation.authenticator.AAGUID;
 import com.webauthn4j.util.AssertUtil;
 import com.webauthn4j.util.CertificateUtil;
@@ -35,9 +33,11 @@ import java.security.cert.X509Certificate;
 import java.util.*;
 
 /**
- * An implementation of {@link TrustAnchorsProvider} that loads {@link TrustAnchor}(s) from Java Key Store file in the Spring {@link Resource}
+ * An implementation of {@link com.webauthn4j.anchor.TrustAnchorsProvider} that loads {@link TrustAnchor}(s) from Java Key Store file in the Spring {@link Resource}
+ * @deprecated
  */
-public class KeyStoreResourceTrustAnchorProvider extends CachingTrustAnchorsProviderBase implements InitializingBean {
+@Deprecated
+public class KeyStoreResourceTrustAnchorProvider extends com.webauthn4j.anchor.CachingTrustAnchorsProviderBase implements InitializingBean {
 
     // ~ Instance fields
     // ================================================================================================

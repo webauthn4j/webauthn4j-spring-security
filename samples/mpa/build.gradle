@@ -47,7 +47,7 @@ dependencies {
     implementation('org.webjars:webjars-locator:0.42')
 
     //Test
-    testImplementation("com.webauthn4j:webauthn4j-test")
+    testImplementation project(':webauthn4j-spring-security-test')
     testImplementation('org.springframework.boot:spring-boot-starter-test')
     testImplementation('org.springframework.security:spring-security-test')
     testImplementation('junit:junit')

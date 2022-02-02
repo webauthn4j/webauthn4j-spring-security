@@ -16,8 +16,6 @@
 
 package com.webauthn4j.springframework.security.anchor;
 
-import com.webauthn4j.anchor.CachingTrustAnchorsProviderBase;
-import com.webauthn4j.anchor.TrustAnchorsProvider;
 import com.webauthn4j.data.attestation.authenticator.AAGUID;
 import com.webauthn4j.util.AssertUtil;
 import com.webauthn4j.util.CertificateUtil;
@@ -35,9 +33,12 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
- * An implementation of {@link TrustAnchorsProvider} that loads {@link TrustAnchor}(s) from X.509 certificate file in Spring {@link Resource}
+ * An implementation of {@link com.webauthn4j.anchor.TrustAnchorsProvider} that loads {@link TrustAnchor}(s) from X.509 certificate file in Spring {@link Resource}
+ * @deprecated
  */
-public class CertFileResourcesTrustAnchorsProvider extends CachingTrustAnchorsProviderBase implements InitializingBean {
+@Deprecated
+@SuppressWarnings("deprecation")
+public class CertFileResourcesTrustAnchorsProvider extends com.webauthn4j.anchor.CachingTrustAnchorsProviderBase implements InitializingBean {
 
     // ~ Instance fields
     // ================================================================================================
