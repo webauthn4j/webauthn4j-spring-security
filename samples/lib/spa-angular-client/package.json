@@ -20,10 +20,10 @@
     "@angular/animations": "^13.0.3",
     "@angular/cdk": "^13.3.2",
     "@angular/common": "^13.0.3",
-    "@angular/compiler": "^13.0.3",
+    "@angular/compiler": "^13.3.6",
     "@angular/core": "^13.0.3",
     "@angular/forms": "^13.3.5",
-    "@angular/localize": "^13.0.3",
+    "@angular/localize": "^13.3.6",
     "@angular/platform-browser": "^13.3.5",
     "@angular/platform-browser-dynamic": "^13.3.5",
     "@angular/router": "^13.3.5",
@@ -37,7 +37,7 @@
     "zone.js": "~0.11.5"
   },
   "devDependencies": {
-    "@angular-devkit/build-angular": "^13.3.1",
+    "@angular-devkit/build-angular": "^13.3.5",
     "@angular/cli": "^13.3.1",
     "@angular/compiler-cli": "^13.0.3",
     "@angular/language-service": "^13.3.1",
