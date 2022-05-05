@@ -159,11 +159,11 @@ public class WebSecurityBeanConfig {
     MetadataBLOBBasedTrustAnchorRepository metadataBLOBBasedTrustAnchorRepository(ObjectConverter objectConverter){
         X509Certificate mds3RootCertificate = mds3TestRootCertificate();
         MetadataBLOBProvider[] fidoMDS3MetadataBLOBProviders = Stream.of(
-                "https://mds3.certinfra.fidoalliance.org/execute/20e65bb0ac3a6bd1e2443b7ec7ba97590873378d7b0434f0d715bffbd5bf54e7",
-                "https://mds3.certinfra.fidoalliance.org/execute/629bc024763f164c78072d2af1af05bec35ff9fcc429bdc786d7b767e7fe2403",
-                "https://mds3.certinfra.fidoalliance.org/execute/9fb3821e5a8d375d701780434701d671ff7a363888c4196b7be530b8e7716510",
-                "https://mds3.certinfra.fidoalliance.org/execute/d178ac72328cc4218d3845a31795abfa5587d070f557a9f5987197650093cbfe",
-                "https://mds3.certinfra.fidoalliance.org/execute/fb966302cf343fafb38a1f09d4ac83db323bfe3d703996c604b67f54ac64b30b")
+                "https://mds3.certinfra.fidoalliance.org/execute/1e69daea44223573d3fe416c3b1b0e0d74df7024c847bc18a210a2a7282bd92b",
+                "https://mds3.certinfra.fidoalliance.org/execute/3aae89e2204aefd1366f5df0e04527572747782594f13c381957e35255b3f4c7",
+                "https://mds3.certinfra.fidoalliance.org/execute/a11ab418ceeb3074d972d5c07b072003b0529f321a68e3c359ab0f355d697801",
+                "https://mds3.certinfra.fidoalliance.org/execute/ad920e3a70c3483f15a7638176b0e07d7263a26b7a53d8ea925ca0005e239a41",
+                "https://mds3.certinfra.fidoalliance.org/execute/dd3258ba46df7d2093c1b8edbcb7f8c7705a4ab3037588b047129b647b6e35dd")
                 .map(url -> {
                     try{
                         FidoMDS3MetadataBLOBProvider fidoMDS3MetadataBLOBProvider = new FidoMDS3MetadataBLOBProvider(objectConverter, url, mds3RootCertificate);
