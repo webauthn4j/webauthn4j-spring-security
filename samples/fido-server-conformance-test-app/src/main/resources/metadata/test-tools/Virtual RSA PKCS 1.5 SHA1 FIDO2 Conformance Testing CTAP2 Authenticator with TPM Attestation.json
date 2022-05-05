@@ -20,13 +20,13 @@
         "cose"
     ],
     "attestationTypes": [
-        "basic_full"
+        "attca"
     ],
     "schema": 3,
     "userVerificationDetails": [
         [
             {
-                "userVerification": "none"
+                "userVerificationMethod": "none"
             }
         ],
         [

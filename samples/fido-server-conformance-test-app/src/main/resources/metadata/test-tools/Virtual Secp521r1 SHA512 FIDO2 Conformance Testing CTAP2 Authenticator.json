@@ -14,7 +14,7 @@
         }
     ],
     "authenticationAlgorithms": [
-        "secp521r1_ecdsa_sha256_raw"
+        "secp521r1_ecdsa_sha512_raw"
     ],
     "publicKeyAlgAndEncodings": [
         "cose"
@@ -26,7 +26,7 @@
     "userVerificationDetails": [
         [
             {
-                "userVerification": "none"
+                "userVerificationMethod": "none"
             }
         ],
         [
