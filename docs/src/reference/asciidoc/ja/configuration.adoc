@@ -5,9 +5,7 @@
 
 ==== Maven依存関係
 
-[line-through]#ライブラリとその依存関係を導入するために、以下をpom.xmlファイルに追加してください。#
-
-現在、まだMaven Centralへの公開は行っていません。
+ライブラリとその依存関係を導入するために、以下をpom.xmlファイルに追加してください。
 
 [source,xml]
 ----
@@ -27,51 +25,70 @@
 
 ==== Java Config
 
-WebAuthn4J Spring Securityは、Security SecurityのJava Configで設定することが可能です。
-WebAuthnの認証リクエストを受け付ける `WebAuthnProcessingFilter` や、 WebAuthn JS APIのリクエストパラメータを返却するAttestation Optionsエンドポイント、Assertion Optionsエンドポイントを構成することが可能です。
-
-`WebSecurityConfigurerAdapter` を継承したクラスで `configure(HttpSecurity http)` メソッドをオーバーライドし、
-`WebAuthnLoginConfigurer` を適用して下さい。 `WebAuthnLoginConfigurer` はインスタンスを返却する `webAuthnLogin()` という staticメソッドを持っていますので、そちらを活用すると良いでしょう。
+WebAuthn4J Spring Securityは、Security SecurityのJava Config DSLで設定することが可能です。
+`SecurityFilterChain` Beanを以下のように定義し、`HttpSecurity` Beanに対して `WebAuthnLoginConfigurer` を適用して下さい。
+`WebAuthnLoginConfigurer` を通じて `WebAuthnProcessingFilter` やWebAuthn JS APIのリクエストパラメータを返却するAttestation Optionsエンドポイント、Assertion Optionsエンドポイントの各種設定が可能です。
 
 [source,java]
 ----
+@Configuration
+public class WebSecurityConfig {
 
-import static WebAuthnLoginConfigurer.webAuthnLogin;
-
-public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
-    @Override
-    protected void configure(HttpSecurity http) throws Exception {
-
+    @Bean
+    public SecurityFilterChain filterChain(HttpSecurity http, AuthenticationManager authenticationManager) throws Exception {
         // WebAuthn Login
-        http.apply(webAuthnLogin())
-                .loginPage("/login")
-                .usernameParameter("username")
-                .passwordParameter("rawPassword");
+        http.apply(WebAuthnLoginConfigurer.webAuthnLogin())
+            .loginPage("/login")
+            .usernameParameter("username")
+            .passwordParameter("rawPassword")
+            .credentialIdParameter("credentialId")
+            .clientDataJSONParameter("clientDataJSON")
+            .authenticatorDataParameter("authenticatorData")
+            .signatureParameter("signature")
+            .clientExtensionsJSONParameter("clientExtensionsJSON")
+            .loginProcessingUrl("/login")
+            .rpId("example.com")
+            .attestationOptionsEndpoint()
+                .attestationOptionsProvider(attestationOptionsProvider)
+                .and()
+            .assertionOptionsEndpoint()
+                .assertionOptionsProvider(assertionOptionsProvider)
+            .and()
+        .authenticationManager(authenticationManager);
     }
 }
 ----
 
 ===== WebAuthnAuthenticationProviderの組込
 
-Web Authentication用の `AuthenticationProvider` である `WebAuthnAuthenticationProvider` もJavaConfigで設定可能です。
-`WebSecurityConfigurerAdapter` を継承したクラスで `configure(AuthenticationManagerBuilder builder)` メソッドをオーバーライドし、
-`WebAuthnAuthenticationProviderConfigurer` を適用して下さい。
+Web Authentication用の `AuthenticationProvider` である `WebAuthnAuthenticationProvider` はBeanとして定義して下さい。
+パスワード認証と組み合わせた二段階認証とする場合は、 `DaoAuthenticationProvider` のBean定義も必要です。
 
 [source,java]
 ----
-public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
-    @Override
-    public void configure(AuthenticationManagerBuilder builder) throws Exception {
-        builder.apply(new WebAuthnAuthenticationProviderConfigurer<>(authenticatorService, webAuthnManager));
+    @Bean
+    public WebAuthnAuthenticationProvider webAuthnAuthenticationProvider(WebAuthnAuthenticatorService authenticatorService, WebAuthnManager webAuthnManager){
+        return new WebAuthnAuthenticationProvider(authenticatorService, webAuthnManager);
     }
-}
+
+    @Bean
+    public DaoAuthenticationProvider daoAuthenticationProvider(UserDetailsService userDetailsService){
+        DaoAuthenticationProvider daoAuthenticationProvider = new DaoAuthenticationProvider();
+        daoAuthenticationProvider.setUserDetailsService(userDetailsService);
+        daoAuthenticationProvider.setPasswordEncoder(new BCryptPasswordEncoder());
+        return daoAuthenticationProvider;
+    }
+
+    @Bean
+    public AuthenticationManager authenticationManager(List<AuthenticationProvider> providers){
+        return new ProviderManager(providers);
+    }
 ----
 
 ==== 永続化層との統合
 
 WebAuthn4J Spring Securityは `WebAuthnAuthenticatorService` インタフェースを通じて認証デバイスを検索します。
 `WebAuthnAuthenticatorService` を実装したクラスを用意し、 `WebAuthnAuthenticationProvider` にセットして下さい。
-JavaConfigの場合、`WebAuthnAuthenticationProviderConfigurer` のコンストラクタを通じてセット出来ます。
 
 === クライアントサイドとのインタフェース仕様
 
@@ -127,52 +144,42 @@ Java Configからカスタマイズも可能です。 `WebAuthnLoginConfigurer` 
 
 [source,java]
 ----
-public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
-       @Override
-        protected void configure(HttpSecurity http) throws Exception {
+@Configuration
+public class WebSecurityConfig {
 
-            http.apply(WebAuthnLoginConfigurer.webAuthnLogin())
-                    .attestationOptionsEndpoint()
-                        .attestationOptionsProvider(attestationOptionsProvider)
-                        .processingUrl("/webauthn/attestation/options")
-                        .rp()
-                            .id("example.com")
-                            .name("example")
-                            .and()
-                        .pubKeyCredParams(
-                                new PublicKeyCredentialParameters(PublicKeyCredentialType.PUBLIC_KEY, COSEAlgorithmIdentifier.ES256),
-                                new PublicKeyCredentialParameters(PublicKeyCredentialType.PUBLIC_KEY, COSEAlgorithmIdentifier.RS1)
-                        )
-                        .timeout(10000L)
-                        .authenticatorSelection()
-                            .authenticatorAttachment(AuthenticatorAttachment.CROSS_PLATFORM)
-                            .residentKey(ResidentKeyRequirement.PREFERRED)
-                            .userVerification(UserVerificationRequirement.PREFERRED)
-                            .and()
-                        .attestation(AttestationConveyancePreference.DIRECT)
-                        .extensions()
-                            .credProps(true)
-                            .uvm(true)
-                            .entry("unknown", true)
-                            .extensionProviders((builder, httpServletRequest) -> builder.set("extensionProvider", httpServletRequest.getRequestURI()))
-                        .and()
-                    .assertionOptionsEndpoint()
-                        .assertionOptionsProvider(assertionOptionsProvider)
-                        .processingUrl("/webauthn/assertion/options")
-                        .rpId("example.com")
-                        .timeout(20000L)
-                        .userVerification(UserVerificationRequirement.PREFERRED)
-                        .extensions()
-                            .appid("appid")
-                            .appidExclude("appidExclude")
-                            .uvm(true)
-                            .entry("unknown", true)
-                            .extensionProviders((builder, httpServletRequest) -> {
-                                builder.set("extensionProvider", httpServletRequest.getRequestURI());
-                            })
-                        .and()
-                    .and();
-        }
+    @Bean
+    public SecurityFilterChain filterChain(HttpSecurity http, AuthenticationManager authenticationManager) throws Exception {
+        // WebAuthn Login
+        http.apply(WebAuthnLoginConfigurer.webAuthnLogin())
+            .rpId("example.com")
+            .attestationOptionsEndpoint()
+                .attestationOptionsProvider(attestationOptionsProvider)
+                .processingUrl("/webauthn/attestation/options")
+                .rp()
+                    .name("example")
+                    .and()
+                .pubKeyCredParams(
+                        new PublicKeyCredentialParameters(PublicKeyCredentialType.PUBLIC_KEY, COSEAlgorithmIdentifier.ES256),
+                        new PublicKeyCredentialParameters(PublicKeyCredentialType.PUBLIC_KEY, COSEAlgorithmIdentifier.RS1)
+                )
+                .authenticatorSelection()
+                    .authenticatorAttachment(AuthenticatorAttachment.CROSS_PLATFORM)
+                    .residentKey(ResidentKeyRequirement.PREFERRED)
+                    .userVerification(UserVerificationRequirement.PREFERRED)
+                    .and()
+                .attestation(AttestationConveyancePreference.DIRECT)
+                .extensions()
+                    .credProps(true)
+                    .uvm(true)
+                .and()
+            .assertionOptionsEndpoint()
+                .assertionOptionsProvider(assertionOptionsProvider)
+                .processingUrl("/webauthn/assertion/options")
+                .rpId("example.com")
+                .userVerification(UserVerificationRequirement.PREFERRED)
+            .and()
+        .authenticationManager(authenticationManager);
+    }
 }
 ----
 
@@ -185,16 +192,19 @@ Attestation Optionsエンドポイントは、返却する `PublicKeyCredentialU
 Java Configの場合は、以下のようにセット可能です。
 
 ----
-public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
-       @Override
-        protected void configure(HttpSecurity http) throws Exception {
+@Configuration
+public class WebSecurityConfig {
 
-            http.apply(WebAuthnLoginConfigurer.webAuthnLogin())
-                    .attestationOptionsEndpoint()
-                        .attestationOptionsProvider(attestationOptionsProvider)
-                        .processingUrl("/webauthn/attestation/options")
-                        .user(new MyPublicKeyCredentialUserEntityProvider()) // put your PublicKeyCredentialUserEntityProvider implementation
-        }
+    @Bean
+    public SecurityFilterChain filterChain(HttpSecurity http, AuthenticationManager authenticationManager) throws Exception {
+        // WebAuthn Login
+        http.apply(WebAuthnLoginConfigurer.webAuthnLogin())
+            .attestationOptionsEndpoint()
+                .attestationOptionsProvider(attestationOptionsProvider)
+                .processingUrl("/webauthn/attestation/options")
+                .processingUrl("/webauthn/attestation/options")
+                .user(new MyPublicKeyCredentialUserEntityProvider()) // put your PublicKeyCredentialUserEntityProvider implementation
+    }
 }
 ----
 

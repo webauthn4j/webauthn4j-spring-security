@@ -73,33 +73,67 @@ WebAuthn4J Spring Security can be configured through Spring Security Java Config
 ```java
 @Configuration
 @EnableWebSecurity
-public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
+public class WebSecurityConfig {
 
-    @Override
-    public void configure(AuthenticationManagerBuilder builder) throws Exception {
-        builder.apply(new WebAuthnAuthenticationProviderConfigurer<>(webAuthnAuthenticatorService, webAuthnManager));
-        builder.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder);
+    @Bean
+    public WebAuthnAuthenticationProvider webAuthnAuthenticationProvider(WebAuthnAuthenticatorService authenticatorService, WebAuthnManager webAuthnManager){
+        return new WebAuthnAuthenticationProvider(authenticatorService, webAuthnManager);
     }
 
-    @Override
-    protected void configure(HttpSecurity http) throws Exception {
+    @Bean
+    public DaoAuthenticationProvider daoAuthenticationProvider(UserDetailsService userDetailsService){
+        DaoAuthenticationProvider daoAuthenticationProvider = new DaoAuthenticationProvider();
+        daoAuthenticationProvider.setUserDetailsService(userDetailsService);
+        daoAuthenticationProvider.setPasswordEncoder(new BCryptPasswordEncoder());
+        return daoAuthenticationProvider;
+    }
 
+    @Bean
+    public AuthenticationManager authenticationManager(List<AuthenticationProvider> providers){
+        return new ProviderManager(providers);
+    }
+
+    @Bean
+    public SecurityFilterChain filterChain(HttpSecurity http, AuthenticationManager authenticationManager) throws Exception {
         // WebAuthn Login
         http.apply(WebAuthnLoginConfigurer.webAuthnLogin())
-                .defaultSuccessUrl("/", true)
+                .loginPage("/login")
+                .usernameParameter("username")
+                .passwordParameter("rawPassword")
+                .credentialIdParameter("credentialId")
+                .clientDataJSONParameter("clientDataJSON")
+                .authenticatorDataParameter("authenticatorData")
+                .signatureParameter("signature")
+                .clientExtensionsJSONParameter("clientExtensionsJSON")
+                .loginProcessingUrl("/login")
                 .rpId("example.com")
                 .attestationOptionsEndpoint()
-                    .rp()
-                        .name("WebAuthn4J Spring Security Sample MPA")
-                        .and()
-                    .pubKeyCredParams(
+                .attestationOptionsProvider(attestationOptionsProvider)
+                .processingUrl("/webauthn/attestation/options")
+                .rp()
+                .name("example")
+                .and()
+                .pubKeyCredParams(
                         new PublicKeyCredentialParameters(PublicKeyCredentialType.PUBLIC_KEY, COSEAlgorithmIdentifier.ES256),
                         new PublicKeyCredentialParameters(PublicKeyCredentialType.PUBLIC_KEY, COSEAlgorithmIdentifier.RS1)
-                    )
-                    .attestation(AttestationConveyancePreference.DIRECT)
-                    .extensions()
-                        .uvm(true)
-                        .credProps(true);
+                )
+                .authenticatorSelection()
+                .authenticatorAttachment(AuthenticatorAttachment.CROSS_PLATFORM)
+                .residentKey(ResidentKeyRequirement.PREFERRED)
+                .userVerification(UserVerificationRequirement.PREFERRED)
+                .and()
+                .attestation(AttestationConveyancePreference.DIRECT)
+                .extensions()
+                .credProps(true)
+                .uvm(true)
+                .and()
+                .assertionOptionsEndpoint()
+                .assertionOptionsProvider(assertionOptionsProvider)
+                .processingUrl("/webauthn/assertion/options")
+                .rpId("example.com")
+                .userVerification(UserVerificationRequirement.PREFERRED)
+                .and()
+                .authenticationManager(authenticationManager);
     }
 }
 ```
