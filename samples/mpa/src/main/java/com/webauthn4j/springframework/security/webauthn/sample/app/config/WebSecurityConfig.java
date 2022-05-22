@@ -21,80 +21,72 @@ import com.webauthn4j.data.AttestationConveyancePreference;
 import com.webauthn4j.data.PublicKeyCredentialParameters;
 import com.webauthn4j.data.PublicKeyCredentialType;
 import com.webauthn4j.data.attestation.statement.COSEAlgorithmIdentifier;
+import com.webauthn4j.springframework.security.WebAuthnAuthenticationProvider;
 import com.webauthn4j.springframework.security.authenticator.WebAuthnAuthenticatorService;
-import com.webauthn4j.springframework.security.config.configurers.WebAuthnAuthenticationProviderConfigurer;
 import com.webauthn4j.springframework.security.config.configurers.WebAuthnLoginConfigurer;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.AuthenticationProvider;
+import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
+import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
+
+import java.util.List;
 
 @Configuration
 @EnableWebSecurity
-public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
+public class WebSecurityConfig {
 
-    @Autowired
-    private WebAuthnAuthenticatorService webAuthnAuthenticatorService;
-
-    @Autowired
-    private WebAuthnManager webAuthnManager;
-
-    @Autowired
-    private UserDetailsService userDetailsService;
-
-    @Autowired
-    private PasswordEncoder passwordEncoder;
-
-    @Override
-    public void configure(AuthenticationManagerBuilder builder) throws Exception {
-        builder.apply(new WebAuthnAuthenticationProviderConfigurer<>(webAuthnAuthenticatorService, webAuthnManager));
-        builder.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder);
+    @Bean
+    public WebAuthnAuthenticationProvider webAuthnAuthenticationProvider(WebAuthnAuthenticatorService authenticatorService, WebAuthnManager webAuthnManager){
+        return new WebAuthnAuthenticationProvider(authenticatorService, webAuthnManager);
     }
 
-    @Override
-    public void configure(WebSecurity web) {
-        // ignore static resources
-        web.ignoring().antMatchers(
-                "/favicon.ico",
-                "/js/**",
-                "/css/**",
-                "/webjars/**");
+    @Bean
+    public AuthenticationManager authenticationManager(List<AuthenticationProvider> providers){
+        return new ProviderManager(providers);
     }
 
-    /**
-     * Configure SecurityFilterChain
-     */
-    @Override
-    protected void configure(HttpSecurity http) throws Exception {
+    @Bean
+    public WebSecurityCustomizer webSecurityCustomizer() {
+        return (web) -> {
+            // ignore static resources
+            web.ignoring().antMatchers(
+                    "/favicon.ico",
+                    "/js/**",
+                    "/css/**",
+                    "/webjars/**");
+        };
+    }
 
+    @Bean
+    public SecurityFilterChain filterChain(HttpSecurity http, AuthenticationManager authenticationManager) throws Exception {
         // WebAuthn Login
         http.apply(WebAuthnLoginConfigurer.webAuthnLogin())
                 .defaultSuccessUrl("/", true)
                 .failureUrl("/login")
                 .attestationOptionsEndpoint()
-                    .rp()
-                        .name("WebAuthn4J Spring Security Sample MPA")
-                        .and()
-                    .pubKeyCredParams(
+                .rp()
+                .name("WebAuthn4J Spring Security Sample MPA")
+                .and()
+                .pubKeyCredParams(
                         new PublicKeyCredentialParameters(PublicKeyCredentialType.PUBLIC_KEY, COSEAlgorithmIdentifier.ES256),
                         new PublicKeyCredentialParameters(PublicKeyCredentialType.PUBLIC_KEY, COSEAlgorithmIdentifier.RS1)
-                    )
-                    .attestation(AttestationConveyancePreference.DIRECT)
-                    .extensions()
-                        .uvm(true)
-                        .credProps(true)
-                        .extensionProviders()
-                    .and()
+                )
+                .attestation(AttestationConveyancePreference.DIRECT)
+                .extensions()
+                .uvm(true)
+                .credProps(true)
+                .extensionProviders()
+                .and()
                 .assertionOptionsEndpoint()
-                    .extensions()
-                        .extensionProviders();
+                .extensions()
+                .extensionProviders();
 
         http.headers(headers -> {
             // 'publickey-credentials-get *' allows getting WebAuthn credentials to all nested browsing contexts (iframes) regardless of their origin.
@@ -114,10 +106,13 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         http.exceptionHandling()
                 .accessDeniedHandler((request, response, accessDeniedException) -> response.sendRedirect("/login"));
 
-
+        http.authenticationManager(authenticationManager);
 
         // As WebAuthn has its own CSRF protection mechanism (challenge), CSRF token is disabled here
         http.csrf().csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse());
         http.csrf().ignoringAntMatchers("/webauthn/**");
+
+        return http.build();
+
     }
 }
