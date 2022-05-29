@@ -19,7 +19,7 @@ buildscript {
         //Plugins
         springBootVersion = '2.6.7'
         sonarqubeVersion = '3.3'
-        asciidoctorGradleVersion = '1.6.1'
+        asciidoctorGradleVersion = "3.3.2"
         artifactoryVersion = '4.28.3'
         bintrayVersion = '1.8.5'
         owaspDependencyCheckVersion = '7.1.0.1'
@@ -48,12 +48,14 @@ buildscript {
 
     repositories {
         mavenCentral()
-        jcenter()
+        maven {
+            url "https://plugins.gradle.org/m2/"
+        }
     }
     dependencies {
         classpath("org.springframework.boot:spring-boot-gradle-plugin:$springBootVersion")
         classpath("org.sonarsource.scanner.gradle:sonarqube-gradle-plugin:$sonarqubeVersion")
-        classpath("org.asciidoctor:asciidoctor-gradle-plugin:$asciidoctorGradleVersion")
+        classpath("org.asciidoctor:asciidoctor-gradle-jvm:$asciidoctorGradleVersion")
         classpath("org.jfrog.buildinfo:build-info-extractor-gradle:$artifactoryVersion")
         classpath("com.jfrog.bintray.gradle:gradle-bintray-plugin:$bintrayVersion")
         classpath("org.owasp:dependency-check-gradle:$owaspDependencyCheckVersion")
@@ -64,11 +66,15 @@ buildscript {
 
 apply plugin: 'org.sonarqube'
 apply plugin: 'com.jfrog.artifactory'
-apply plugin: 'org.asciidoctor.convert'
+apply plugin: 'org.asciidoctor.jvm.convert'
 
 
 group 'com.webauthn4j'
 version "${webAuthn4JSpringSecurityVersion}"
+
+repositories {
+    mavenCentral() //for jruby used in asciidoctorj
+}
 
 def sampleAppProjects = subprojects.findAll { ["fido-server-conformance-test-app", "spa", "spa-angular-client", "mpa"].contains(it.name) }
 def webAuthn4JSpringSecurityLibraryProjects = subprojects.findAll { it.name.startsWith('webauthn4j-spring-security') }
@@ -286,10 +292,6 @@ task generateReleaseNote(type: JavaExec) {
 
     args(latestReleasedWebAuthn4JSpringSecurityVersion, file("build/release-note.md").absolutePath, "--spring.config.location=file:" + file("github-release-notes-generator.yml").absolutePath)
 
-}
-
-asciidoctorj {
-    version = asciidoctorVersion
 }
 
 asciidoctor {
