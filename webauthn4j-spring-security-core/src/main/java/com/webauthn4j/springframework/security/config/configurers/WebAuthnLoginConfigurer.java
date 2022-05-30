@@ -35,7 +35,6 @@ import com.webauthn4j.springframework.security.server.ServerPropertyProviderImpl
 import org.springframework.security.authentication.AuthenticationTrustResolver;
 import org.springframework.security.config.annotation.web.HttpSecurityBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.annotation.web.configurers.AbstractAuthenticationFilterConfigurer;
 import org.springframework.security.web.authentication.ForwardAuthenticationFailureHandler;
 import org.springframework.security.web.authentication.ForwardAuthenticationSuccessHandler;
@@ -410,7 +409,7 @@ public final class WebAuthnLoginConfigurer<H extends HttpSecurityBuilder<H>> ext
     /**
      * <p>
      * Specifies the URL to send users to if login is required. If used with
-     * {@link WebSecurityConfigurerAdapter} a default login page will be generated when
+     * WebSecurityConfigurerAdapter a default login page will be generated when
      * this attribute is not specified.
      * </p>
      *

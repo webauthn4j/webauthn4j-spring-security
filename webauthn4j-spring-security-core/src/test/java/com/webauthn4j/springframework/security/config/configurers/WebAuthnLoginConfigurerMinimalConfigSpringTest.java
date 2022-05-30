@@ -26,8 +26,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.web.FilterChainProxy;
+import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
@@ -61,10 +61,10 @@ public class WebAuthnLoginConfigurerMinimalConfigSpringTest {
 
 
     @EnableWebSecurity
-    static class Config extends WebSecurityConfigurerAdapter {
+    static class Config {
 
-        @Override
-        protected void configure(HttpSecurity http) throws Exception {
+        @Bean
+        public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
             http.apply(WebAuthnLoginConfigurer.webAuthnLogin());
 
@@ -72,6 +72,8 @@ public class WebAuthnLoginConfigurerMinimalConfigSpringTest {
             http.authorizeRequests()
                     .antMatchers("/login").permitAll()
                     .anyRequest().authenticated();
+
+            return http.build();
         }
 
         @Configuration

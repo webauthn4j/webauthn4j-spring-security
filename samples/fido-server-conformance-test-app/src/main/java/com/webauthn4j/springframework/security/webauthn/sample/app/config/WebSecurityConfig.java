@@ -21,11 +21,11 @@ import com.webauthn4j.converter.util.ObjectConverter;
 import com.webauthn4j.data.PublicKeyCredentialParameters;
 import com.webauthn4j.data.PublicKeyCredentialType;
 import com.webauthn4j.data.attestation.statement.COSEAlgorithmIdentifier;
+import com.webauthn4j.springframework.security.WebAuthnAuthenticationProvider;
 import com.webauthn4j.springframework.security.WebAuthnRegistrationRequestValidator;
 import com.webauthn4j.springframework.security.authenticator.WebAuthnAuthenticatorManager;
 import com.webauthn4j.springframework.security.authenticator.WebAuthnAuthenticatorService;
 import com.webauthn4j.springframework.security.challenge.ChallengeRepository;
-import com.webauthn4j.springframework.security.config.configurers.WebAuthnAuthenticationProviderConfigurer;
 import com.webauthn4j.springframework.security.config.configurers.WebAuthnLoginConfigurer;
 import com.webauthn4j.springframework.security.fido.server.endpoint.FidoServerAssertionOptionsEndpointFilter;
 import com.webauthn4j.springframework.security.fido.server.endpoint.FidoServerAssertionResultEndpointFilter;
@@ -41,14 +41,17 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.authentication.AuthenticationProvider;
+import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.provisioning.UserDetailsManager;
+import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 import org.springframework.security.web.session.SessionManagementFilter;
+
+import java.util.List;
 
 
 /**
@@ -58,15 +61,9 @@ import org.springframework.security.web.session.SessionManagementFilter;
 @Import(value = WebSecurityBeanConfig.class)
 @EnableWebSecurity
 public class
-WebSecurityConfig extends WebSecurityConfigurerAdapter {
+WebSecurityConfig {
 
     private static final String ADMIN_ROLE = "ADMIN";
-
-    @Autowired
-    private WebAuthnAuthenticatorService authenticatorService;
-
-    @Autowired
-    private WebAuthnManager webAuthnManager;
 
     @Autowired
     private WebAuthnRegistrationRequestValidator webAuthnRegistrationRequestValidator;
@@ -92,34 +89,29 @@ WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     private ChallengeRepository challengeRepository;
 
-    @Override
-    public void configure(AuthenticationManagerBuilder builder) throws Exception {
-        builder.apply(new WebAuthnAuthenticationProviderConfigurer<>(authenticatorService, webAuthnManager));
-    }
-
-    @Override
-    public void configure(WebSecurity web) {
-        // ignore static resources
-        web.ignoring().antMatchers(
-                "/favicon.ico",
-                "/static/**",
-                "/webjars/**",
-                "/angular",
-                "/angular/**");
+    @Bean
+    public WebAuthnAuthenticationProvider webAuthnAuthenticationProvider(WebAuthnAuthenticatorService authenticatorService, WebAuthnManager webAuthnManager){
+        return new WebAuthnAuthenticationProvider(authenticatorService, webAuthnManager);
     }
 
     @Bean
-    @Override
-    public AuthenticationManager authenticationManagerBean() throws Exception {
-        return super.authenticationManagerBean();
+    public AuthenticationManager authenticationManager(List<AuthenticationProvider> providers){
+        return new ProviderManager(providers);
     }
 
-    /**
-     * Configure SecurityFilterChain
-     */
-    @Override
-    protected void configure(HttpSecurity http) throws Exception {
+    @Bean
+    public WebSecurityCustomizer webSecurityCustomizer() {
+        return (web) -> {
+            // ignore static resources
+            web.ignoring().antMatchers(
+                    "/favicon.ico",
+                    "/static/**",
+                    "/webjars/**");
+        };
+    }
 
+    @Bean
+    public SecurityFilterChain filterChain(HttpSecurity http, AuthenticationManager authenticationManager) throws Exception {
         // WebAuthn Config
         http.apply(WebAuthnLoginConfigurer.webAuthnLogin())
                 .attestationOptionsEndpoint()
@@ -129,7 +121,8 @@ WebSecurityConfig extends WebSecurityConfigurerAdapter {
                     .pubKeyCredParams(
                             new PublicKeyCredentialParameters(PublicKeyCredentialType.PUBLIC_KEY, COSEAlgorithmIdentifier.ES256),
                             new PublicKeyCredentialParameters(PublicKeyCredentialType.PUBLIC_KEY, COSEAlgorithmIdentifier.RS256),
-                            new PublicKeyCredentialParameters(PublicKeyCredentialType.PUBLIC_KEY, COSEAlgorithmIdentifier.RS1)
+                            new PublicKeyCredentialParameters(PublicKeyCredentialType.PUBLIC_KEY, COSEAlgorithmIdentifier.RS1),
+                            new PublicKeyCredentialParameters(PublicKeyCredentialType.PUBLIC_KEY, COSEAlgorithmIdentifier.EdDSA)
                     )
                     .extensions()
                         .entry("example.extension", "test")
@@ -139,13 +132,12 @@ WebSecurityConfig extends WebSecurityConfigurerAdapter {
                         .entry("example.extension", "test")
                     .and();
 
-
         FidoServerAttestationOptionsEndpointFilter fidoServerAttestationOptionsEndpointFilter = new FidoServerAttestationOptionsEndpointFilter(objectConverter, attestationOptionsProvider, challengeRepository);
         FidoServerAttestationResultEndpointFilter fidoServerAttestationResultEndpointFilter = new FidoServerAttestationResultEndpointFilter(objectConverter, userDetailsManager, webAuthnAuthenticatorManager, webAuthnRegistrationRequestValidator);
         fidoServerAttestationResultEndpointFilter.setUsernameNotFoundHandler(new SampleUsernameNotFoundHandler(userDetailsManager));
         FidoServerAssertionOptionsEndpointFilter fidoServerAssertionOptionsEndpointFilter = new FidoServerAssertionOptionsEndpointFilter(objectConverter, assertionOptionsProvider, challengeRepository);
         FidoServerAssertionResultEndpointFilter fidoServerAssertionResultEndpointFilter = new FidoServerAssertionResultEndpointFilter(objectConverter, serverPropertyProvider);
-        fidoServerAssertionResultEndpointFilter.setAuthenticationManager(authenticationManagerBean());
+        fidoServerAssertionResultEndpointFilter.setAuthenticationManager(authenticationManager);
 
         http.addFilterAfter(fidoServerAttestationOptionsEndpointFilter, SessionManagementFilter.class);
         http.addFilterAfter(fidoServerAttestationResultEndpointFilter, SessionManagementFilter.class);
@@ -169,7 +161,9 @@ WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
         http.csrf().ignoringAntMatchers("/webauthn/**");
 
+        http.authenticationManager(authenticationManager);
+
+        return http.build();
 
     }
-
 }

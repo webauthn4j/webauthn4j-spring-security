@@ -43,8 +43,8 @@ import org.springframework.security.authentication.AuthenticationTrustResolver;
 import org.springframework.security.authentication.AuthenticationTrustResolverImpl;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.web.FilterChainProxy;
+import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
@@ -158,7 +158,7 @@ public class WebAuthnLoginConfigurerSpringTest {
     }
 
     @EnableWebSecurity
-    static class Config extends WebSecurityConfigurerAdapter {
+    static class Config {
 
         @Autowired
         private ObjectConverter objectConverter;
@@ -180,9 +180,8 @@ public class WebAuthnLoginConfigurerSpringTest {
         @Autowired
         private AssertionOptionsProvider assertionOptionsProvider;
 
-        @Override
-        protected void configure(HttpSecurity http) throws Exception {
-
+        @Bean
+        public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
             http.apply(WebAuthnLoginConfigurer.webAuthnLogin())
                     .objectConverter(objectConverter)
                     .serverPropertyProvider(serverPropertyProvider)
@@ -201,50 +200,52 @@ public class WebAuthnLoginConfigurerSpringTest {
                     .loginPage("/login")
                     .rpId("example.com")
                     .attestationOptionsEndpoint()
-                        .attestationOptionsProvider(attestationOptionsProvider)
-                        .processingUrl("/webauthn/attestation/options")
-                        .rp()
-                            .id("example.com")
-                            .name("example")
-                            .and()
-                        .pubKeyCredParams(
-                                new PublicKeyCredentialParameters(PublicKeyCredentialType.PUBLIC_KEY, COSEAlgorithmIdentifier.ES256),
-                                new PublicKeyCredentialParameters(PublicKeyCredentialType.PUBLIC_KEY, COSEAlgorithmIdentifier.RS1)
-                        )
-                        .timeout(10000L)
-                        .authenticatorSelection()
-                            .authenticatorAttachment(AuthenticatorAttachment.CROSS_PLATFORM)
-                            .residentKey(ResidentKeyRequirement.PREFERRED)
-                            .userVerification(UserVerificationRequirement.PREFERRED)
-                            .and()
-                        .attestation(AttestationConveyancePreference.DIRECT)
-                        .extensions()
-                            .credProps(true)
-                            .uvm(true)
-                            .entry("unknown", true)
-                            .extensionProviders((builder, httpServletRequest) -> builder.set("extensionProvider", httpServletRequest.getRequestURI()))
-                        .and()
+                    .attestationOptionsProvider(attestationOptionsProvider)
+                    .processingUrl("/webauthn/attestation/options")
+                    .rp()
+                    .id("example.com")
+                    .name("example")
+                    .and()
+                    .pubKeyCredParams(
+                            new PublicKeyCredentialParameters(PublicKeyCredentialType.PUBLIC_KEY, COSEAlgorithmIdentifier.ES256),
+                            new PublicKeyCredentialParameters(PublicKeyCredentialType.PUBLIC_KEY, COSEAlgorithmIdentifier.RS1)
+                    )
+                    .timeout(10000L)
+                    .authenticatorSelection()
+                    .authenticatorAttachment(AuthenticatorAttachment.CROSS_PLATFORM)
+                    .residentKey(ResidentKeyRequirement.PREFERRED)
+                    .userVerification(UserVerificationRequirement.PREFERRED)
+                    .and()
+                    .attestation(AttestationConveyancePreference.DIRECT)
+                    .extensions()
+                    .credProps(true)
+                    .uvm(true)
+                    .entry("unknown", true)
+                    .extensionProviders((builder, httpServletRequest) -> builder.set("extensionProvider", httpServletRequest.getRequestURI()))
+                    .and()
                     .assertionOptionsEndpoint()
-                        .assertionOptionsProvider(assertionOptionsProvider)
-                        .processingUrl("/webauthn/assertion/options")
-                        .rpId("example.com")
-                        .timeout(20000L)
-                        .userVerification(UserVerificationRequirement.PREFERRED)
-                        .extensions()
-                            .appid("appid")
-                            .appidExclude("appidExclude")
-                            .uvm(true)
-                            .entry("unknown", true)
-                            .extensionProviders((builder, httpServletRequest) -> {
-                                builder.set("extensionProvider", httpServletRequest.getRequestURI());
-                            })
-                        .and()
+                    .assertionOptionsProvider(assertionOptionsProvider)
+                    .processingUrl("/webauthn/assertion/options")
+                    .rpId("example.com")
+                    .timeout(20000L)
+                    .userVerification(UserVerificationRequirement.PREFERRED)
+                    .extensions()
+                    .appid("appid")
+                    .appidExclude("appidExclude")
+                    .uvm(true)
+                    .entry("unknown", true)
+                    .extensionProviders((builder, httpServletRequest) -> {
+                        builder.set("extensionProvider", httpServletRequest.getRequestURI());
+                    })
+                    .and()
                     .and();
 
             // Authorization
             http.authorizeRequests()
                     .antMatchers("/login").permitAll()
                     .anyRequest().authenticated();
+
+            return http.build();
         }
 
         @Configuration

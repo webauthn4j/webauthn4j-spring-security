@@ -31,10 +31,9 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.ProviderManager;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -51,7 +50,7 @@ public class WebAuthnAuthenticationProviderConfigurerSpringTest {
     }
 
     @EnableWebSecurity
-    static class Config extends WebSecurityConfigurerAdapter {
+    static class Config {
 
         @MockBean
         private WebAuthnAuthenticatorService authenticatorService;
@@ -82,14 +81,7 @@ public class WebAuthnAuthenticationProviderConfigurerSpringTest {
         }
 
         @Bean
-        @Override
-        public AuthenticationManager authenticationManagerBean() throws Exception {
-            return super.authenticationManager();
-        }
-
-        @Override
-        protected void configure(HttpSecurity http) throws Exception {
-
+        public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
             // Authentication
             http.apply(WebAuthnLoginConfigurer.webAuthnLogin());
 
@@ -97,13 +89,13 @@ public class WebAuthnAuthenticationProviderConfigurerSpringTest {
             http.authorizeRequests()
                     .antMatchers("/login").permitAll()
                     .anyRequest().authenticated();
+
+            return http.build();
         }
 
-        @Override
-        public void configure(AuthenticationManagerBuilder builder) throws Exception {
-            builder.apply(new WebAuthnAuthenticationProviderConfigurer<>(authenticatorService, WebAuthnManager.createNonStrictWebAuthnManager()));
+        @Bean
+        public AuthenticationManager authenticationManager(){
+            return new ProviderManager(new WebAuthnAuthenticationProvider(authenticatorService, WebAuthnManager.createNonStrictWebAuthnManager()));
         }
-
     }
-
 }
