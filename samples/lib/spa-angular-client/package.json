@@ -22,7 +22,7 @@
     "@angular/common": "^13.3.11",
     "@angular/compiler": "^13.3.11",
     "@angular/core": "^13.0.3",
-    "@angular/forms": "^13.3.6",
+    "@angular/forms": "^13.3.11",
     "@angular/localize": "^13.3.11",
     "@angular/platform-browser": "^13.3.11",
     "@angular/platform-browser-dynamic": "^13.3.11",
