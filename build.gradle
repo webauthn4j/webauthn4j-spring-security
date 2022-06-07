@@ -26,7 +26,7 @@ buildscript {
         httpBuilderVersion = '0.7.2'
 
         //Libraries
-        webauthn4jVersion = '0.20.0-SNAPSHOT'
+        webauthn4jVersion = '0.20.0.RELEASE'
         springSecurityVersion = '5.7.1'
         hibernateValidatorVersion = '6.2.3.Final'
         thymeleafVersion = '3.0.4.RELEASE'
@@ -43,7 +43,7 @@ buildscript {
         webDriverManagerVersion = '5.2.0'
         // To use WebAuthn WebDriver extension, alpha release is used here.
         // When stable version is released, and Spring Boot BOM includes it, this need to be removed.
-        seleniumVersion = '4.1.4'
+        seleniumVersion = '4.2.1'
     }
 
     repositories {
