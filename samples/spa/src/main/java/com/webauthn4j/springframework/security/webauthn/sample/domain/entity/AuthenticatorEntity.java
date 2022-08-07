@@ -56,9 +56,9 @@ public class AuthenticatorEntity implements WebAuthnAuthenticator {
 
     @Embedded
     @AttributeOverrides({
-            @AttributeOverride(name="aaguid", column=@Column(columnDefinition = "blob")),
-            @AttributeOverride(name="credentialId", column=@Column(columnDefinition = "blob")),
-            @AttributeOverride(name="coseKey", column=@Column(name = "cose_key", columnDefinition = "blob"))
+            @AttributeOverride(name="aaguid", column=@Column(name = "aaguid", columnDefinition = "binary")),
+            @AttributeOverride(name="credentialId", column=@Column(name = "credential_id", columnDefinition = "binary")),
+            @AttributeOverride(name="coseKey", column=@Column(name = "cose_key", columnDefinition = "binary"))
     })
     @Converts({
             @Convert(converter = AAGUIDConverter.class, attributeName = "aaguid"),

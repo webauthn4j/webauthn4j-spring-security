@@ -33,7 +33,7 @@ public class UserEntity implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-    @Column(columnDefinition = "blob")
+    @Column(columnDefinition = "VARBINARY(64)")
     private byte[] userHandle;
     private String firstName;
     private String lastName;
