@@ -1,7 +1,7 @@
 -- User table  --
 CREATE TABLE m_user (
   id                INTEGER        NOT NULL AUTO_INCREMENT,
-  user_handle       BLOB            NOT NULL,
+  user_handle       VARBINARY(64)            NOT NULL,
   first_name        VARCHAR(32)    NOT NULL,
   last_name         VARCHAR(32)    NOT NULL,
   email_address     VARCHAR(64)    NOT NULL  UNIQUE,
@@ -30,12 +30,12 @@ CREATE TABLE m_authenticator(
   name                   VARCHAR(32)   NOT NULL,
   user_id                INTEGER       NOT NULL  REFERENCES m_user(id),
   counter                BIGINT         NOT NULL,
-  aaguid                BLOB           NOT NULL,
-  credential_id          BLOB           NOT NULL,
-  cose_key  BLOB NOT NULL,
-  attestation_statement  TEXT NOT NULL,
-  client_extensions  TEXT NOT NULL,
-  authenticator_extensions  TEXT NOT NULL,
+  aaguid                VARBINARY(16)           NOT NULL,
+  credential_id          VARBINARY(1024)           NOT NULL,
+  cose_key  VARBINARY(1024)    NOT NULL,
+  attestation_statement  CLOB NOT NULL,
+  client_extensions  CLOB NOT NULL,
+  authenticator_extensions  CLOB NOT NULL,
   primary key(id)
 );
 
