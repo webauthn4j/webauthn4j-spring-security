@@ -24,7 +24,7 @@ If you are using Maven, just add the webauthn4j-spring-security as a dependency:
 <properties>
   ...
   <!-- Use the latest version whenever possible. -->
-  <webauthn4j-spring-security.version>0.7.4.RELEASE</webauthn4j-spring-security.version>
+  <webauthn4j-spring-security.version>0.7.5.RELEASE</webauthn4j-spring-security.version>
   ...
 </properties>
 
