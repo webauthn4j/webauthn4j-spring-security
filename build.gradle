@@ -294,16 +294,14 @@ task generateReleaseNote(type: JavaExec) {
 
 }
 
-asciidoctor {
-    sourceDir = file("docs/src/reference/asciidoc")
-//  backends = ['docbook5']
-    resources {
-        from(sourceDir) {
-            include '*/images/**'
-        }
-    }
-    options eruby: 'erubis'
+import org.asciidoctor.gradle.jvm.AsciidoctorTask
 
+task generateReferenceJA(type: AsciidoctorTask) {
+    group = "documentation"
+    baseDirFollowsSourceDir()
+    sourceDir = file("docs/src/reference/asciidoc/ja")
+    outputDir = file("build/docs/asciidoc/ja")
+    options eruby: 'erubis'
     //noinspection GroovyAssignabilityCheck
     attributes docinfo: '',
             copycss: '',
@@ -317,6 +315,27 @@ asciidoctor {
             numbered: '',
             revnumber: "${webAuthn4JSpringSecurityVersion}"
 }
+
+task generateReferenceEN(type: AsciidoctorTask) {
+    group = "documentation"
+    baseDirFollowsSourceDir()
+    sourceDir = file("docs/src/reference/asciidoc/en")
+    outputDir = file("build/docs/asciidoc/en")
+    options eruby: 'erubis'
+    //noinspection GroovyAssignabilityCheck
+    attributes docinfo: '',
+            copycss: '',
+            icons: 'font',
+            'source-highlighter': 'prettify',
+            sectanchors: '',
+            toc2: '',
+            idprefix: '',
+            idseparator: '-',
+            doctype: 'book',
+            numbered: '',
+            revnumber: "${webAuthn4JSpringSecurityVersion}"
+}
+
 
 sonarqube {
     properties {
