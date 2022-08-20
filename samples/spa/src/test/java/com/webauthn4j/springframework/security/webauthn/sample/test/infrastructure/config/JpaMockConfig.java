@@ -17,7 +17,6 @@
 package com.webauthn4j.springframework.security.webauthn.sample.test.infrastructure.config;
 
 import com.webauthn4j.springframework.security.webauthn.sample.domain.repository.AuthenticatorEntityRepository;
-import com.webauthn4j.springframework.security.webauthn.sample.domain.repository.GroupEntityRepository;
 import com.webauthn4j.springframework.security.webauthn.sample.domain.repository.UserEntityRepository;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Configuration;
@@ -27,9 +26,6 @@ public class JpaMockConfig {
 
     @MockBean
     public UserEntityRepository userEntityRepository;
-
-    @MockBean
-    public GroupEntityRepository groupEntityRepository;
 
     @MockBean
     public AuthenticatorEntityRepository authenticatorEntityRepository;
