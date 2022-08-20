@@ -73,7 +73,7 @@
         <div class="card-header">
           <div class="row">
             <label class="col-8">Authenticators</label>
-            <div class="button-group col-4 text-right">
+            <div class="button-group col-4 text-end">
               <div class="tooltip-wrapper">
                 <button type="button" id="addAuthenticator" class="btn btn-light btn-sm" (click)="addAuthenticator()"
                         [disabled]="!isWebAuthnAvailable() || username.invalid">
@@ -88,7 +88,7 @@
             <li class="list-group-item">
               <div class="row">
                 <div class="col-8">{{authenticator.name}}</div>
-                <div class="button-group col-4 text-right">
+                <div class="button-group col-4 text-end">
                   <button type="button" class="btn btn-light btn-sm" (click)="editAuthenticator(authenticator)"><i
                     class="fas fa-edit"></i></button>
                   <button type="button" class="btn btn-light btn-sm" (click)="removeAuthenticator(authenticator)"><i
