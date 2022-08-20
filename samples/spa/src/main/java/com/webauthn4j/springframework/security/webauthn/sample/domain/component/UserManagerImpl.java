@@ -20,9 +20,7 @@ import com.webauthn4j.springframework.security.exception.PrincipalNotFoundExcept
 import com.webauthn4j.springframework.security.webauthn.sample.domain.entity.UserEntity;
 import com.webauthn4j.springframework.security.webauthn.sample.domain.exception.WebAuthnSampleBusinessException;
 import com.webauthn4j.springframework.security.webauthn.sample.domain.exception.WebAuthnSampleEntityNotFoundException;
-import com.webauthn4j.springframework.security.webauthn.sample.domain.repository.AuthenticatorEntityRepository;
 import com.webauthn4j.springframework.security.webauthn.sample.domain.repository.UserEntityRepository;
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -35,16 +33,11 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class UserManagerImpl implements UserManager {
 
-    private final ModelMapper modelMapper;
-
     private final UserEntityRepository userEntityRepository;
-    private final AuthenticatorEntityRepository authenticatorEntityRepository;
 
     @Autowired
-    public UserManagerImpl(ModelMapper mapper, UserEntityRepository userEntityRepository, AuthenticatorEntityRepository authenticatorEntityRepository) {
-        this.modelMapper = mapper;
+    public UserManagerImpl(UserEntityRepository userEntityRepository) {
         this.userEntityRepository = userEntityRepository;
-        this.authenticatorEntityRepository = authenticatorEntityRepository;
     }
 
     /**
