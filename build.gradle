@@ -33,7 +33,7 @@ buildscript {
         modelMapperVersion = '3.1.0'
 
         bootstrapVersion = '5.2.0'
-        jqueryVersion = '3.6.0'
+        jqueryVersion = '3.6.1'
         fontAwesomeVersion = '6.1.2'
         webjarsLocatorVersion = '0.45'
 
