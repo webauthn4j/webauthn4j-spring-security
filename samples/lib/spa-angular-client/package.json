@@ -42,7 +42,7 @@
     "@angular/compiler-cli": "^13.0.3",
     "@angular/language-service": "^14.2.0",
     "@types/base64-arraybuffer": "^0.2.0",
-    "@types/jasmine": "~4.0.3",
+    "@types/jasmine": "~4.3.0",
     "@types/jasminewd2": "~2.0.10",
     "@types/node": "^18.7.14",
     "@types/uuid": "^8.3.4",
