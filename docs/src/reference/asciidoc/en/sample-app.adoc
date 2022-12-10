@@ -18,7 +18,7 @@ Sample application can be executed by following command.
 
 image::images/signup.png[signup view]
 
-The signup page can be accessed with `http://localhost:8080/signup`.
+The signup page can be accessed with `http://localhost:8080/angular/signup`.
 Please fill user information and register user and authentication device.
 
 image::images/signup-with-popup.png[authenticator request popup]
@@ -29,7 +29,7 @@ If you would like to allow single-factor authentication, Please check "Allow pas
 
 === User authentication
 
-Login page can be accessed with `http://localhost:/8080/login`.
+Login page can be accessed with `http://localhost:8080/angular/login`.
 Sample application supports three authentication flow.
 
 * Multi-factor authentication with password and authenticator
