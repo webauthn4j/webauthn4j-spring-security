@@ -17,7 +17,7 @@
 buildscript {
     ext{
         //Plugins
-        springBootVersion = '2.7.5'
+        springBootVersion = '2.7.8'
         sonarqubeVersion = '3.5.0.2730'
         asciidoctorGradleVersion = "3.3.2"
         artifactoryVersion = '4.31.0'
@@ -27,8 +27,8 @@ buildscript {
 
         //Libraries
         webauthn4jVersion = '0.20.6.RELEASE'
-        springSecurityVersion = '5.7.5'
-        hibernateValidatorVersion = '6.2.4.Final'
+        springSecurityVersion = '5.7.6'
+        hibernateValidatorVersion = '6.2.5.Final'
         thymeleafVersion = '3.0.4.RELEASE'
         modelMapperVersion = '3.1.1'
 
