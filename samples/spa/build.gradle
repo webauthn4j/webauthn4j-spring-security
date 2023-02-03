@@ -44,7 +44,7 @@ dependencies {
     implementation('org.flywaydb:flyway-core')
     runtimeOnly('ch.qos.logback:logback-classic')
     runtimeOnly('com.h2database:h2')
-    runtimeOnly('mysql:mysql-connector-java')
+    runtimeOnly('com.mysql:mysql-connector-j')
     runtimeOnly("org.lazyluke:log4jdbc-remix")
 
     //Test
