@@ -42,7 +42,10 @@ dependencies {
     implementation("org.slf4j:jcl-over-slf4j")
     implementation("org.modelmapper:modelmapper")
     implementation('org.flywaydb:flyway-core')
-    runtimeOnly('ch.qos.logback:logback-classic')
+    //We have to force the use of this dependency
+    runtimeOnly("ch.qos.logback:logback-classic:$logbackSpringBoot27xCompatibilityVersion"){
+        force = true
+    }
     runtimeOnly('com.h2database:h2')
     runtimeOnly('com.mysql:mysql-connector-j')
     runtimeOnly("org.lazyluke:log4jdbc-remix")
