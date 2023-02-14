@@ -26,7 +26,7 @@ buildscript {
         httpBuilderVersion = '0.7.2'
 
         //Libraries
-        webauthn4jVersion = '0.20.6.RELEASE'
+        webauthn4jVersion = '0.20.8.RELEASE'
         springSecurityVersion = '5.7.6'
         hibernateValidatorVersion = '6.2.5.Final'
         thymeleafVersion = '3.0.4.RELEASE'
@@ -44,6 +44,13 @@ buildscript {
         // To use WebAuthn WebDriver extension, alpha release is used here.
         // When stable version is released, and Spring Boot BOM includes it, this need to be removed.
         seleniumVersion = '4.8.0'
+
+        // To make the test pass without errors NoClassDefFoundError in samples/fido-server-conformance-test-app
+        // There is a compatibility issue between the versions of SLF4J/Logback used by webauthn4j and the versions used by Spring Boot 2.7.x
+        // There are breaking change in th SLF4J 2.x branche ("SLF4J API version 2.0.0 relies on the ServiceLoader mechanism to find its logging backend"
+        // and no any more on the StaticLoggerBinder see https://www.slf4j.org/manual.html).
+        // When upgrading to Spring Boot 3.x branche, this constant will have to be removed.
+        logbackSpringBoot27xCompatibilityVersion = '1.2.11'
     }
 
     repositories {

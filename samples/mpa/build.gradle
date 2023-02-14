@@ -46,6 +46,11 @@ dependencies {
     implementation('org.webjars:font-awesome:6.2.1')
     implementation('org.webjars:webjars-locator:0.46')
 
+    //We have to force the use of this dependency
+    runtimeOnly("ch.qos.logback:logback-classic:$logbackSpringBoot27xCompatibilityVersion"){
+        force = true
+    }
+
     //Test
     testImplementation project(':webauthn4j-spring-security-test')
     testImplementation('org.springframework.boot:spring-boot-starter-test')
