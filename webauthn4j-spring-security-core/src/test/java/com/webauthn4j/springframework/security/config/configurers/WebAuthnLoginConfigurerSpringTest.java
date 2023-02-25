@@ -48,6 +48,7 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.web.servlet.handler.HandlerMappingIntrospector;
 
 import static org.mockito.Mockito.*;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.anonymous;
@@ -157,6 +158,7 @@ public class WebAuthnLoginConfigurerSpringTest {
                 .andExpect(status().isOk());
     }
 
+    @Configuration
     @EnableWebSecurity
     static class Config {
 
@@ -241,8 +243,8 @@ public class WebAuthnLoginConfigurerSpringTest {
                     .and();
 
             // Authorization
-            http.authorizeRequests()
-                    .antMatchers("/login").permitAll()
+            http.authorizeHttpRequests()
+                    .requestMatchers("/login").permitAll()
                     .anyRequest().authenticated();
 
             return http.build();
@@ -291,6 +293,11 @@ public class WebAuthnLoginConfigurerSpringTest {
             @Bean
             public AuthenticationTrustResolver authenticationTrustResolver(){
                 return new AuthenticationTrustResolverImpl();
+            }
+
+            @Bean(name = "mvcHandlerMappingIntrospector")
+            public HandlerMappingIntrospector mvcHandlerMappingIntrospector() {
+                return new HandlerMappingIntrospector();
             }
 
         }

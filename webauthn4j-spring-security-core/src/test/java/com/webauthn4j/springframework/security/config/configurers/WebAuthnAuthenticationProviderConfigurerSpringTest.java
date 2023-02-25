@@ -29,12 +29,14 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.web.servlet.handler.HandlerMappingIntrospector;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -49,6 +51,7 @@ public class WebAuthnAuthenticationProviderConfigurerSpringTest {
         assertThat(providerManager.getProviders()).extracting("class").contains(WebAuthnAuthenticationProvider.class);
     }
 
+    @Configuration
     @EnableWebSecurity
     static class Config {
 
@@ -86,8 +89,8 @@ public class WebAuthnAuthenticationProviderConfigurerSpringTest {
             http.apply(WebAuthnLoginConfigurer.webAuthnLogin());
 
             // Authorization
-            http.authorizeRequests()
-                    .antMatchers("/login").permitAll()
+            http.authorizeHttpRequests()
+                    .requestMatchers("/login").permitAll()
                     .anyRequest().authenticated();
 
             return http.build();
@@ -96,6 +99,11 @@ public class WebAuthnAuthenticationProviderConfigurerSpringTest {
         @Bean
         public AuthenticationManager authenticationManager(){
             return new ProviderManager(new WebAuthnAuthenticationProvider(authenticatorService, WebAuthnManager.createNonStrictWebAuthnManager()));
+        }
+
+        @Bean(name = "mvcHandlerMappingIntrospector")
+        public HandlerMappingIntrospector mvcHandlerMappingIntrospector() {
+            return new HandlerMappingIntrospector();
         }
     }
 }
