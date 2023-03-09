@@ -36,9 +36,10 @@ import java.util.List;
 
 
 /**
- * Processes a WebAuthn authentication form submission. For supporting username/password authentication for first step of
- * two step authentication, if credentialId is not found in the HTTP request, this filter try to find username/password
- * parameters.
+ * Processes a WebAuthn authentication form submission.
+ * <p>
+ * For supporting the username/password authentication in the first step of a two factors authentication,
+ * if credentialId is not found in the HTTP request, this filter try to find username/password parameters.
  * <p>
  * Login forms must present WebAuthn parameters (credentialId, clientDataJSON, authenticatorData,signature and
  * clientExtensionJSON) or Password authentication parameters (username and password).
@@ -75,7 +76,7 @@ public class WebAuthnProcessingFilter extends UsernamePasswordAuthenticationFilt
     private String clientExtensionsJSONParameter = SPRING_SECURITY_FORM_CLIENT_EXTENSIONS_JSON_KEY;
 
     private ServerPropertyProvider serverPropertyProvider;
-    private UserVerificationStrategy userVerificationStrategy = new DefaultUserVerificationStrategy();
+    private UserVerificationStrategy userVerificationStrategy;
 
     private boolean postOnly = true;
 
@@ -91,7 +92,7 @@ public class WebAuthnProcessingFilter extends UsernamePasswordAuthenticationFilt
     }
 
     /**
-     * Constructor
+     * Constructor which initializes the filter with a default user verification strategy
      *
      * @param authorities            authorities for FirstOfMultiFactorAuthenticationToken
      * @param serverPropertyProvider provider for ServerProperty
@@ -101,6 +102,23 @@ public class WebAuthnProcessingFilter extends UsernamePasswordAuthenticationFilt
         Assert.notNull(serverPropertyProvider, "serverPropertyProvider must not be null");
         this.authorities = authorities;
         this.serverPropertyProvider = serverPropertyProvider;
+        this.userVerificationStrategy = new DefaultUserVerificationStrategy();
+    }
+
+    /**
+     * Overloading constructor in which the user verification strategy with which initializing the filter can be specified
+     *
+     * @param authorities              authorities for FirstOfMultiFactorAuthenticationToken
+     * @param serverPropertyProvider   provider for ServerProperty
+     * @param userVerificationStrategy the user verification strategy to be used by the filter
+     */
+    public WebAuthnProcessingFilter(List<GrantedAuthority> authorities, ServerPropertyProvider serverPropertyProvider, UserVerificationStrategy userVerificationStrategy) {
+        Assert.notNull(authorities, "authorities must not be null");
+        Assert.notNull(serverPropertyProvider, "serverPropertyProvider must not be null");
+        Assert.notNull(userVerificationStrategy, "userVerificationStrategy must not be null");
+        this.authorities = authorities;
+        this.serverPropertyProvider = serverPropertyProvider;
+        this.userVerificationStrategy = userVerificationStrategy;
     }
 
     // ~ Methods
