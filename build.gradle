@@ -17,16 +17,16 @@
 buildscript {
     ext{
         //Plugins
-        springBootVersion = '2.7.8'
-        sonarqubeVersion = '3.5.0.2730'
+        springBootVersion = '2.7.9'
+        sonarqubeVersion = '4.0.0.2929'
         asciidoctorGradleVersion = "3.3.2"
-        artifactoryVersion = '4.31.0'
+        artifactoryVersion = '4.31.5'
         bintrayVersion = '1.8.5'
-        owaspDependencyCheckVersion = '8.0.2'
+        owaspDependencyCheckVersion = '8.1.0'
         httpBuilderVersion = '0.7.2'
 
         //Libraries
-        webauthn4jVersion = '0.20.8.RELEASE'
+        webauthn4jVersion = '0.21.0.RELEASE'
         springSecurityVersion = '5.7.6'
         hibernateValidatorVersion = '6.2.5.Final'
         thymeleafVersion = '3.0.4.RELEASE'
@@ -34,7 +34,7 @@ buildscript {
 
         bootstrapVersion = '5.2.3'
         jqueryVersion = '3.6.3'
-        fontAwesomeVersion = '6.2.1'
+        fontAwesomeVersion = '6.3.0'
         webjarsLocatorVersion = '0.46'
 
         log4jdbcVersion = '0.2.7'
@@ -43,7 +43,7 @@ buildscript {
         webDriverManagerVersion = '5.3.2'
         // To use WebAuthn WebDriver extension, alpha release is used here.
         // When stable version is released, and Spring Boot BOM includes it, this need to be removed.
-        seleniumVersion = '4.8.0'
+        seleniumVersion = '4.8.1'
 
         // To make the test pass without errors NoClassDefFoundError in samples/fido-server-conformance-test-app
         // There is a compatibility issue between the versions of SLF4J/Logback used by webauthn4j and the versions used by Spring Boot 2.7.x
