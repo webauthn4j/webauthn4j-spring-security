@@ -103,7 +103,7 @@ WebSecurityConfig {
     public WebSecurityCustomizer webSecurityCustomizer() {
         return (web) -> {
             // ignore static resources
-            web.ignoring().antMatchers(
+            web.ignoring().requestMatchers(
                     "/favicon.ico",
                     "/static/**",
                     "/webjars/**");
@@ -144,21 +144,21 @@ WebSecurityConfig {
         http.addFilterAfter(fidoServerAssertionResultEndpointFilter, SessionManagementFilter.class);
 
         // Authorization
-        http.authorizeRequests()
-                .mvcMatchers("/").permitAll()
-                .mvcMatchers("/api/auth/status").permitAll()
-                .mvcMatchers(HttpMethod.GET, "/login").permitAll()
-                .mvcMatchers(HttpMethod.POST, "/api/profile").permitAll()
-                .mvcMatchers("/health/**").permitAll()
-                .mvcMatchers("/info/**").permitAll()
-                .mvcMatchers("/h2-console/**").denyAll()
-                .mvcMatchers("/api/admin/**").hasRole(ADMIN_ROLE)
+        http.authorizeHttpRequests()
+                .requestMatchers("/").permitAll()
+                .requestMatchers("/api/auth/status").permitAll()
+                .requestMatchers(HttpMethod.GET, "/login").permitAll()
+                .requestMatchers(HttpMethod.POST, "/api/profile").permitAll()
+                .requestMatchers("/health/**").permitAll()
+                .requestMatchers("/info/**").permitAll()
+                .requestMatchers("/h2-console/**").denyAll()
+                .requestMatchers("/api/admin/**").hasRole(ADMIN_ROLE)
                 .anyRequest().fullyAuthenticated();
 
         //TODO:
         http.csrf().csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse());
 
-        http.csrf().ignoringAntMatchers("/webauthn/**");
+        http.csrf().ignoringRequestMatchers("/webauthn/**");
 
         http.authenticationManager(authenticationManager);
 
