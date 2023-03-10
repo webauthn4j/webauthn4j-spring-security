@@ -14,15 +14,19 @@
  * limitations under the License.
  */
 
-package com.webauthn4j.springframework.security.options;
+package com.webauthn4j.springframework.security.exception;
 
-public interface RpIdProvider {
+public class UnretrievableOriginException extends RuntimeException{
 
-    /**
-     * Provides rpId
-     *
-     * @return rpId
-     */
-    String provide();
+    public UnretrievableOriginException(String message, Throwable cause) {
+        super(message, cause);
+    }
 
+    public UnretrievableOriginException(String message) {
+        super(message);
+    }
+
+    public UnretrievableOriginException(Throwable cause) {
+        super(cause);
+    }
 }

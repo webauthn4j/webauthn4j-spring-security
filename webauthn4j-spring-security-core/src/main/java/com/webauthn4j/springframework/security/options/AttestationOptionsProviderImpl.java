@@ -81,7 +81,7 @@ public class AttestationOptionsProviderImpl implements AttestationOptionsProvide
      */
     public AttestationOptions getAttestationOptions(HttpServletRequest request, Authentication authentication) {
 
-        PublicKeyCredentialRpEntity relyingParty = new PublicKeyCredentialRpEntity(getRpId(request), rpName);
+        PublicKeyCredentialRpEntity relyingParty = new PublicKeyCredentialRpEntity(getRpId(), rpName);
         PublicKeyCredentialUserEntity user;
         try {
             user = getPublicKeyCredentialUserEntityProvider().provide(authentication);
@@ -99,11 +99,6 @@ public class AttestationOptionsProviderImpl implements AttestationOptionsProvide
                 getRegistrationAuthenticatorSelection(),
                 getAttestation(),
                 getRegistrationExtensionsProvider().provide(request));
-    }
-
-
-    public String getRpId() {
-        return rpId;
     }
 
     public void setRpId(String rpId) {
@@ -210,9 +205,9 @@ public class AttestationOptionsProviderImpl implements AttestationOptionsProvide
         }
     }
 
-    String getRpId(HttpServletRequest request) {
+    String getRpId() {
         if(rpIdProvider != null){
-            return rpIdProvider.provide(request);
+            return rpIdProvider.provide();
         }
         else {
             return rpId;

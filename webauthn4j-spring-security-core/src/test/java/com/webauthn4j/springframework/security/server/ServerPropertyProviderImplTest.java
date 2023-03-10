@@ -23,11 +23,15 @@ import com.webauthn4j.server.ServerProperty;
 import com.webauthn4j.springframework.security.challenge.ChallengeRepository;
 import com.webauthn4j.springframework.security.options.RpIdProvider;
 import com.webauthn4j.springframework.security.options.RpIdProviderImpl;
+import com.webauthn4j.springframework.security.util.internal.ServletUtil;
 import org.junit.Test;
+import org.mockito.MockedStatic;
+import org.mockito.Mockito;
 import org.springframework.mock.web.MockHttpServletRequest;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.when;
 
 public class ServerPropertyProviderImplTest {
@@ -39,18 +43,25 @@ public class ServerPropertyProviderImplTest {
     @Test
     public void provide_test() {
         MockHttpServletRequest request = new MockHttpServletRequest();
-        request.setScheme("https");
-        request.setServerName("origin.example.com");
+        final String scheme = "https";
+        final String serverName = "origin.example.com";
+        final String rpId = "rpid.example.com";
+        final String originURL = scheme + "://" + serverName;
+        request.setScheme(scheme);
+        request.setServerName(serverName);
         request.setServerPort(443);
         Challenge mockChallenge = new DefaultChallenge();
         when(challengeRepository.loadOrGenerateChallenge(request)).thenReturn(mockChallenge);
-        when(rpIdProvider.provide(request)).thenReturn("rpid.example.com");
+        when(rpIdProvider.provide()).thenReturn(rpId);
+        try (MockedStatic<ServletUtil> servletUtil = Mockito.mockStatic(ServletUtil.class)) {
+            servletUtil.when(ServletUtil::getOrigin).thenReturn(new Origin(originURL));
+            ServerProperty serverProperty = target.provide(request);
 
-        ServerProperty serverProperty = target.provide(request);
-
-        assertThat(serverProperty.getRpId()).isEqualTo("rpid.example.com");
-        assertThat(serverProperty.getOrigins()).containsExactly(new Origin("https://origin.example.com"));
-        assertThat(serverProperty.getChallenge()).isEqualTo(mockChallenge);
+            assertThat(serverProperty.getRpId()).isEqualTo(rpId);
+            assertThat(serverProperty.getOrigins()).containsExactly(new Origin(originURL));
+            assertThat(serverProperty.getChallenge()).isEqualTo(mockChallenge);
+            servletUtil.verify(ServletUtil::getOrigin, times(1));
+        }
     }
 
     @Test
@@ -61,8 +72,8 @@ public class ServerPropertyProviderImplTest {
         request.setServerPort(443);
         Challenge mockChallenge = new DefaultChallenge();
         when(challengeRepository.loadOrGenerateChallenge(request)).thenReturn(mockChallenge);
-        ServerPropertyProviderImpl serverPropertyProviderImpl = new ServerPropertyProviderImpl(challengeRepository);
-        assertThat(serverPropertyProviderImpl.getRpId(request)).isEqualTo("origin.example.com");
+        ServerPropertyProviderImpl serverPropertyProviderImpl = new ServerPropertyProviderImpl(() ->"origin.example.com", challengeRepository);
+        assertThat(serverPropertyProviderImpl.getEffectiveRpId()).isEqualTo("origin.example.com");
     }
 
     @Test
@@ -73,9 +84,9 @@ public class ServerPropertyProviderImplTest {
         request.setServerPort(443);
         Challenge mockChallenge = new DefaultChallenge();
         when(challengeRepository.loadOrGenerateChallenge(request)).thenReturn(mockChallenge);
-        ServerPropertyProviderImpl serverPropertyProviderImpl = new ServerPropertyProviderImpl(challengeRepository);
+        ServerPropertyProviderImpl serverPropertyProviderImpl = new ServerPropertyProviderImpl(() ->"origin.example.com", challengeRepository);
         serverPropertyProviderImpl.setRpId("example.com");
-        assertThat(serverPropertyProviderImpl.getRpId(request)).isEqualTo("example.com");
+        assertThat(serverPropertyProviderImpl.getRpId()).isEqualTo("example.com");
     }
 
     @Test
@@ -87,8 +98,8 @@ public class ServerPropertyProviderImplTest {
         Challenge mockChallenge = new DefaultChallenge();
         when(challengeRepository.loadOrGenerateChallenge(request)).thenReturn(mockChallenge);
         ServerPropertyProviderImpl serverPropertyProviderImpl = new ServerPropertyProviderImpl(challengeRepository);
-        serverPropertyProviderImpl.setRpIdProvider(httpServletRequest -> "example.com");
-        assertThat(serverPropertyProviderImpl.getRpId(request)).isEqualTo("example.com");
+        serverPropertyProviderImpl.setRpIdProvider(() -> "example.com");
+        assertThat(serverPropertyProviderImpl.getEffectiveRpId()).isEqualTo("example.com");
     }
 
     @Test

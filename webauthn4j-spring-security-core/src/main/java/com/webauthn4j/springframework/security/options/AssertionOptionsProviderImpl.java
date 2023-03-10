@@ -77,16 +77,12 @@ public class AssertionOptionsProviderImpl implements AssertionOptionsProvider {
         return new AssertionOptions(
                 getChallengeRepository().loadOrGenerateChallenge(request),
                 getAuthenticationTimeout(),
-                getRpId(request),
+                getRpId(),
                 getCredentials(authentication),
                 getAuthenticationUserVerification(),
                 getAuthenticationExtensionsProvider().provide(request));
     }
 
-
-    public String getRpId() {
-        return rpId;
-    }
 
     public void setRpId(String rpId) {
         this.rpId = rpId;
@@ -146,9 +142,9 @@ public class AssertionOptionsProviderImpl implements AssertionOptionsProvider {
     }
 
 
-    String getRpId(HttpServletRequest request) {
+    String getRpId() {
         if(rpIdProvider != null){
-            return rpIdProvider.provide(request);
+            return rpIdProvider.provide();
         }
         return rpId;
     }

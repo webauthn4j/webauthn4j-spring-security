@@ -19,13 +19,11 @@ package com.webauthn4j.springframework.security.options;
 import com.webauthn4j.data.client.Origin;
 import com.webauthn4j.springframework.security.util.internal.ServletUtil;
 
-import javax.servlet.http.HttpServletRequest;
-
 public class RpIdProviderImpl implements RpIdProvider {
 
     @Override
-    public String provide(HttpServletRequest request) {
-        Origin origin = ServletUtil.getOrigin(request);
+    public String provide() {
+        Origin origin = ServletUtil.getOrigin();
         return origin.getHost();
     }
 }

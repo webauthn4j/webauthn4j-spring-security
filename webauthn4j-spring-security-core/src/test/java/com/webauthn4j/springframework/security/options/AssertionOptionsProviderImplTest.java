@@ -79,19 +79,19 @@ public class AssertionOptionsProviderImplTest {
 
         MockHttpServletRequest request = new MockHttpServletRequest();
 
-        assertThat(optionsProvider.getRpId(request)).isEqualTo("example.com");
+        assertThat(optionsProvider.getRpId()).isEqualTo("example.com");
     }
 
     @Test
     public void getRpId_with_rpIdProvider(){
-        RpIdProvider rpIdProvider = (HttpServletRequest) -> "example.com";
+        RpIdProvider rpIdProvider = () -> "example.com";
         WebAuthnAuthenticatorService authenticatorService = mock(WebAuthnAuthenticatorService.class);
         ChallengeRepository challengeRepository = mock(ChallengeRepository.class);
         AssertionOptionsProviderImpl optionsProvider = new AssertionOptionsProviderImpl(rpIdProvider, authenticatorService, challengeRepository);
 
         MockHttpServletRequest request = new MockHttpServletRequest();
 
-        assertThat(optionsProvider.getRpId(request)).isEqualTo("example.com");
+        assertThat(optionsProvider.getRpId()).isEqualTo("example.com");
     }
 
     @Test

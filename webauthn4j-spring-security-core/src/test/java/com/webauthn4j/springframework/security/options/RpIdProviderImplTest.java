@@ -17,21 +17,32 @@
 package com.webauthn4j.springframework.security.options;
 
 import org.junit.Test;
+import org.mockito.MockedStatic;
+import org.mockito.Mockito;
 import org.springframework.mock.web.MockHttpServletRequest;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.times;
 
 public class RpIdProviderImplTest {
 
     @Test
     public void getEffectiveRpId() {
         RpIdProviderImpl rpIdProvider = new RpIdProviderImpl();
-        MockHttpServletRequest httpServletRequest = new MockHttpServletRequest();
-        httpServletRequest.setScheme("https");
-        httpServletRequest.setServerName("example.com");
-        httpServletRequest.setServerPort(8080);
-        assertThat(rpIdProvider.provide(httpServletRequest)).isEqualTo("example.com");
 
+        final String serverName = "example.com";
+        final MockHttpServletRequest mockHttpServletRequest = new MockHttpServletRequest();
+        mockHttpServletRequest.setServerPort(8080);
+        mockHttpServletRequest.setScheme("https");
+        mockHttpServletRequest.setServerName(serverName);
+
+        try (MockedStatic<RequestContextHolder> requestContextHolderMockedStatic = Mockito.mockStatic(RequestContextHolder.class)) {
+            requestContextHolderMockedStatic.when(RequestContextHolder::getRequestAttributes).thenReturn(new ServletRequestAttributes(mockHttpServletRequest));
+            assertThat(rpIdProvider.provide()).isEqualTo("example.com");
+            requestContextHolderMockedStatic.verify(RequestContextHolder::getRequestAttributes, times(1));
+        }
     }
 
 }

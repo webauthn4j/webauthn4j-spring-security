@@ -55,8 +55,8 @@ public class ServerPropertyProviderImpl implements ServerPropertyProvider {
      */
     public ServerProperty provide(HttpServletRequest request) {
 
-        Origin origin = ServletUtil.getOrigin(request);
-        String effectiveRpId = getRpId(request);
+        Origin origin = ServletUtil.getOrigin();
+        String effectiveRpId = getEffectiveRpId();
         Challenge challenge = challengeRepository.loadOrGenerateChallenge(request);
 
         return new ServerProperty(origin, effectiveRpId, challenge, null); // tokenBinding is not supported by Servlet API as of 4.0
@@ -70,15 +70,15 @@ public class ServerPropertyProviderImpl implements ServerPropertyProvider {
         this.rpId = rpId;
     }
 
-    String getRpId(HttpServletRequest request) {
+    String getEffectiveRpId() {
         if(rpIdProvider != null){
-            return rpIdProvider.provide(request);
+            return rpIdProvider.provide();
         }
         else if(rpId != null){
             return rpId;
         }
         else {
-            return defaultRpIdProvider.provide(request);
+            return defaultRpIdProvider.provide();
         }
     }
 
