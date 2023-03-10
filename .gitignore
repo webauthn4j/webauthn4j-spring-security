@@ -27,3 +27,10 @@ nbdist/
 
 
 ### Project Files ###
+/webauthn4j-spring-security-metadata/bin
+/webauthn4j-spring-security-test/bin
+/webauthn4j-spring-security-core/bin
+/samples/spa/bin
+/samples/mpa/bin
+/samples/lib/spa-angular-client/.angular
+/samples/fido-server-conformance-test-app/bin
