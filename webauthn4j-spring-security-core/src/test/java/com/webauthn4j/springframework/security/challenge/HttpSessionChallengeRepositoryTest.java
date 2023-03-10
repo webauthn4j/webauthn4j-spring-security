@@ -115,4 +115,32 @@ public class HttpSessionChallengeRepositoryTest {
 
         assertThat(loadedChallenge).isNotNull();
     }
+
+    @Test
+    public void constructorWithChallengeProvider_test() {
+        final HttpSessionChallengeRepository target = new HttpSessionChallengeRepository(DummyChallenge::new);
+        byte[] expectedChallengeValue = new byte[8];
+        for (int i = 0; i < 8; i++) {
+            expectedChallengeValue[i] = 0;
+        }
+        Challenge challenge = target.generateChallenge();
+        assertThat(challenge).isNotNull();
+        assertThat(challenge.getValue()).hasSize(8);
+        assertThat(challenge.getValue()).isEqualTo(expectedChallengeValue);
+    }
+
+    /*
+    * Very Dummy challenge implementation for test only
+    * */
+    private static class DummyChallenge implements Challenge {
+
+        @Override
+        public byte[] getValue() {
+            byte[] bytes = new byte[8];
+            for (int i = 0; i < 8; i++) {
+                bytes[i] = 0;
+            }
+            return bytes;
+        }
+    }
 }

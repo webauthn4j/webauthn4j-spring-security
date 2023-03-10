@@ -17,7 +17,6 @@
 package com.webauthn4j.springframework.security.challenge;
 
 import com.webauthn4j.data.client.challenge.Challenge;
-import com.webauthn4j.data.client.challenge.DefaultChallenge;
 import org.springframework.security.web.csrf.HttpSessionCsrfTokenRepository;
 import org.springframework.util.Assert;
 
@@ -40,13 +39,24 @@ public class HttpSessionChallengeRepository implements ChallengeRepository {
     //~ Instance fields
     // ================================================================================================
     private String sessionAttributeName = DEFAULT_CHALLENGE_ATTR_NAME;
+    private final ChallengeProvider challengeProvider;
+
+    // ~ Constructors
+    // ========================================================================================================
+    public HttpSessionChallengeRepository() {
+        this.challengeProvider = new DefaultChallengeProvider();
+    }
+
+    public HttpSessionChallengeRepository(ChallengeProvider challengeProvider) {
+        this.challengeProvider = challengeProvider;
+    }
 
     // ~ Methods
     // ========================================================================================================
 
     @Override
     public Challenge generateChallenge() {
-        return new DefaultChallenge();
+        return this.challengeProvider.provide();
     }
 
     @Override
