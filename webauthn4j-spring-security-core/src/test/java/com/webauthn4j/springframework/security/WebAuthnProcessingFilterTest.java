@@ -247,9 +247,18 @@ public class WebAuthnProcessingFilterTest {
     }
 
     @Test
-    public void constructor_test() {
+    public void first_constructor_test() {
         ServerPropertyProvider serverPropertyProvider = mock(ServerPropertyProvider.class);
         WebAuthnProcessingFilter webAuthnProcessingFilter = new WebAuthnProcessingFilter(AuthorityUtils.NO_AUTHORITIES, serverPropertyProvider);
+        assertThat(webAuthnProcessingFilter.getServerPropertyProvider()).isEqualTo(serverPropertyProvider);
+        assertThat(webAuthnProcessingFilter.getUserVerificationStrategy()).isNotNull();
+    }
+
+    @Test
+    public void second_constructor_test() {
+        ServerPropertyProvider serverPropertyProvider = mock(ServerPropertyProvider.class);
+        UserVerificationStrategy userVerificationStrategy = mock(UserVerificationStrategy.class);
+        WebAuthnProcessingFilter webAuthnProcessingFilter = new WebAuthnProcessingFilter(AuthorityUtils.NO_AUTHORITIES, serverPropertyProvider, userVerificationStrategy);
         assertThat(webAuthnProcessingFilter.getServerPropertyProvider()).isEqualTo(serverPropertyProvider);
         assertThat(webAuthnProcessingFilter.getUserVerificationStrategy()).isNotNull();
     }
