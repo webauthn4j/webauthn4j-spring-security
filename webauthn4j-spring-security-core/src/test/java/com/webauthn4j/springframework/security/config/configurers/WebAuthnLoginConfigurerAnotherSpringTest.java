@@ -43,6 +43,7 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.web.servlet.handler.HandlerMappingIntrospector;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
@@ -74,7 +75,7 @@ public class WebAuthnLoginConfigurerAnotherSpringTest {
 
     }
 
-
+    @Configuration
     @EnableWebSecurity
     static class Config {
 
@@ -83,8 +84,8 @@ public class WebAuthnLoginConfigurerAnotherSpringTest {
             http.apply(WebAuthnLoginConfigurer.webAuthnLogin());
 
             // Authorization
-            http.authorizeRequests()
-                    .antMatchers("/login").permitAll()
+            http.authorizeHttpRequests()
+                    .requestMatchers("/login").permitAll()
                     .anyRequest().authenticated();
 
             return http.build();
@@ -142,6 +143,11 @@ public class WebAuthnLoginConfigurerAnotherSpringTest {
             @Bean
             public AssertionOptionsEndpointFilter assertionOptionsEndpointFilter(AssertionOptionsProvider optionsProvider, ObjectConverter objectConverter){
                 return new AssertionOptionsEndpointFilter(optionsProvider, objectConverter);
+            }
+
+            @Bean(name = "mvcHandlerMappingIntrospector")
+            public HandlerMappingIntrospector mvcHandlerMappingIntrospector() {
+                return new HandlerMappingIntrospector();
             }
 
         }

@@ -39,42 +39,36 @@ import {AuthInterceptor} from "./auth/auth.interceptor";
 import {ResidentKeyRequirementDialogComponent} from './resident-key-requirement-dialog/resident-key-requirement-dialog.component';
 
 @NgModule({
-  declarations: [
-    AppComponent,
-    LoginComponent,
-    AuthenticatorLoginComponent,
-    PasswordLoginComponent,
-    DashboardComponent,
-    SignupComponent,
-    AuthenticatorDialogComponent,
-    AuthenticatorRegistrationReconfirmationDialogComponent,
-    ProfileComponent,
-    PageNotFoundComponent,
-    HeaderComponent,
-    ResidentKeyRequirementDialogComponent
-  ],
-  imports: [
-    BrowserModule,
-    BrowserAnimationsModule,
-    AppRoutingModule,
-    HttpClientModule,
-    FormsModule,
-    NgbModule
-  ],
-  exports: [
-    RouterModule
-  ],
-  providers: [
-    AuthGuard,
-    {provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true},
-  ],
-  bootstrap: [AppComponent],
-  entryComponents: [
-    AuthenticatorDialogComponent,
-    AuthenticatorRegistrationReconfirmationDialogComponent,
-    ResidentKeyRequirementDialogComponent
-  ]
-
+    declarations: [
+        AppComponent,
+        LoginComponent,
+        AuthenticatorLoginComponent,
+        PasswordLoginComponent,
+        DashboardComponent,
+        SignupComponent,
+        AuthenticatorDialogComponent,
+        AuthenticatorRegistrationReconfirmationDialogComponent,
+        ProfileComponent,
+        PageNotFoundComponent,
+        HeaderComponent,
+        ResidentKeyRequirementDialogComponent
+    ],
+    imports: [
+        BrowserModule,
+        BrowserAnimationsModule,
+        AppRoutingModule,
+        HttpClientModule,
+        FormsModule,
+        NgbModule
+    ],
+    exports: [
+        RouterModule
+    ],
+    providers: [
+        AuthGuard,
+        { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
+    ],
+    bootstrap: [AppComponent]
 })
 export class AppModule {
 }

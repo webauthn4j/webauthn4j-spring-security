@@ -18,8 +18,8 @@ package com.webauthn4j.springframework.security.webauthn.sample.app.util.modelma
 
 import com.webauthn4j.data.client.challenge.Challenge;
 import com.webauthn4j.data.client.challenge.DefaultChallenge;
+import com.webauthn4j.util.Base64UrlUtil;
 import org.modelmapper.AbstractConverter;
-import org.springframework.util.Base64Utils;
 
 /**
  * Converter which converts from {@link String} to {@link Challenge}
@@ -28,7 +28,7 @@ public class StringToChallengeConverter extends AbstractConverter<String, Challe
 
     @Override
     protected Challenge convert(String source) {
-        byte[] challenge = Base64Utils.decodeFromUrlSafeString(source);
+        byte[] challenge = Base64UrlUtil.decode(source);
         return new DefaultChallenge(challenge);
     }
 }

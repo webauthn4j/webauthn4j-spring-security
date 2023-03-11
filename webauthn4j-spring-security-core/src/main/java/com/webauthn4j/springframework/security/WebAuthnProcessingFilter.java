@@ -18,6 +18,7 @@ package com.webauthn4j.springframework.security;
 
 import com.webauthn4j.server.ServerProperty;
 import com.webauthn4j.springframework.security.server.ServerPropertyProvider;
+import com.webauthn4j.util.Base64UrlUtil;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AbstractAuthenticationToken;
 import org.springframework.security.authentication.AuthenticationServiceException;
@@ -27,7 +28,6 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.util.Assert;
-import org.springframework.util.Base64Utils;
 import org.springframework.util.StringUtils;
 
 import javax.servlet.http.HttpServletRequest;
@@ -143,10 +143,10 @@ public class WebAuthnProcessingFilter extends UsernamePasswordAuthenticationFilt
             String signature = obtainSignatureData(request);
             String clientExtensionsJSON = obtainClientExtensionsJSON(request);
 
-            byte[] rawId = Base64Utils.decodeFromUrlSafeString(credentialId);
-            byte[] rawClientData = Base64Utils.decodeFromUrlSafeString(clientDataJSON);
-            byte[] rawAuthenticatorData = Base64Utils.decodeFromUrlSafeString(authenticatorData);
-            byte[] signatureBytes = Base64Utils.decodeFromUrlSafeString(signature);
+            byte[] rawId = Base64UrlUtil.decode(credentialId);
+            byte[] rawClientData = Base64UrlUtil.decode(clientDataJSON);
+            byte[] rawAuthenticatorData = Base64UrlUtil.decode(authenticatorData);
+            byte[] signatureBytes = Base64UrlUtil.decode(signature);
 
             ServerProperty serverProperty = serverPropertyProvider.provide(request);
 

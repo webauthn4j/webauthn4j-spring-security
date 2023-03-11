@@ -24,6 +24,7 @@ import com.webauthn4j.springframework.security.WebAuthnAuthenticationProvider;
 import com.webauthn4j.springframework.security.authenticator.WebAuthnAuthenticatorService;
 import com.webauthn4j.springframework.security.config.configurers.WebAuthnLoginConfigurer;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
@@ -39,10 +40,13 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.access.AccessDeniedHandler;
+import org.springframework.security.web.access.expression.DefaultHttpSecurityExpressionHandler;
+import org.springframework.security.web.access.expression.WebExpressionAuthorizationManager;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
 import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
+import org.springframework.security.web.csrf.CsrfTokenRequestAttributeHandler;
 
 import java.util.List;
 
@@ -54,6 +58,9 @@ import java.util.List;
 @Import(value = WebSecurityBeanConfig.class)
 @EnableWebSecurity
 public class WebSecurityConfig {
+
+    @Autowired
+    private ApplicationContext applicationContext;
 
     @Autowired
     private AuthenticationSuccessHandler authenticationSuccessHandler;
@@ -125,26 +132,28 @@ public class WebSecurityConfig {
             headers.frameOptions().disable();
         });
 
+        // Authorization
+        http.authorizeHttpRequests(authz -> authz
+                .requestMatchers("/").permitAll()
+                .requestMatchers("/static/**").permitAll()
+                .requestMatchers("/angular/**").permitAll()
+                .requestMatchers("/webjars/**").permitAll()
+                .requestMatchers("/favicon.ico").permitAll()
+                .requestMatchers("/api/auth/status").permitAll()
+                .requestMatchers(HttpMethod.GET, "/login").permitAll()
+                .requestMatchers(HttpMethod.POST, "/api/profile").permitAll()
+                .requestMatchers("/api/status/**").permitAll()
+                .requestMatchers("/health/**").permitAll()
+                .requestMatchers("/info/**").permitAll()
+                .requestMatchers("/h2-console/**").denyAll()
+                .requestMatchers("/api/admin/**").access(getWebExpressionAuthorizationManager("hasRole('ADMIN_ROLE') and isAuthenticated()"))
+                .anyRequest().access(getWebExpressionAuthorizationManager("@webAuthnSecurityExpression.isWebAuthnAuthenticated(authentication) || hasAuthority('SINGLE_FACTOR_AUTHN_ALLOWED')"))
+        );
+
         // Logout
         http.logout()
                 .logoutUrl("/logout")
                 .logoutSuccessHandler(logoutSuccessHandler);
-
-        // Authorization
-        http.authorizeRequests()
-                .mvcMatchers("/").permitAll()
-                .mvcMatchers("/static/**").permitAll()
-                .mvcMatchers("/angular/**").permitAll()
-                .mvcMatchers("/webjars/**").permitAll()
-                .mvcMatchers("/favicon.ico").permitAll()
-                .mvcMatchers("/api/auth/status").permitAll()
-                .mvcMatchers(HttpMethod.GET, "/login").permitAll()
-                .mvcMatchers(HttpMethod.POST, "/api/profile").permitAll()
-                .mvcMatchers("/health/**").permitAll()
-                .mvcMatchers("/info/**").permitAll()
-                .mvcMatchers("/h2-console/**").denyAll()
-                .mvcMatchers("/api/admin/**").access("hasRole('ADMIN_ROLE') and isAuthenticated()")
-                .anyRequest().access("@webAuthnSecurityExpression.isWebAuthnAuthenticated(authentication) || hasAuthority('SINGLE_FACTOR_AUTHN_ALLOWED')");
 
         http.sessionManagement()
                 .sessionAuthenticationFailureHandler(authenticationFailureHandler);
@@ -154,9 +163,20 @@ public class WebSecurityConfig {
                 .accessDeniedHandler(accessDeniedHandler);
 
         // As WebAuthn has its own CSRF protection mechanism (challenge), CSRF token is disabled here
+        CsrfTokenRequestAttributeHandler csrfTokenRequestAttributeHandler = new CsrfTokenRequestAttributeHandler();
+        csrfTokenRequestAttributeHandler.setCsrfRequestAttributeName(null);
+        http.csrf().csrfTokenRequestHandler(csrfTokenRequestAttributeHandler);
         http.csrf().csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse());
-        http.csrf().ignoringAntMatchers("/webauthn/**");
+        http.csrf().ignoringRequestMatchers("/webauthn/**");
 
         return http.build();
+    }
+
+    private WebExpressionAuthorizationManager getWebExpressionAuthorizationManager(final String expression) {
+        DefaultHttpSecurityExpressionHandler expressionHandler = new DefaultHttpSecurityExpressionHandler();
+        expressionHandler.setApplicationContext(applicationContext);
+        WebExpressionAuthorizationManager authorizationManager = new WebExpressionAuthorizationManager(expression);
+        authorizationManager.setExpressionHandler(expressionHandler);
+        return authorizationManager;
     }
 }
