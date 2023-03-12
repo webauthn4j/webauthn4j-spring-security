@@ -20,6 +20,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
@@ -33,9 +34,8 @@ public class ApiGlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
 
     @Override
-    protected ResponseEntity<Object> handleExceptionInternal(Exception ex,
-                                                             Object body, HttpHeaders headers, HttpStatus status,
-                                                             WebRequest request) {
+    protected ResponseEntity<Object> handleExceptionInternal(
+            Exception ex, Object body, HttpHeaders headers, HttpStatusCode statusCode, WebRequest request) {
         final Object apiError;
         if (body == null) {
             String errorCode = ""; //exceptionCodeResolver.resolveExceptionCode(ex);
@@ -43,7 +43,7 @@ public class ApiGlobalExceptionHandler extends ResponseEntityExceptionHandler {
         } else {
             apiError = body;
         }
-        return ResponseEntity.status(status).headers(headers).body(apiError);
+        return ResponseEntity.status(statusCode).headers(headers).body(apiError);
     }
 
     public ApiError createApiError(WebRequest request, String errorCode,

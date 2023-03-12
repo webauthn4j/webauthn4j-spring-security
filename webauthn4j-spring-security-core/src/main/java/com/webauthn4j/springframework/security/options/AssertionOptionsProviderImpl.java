@@ -25,10 +25,10 @@ import com.webauthn4j.springframework.security.authenticator.WebAuthnAuthenticat
 import com.webauthn4j.springframework.security.challenge.ChallengeRepository;
 import com.webauthn4j.springframework.security.exception.PrincipalNotFoundException;
 import com.webauthn4j.springframework.security.extension.AuthenticationExtensionsClientInputsProvider;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.security.core.Authentication;
 import org.springframework.util.Assert;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;

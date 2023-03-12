@@ -19,6 +19,8 @@ package com.webauthn4j.springframework.security;
 import com.webauthn4j.server.ServerProperty;
 import com.webauthn4j.springframework.security.server.ServerPropertyProvider;
 import com.webauthn4j.util.Base64UrlUtil;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AbstractAuthenticationToken;
 import org.springframework.security.authentication.AuthenticationServiceException;
@@ -30,8 +32,6 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
 

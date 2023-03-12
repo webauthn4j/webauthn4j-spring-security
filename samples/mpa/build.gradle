@@ -39,17 +39,13 @@ dependencies {
     //Others
     implementation("org.slf4j:jcl-over-slf4j")
     implementation('ch.qos.logback:logback-classic')
-    implementation('javax.xml.bind:jaxb-api')
-    implementation('org.thymeleaf:thymeleaf-spring5')
+    implementation('jakarta.xml.bind:jakarta.xml.bind-api')
+    implementation('org.thymeleaf:thymeleaf-spring6')
     implementation('org.webjars:bootstrap:5.2.3')
     implementation('org.webjars:jquery:3.6.4')
     implementation('org.webjars:font-awesome:6.3.0')
     implementation('org.webjars:webjars-locator:0.46')
 
-    //We have to force the use of this dependency
-    runtimeOnly("ch.qos.logback:logback-classic:$logbackSpringBoot27xCompatibilityVersion"){
-        force = true
-    }
 
     //Test
     testImplementation project(':webauthn4j-spring-security-test')

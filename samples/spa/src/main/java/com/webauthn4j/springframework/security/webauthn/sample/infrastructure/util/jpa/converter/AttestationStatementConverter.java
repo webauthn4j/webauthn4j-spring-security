@@ -21,7 +21,7 @@ import com.webauthn4j.converter.util.ObjectConverter;
 import com.webauthn4j.data.attestation.statement.AttestationStatement;
 import com.webauthn4j.util.Base64UrlUtil;
 
-import javax.persistence.AttributeConverter;
+import jakarta.persistence.AttributeConverter;
 
 /**
  * AttestationStatementConverter

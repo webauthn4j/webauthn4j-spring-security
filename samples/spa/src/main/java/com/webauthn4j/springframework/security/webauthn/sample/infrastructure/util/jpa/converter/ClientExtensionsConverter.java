@@ -21,7 +21,7 @@ import com.webauthn4j.converter.util.JsonConverter;
 import com.webauthn4j.converter.util.ObjectConverter;
 import com.webauthn4j.data.extension.client.RegistrationExtensionClientOutput;
 
-import javax.persistence.AttributeConverter;
+import jakarta.persistence.AttributeConverter;
 import java.util.Map;
 
 public class ClientExtensionsConverter implements AttributeConverter<Map<String, RegistrationExtensionClientOutput>, String> {

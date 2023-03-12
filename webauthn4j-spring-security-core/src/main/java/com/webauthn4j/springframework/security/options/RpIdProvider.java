@@ -16,7 +16,7 @@
 
 package com.webauthn4j.springframework.security.options;
 
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 
 public interface RpIdProvider {
 

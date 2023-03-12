@@ -27,7 +27,7 @@ import com.webauthn4j.springframework.security.authenticator.WebAuthnAuthenticat
 import com.webauthn4j.springframework.security.webauthn.sample.infrastructure.util.jpa.converter.*;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 import java.util.Set;
 
 /**

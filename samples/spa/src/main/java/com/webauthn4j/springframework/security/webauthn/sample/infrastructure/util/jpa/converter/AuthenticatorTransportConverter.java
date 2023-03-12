@@ -18,7 +18,7 @@ package com.webauthn4j.springframework.security.webauthn.sample.infrastructure.u
 
 import com.webauthn4j.data.AuthenticatorTransport;
 
-import javax.persistence.AttributeConverter;
+import jakarta.persistence.AttributeConverter;
 
 public class AuthenticatorTransportConverter implements AttributeConverter<AuthenticatorTransport, String> {
     @Override

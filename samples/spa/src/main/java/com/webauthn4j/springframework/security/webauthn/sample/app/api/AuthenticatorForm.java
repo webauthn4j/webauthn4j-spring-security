@@ -18,7 +18,7 @@ package com.webauthn4j.springframework.security.webauthn.sample.app.api;
 
 import com.webauthn4j.springframework.security.webauthn.sample.app.api.validator.AuthenticatorFormValidator;
 
-import javax.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotEmpty;
 import java.util.Set;
 
 public class AuthenticatorForm {

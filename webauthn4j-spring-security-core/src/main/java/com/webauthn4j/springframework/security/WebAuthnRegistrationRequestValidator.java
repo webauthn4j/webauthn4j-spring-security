@@ -25,9 +25,9 @@ import com.webauthn4j.springframework.security.server.ServerPropertyProvider;
 import com.webauthn4j.springframework.security.util.internal.ExceptionUtil;
 import com.webauthn4j.util.Base64UrlUtil;
 import com.webauthn4j.util.exception.WebAuthnException;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.util.Assert;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.Set;
 
 
