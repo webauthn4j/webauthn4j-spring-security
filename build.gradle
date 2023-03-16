@@ -50,7 +50,7 @@ buildscript {
         // There are breaking change in th SLF4J 2.x branche ("SLF4J API version 2.0.0 relies on the ServiceLoader mechanism to find its logging backend"
         // and no any more on the StaticLoggerBinder see https://www.slf4j.org/manual.html).
         // When upgrading to Spring Boot 3.x branche, this constant will have to be removed.
-        logbackSpringBoot27xCompatibilityVersion = '1.2.11'
+        logbackSpringBoot27xCompatibilityVersion = '1.4.6'
     }
 
     repositories {
