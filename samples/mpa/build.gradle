@@ -76,6 +76,6 @@ test {
     }
 }
 
-sonarqube {
+sonar {
     skipProject = true
 }

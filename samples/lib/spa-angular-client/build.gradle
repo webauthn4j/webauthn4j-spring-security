@@ -85,6 +85,6 @@ npm_run_build.mustRunAfter processResources
 // test is a Java task
 test.dependsOn npm_run_test
 
-sonarqube {
+sonar {
   skipProject = true
 }
