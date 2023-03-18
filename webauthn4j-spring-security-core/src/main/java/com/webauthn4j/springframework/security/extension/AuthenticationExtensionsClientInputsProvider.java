@@ -18,9 +18,7 @@ package com.webauthn4j.springframework.security.extension;
 
 import com.webauthn4j.data.extension.client.AuthenticationExtensionsClientInputs;
 import com.webauthn4j.data.extension.client.ExtensionClientInput;
-
-import javax.servlet.http.HttpServletRequest;
-
+import jakarta.servlet.http.HttpServletRequest;
 public interface AuthenticationExtensionsClientInputsProvider<T extends ExtensionClientInput> {
 
     AuthenticationExtensionsClientInputs<T> provide(HttpServletRequest httpServletRequest);

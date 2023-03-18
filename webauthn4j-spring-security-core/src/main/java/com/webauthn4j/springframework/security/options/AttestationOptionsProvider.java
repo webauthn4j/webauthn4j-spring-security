@@ -18,7 +18,7 @@ package com.webauthn4j.springframework.security.options;
 
 import org.springframework.security.core.Authentication;
 
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 
 /**
  * Provides {@link AttestationOptions} for {@link HttpServletRequest}

@@ -18,8 +18,7 @@ package com.webauthn4j.springframework.security.util.internal;
 
 
 import com.webauthn4j.data.client.Origin;
-
-import javax.servlet.ServletRequest;
+import jakarta.servlet.ServletRequest;
 
 /**
  * Internal utility to handle servlet

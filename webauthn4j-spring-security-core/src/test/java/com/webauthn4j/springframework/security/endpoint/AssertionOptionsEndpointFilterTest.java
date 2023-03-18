@@ -19,6 +19,7 @@ package com.webauthn4j.springframework.security.endpoint;
 import com.webauthn4j.converter.util.ObjectConverter;
 import com.webauthn4j.springframework.security.options.AssertionOptions;
 import com.webauthn4j.springframework.security.options.AssertionOptionsProvider;
+import jakarta.servlet.ServletException;
 import org.junit.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.mock.web.MockFilterChain;
@@ -27,7 +28,6 @@ import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.security.authentication.AuthenticationTrustResolver;
 import org.springframework.security.authentication.AuthenticationTrustResolverImpl;
 
-import javax.servlet.ServletException;
 import java.io.IOException;
 
 import static org.assertj.core.api.Assertions.assertThat;

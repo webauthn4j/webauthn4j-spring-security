@@ -22,7 +22,7 @@ import com.webauthn4j.converter.util.ObjectConverter;
 import com.webauthn4j.data.extension.authenticator.RegistrationExtensionAuthenticatorOutput;
 import com.webauthn4j.util.Base64UrlUtil;
 
-import javax.persistence.AttributeConverter;
+import jakarta.persistence.AttributeConverter;
 import java.util.Map;
 
 public class AuthenticatorExtensionsConverter implements AttributeConverter<Map<String, RegistrationExtensionAuthenticatorOutput>, String> {

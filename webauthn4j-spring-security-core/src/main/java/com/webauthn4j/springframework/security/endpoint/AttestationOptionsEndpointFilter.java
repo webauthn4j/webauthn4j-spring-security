@@ -22,12 +22,12 @@ import com.webauthn4j.data.PublicKeyCredentialRpEntity;
 import com.webauthn4j.data.client.challenge.Challenge;
 import com.webauthn4j.springframework.security.options.AttestationOptions;
 import com.webauthn4j.springframework.security.options.AttestationOptionsProvider;
+import jakarta.servlet.FilterChain;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.ServletRequest;
+import jakarta.servlet.ServletResponse;
 import org.springframework.security.web.FilterInvocation;
 
-import javax.servlet.FilterChain;
-import javax.servlet.ServletException;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
 import java.io.IOException;
 
 /**

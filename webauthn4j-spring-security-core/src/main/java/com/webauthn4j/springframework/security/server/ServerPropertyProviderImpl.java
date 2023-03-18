@@ -23,9 +23,8 @@ import com.webauthn4j.springframework.security.challenge.ChallengeRepository;
 import com.webauthn4j.springframework.security.options.RpIdProvider;
 import com.webauthn4j.springframework.security.options.RpIdProviderImpl;
 import com.webauthn4j.springframework.security.util.internal.ServletUtil;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.util.Assert;
-
-import javax.servlet.http.HttpServletRequest;
 
 /**
  * {@inheritDoc}
