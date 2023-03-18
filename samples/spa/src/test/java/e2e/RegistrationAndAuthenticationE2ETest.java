@@ -54,7 +54,8 @@ public class RegistrationAndAuthenticationE2ETest {
     @Before
     public void setupTest() {
         ChromeOptions chromeOptions = new ChromeOptions();
-        chromeOptions.setHeadless(true);
+        chromeOptions.addArguments("--headless=new");
+        chromeOptions.addArguments("--remote-allow-origins=*");
         driver = new ChromeDriver(chromeOptions);
         wait = new WebDriverWait(driver, Duration.ofSeconds(5));
         driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
