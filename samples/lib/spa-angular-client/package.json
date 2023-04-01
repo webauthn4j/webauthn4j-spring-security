@@ -39,7 +39,7 @@
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "^14.2.10",
-    "@angular/cli": "^15.2.0",
+    "@angular/cli": "^15.2.4",
     "@angular/compiler-cli": "^14.2.12",
     "@angular/language-service": "^15.2.0",
     "@types/base64-arraybuffer": "^0.2.0",
