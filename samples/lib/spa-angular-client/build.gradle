@@ -15,7 +15,7 @@
  */
 
 plugins {
-  id 'com.github.node-gradle.node' version '3.5.1'
+  id 'com.github.node-gradle.node' version '3.6.0'
 }
 
 group 'com.webauthn4j'
