@@ -26,7 +26,7 @@ buildscript {
         httpBuilderVersion = '0.7.2'
 
         //Libraries
-        webauthn4jVersion = '0.21.1.RELEASE'
+        webauthn4jVersion = '0.21.2.RELEASE'
         springSecurityVersion = '6.0.2'
         hibernateValidatorVersion = '6.2.5.Final'
         thymeleafVersion = '3.0.4.RELEASE'
