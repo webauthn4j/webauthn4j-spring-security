@@ -22,7 +22,7 @@ buildscript {
         asciidoctorGradleVersion = "3.3.2"
         artifactoryVersion = '5.0.3'
         bintrayVersion = '1.8.5'
-        owaspDependencyCheckVersion = '8.2.1'
+        owaspDependencyCheckVersion = '8.4.0'
         httpBuilderVersion = '0.7.2'
 
         //Libraries
