@@ -16,6 +16,7 @@
 
 package e2e;
 
+import com.webauthn4j.springframework.security.authenticator.WebAuthnAuthenticatorService;
 import com.webauthn4j.springframework.security.webauthn.sample.SampleSPA;
 import e2e.page.AuthenticatorLoginComponent;
 import e2e.page.PasswordLoginComponent;
@@ -34,10 +35,13 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.openqa.selenium.virtualauthenticator.HasVirtualAuthenticator;
 import org.openqa.selenium.virtualauthenticator.VirtualAuthenticatorOptions;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.time.Duration;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = SampleSPA.class, webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
@@ -45,6 +49,9 @@ public class RegistrationAndAuthenticationE2ETest {
 
     private WebDriver driver;
     private WebDriverWait wait;
+
+    @Autowired
+    private WebAuthnAuthenticatorService webAuthnAuthenticatorService;
 
     @BeforeClass
     public static void setupClassTest() {
@@ -86,8 +93,10 @@ public class RegistrationAndAuthenticationE2ETest {
         signupComponent.waitRegisterClickable();
         signupComponent.clickRegister();
 
-        // Password authentication
         wait.until(ExpectedConditions.urlToBe("http://localhost:8080/angular/login"));
+        long counterValueAtRegistrationPhase = webAuthnAuthenticatorService.loadAuthenticatorsByUserPrincipal("john.doe@example.com").get(0).getCounter();
+
+        // Password authentication
         PasswordLoginComponent passwordLoginComponent = new PasswordLoginComponent(driver);
         passwordLoginComponent.setUsername("john.doe@example.com");
         passwordLoginComponent.setPassword("password");
@@ -98,6 +107,10 @@ public class RegistrationAndAuthenticationE2ETest {
         // nop
 
         wait.until(ExpectedConditions.urlToBe("http://localhost:8080/angular/profile"));
+        long counterValueAtAuthenticationPhase = webAuthnAuthenticatorService.loadAuthenticatorsByUserPrincipal("john.doe@example.com").get(0).getCounter();
+
+        assertThat(counterValueAtAuthenticationPhase).isGreaterThan(counterValueAtRegistrationPhase);
+
         ProfileComponent profileComponent = new ProfileComponent(driver);
 
     }
