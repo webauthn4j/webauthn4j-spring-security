@@ -28,7 +28,7 @@ buildscript {
         //Libraries
         webauthn4jVersion = '0.21.5.RELEASE'
         springSecurityVersion = '6.0.2'
-        hibernateValidatorVersion = '6.2.5.Final'
+        hibernateValidatorVersion = '8.0.1.Final'
         thymeleafVersion = '3.0.4.RELEASE'
         modelMapperVersion = '3.1.1'
 
