@@ -136,13 +136,7 @@ public class WebAuthnAuthenticationProvider implements AuthenticationProvider {
         );
         AuthenticationParameters authenticationParameters = new AuthenticationParameters(
                 parameters.getServerProperty(),
-                new AuthenticatorImpl(
-                        webAuthnAuthenticator.getAttestedCredentialData(),
-                        webAuthnAuthenticator.getAttestationStatement(),
-                        webAuthnAuthenticator.getCounter(),
-                        webAuthnAuthenticator.getTransports(),
-                        webAuthnAuthenticator.getClientExtensions(),
-                        webAuthnAuthenticator.getAuthenticatorExtensions()),
+                webAuthnAuthenticator,
                 null,
                 parameters.isUserVerificationRequired(),
                 parameters.isUserPresenceRequired()
