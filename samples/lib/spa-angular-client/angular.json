@@ -115,6 +115,5 @@
         }
       }
     }
-  },
-  "defaultProject": "spa-angular-client"
+  }
 }
