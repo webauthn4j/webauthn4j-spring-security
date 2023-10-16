@@ -27,10 +27,10 @@ node {
   download = true
 
   // Version of node to use.
-  version = '16.13.0'
+  version = '18.18.2'
 
   // Version of npm to use.
-  npmVersion = '8.1.4'
+  npmVersion = '9.8.1'
 }
 
 npm_run_build {
