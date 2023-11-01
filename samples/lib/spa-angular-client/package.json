@@ -24,7 +24,7 @@
     "@angular/compiler": "^16.2.9",
     "@angular/core": "^16.2.9",
     "@angular/forms": "^16.2.9",
-    "@angular/localize": "^16.2.9",
+    "@angular/localize": "^16.2.11",
     "@angular/platform-browser": "^16.2.9",
     "@angular/platform-browser-dynamic": "^16.2.9",
     "@angular/router": "^16.2.9",
