@@ -35,7 +35,7 @@ buildscript {
         bootstrapVersion = '5.3.2'
         jqueryVersion = '3.7.1'
         fontAwesomeVersion = '6.4.2'
-        webjarsLocatorVersion = '0.47'
+        webjarsLocatorVersion = '0.50'
 
         log4jdbcVersion = '0.2.7'
         dbunitVersion = '2.7.3'
