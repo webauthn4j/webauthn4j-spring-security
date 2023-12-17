@@ -22,7 +22,6 @@ buildscript {
         asciidoctorGradleVersion = "3.3.2"
         artifactoryVersion = '5.1.10'
         bintrayVersion = '1.8.5'
-        owaspDependencyCheckVersion = '8.2.1'
         httpBuilderVersion = '0.7.2'
 
         //Libraries
@@ -59,7 +58,6 @@ buildscript {
         classpath("org.asciidoctor:asciidoctor-gradle-jvm:$asciidoctorGradleVersion")
         classpath("org.jfrog.buildinfo:build-info-extractor-gradle:$artifactoryVersion")
         classpath("com.jfrog.bintray.gradle:gradle-bintray-plugin:$bintrayVersion")
-        classpath("org.owasp:dependency-check-gradle:$owaspDependencyCheckVersion")
         classpath("org.codehaus.groovy.modules.http-builder:http-builder:$httpBuilderVersion")
     }
 
@@ -227,7 +225,6 @@ configure(sampleAppProjects) {
 
 
 configure(allJavaProjects) {
-    apply plugin: 'org.owasp.dependencycheck'
 
     sourceCompatibility = 17
 
