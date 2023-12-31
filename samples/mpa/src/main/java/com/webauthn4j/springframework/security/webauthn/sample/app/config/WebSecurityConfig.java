@@ -20,6 +20,7 @@ import com.webauthn4j.WebAuthnManager;
 import com.webauthn4j.data.AttestationConveyancePreference;
 import com.webauthn4j.data.PublicKeyCredentialParameters;
 import com.webauthn4j.data.PublicKeyCredentialType;
+import com.webauthn4j.data.ResidentKeyRequirement;
 import com.webauthn4j.data.attestation.statement.COSEAlgorithmIdentifier;
 import com.webauthn4j.springframework.security.WebAuthnAuthenticationProvider;
 import com.webauthn4j.springframework.security.authenticator.WebAuthnAuthenticatorService;
@@ -79,13 +80,13 @@ public class WebSecurityConfig {
                 .failureUrl("/login")
                 .attestationOptionsEndpoint()
                 .rp()
-                .name("WebAuthn4J Spring Security Sample MPA")
+                .name("WebAuthn4J Spring Security Sample")
                 .and()
                 .pubKeyCredParams(
                         new PublicKeyCredentialParameters(PublicKeyCredentialType.PUBLIC_KEY, COSEAlgorithmIdentifier.ES256),
                         new PublicKeyCredentialParameters(PublicKeyCredentialType.PUBLIC_KEY, COSEAlgorithmIdentifier.RS1)
                 )
-                .attestation(AttestationConveyancePreference.DIRECT)
+                .attestation(AttestationConveyancePreference.NONE)
                 .extensions()
                 .uvm(true)
                 .credProps(true)
