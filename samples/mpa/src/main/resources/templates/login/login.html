@@ -25,7 +25,7 @@
 </head>
 <body class="hold-transition login-page" id="login-login-view">
 <div class="content-wrapper">
-    <h1 href="/" class="h3 font-weight-normal text-center">WebAuthn4J Spring Security Sample MPA</h1>
+    <h1 href="/" class="h3 font-weight-normal text-center">WebAuthn4J Spring Security Sample</h1>
 
     <h2 href="/" class="h4 font-weight-normal text-center">Login</h2>
 
@@ -43,7 +43,7 @@
             <p class="mt-1 mb-1 text-muted text-center">OR</p>
             <button id="fast-login" class="btn btn-primary btn-block" type="button"
                     data-toggle="tooltip" data-placement="bottom"
-                    title="Fast(id&password-less) Login">Fast Login</button>
+                    title="Passkey Login">Passkey Login</button>
         </div>
 
         <input id="credentialId" name="credentialId" type="hidden" />
@@ -58,54 +58,6 @@
     </p>
 
     <div class="alert alert-info" role="alert">
-        <p>
-            Fast Login means username & password-less login here. Only following combinations are supported for Fast Login as of 2020-08-01.
-        </p>
-        <p>
-            <table class="mt-3 mb-3">
-                <tbody class="align-top">
-                    <tr>
-                        <th>OS</th><th>Browser</th><th>Authenticator</th>
-                    </tr>
-                    <tr>
-                        <td rowspan="6">Windows 10</td><td rowspan="2">Edge</td><td>FIDO2 Security Key</td>
-                    </tr>
-                    <tr>
-                                                                                <td>Windows Hello</td>
-                    </tr>
-                    <tr>
-                                                       <td rowspan="2">Chrome</td><td>FIDO2 Security Key</td>
-                    </tr>
-                    <tr>
-                                                                                  <td>Windows Hello</td>
-                    </tr>
-                    <tr>
-                                                       <td rowspan="2">Firefox</td><td>FIDO2 Security Key</td>
-                    </tr>
-                    <tr>
-                                                                                   <td>Windows Hello</td>
-                    </tr>
-                    <tr>
-                        <td rowspan="4">MacOS</td><td rowspan="2">Chrome</td><td>FIDO2 Security Key</td>
-                    </tr>
-                    <tr>
-                                                                             <td>Touch ID</td>
-                    </tr>
-                    <tr>
-                                                  <td rowspan="2">Safari</td><td>FIDO2 Security Key</td>
-                    </tr>
-                    <tr>
-                                                                             <td>Touch ID</td>
-                    </tr>
-                    <tr>
-                        <td rowspan="4">iOS</td><td rowspan="2">Safari</td><td>FIDO2 Security Key</td>
-                    </tr>
-                    <tr>
-                                                                           <td>Touch ID/Face ID</td>
-                    </tr>
-                </tbody>
-            </table>
-        </p>
         <p>
             If you would like to test two-step authentication with password and security key combination, fill username and password, then press "Login".
         </p>

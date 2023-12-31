@@ -1,5 +1,5 @@
 
-function createCredential(residentKeyRequirement){
+function createCredential(){
 
     let username = $("#username").val();
     let userHandle = $("#userHandle").val();
@@ -25,7 +25,8 @@ function createCredential(residentKeyRequirement){
                 }
             }),
             authenticatorSelection: {
-                requireResidentKey: residentKeyRequirement
+                requireResidentKey: true,
+                residentKey: "preferred"
             },
             attestation: options.attestation,
             extensions: options.extensions
@@ -65,10 +66,9 @@ function getCredential(userVerification){
 
 $(document).ready(function() {
 
-    let dialog = $("#resident-key-requirement-dialog");
 
-    let onResidentKeyRequirementDialogClosing = function(residentKeyRequirement){
-        createCredential(residentKeyRequirement).then(function (credential) {
+    $('#authenticator').click(function(){
+        createCredential().then(function (credential) {
             console.log(credential);
             $('#clientDataJSON').val(base64url.encodeBase64url(credential.response.clientDataJSON));
             $('#attestationObject').val(base64url.encodeBase64url(credential.response.attestationObject));
@@ -76,25 +76,9 @@ $(document).ready(function() {
             $('#authenticator').text('Authenticator registered');
             $('#authenticator').prop('disabled', true);
             $('#submit').prop('disabled', false);
-            dialog.modal('hide');
         }).catch(function (e) {
             console.error("Error:%s, Message:%s", e.name, e.message);
-            dialog.modal('hide');
         });
-    };
-
-    $('#resident-key-requirement-dialog-yes').click(function () {
-        onResidentKeyRequirementDialogClosing(true);
-    });
-    $('#resident-key-requirement-dialog-no').click(function () {
-        onResidentKeyRequirementDialogClosing(false);
-    });
-    $('#resident-key-requirement-dialog-close').click(function () {
-        dialog.modal('hide');
-    });
-
-    $('#authenticator').click(function(){
-        dialog.modal('show');
     });
 
     $('#fast-login').click(function(){
