@@ -14,14 +14,22 @@
  * limitations under the License.
  */
 
-include 'webauthn4j-spring-security-core'
-include 'webauthn4j-spring-security-metadata'
-include 'webauthn4j-spring-security-test'
+package com.webauthn4j.springframework.security.webauthn.sample.app.web;
 
-include 'samples:lib:spa-angular-client'
-include 'samples:spa'
-include 'samples:fido-server-conformance-test-app'
-include 'samples:mpa'
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.RequestMapping;
 
-include 'samples:sample-app'
-include 'samples:sample-web'
+
+/**
+ * Dashboard controller
+ */
+@Controller
+public class RootController {
+
+    @RequestMapping(value = "/")
+    public String index(Model model) {
+        return "redirect:/angular/login";
+    }
+
+}

@@ -14,14 +14,20 @@
  * limitations under the License.
  */
 
-include 'webauthn4j-spring-security-core'
-include 'webauthn4j-spring-security-metadata'
-include 'webauthn4j-spring-security-test'
+package com.webauthn4j.springframework.security.webauthn.sample.domain.exception;
 
-include 'samples:lib:spa-angular-client'
-include 'samples:spa'
-include 'samples:fido-server-conformance-test-app'
-include 'samples:mpa'
 
-include 'samples:sample-app'
-include 'samples:sample-web'
+/**
+ * EntityNotFoundException for WebAuthn Sample
+ */
+@SuppressWarnings("squid:MaximumInheritanceDepth")
+public class WebAuthnSampleEntityNotFoundException extends WebAuthnSampleBusinessException {
+
+    public WebAuthnSampleEntityNotFoundException(String message) {
+        super(message);
+    }
+
+    public WebAuthnSampleEntityNotFoundException(String message, Throwable cause) {
+        super(message, cause);
+    }
+}

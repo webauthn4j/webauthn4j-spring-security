@@ -14,14 +14,19 @@
  * limitations under the License.
  */
 
-include 'webauthn4j-spring-security-core'
-include 'webauthn4j-spring-security-metadata'
-include 'webauthn4j-spring-security-test'
+package com.webauthn4j.springframework.security.webauthn.sample.infrastructure.util.jpa.converter;
 
-include 'samples:lib:spa-angular-client'
-include 'samples:spa'
-include 'samples:fido-server-conformance-test-app'
-include 'samples:mpa'
+import com.webauthn4j.data.AuthenticatorTransport;
+import jakarta.persistence.AttributeConverter;
 
-include 'samples:sample-app'
-include 'samples:sample-web'
+public class AuthenticatorTransportConverter implements AttributeConverter<AuthenticatorTransport, String> {
+    @Override
+    public String convertToDatabaseColumn(AuthenticatorTransport attribute) {
+        return attribute.getValue();
+    }
+
+    @Override
+    public AuthenticatorTransport convertToEntityAttribute(String dbData) {
+        return AuthenticatorTransport.create(dbData);
+    }
+}

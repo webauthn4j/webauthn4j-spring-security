@@ -45,7 +45,7 @@ CREATE TABLE m_transport (
   transport         VARCHAR(32)    NOT NULL
 );
 
--- user-group relation  --
+-- ユーザー・グループリレーション  --
 CREATE TABLE r_user_group (
   user_id           INTEGER        NOT NULL,
   group_id          INTEGER        NOT NULL,
@@ -53,7 +53,7 @@ CREATE TABLE r_user_group (
   FOREIGN KEY (group_id) REFERENCES m_group(id) ON DELETE CASCADE
 );
 
--- user-authority relation --
+-- ユーザー・権限リレーション --
 CREATE TABLE r_user_authority (
   user_id           INTEGER        NOT NULL,
   authority_id      INTEGER        NOT NULL,
@@ -61,7 +61,7 @@ CREATE TABLE r_user_authority (
   FOREIGN KEY (authority_id) REFERENCES m_authority(id) ON DELETE CASCADE
 );
 
--- group-authority relation --
+-- グループ・権限リレーション --
 CREATE TABLE r_group_authority (
   group_id           INTEGER        NOT NULL,
   authority_id       INTEGER        NOT NULL,

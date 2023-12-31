@@ -1,0 +1,75 @@
+/*
+ * Copyright 2002-2019 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+plugins {
+    id 'com.github.node-gradle.node' version '7.0.1'
+}
+
+group 'com.webauthn4j'
+version "${webAuthn4JSpringSecurityVersion}"
+
+description = "WebAuthn4J Spring Security Sample SPA angular client library"
+
+node {
+    download = true
+
+    // Version of node to use.
+    version = '18.18.2'
+
+    // Version of npm to use.
+    npmVersion = '10.2.0'
+}
+
+npm_run_build {
+    args = ['--production']
+    group = 'build'
+
+}
+
+npm_run_test {
+    group = 'verification'
+}
+
+
+npm_install {
+    group = 'other'
+}
+
+npm_outdated {
+    group = 'other'
+}
+
+// npm tasks start with npm_run executes corresponding npm scripts
+
+npm_run_start {
+    group = 'other'
+}
+
+npm_run_start_dev {
+    group = 'other'
+}
+
+
+// processResources is a Java task
+classes.dependsOn npm_run_build
+npm_run_build.mustRunAfter processResources
+
+// test is a Java task
+test.dependsOn npm_run_test
+
+sonar {
+    skipProject = true
+}

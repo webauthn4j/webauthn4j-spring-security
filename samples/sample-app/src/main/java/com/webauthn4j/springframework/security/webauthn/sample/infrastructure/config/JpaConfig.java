@@ -14,14 +14,15 @@
  * limitations under the License.
  */
 
-include 'webauthn4j-spring-security-core'
-include 'webauthn4j-spring-security-metadata'
-include 'webauthn4j-spring-security-test'
+package com.webauthn4j.springframework.security.webauthn.sample.infrastructure.config;
 
-include 'samples:lib:spa-angular-client'
-include 'samples:spa'
-include 'samples:fido-server-conformance-test-app'
-include 'samples:mpa'
+import org.springframework.boot.autoconfigure.domain.EntityScan;
+import org.springframework.context.annotation.Configuration;
 
-include 'samples:sample-app'
-include 'samples:sample-web'
+/**
+ * JPA Configuration
+ */
+@Configuration
+@EntityScan("com.webauthn4j.springframework.security.webauthn.sample.domain.entity")
+public class JpaConfig {
+}

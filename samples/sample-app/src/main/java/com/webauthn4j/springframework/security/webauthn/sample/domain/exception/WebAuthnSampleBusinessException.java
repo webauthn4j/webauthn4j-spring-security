@@ -14,14 +14,19 @@
  * limitations under the License.
  */
 
-include 'webauthn4j-spring-security-core'
-include 'webauthn4j-spring-security-metadata'
-include 'webauthn4j-spring-security-test'
+package com.webauthn4j.springframework.security.webauthn.sample.domain.exception;
 
-include 'samples:lib:spa-angular-client'
-include 'samples:spa'
-include 'samples:fido-server-conformance-test-app'
-include 'samples:mpa'
+/**
+ * Business Exception for WebAuthn Sample
+ */
+@SuppressWarnings("squid:MaximumInheritanceDepth")
+public class WebAuthnSampleBusinessException extends RuntimeException {
 
-include 'samples:sample-app'
-include 'samples:sample-web'
+    public WebAuthnSampleBusinessException(String message) {
+        super(message);
+    }
+
+    public WebAuthnSampleBusinessException(String message, Throwable cause) {
+        super(message, cause);
+    }
+}
