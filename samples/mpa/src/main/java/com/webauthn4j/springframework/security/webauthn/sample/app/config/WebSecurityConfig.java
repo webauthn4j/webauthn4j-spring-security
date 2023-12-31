@@ -20,6 +20,7 @@ import com.webauthn4j.WebAuthnManager;
 import com.webauthn4j.data.AttestationConveyancePreference;
 import com.webauthn4j.data.PublicKeyCredentialParameters;
 import com.webauthn4j.data.PublicKeyCredentialType;
+import com.webauthn4j.data.ResidentKeyRequirement;
 import com.webauthn4j.data.attestation.statement.COSEAlgorithmIdentifier;
 import com.webauthn4j.springframework.security.WebAuthnAuthenticationProvider;
 import com.webauthn4j.springframework.security.authenticator.WebAuthnAuthenticatorService;
@@ -32,9 +33,12 @@ import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.ProviderManager;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.access.expression.DefaultHttpSecurityExpressionHandler;
 import org.springframework.security.web.access.expression.WebExpressionAuthorizationManager;
@@ -52,6 +56,14 @@ public class WebSecurityConfig {
     @Bean
     public WebAuthnAuthenticationProvider webAuthnAuthenticationProvider(WebAuthnAuthenticatorService authenticatorService, WebAuthnManager webAuthnManager){
         return new WebAuthnAuthenticationProvider(authenticatorService, webAuthnManager);
+    }
+
+    @Bean
+    public DaoAuthenticationProvider daoAuthenticationProvider(PasswordEncoder passwordEncoder, UserDetailsService userDetailsService){
+        DaoAuthenticationProvider daoAuthenticationProvider = new DaoAuthenticationProvider();
+        daoAuthenticationProvider.setPasswordEncoder(passwordEncoder);
+        daoAuthenticationProvider.setUserDetailsService(userDetailsService);
+        return daoAuthenticationProvider;
     }
 
     @Bean
@@ -79,13 +91,13 @@ public class WebSecurityConfig {
                 .failureUrl("/login")
                 .attestationOptionsEndpoint()
                 .rp()
-                .name("WebAuthn4J Spring Security Sample MPA")
+                .name("WebAuthn4J Spring Security Sample")
                 .and()
                 .pubKeyCredParams(
                         new PublicKeyCredentialParameters(PublicKeyCredentialType.PUBLIC_KEY, COSEAlgorithmIdentifier.ES256),
                         new PublicKeyCredentialParameters(PublicKeyCredentialType.PUBLIC_KEY, COSEAlgorithmIdentifier.RS1)
                 )
-                .attestation(AttestationConveyancePreference.DIRECT)
+                .attestation(AttestationConveyancePreference.NONE)
                 .extensions()
                 .uvm(true)
                 .credProps(true)
