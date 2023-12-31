@@ -43,7 +43,7 @@ dependencies {
     implementation('org.thymeleaf:thymeleaf-spring6')
     implementation('org.webjars:bootstrap:5.3.2')
     implementation('org.webjars:jquery:3.7.1')
-    implementation('org.webjars:font-awesome:6.4.2')
+    implementation('org.webjars:font-awesome:6.5.1')
     implementation('org.webjars:webjars-locator:0.50')
 
 
