@@ -81,7 +81,7 @@ public class RegistrationValidationTest {
                 null
         );
 
-        AuthenticatorAttestationResponse registrationRequest = clientPlatform.create(credentialCreationOptions).getAuthenticatorResponse();
+        AuthenticatorAttestationResponse registrationRequest = clientPlatform.create(credentialCreationOptions).getResponse();
 
         MockHttpServletRequest mockHttpServletRequest = new MockHttpServletRequest();
         mockHttpServletRequest.setScheme("https");
