@@ -35,6 +35,7 @@ import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.AuthenticationEntryPoint;
@@ -97,39 +98,41 @@ public class WebSecurityConfig {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http, AuthenticationManager authenticationManager) throws Exception {
+
+        http.authenticationManager(authenticationManager);
         // WebAuthn Login
-        http.apply(WebAuthnLoginConfigurer.webAuthnLogin())
-                .usernameParameter("username")
-                .passwordParameter("password")
-                .credentialIdParameter("credentialId")
-                .clientDataJSONParameter("clientDataJSON")
-                .authenticatorDataParameter("authenticatorData")
-                .signatureParameter("signature")
-                .clientExtensionsJSONParameter("clientExtensionsJSON")
-                .loginProcessingUrl("/login")
-                .attestationOptionsEndpoint()
-                .rp()
-                .name("WebAuthn4J Spring Security Sample")
-                .and()
-                .pubKeyCredParams(
-                        new PublicKeyCredentialParameters(PublicKeyCredentialType.PUBLIC_KEY, COSEAlgorithmIdentifier.RS256), // Windows Hello
-                        new PublicKeyCredentialParameters(PublicKeyCredentialType.PUBLIC_KEY, COSEAlgorithmIdentifier.ES256) // FIDO U2F Key, etc
-                )
-                .extensions()
-                .credProps(true)
-                .and()
-                .assertionOptionsEndpoint()
-                .and()
-                .successHandler(authenticationSuccessHandler)
-                .failureHandler(authenticationFailureHandler)
-                .and()
-                .authenticationManager(authenticationManager);
+        http.with(WebAuthnLoginConfigurer.webAuthnLogin(), (customizer) ->{
+            customizer
+                    .usernameParameter("username")
+                    .passwordParameter("password")
+                    .credentialIdParameter("credentialId")
+                    .clientDataJSONParameter("clientDataJSON")
+                    .authenticatorDataParameter("authenticatorData")
+                    .signatureParameter("signature")
+                    .clientExtensionsJSONParameter("clientExtensionsJSON")
+                    .loginProcessingUrl("/login")
+                    .attestationOptionsEndpoint()
+                    .rp()
+                        .name("WebAuthn4J Spring Security Sample")
+                    .and()
+                    .pubKeyCredParams(
+                            new PublicKeyCredentialParameters(PublicKeyCredentialType.PUBLIC_KEY, COSEAlgorithmIdentifier.RS256), // Windows Hello
+                            new PublicKeyCredentialParameters(PublicKeyCredentialType.PUBLIC_KEY, COSEAlgorithmIdentifier.ES256) // FIDO U2F Key, etc
+                    )
+                    .extensions()
+                        .credProps(true)
+                    .and()
+                    .assertionOptionsEndpoint()
+                    .and()
+                    .successHandler(authenticationSuccessHandler)
+                    .failureHandler(authenticationFailureHandler);
+        });
 
         http.headers(headers -> {
             // 'publickey-credentials-get *' allows getting WebAuthn credentials to all nested browsing contexts (iframes) regardless of their origin.
             headers.permissionsPolicy(config -> config.policy("publickey-credentials-get *"));
             // Disable "X-Frame-Options" to allow cross-origin iframe access
-            headers.frameOptions().disable();
+            headers.frameOptions(HeadersConfigurer.FrameOptionsConfig::disable);
         });
 
         // Authorization
@@ -151,23 +154,26 @@ public class WebSecurityConfig {
         );
 
         // Logout
-        http.logout()
-                .logoutUrl("/logout")
-                .logoutSuccessHandler(logoutSuccessHandler);
+        http.logout(customizer -> {
+            customizer.logoutUrl("/logout");
+            customizer.logoutSuccessHandler(logoutSuccessHandler);
+        });
 
-        http.sessionManagement()
-                .sessionAuthenticationFailureHandler(authenticationFailureHandler);
+        http.sessionManagement(customizer -> customizer.sessionAuthenticationFailureHandler(authenticationFailureHandler));
 
-        http.exceptionHandling()
-                .authenticationEntryPoint(authenticationEntryPoint)
-                .accessDeniedHandler(accessDeniedHandler);
+        http.exceptionHandling(customizer -> {
+            customizer.authenticationEntryPoint(authenticationEntryPoint);
+            customizer.accessDeniedHandler(accessDeniedHandler);
+        });
 
         // As WebAuthn has its own CSRF protection mechanism (challenge), CSRF token is disabled here
         CsrfTokenRequestAttributeHandler csrfTokenRequestAttributeHandler = new CsrfTokenRequestAttributeHandler();
         csrfTokenRequestAttributeHandler.setCsrfRequestAttributeName(null);
-        http.csrf().csrfTokenRequestHandler(csrfTokenRequestAttributeHandler);
-        http.csrf().csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse());
-        http.csrf().ignoringRequestMatchers("/webauthn/**");
+        http.csrf(customizer ->{
+            customizer.csrfTokenRequestHandler(csrfTokenRequestAttributeHandler);
+            customizer.csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse());
+            customizer.ignoringRequestMatchers("/webauthn/**");
+        });
 
         return http.build();
     }

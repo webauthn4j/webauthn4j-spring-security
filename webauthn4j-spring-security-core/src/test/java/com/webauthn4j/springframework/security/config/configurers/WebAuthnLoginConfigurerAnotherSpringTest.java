@@ -81,12 +81,14 @@ public class WebAuthnLoginConfigurerAnotherSpringTest {
 
         @Bean
         public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-            http.apply(WebAuthnLoginConfigurer.webAuthnLogin());
+            http.with(WebAuthnLoginConfigurer.webAuthnLogin(), (customizer)->{
+            });
 
             // Authorization
-            http.authorizeHttpRequests()
-                    .requestMatchers("/login").permitAll()
-                    .anyRequest().authenticated();
+            http.authorizeHttpRequests(authorizeHttpRequestsCustomizer->{
+                authorizeHttpRequestsCustomizer.requestMatchers("/login").permitAll();
+                authorizeHttpRequestsCustomizer.anyRequest().authenticated();
+            });
 
             return http.build();
         }

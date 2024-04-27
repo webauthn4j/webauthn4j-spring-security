@@ -184,68 +184,70 @@ public class WebAuthnLoginConfigurerSpringTest {
 
         @Bean
         public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-            http.apply(WebAuthnLoginConfigurer.webAuthnLogin())
-                    .objectConverter(objectConverter)
-                    .serverPropertyProvider(serverPropertyProvider)
-                    .trustResolver(trustResolver)
-                    .userVerificationStrategy(userVerificationStrategy)
-                    .usernameParameter("username")
-                    .passwordParameter("password")
-                    .credentialIdParameter("credentialId")
-                    .clientDataJSONParameter("clientDataJSON")
-                    .authenticatorDataParameter("authenticatorData")
-                    .signatureParameter("signature")
-                    .clientExtensionsJSONParameter("clientExtensionsJSON")
-                    .loginProcessingUrl("/login")
-                    .successForwardUrl("/")
-                    .failureForwardUrl("/login")
-                    .loginPage("/login")
-                    .rpId("example.com")
-                    .attestationOptionsEndpoint()
-                    .attestationOptionsProvider(attestationOptionsProvider)
-                    .processingUrl("/webauthn/attestation/options")
-                    .rp()
-                    .id("example.com")
-                    .name("example")
-                    .and()
-                    .pubKeyCredParams(
-                            new PublicKeyCredentialParameters(PublicKeyCredentialType.PUBLIC_KEY, COSEAlgorithmIdentifier.ES256),
-                            new PublicKeyCredentialParameters(PublicKeyCredentialType.PUBLIC_KEY, COSEAlgorithmIdentifier.RS1)
-                    )
-                    .timeout(10000L)
-                    .authenticatorSelection()
-                    .authenticatorAttachment(AuthenticatorAttachment.CROSS_PLATFORM)
-                    .residentKey(ResidentKeyRequirement.PREFERRED)
-                    .userVerification(UserVerificationRequirement.PREFERRED)
-                    .and()
-                    .attestation(AttestationConveyancePreference.DIRECT)
-                    .extensions()
-                    .credProps(true)
-                    .uvm(true)
-                    .entry("unknown", true)
-                    .extensionProviders((builder, httpServletRequest) -> builder.set("extensionProvider", httpServletRequest.getRequestURI()))
-                    .and()
-                    .assertionOptionsEndpoint()
-                    .assertionOptionsProvider(assertionOptionsProvider)
-                    .processingUrl("/webauthn/assertion/options")
-                    .rpId("example.com")
-                    .timeout(20000L)
-                    .userVerification(UserVerificationRequirement.PREFERRED)
-                    .extensions()
-                    .appid("appid")
-                    .appidExclude("appidExclude")
-                    .uvm(true)
-                    .entry("unknown", true)
-                    .extensionProviders((builder, httpServletRequest) -> {
-                        builder.set("extensionProvider", httpServletRequest.getRequestURI());
-                    })
-                    .and()
-                    .and();
+            http.with(WebAuthnLoginConfigurer.webAuthnLogin(), (customizer)->{
+                customizer.objectConverter(objectConverter)
+                        .serverPropertyProvider(serverPropertyProvider)
+                        .trustResolver(trustResolver)
+                        .userVerificationStrategy(userVerificationStrategy)
+                        .usernameParameter("username")
+                        .passwordParameter("password")
+                        .credentialIdParameter("credentialId")
+                        .clientDataJSONParameter("clientDataJSON")
+                        .authenticatorDataParameter("authenticatorData")
+                        .signatureParameter("signature")
+                        .clientExtensionsJSONParameter("clientExtensionsJSON")
+                        .loginProcessingUrl("/login")
+                        .successForwardUrl("/")
+                        .failureForwardUrl("/login")
+                        .loginPage("/login")
+                        .rpId("example.com")
+                        .attestationOptionsEndpoint()
+                        .attestationOptionsProvider(attestationOptionsProvider)
+                        .processingUrl("/webauthn/attestation/options")
+                        .rp()
+                        .id("example.com")
+                        .name("example")
+                        .and()
+                        .pubKeyCredParams(
+                                new PublicKeyCredentialParameters(PublicKeyCredentialType.PUBLIC_KEY, COSEAlgorithmIdentifier.ES256),
+                                new PublicKeyCredentialParameters(PublicKeyCredentialType.PUBLIC_KEY, COSEAlgorithmIdentifier.RS1)
+                        )
+                        .timeout(10000L)
+                        .authenticatorSelection()
+                        .authenticatorAttachment(AuthenticatorAttachment.CROSS_PLATFORM)
+                        .residentKey(ResidentKeyRequirement.PREFERRED)
+                        .userVerification(UserVerificationRequirement.PREFERRED)
+                        .and()
+                        .attestation(AttestationConveyancePreference.DIRECT)
+                        .extensions()
+                        .credProps(true)
+                        .uvm(true)
+                        .entry("unknown", true)
+                        .extensionProviders((builder, httpServletRequest) -> builder.set("extensionProvider", httpServletRequest.getRequestURI()))
+                        .and()
+                        .assertionOptionsEndpoint()
+                        .assertionOptionsProvider(assertionOptionsProvider)
+                        .processingUrl("/webauthn/assertion/options")
+                        .rpId("example.com")
+                        .timeout(20000L)
+                        .userVerification(UserVerificationRequirement.PREFERRED)
+                        .extensions()
+                        .appid("appid")
+                        .appidExclude("appidExclude")
+                        .uvm(true)
+                        .entry("unknown", true)
+                        .extensionProviders((builder, httpServletRequest) -> {
+                            builder.set("extensionProvider", httpServletRequest.getRequestURI());
+                        })
+                        .and()
+                        .and();
+            });
 
             // Authorization
-            http.authorizeHttpRequests()
-                    .requestMatchers("/login").permitAll()
-                    .anyRequest().authenticated();
+            http.authorizeHttpRequests(authorizeHttpRequestsCustomizer->{
+                authorizeHttpRequestsCustomizer.requestMatchers("/login").permitAll();
+                authorizeHttpRequestsCustomizer.anyRequest().authenticated();
+            });
 
             return http.build();
         }
