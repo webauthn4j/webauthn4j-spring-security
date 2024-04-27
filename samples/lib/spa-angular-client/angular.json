@@ -63,19 +63,19 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "browserTarget": "spa-angular-client:build",
-            "servePath": "/angular"
+            "servePath": "/angular",
+            "buildTarget": "spa-angular-client:build"
           },
           "configurations": {
             "production": {
-              "browserTarget": "spa-angular-client:build:production"
+              "buildTarget": "spa-angular-client:build:production"
             }
           }
         },
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "spa-angular-client:build"
+            "buildTarget": "spa-angular-client:build"
           }
         },
         "test": {
@@ -116,5 +116,8 @@
       }
     }
   },
-  "defaultProject": "spa-angular-client"
+  "defaultProject": "spa-angular-client",
+  "cli": {
+    "analytics": false
+  }
 }
