@@ -113,23 +113,25 @@ WebSecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http, AuthenticationManager authenticationManager) throws Exception {
         // WebAuthn Config
-        http.apply(WebAuthnLoginConfigurer.webAuthnLogin())
-                .attestationOptionsEndpoint()
-                .rp()
-                .name("WebAuthn4J Spring Security Sample")
-                .and()
-                .pubKeyCredParams(
-                        new PublicKeyCredentialParameters(PublicKeyCredentialType.PUBLIC_KEY, COSEAlgorithmIdentifier.ES256),
-                        new PublicKeyCredentialParameters(PublicKeyCredentialType.PUBLIC_KEY, COSEAlgorithmIdentifier.RS1),
-                        new PublicKeyCredentialParameters(PublicKeyCredentialType.PUBLIC_KEY, COSEAlgorithmIdentifier.EdDSA)
-                )
-                .extensions()
-                .entry("example.extension", "test")
-                .and()
-                .assertionOptionsEndpoint()
-                .extensions()
-                .entry("example.extension", "test")
-                .and();
+        http.with(WebAuthnLoginConfigurer.webAuthnLogin(), (customizer)->{
+            customizer
+                    .attestationOptionsEndpoint()
+                    .rp()
+                    .name("WebAuthn4J Spring Security Sample")
+                    .and()
+                    .pubKeyCredParams(
+                            new PublicKeyCredentialParameters(PublicKeyCredentialType.PUBLIC_KEY, COSEAlgorithmIdentifier.ES256),
+                            new PublicKeyCredentialParameters(PublicKeyCredentialType.PUBLIC_KEY, COSEAlgorithmIdentifier.RS1),
+                            new PublicKeyCredentialParameters(PublicKeyCredentialType.PUBLIC_KEY, COSEAlgorithmIdentifier.EdDSA)
+                    )
+                    .extensions()
+                    .entry("example.extension", "test")
+                    .and()
+                    .assertionOptionsEndpoint()
+                    .extensions()
+                    .entry("example.extension", "test")
+                    .and();
+        });
 
         FidoServerAttestationOptionsEndpointFilter fidoServerAttestationOptionsEndpointFilter = new FidoServerAttestationOptionsEndpointFilter(objectConverter, attestationOptionsProvider, challengeRepository);
         FidoServerAttestationResultEndpointFilter fidoServerAttestationResultEndpointFilter = new FidoServerAttestationResultEndpointFilter(objectConverter, userDetailsManager, webAuthnAuthenticatorManager, webAuthnRegistrationRequestValidator);
@@ -144,21 +146,25 @@ WebSecurityConfig {
         http.addFilterAfter(fidoServerAssertionResultEndpointFilter, SessionManagementFilter.class);
 
         // Authorization
-        http.authorizeHttpRequests()
-                .requestMatchers("/").permitAll()
-                .requestMatchers("/api/auth/status").permitAll()
-                .requestMatchers(HttpMethod.GET, "/login").permitAll()
-                .requestMatchers(HttpMethod.POST, "/api/profile").permitAll()
-                .requestMatchers("/health/**").permitAll()
-                .requestMatchers("/info/**").permitAll()
-                .requestMatchers("/h2-console/**").denyAll()
-                .requestMatchers("/api/admin/**").hasRole(ADMIN_ROLE)
-                .anyRequest().fullyAuthenticated();
+        http.authorizeHttpRequests(customizer -> {
+            customizer
+                    .requestMatchers("/").permitAll()
+                    .requestMatchers("/api/auth/status").permitAll()
+                    .requestMatchers(HttpMethod.GET, "/login").permitAll()
+                    .requestMatchers(HttpMethod.POST, "/api/profile").permitAll()
+                    .requestMatchers("/health/**").permitAll()
+                    .requestMatchers("/info/**").permitAll()
+                    .requestMatchers("/h2-console/**").denyAll()
+                    .requestMatchers("/api/admin/**").hasRole(ADMIN_ROLE)
+                    .anyRequest().fullyAuthenticated();
+        });
+
 
         //TODO:
-        http.csrf().csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse());
-
-        http.csrf().ignoringRequestMatchers("/webauthn/**");
+        http.csrf(customizer -> {
+            customizer.csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse());
+            customizer.ignoringRequestMatchers("/webauthn/**");
+        });
 
         http.authenticationManager(authenticationManager);
 

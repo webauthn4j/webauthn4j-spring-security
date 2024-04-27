@@ -37,6 +37,7 @@ import org.springframework.security.authentication.dao.DaoAuthenticationProvider
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
+import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
@@ -86,32 +87,34 @@ public class WebSecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http, AuthenticationManager authenticationManager) throws Exception {
         // WebAuthn Login
-        http.apply(WebAuthnLoginConfigurer.webAuthnLogin())
-                .defaultSuccessUrl("/", true)
-                .failureUrl("/login")
-                .attestationOptionsEndpoint()
-                .rp()
-                .name("WebAuthn4J Spring Security Sample")
-                .and()
-                .pubKeyCredParams(
-                        new PublicKeyCredentialParameters(PublicKeyCredentialType.PUBLIC_KEY, COSEAlgorithmIdentifier.ES256),
-                        new PublicKeyCredentialParameters(PublicKeyCredentialType.PUBLIC_KEY, COSEAlgorithmIdentifier.RS1)
-                )
-                .attestation(AttestationConveyancePreference.NONE)
-                .extensions()
-                .uvm(true)
-                .credProps(true)
-                .extensionProviders()
-                .and()
-                .assertionOptionsEndpoint()
-                .extensions()
-                .extensionProviders();
+        http.with(WebAuthnLoginConfigurer.webAuthnLogin(), (customizer)-> {
+            customizer
+                    .defaultSuccessUrl("/", true)
+                    .failureUrl("/login")
+                    .attestationOptionsEndpoint()
+                    .rp()
+                    .name("WebAuthn4J Spring Security Sample")
+                    .and()
+                    .pubKeyCredParams(
+                            new PublicKeyCredentialParameters(PublicKeyCredentialType.PUBLIC_KEY, COSEAlgorithmIdentifier.ES256),
+                            new PublicKeyCredentialParameters(PublicKeyCredentialType.PUBLIC_KEY, COSEAlgorithmIdentifier.RS1)
+                    )
+                    .attestation(AttestationConveyancePreference.NONE)
+                    .extensions()
+                    .uvm(true)
+                    .credProps(true)
+                    .extensionProviders()
+                    .and()
+                    .assertionOptionsEndpoint()
+                    .extensions()
+                    .extensionProviders();
+        });
 
         http.headers(headers -> {
             // 'publickey-credentials-get *' allows getting WebAuthn credentials to all nested browsing contexts (iframes) regardless of their origin.
             headers.permissionsPolicy(config -> config.policy("publickey-credentials-get *"));
             // Disable "X-Frame-Options" to allow cross-origin iframe access
-            headers.frameOptions().disable();
+            headers.frameOptions(HeadersConfigurer.FrameOptionsConfig::disable);
         });
 
 
@@ -123,14 +126,18 @@ public class WebSecurityConfig {
                 .anyRequest().access(getWebExpressionAuthorizationManager("@webAuthnSecurityExpression.isWebAuthnAuthenticated(authentication) || hasAuthority('SINGLE_FACTOR_AUTHN_ALLOWED')"))
         );
 
-        http.exceptionHandling()
-                .accessDeniedHandler((request, response, accessDeniedException) -> response.sendRedirect("/login"));
+        http.exceptionHandling(customizer -> {
+            customizer.accessDeniedHandler((request, response, accessDeniedException) -> response.sendRedirect("/login"));
+        });
+
 
         http.authenticationManager(authenticationManager);
 
         // As WebAuthn has its own CSRF protection mechanism (challenge), CSRF token is disabled here
-        http.csrf().csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse());
-        http.csrf().ignoringRequestMatchers("/webauthn/**");
+        http.csrf(customizer -> {
+            customizer.csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse());
+            customizer.ignoringRequestMatchers("/webauthn/**");
+        });
 
         return http.build();
 
