@@ -62,7 +62,7 @@ public class AuthenticatorEntity implements WebAuthnAuthenticator {
     })
     @Converts({
             @Convert(converter = AAGUIDConverter.class, attributeName = "aaguid"),
-            @Convert(converter = COSEKeyConverter.class, attributeName = "cose_key")
+            @Convert(converter = COSEKeyConverter.class, attributeName = "coseKey")
     })
     private AttestedCredentialData attestedCredentialData;
 
