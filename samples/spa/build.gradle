@@ -20,8 +20,7 @@ group 'com.webauthn4j'
 description = "WebAuthn4J Spring Security Angular Sample"
 
 bootJar {
-    baseName = "webauthn4j-spring-security-sample-spa"
-    version = null
+    archiveFileName = "webauthn4j-spring-security-sample-spa.jar"
 }
 
 dependencies {
