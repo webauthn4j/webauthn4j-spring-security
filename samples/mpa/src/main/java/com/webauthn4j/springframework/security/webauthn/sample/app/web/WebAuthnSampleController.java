@@ -19,9 +19,9 @@ package com.webauthn4j.springframework.security.webauthn.sample.app.web;
 import com.webauthn4j.data.client.challenge.Challenge;
 import com.webauthn4j.springframework.security.WebAuthnRegistrationRequestValidationResponse;
 import com.webauthn4j.springframework.security.WebAuthnRegistrationRequestValidator;
-import com.webauthn4j.springframework.security.authenticator.WebAuthnAuthenticator;
-import com.webauthn4j.springframework.security.authenticator.WebAuthnAuthenticatorImpl;
-import com.webauthn4j.springframework.security.authenticator.WebAuthnAuthenticatorManager;
+import com.webauthn4j.springframework.security.credential.WebAuthnCredentialRecord;
+import com.webauthn4j.springframework.security.credential.WebAuthnCredentialRecordImpl;
+import com.webauthn4j.springframework.security.credential.WebAuthnCredentialRecordManager;
 import com.webauthn4j.springframework.security.challenge.ChallengeRepository;
 import com.webauthn4j.springframework.security.exception.PrincipalNotFoundException;
 import com.webauthn4j.springframework.security.exception.WebAuthnAuthenticationException;
@@ -79,7 +79,7 @@ public class WebAuthnSampleController {
 	private UserDetailsManager userDetailsManager;
 
 	@Autowired
-	private WebAuthnAuthenticatorManager webAuthnAuthenticatorManager;
+	private WebAuthnCredentialRecordManager webAuthnAuthenticatorManager;
 
 	@Autowired
 	private WebAuthnRegistrationRequestValidator registrationRequestValidator;
@@ -152,7 +152,7 @@ public class WebAuthnSampleController {
 			}
 			User user = new User(username, password, authorities);
 
-			WebAuthnAuthenticator authenticator = new WebAuthnAuthenticatorImpl(
+			WebAuthnCredentialRecord authenticator = new WebAuthnCredentialRecordImpl(
 					"authenticator",
 					user.getUsername(),
 					registrationRequestValidationResponse.getAttestationObject().getAuthenticatorData().getAttestedCredentialData(),
@@ -165,7 +165,7 @@ public class WebAuthnSampleController {
 
 			try {
 				userDetailsManager.createUser(user);
-				webAuthnAuthenticatorManager.createAuthenticator(authenticator);
+				webAuthnAuthenticatorManager.createCredentialRecord(authenticator);
 			} catch (IllegalArgumentException ex) {
 				model.addAttribute("errorMessage", "Registration failed. The user may already be registered.");
 				logger.debug("Registration failed.", ex);
@@ -199,8 +199,8 @@ public class WebAuthnSampleController {
 			return Collections.emptyList();
 		} else {
 			try {
-				List<WebAuthnAuthenticator> webAuthnAuthenticators = webAuthnAuthenticatorManager.loadAuthenticatorsByUserPrincipal(principal);
-				return webAuthnAuthenticators.stream()
+				List<WebAuthnCredentialRecord> webAuthnCredentialRecords = webAuthnAuthenticatorManager.loadCredentialRecordsByUserPrincipal(principal);
+				return webAuthnCredentialRecords.stream()
 						.map(webAuthnAuthenticator -> Base64UrlUtil.encodeToString(webAuthnAuthenticator.getAttestedCredentialData().getCredentialId()))
 						.collect(Collectors.toList());
 			} catch (PrincipalNotFoundException e) {

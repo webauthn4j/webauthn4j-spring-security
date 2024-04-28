@@ -16,7 +16,7 @@
 
 package com.webauthn4j.springframework.security.webauthn.sample.domain.repository;
 
-import com.webauthn4j.springframework.security.webauthn.sample.domain.entity.AuthenticatorEntity;
+import com.webauthn4j.springframework.security.webauthn.sample.domain.entity.CredentialRecordEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -25,13 +25,13 @@ import java.util.List;
 import java.util.Optional;
 
 /**
- * {@link AuthenticatorEntity} repository
+ * {@link CredentialRecordEntity} repository
  */
-public interface AuthenticatorEntityRepository extends JpaRepository<AuthenticatorEntity, Integer> {
+public interface AuthenticatorEntityRepository extends JpaRepository<CredentialRecordEntity, Integer> {
 
-    @Query("SELECT authenticator FROM AuthenticatorEntity authenticator WHERE authenticator.attestedCredentialData.credentialId = :credentialId")
-    Optional<AuthenticatorEntity> findOneByCredentialId(@Param("credentialId") byte[] credentialId);
+    @Query("SELECT authenticator FROM CredentialRecordEntity authenticator WHERE authenticator.attestedCredentialData.credentialId = :credentialId")
+    Optional<CredentialRecordEntity> findOneByCredentialId(@Param("credentialId") byte[] credentialId);
 
-    @Query("SELECT authenticator FROM AuthenticatorEntity authenticator WHERE authenticator.user.emailAddress = :emailAddress")
-    List<AuthenticatorEntity> findAllByEmailAddress(String emailAddress);
+    @Query("SELECT authenticator FROM CredentialRecordEntity authenticator WHERE authenticator.user.emailAddress = :emailAddress")
+    List<CredentialRecordEntity> findAllByEmailAddress(String emailAddress);
 }

@@ -18,7 +18,7 @@ package com.webauthn4j.springframework.security.webauthn.sample.test;
 
 import com.webauthn4j.springframework.security.WebAuthnAuthenticationRequest;
 import com.webauthn4j.springframework.security.WebAuthnAuthenticationToken;
-import com.webauthn4j.springframework.security.webauthn.sample.domain.entity.AuthenticatorEntity;
+import com.webauthn4j.springframework.security.webauthn.sample.domain.entity.CredentialRecordEntity;
 import com.webauthn4j.springframework.security.webauthn.sample.domain.entity.AuthorityEntity;
 import com.webauthn4j.springframework.security.webauthn.sample.domain.entity.GroupEntity;
 import com.webauthn4j.springframework.security.webauthn.sample.domain.entity.UserEntity;
@@ -52,10 +52,10 @@ public class WithMockWebAuthnUserSecurityContextFactory implements WithSecurityC
         SecurityContext context = SecurityContextHolder.createEmptyContext();
         List<AuthorityEntity> authorities = Arrays.stream(user.authorities()).map((name) -> new AuthorityEntity(null, name)).collect(Collectors.toList());
         List<GroupEntity> groups = Arrays.stream(user.groups()).map(GroupEntity::new).collect(Collectors.toList());
-        List<AuthenticatorEntity> authenticatorEntities =
+        List<CredentialRecordEntity> authenticatorEntities =
                 Arrays.stream(user.authenticators())
                         .map((name) -> {
-                            AuthenticatorEntity authenticatorEntity = new AuthenticatorEntity();
+                            CredentialRecordEntity authenticatorEntity = new CredentialRecordEntity();
                             authenticatorEntity.setName(name);
                             return authenticatorEntity;
                         })
@@ -69,7 +69,7 @@ public class WithMockWebAuthnUserSecurityContextFactory implements WithSecurityC
         principal.setEmailAddress(user.emailAddress());
         principal.setGroups(groups);
         principal.setAuthorities(authorities);
-        principal.setAuthenticators(authenticatorEntities);
+        principal.setCredentialRecords(authenticatorEntities);
         principal.setLocked(user.locked());
 
         WebAuthnAuthenticationRequest request = mock(WebAuthnAuthenticationRequest.class);

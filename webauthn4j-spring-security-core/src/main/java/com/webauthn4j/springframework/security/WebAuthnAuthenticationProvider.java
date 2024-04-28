@@ -17,11 +17,10 @@
 package com.webauthn4j.springframework.security;
 
 import com.webauthn4j.WebAuthnManager;
-import com.webauthn4j.authenticator.AuthenticatorImpl;
 import com.webauthn4j.data.AuthenticationParameters;
 import com.webauthn4j.data.AuthenticationRequest;
-import com.webauthn4j.springframework.security.authenticator.WebAuthnAuthenticator;
-import com.webauthn4j.springframework.security.authenticator.WebAuthnAuthenticatorService;
+import com.webauthn4j.springframework.security.credential.WebAuthnCredentialRecord;
+import com.webauthn4j.springframework.security.credential.WebAuthnCredentialRecordService;
 import com.webauthn4j.springframework.security.exception.CredentialIdNotFoundException;
 import com.webauthn4j.springframework.security.util.internal.ExceptionUtil;
 import com.webauthn4j.util.exception.WebAuthnException;
@@ -49,7 +48,7 @@ public class WebAuthnAuthenticationProvider implements AuthenticationProvider {
     protected final Log logger = LogFactory.getLog(getClass());
 
     protected final MessageSourceAccessor messages = SpringSecurityWebAuthnMessageSource.getAccessor();
-    private final WebAuthnAuthenticatorService authenticatorService;
+    private final WebAuthnCredentialRecordService webAuthnCredentialRecordService;
     private final WebAuthnManager webAuthnManager;
     private boolean hideCredentialIdNotFoundExceptions = true;
 
@@ -57,13 +56,13 @@ public class WebAuthnAuthenticationProvider implements AuthenticationProvider {
     // ========================================================================================================
 
     public WebAuthnAuthenticationProvider(
-            WebAuthnAuthenticatorService authenticatorService,
+            WebAuthnCredentialRecordService webAuthnCredentialRecordService,
             WebAuthnManager webAuthnManager) {
 
-        Assert.notNull(authenticatorService, "authenticatorService must not be null");
+        Assert.notNull(webAuthnCredentialRecordService, "webAuthnCredentialRecordService must not be null");
         Assert.notNull(webAuthnManager, "webAuthnManager must not be null");
 
-        this.authenticatorService = authenticatorService;
+        this.webAuthnCredentialRecordService = webAuthnCredentialRecordService;
         this.webAuthnManager = webAuthnManager;
     }
 
@@ -91,16 +90,16 @@ public class WebAuthnAuthenticationProvider implements AuthenticationProvider {
         }
 
         byte[] credentialId = credentials.getCredentialId();
-        WebAuthnAuthenticator webAuthnAuthenticator = retrieveAuthenticator(credentialId);
+        WebAuthnCredentialRecord webAuthnCredentialRecord = retrieveCredentialRecord(credentialId);
 
-        doAuthenticate(authenticationToken, webAuthnAuthenticator);
-        authenticatorService.updateCounter(credentialId, webAuthnAuthenticator.getCounter());
+        doAuthenticate(authenticationToken, webAuthnCredentialRecord);
+        webAuthnCredentialRecordService.updateCounter(credentialId, webAuthnCredentialRecord.getCounter());
 
-        return createSuccessAuthentication(authenticationToken, webAuthnAuthenticator);
+        return createSuccessAuthentication(authenticationToken, webAuthnCredentialRecord);
     }
 
-    protected Authentication createSuccessAuthentication(WebAuthnAssertionAuthenticationToken authenticationToken, WebAuthnAuthenticator webAuthnAuthenticator) {
-        Object principal = webAuthnAuthenticator.getUserPrincipal();
+    protected Authentication createSuccessAuthentication(WebAuthnAssertionAuthenticationToken authenticationToken, WebAuthnCredentialRecord webAuthnCredentialRecord) {
+        Object principal = webAuthnCredentialRecord.getUserPrincipal();
         Collection<? extends GrantedAuthority> authorities = null;
         if(principal instanceof UserDetails){
             authorities = ((UserDetails)principal).getAuthorities();
@@ -122,7 +121,7 @@ public class WebAuthnAuthenticationProvider implements AuthenticationProvider {
         return WebAuthnAssertionAuthenticationToken.class.isAssignableFrom(authentication);
     }
 
-    void doAuthenticate(WebAuthnAssertionAuthenticationToken authenticationToken, WebAuthnAuthenticator webAuthnAuthenticator) {
+    void doAuthenticate(WebAuthnAssertionAuthenticationToken authenticationToken, WebAuthnCredentialRecord webAuthnCredentialRecord) {
 
         WebAuthnAuthenticationRequest request = authenticationToken.getCredentials();
         WebAuthnAuthenticationParameters parameters = authenticationToken.getParameters();
@@ -136,7 +135,7 @@ public class WebAuthnAuthenticationProvider implements AuthenticationProvider {
         );
         AuthenticationParameters authenticationParameters = new AuthenticationParameters(
                 parameters.getServerProperty(),
-                webAuthnAuthenticator,
+                webAuthnCredentialRecord,
                 null,
                 parameters.isUserVerificationRequired(),
                 parameters.isUserPresenceRequired()
@@ -170,10 +169,10 @@ public class WebAuthnAuthenticationProvider implements AuthenticationProvider {
         this.hideCredentialIdNotFoundExceptions = hideCredentialIdNotFoundExceptions;
     }
 
-    WebAuthnAuthenticator retrieveAuthenticator(byte[] credentialId) {
-        WebAuthnAuthenticator webAuthnAuthenticator;
+    WebAuthnCredentialRecord retrieveCredentialRecord(byte[] credentialId) {
+        WebAuthnCredentialRecord webAuthnCredentialRecord;
         try {
-            webAuthnAuthenticator = authenticatorService.loadAuthenticatorByCredentialId(credentialId);
+            webAuthnCredentialRecord = webAuthnCredentialRecordService.loadCredentialRecordByCredentialId(credentialId);
         } catch (CredentialIdNotFoundException notFound) {
             if (hideCredentialIdNotFoundExceptions) {
                 throw new BadCredentialsException(messages.getMessage(
@@ -186,11 +185,11 @@ public class WebAuthnAuthenticationProvider implements AuthenticationProvider {
             throw new InternalAuthenticationServiceException(repositoryProblem.getMessage(), repositoryProblem);
         }
 
-        if (webAuthnAuthenticator == null) {
+        if (webAuthnCredentialRecord == null) {
             throw new InternalAuthenticationServiceException(
-                    "WebAuthnAuthenticatorService returned null, which is an interface contract violation");
+                    "webAuthnCredentialRecordService returned null, which is an interface contract violation");
         }
-        return webAuthnAuthenticator;
+        return webAuthnCredentialRecord;
     }
 
 }

@@ -16,7 +16,7 @@
 
 package e2e;
 
-import com.webauthn4j.springframework.security.authenticator.WebAuthnAuthenticatorService;
+import com.webauthn4j.springframework.security.credential.WebAuthnCredentialRecordService;
 import com.webauthn4j.springframework.security.webauthn.sample.SampleSPA;
 import e2e.page.AuthenticatorLoginComponent;
 import e2e.page.PasswordLoginComponent;
@@ -51,7 +51,7 @@ public class RegistrationAndAuthenticationE2ETest {
     private WebDriverWait wait;
 
     @Autowired
-    private WebAuthnAuthenticatorService webAuthnAuthenticatorService;
+    private WebAuthnCredentialRecordService webAuthnCredentialRecordService;
 
     @BeforeClass
     public static void setupClassTest() {
@@ -94,7 +94,7 @@ public class RegistrationAndAuthenticationE2ETest {
         signupComponent.clickRegister();
 
         wait.until(ExpectedConditions.urlToBe("http://localhost:8080/angular/login"));
-        long counterValueAtRegistrationPhase = webAuthnAuthenticatorService.loadAuthenticatorsByUserPrincipal("john.doe@example.com").get(0).getCounter();
+        long counterValueAtRegistrationPhase = webAuthnCredentialRecordService.loadCredentialRecordsByUserPrincipal("john.doe@example.com").get(0).getCounter();
 
         // Password authentication
         PasswordLoginComponent passwordLoginComponent = new PasswordLoginComponent(driver);
@@ -107,7 +107,7 @@ public class RegistrationAndAuthenticationE2ETest {
         // nop
 
         wait.until(ExpectedConditions.urlToBe("http://localhost:8080/angular/profile"));
-        long counterValueAtAuthenticationPhase = webAuthnAuthenticatorService.loadAuthenticatorsByUserPrincipal("john.doe@example.com").get(0).getCounter();
+        long counterValueAtAuthenticationPhase = webAuthnCredentialRecordService.loadCredentialRecordsByUserPrincipal("john.doe@example.com").get(0).getCounter();
 
         assertThat(counterValueAtAuthenticationPhase).isGreaterThan(counterValueAtRegistrationPhase);
 

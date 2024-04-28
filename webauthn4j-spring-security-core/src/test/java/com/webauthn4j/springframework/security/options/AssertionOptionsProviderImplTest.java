@@ -20,8 +20,8 @@ import com.webauthn4j.data.*;
 import com.webauthn4j.data.client.challenge.Challenge;
 import com.webauthn4j.data.client.challenge.DefaultChallenge;
 import com.webauthn4j.data.extension.client.AuthenticationExtensionsClientInputs;
-import com.webauthn4j.springframework.security.authenticator.WebAuthnAuthenticator;
-import com.webauthn4j.springframework.security.authenticator.WebAuthnAuthenticatorService;
+import com.webauthn4j.springframework.security.credential.WebAuthnCredentialRecord;
+import com.webauthn4j.springframework.security.credential.WebAuthnCredentialRecordService;
 import com.webauthn4j.springframework.security.challenge.ChallengeRepository;
 import org.junit.Test;
 import org.springframework.mock.web.MockHttpServletRequest;
@@ -42,15 +42,15 @@ public class AssertionOptionsProviderImplTest {
         byte[] credentialId = new byte[]{0x01, 0x23, 0x45};
         Set<AuthenticatorTransport> transports = Collections.singleton(AuthenticatorTransport.INTERNAL);
         RpIdProvider rpIdProvider = new RpIdProviderImpl();
-        WebAuthnAuthenticatorService authenticatorService = mock(WebAuthnAuthenticatorService.class);
-        WebAuthnAuthenticator authenticator = mock(WebAuthnAuthenticator.class, RETURNS_DEEP_STUBS);
+        WebAuthnCredentialRecordService authenticatorService = mock(WebAuthnCredentialRecordService.class);
+        WebAuthnCredentialRecord authenticator = mock(WebAuthnCredentialRecord.class, RETURNS_DEEP_STUBS);
         when(authenticator.getTransports()).thenReturn(transports);
-        List<WebAuthnAuthenticator> authenticators = Collections.singletonList(authenticator);
+        List<WebAuthnCredentialRecord> authenticators = Collections.singletonList(authenticator);
         ChallengeRepository challengeRepository = mock(ChallengeRepository.class);
 
         MockHttpServletRequest mockRequest = new MockHttpServletRequest();
 
-        when(authenticatorService.loadAuthenticatorsByUserPrincipal(any())).thenReturn(authenticators);
+        when(authenticatorService.loadCredentialRecordsByUserPrincipal(any())).thenReturn(authenticators);
         when(authenticator.getAttestedCredentialData().getCredentialId()).thenReturn(credentialId);
         when(challengeRepository.loadOrGenerateChallenge(mockRequest)).thenReturn(challenge);
 
@@ -72,7 +72,7 @@ public class AssertionOptionsProviderImplTest {
 
     @Test
     public void getRpId_with_static_rpId(){
-        WebAuthnAuthenticatorService authenticatorService = mock(WebAuthnAuthenticatorService.class);
+        WebAuthnCredentialRecordService authenticatorService = mock(WebAuthnCredentialRecordService.class);
         ChallengeRepository challengeRepository = mock(ChallengeRepository.class);
         AssertionOptionsProviderImpl optionsProvider = new AssertionOptionsProviderImpl(authenticatorService, challengeRepository);
         optionsProvider.setRpId("example.com");
@@ -85,7 +85,7 @@ public class AssertionOptionsProviderImplTest {
     @Test
     public void getRpId_with_rpIdProvider(){
         RpIdProvider rpIdProvider = (HttpServletRequest) -> "example.com";
-        WebAuthnAuthenticatorService authenticatorService = mock(WebAuthnAuthenticatorService.class);
+        WebAuthnCredentialRecordService authenticatorService = mock(WebAuthnCredentialRecordService.class);
         ChallengeRepository challengeRepository = mock(ChallengeRepository.class);
         AssertionOptionsProviderImpl optionsProvider = new AssertionOptionsProviderImpl(rpIdProvider, authenticatorService, challengeRepository);
 
@@ -97,7 +97,7 @@ public class AssertionOptionsProviderImplTest {
     @Test
     public void getter_setter_test() {
         RpIdProvider rpIdProvider = mock(RpIdProvider.class);
-        WebAuthnAuthenticatorService authenticatorService = mock(WebAuthnAuthenticatorService.class);
+        WebAuthnCredentialRecordService authenticatorService = mock(WebAuthnCredentialRecordService.class);
         ChallengeRepository challengeRepository = mock(ChallengeRepository.class);
         AssertionOptionsProviderImpl optionsProvider = new AssertionOptionsProviderImpl(null, authenticatorService, challengeRepository);
 

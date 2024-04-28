@@ -98,8 +98,8 @@ Web Authentication用の `AuthenticationProvider` である `WebAuthnAuthenticat
 
 ==== 永続化層との統合
 
-WebAuthn4J Spring Securityは `WebAuthnAuthenticatorService` インタフェースを通じて認証デバイスを検索します。
-`WebAuthnAuthenticatorService` を実装したクラスを用意し、 `WebAuthnAuthenticationProvider` にセットして下さい。
+WebAuthn4J Spring Securityは `WebAuthnCredentialRecordService` インタフェースを通じて認証デバイスを検索します。
+`WebAuthnCredentialRecordService` を実装したクラスを用意し、 `WebAuthnAuthenticationProvider` にセットして下さい。
 
 === クライアントサイドとのインタフェース仕様
 

@@ -59,7 +59,7 @@ public class UserEntity implements UserDetails {
     private List<AuthorityEntity> authorities;
 
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<AuthenticatorEntity> authenticators;
+    private List<CredentialRecordEntity> credentialRecords;
 
     private String password;
 
@@ -121,12 +121,12 @@ public class UserEntity implements UserDetails {
         this.authorities = authorities;
     }
 
-    public List<AuthenticatorEntity> getAuthenticators() {
-        return authenticators;
+    public List<CredentialRecordEntity> getCredentialRecords() {
+        return credentialRecords;
     }
 
-    public void setAuthenticators(List<AuthenticatorEntity> authenticators) {
-        this.authenticators = authenticators;
+    public void setCredentialRecords(List<CredentialRecordEntity> authenticators) {
+        this.credentialRecords = authenticators;
     }
 
     public String getPassword() {

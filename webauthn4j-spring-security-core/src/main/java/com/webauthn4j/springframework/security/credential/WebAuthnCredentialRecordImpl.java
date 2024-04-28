@@ -14,9 +14,8 @@
  * limitations under the License.
  */
 
-package com.webauthn4j.springframework.security.authenticator;
+package com.webauthn4j.springframework.security.credential;
 
-import com.webauthn4j.authenticator.AuthenticatorImpl;
 import com.webauthn4j.credential.CredentialRecordImpl;
 import com.webauthn4j.data.AuthenticatorTransport;
 import com.webauthn4j.data.attestation.AttestationObject;
@@ -33,9 +32,9 @@ import java.util.Objects;
 import java.util.Set;
 
 /**
- * An implementation of {@link WebAuthnAuthenticator}
+ * An implementation of {@link WebAuthnCredentialRecord}
  */
-public class WebAuthnAuthenticatorImpl extends CredentialRecordImpl implements WebAuthnAuthenticator {
+public class WebAuthnCredentialRecordImpl extends CredentialRecordImpl implements WebAuthnCredentialRecord {
 
     // ~ Instance fields
     // ================================================================================================
@@ -56,7 +55,7 @@ public class WebAuthnAuthenticatorImpl extends CredentialRecordImpl implements W
      * @param clientExtensions        client extensions
      * @param transports              transports
      */
-    public WebAuthnAuthenticatorImpl(
+    public WebAuthnCredentialRecordImpl(
             String name,
             Serializable userPrincipal,
             AttestationObject attestationObject,
@@ -115,7 +114,7 @@ public class WebAuthnAuthenticatorImpl extends CredentialRecordImpl implements W
      * @param authenticatorExtensions authenticator extensions
      */
     @SuppressWarnings("java:S107")
-    public WebAuthnAuthenticatorImpl(
+    public WebAuthnCredentialRecordImpl(
             String name,
             Serializable userPrincipal,
             AttestedCredentialData attestedCredentialData,
@@ -139,7 +138,7 @@ public class WebAuthnAuthenticatorImpl extends CredentialRecordImpl implements W
      * @param attestationStatement    attestation statement
      * @param counter                 counter
      */
-    public WebAuthnAuthenticatorImpl(
+    public WebAuthnCredentialRecordImpl(
             String name,
             Serializable userPrincipal,
             AttestedCredentialData attestedCredentialData,
@@ -180,7 +179,7 @@ public class WebAuthnAuthenticatorImpl extends CredentialRecordImpl implements W
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         if (!super.equals(o)) return false;
-        WebAuthnAuthenticatorImpl that = (WebAuthnAuthenticatorImpl) o;
+        WebAuthnCredentialRecordImpl that = (WebAuthnCredentialRecordImpl) o;
         return Objects.equals(name, that.name);
     }
 

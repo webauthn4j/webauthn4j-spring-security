@@ -76,7 +76,7 @@ public class ProfileControllerTest {
         userEntity.setFirstName("John");
         userEntity.setLastName("Doe");
         userEntity.setEmailAddress("john.doe@example.com");
-        userEntity.setAuthenticators(Collections.emptyList());
+        userEntity.setCredentialRecords(Collections.emptyList());
         userEntity.setAuthorities(Collections.singletonList(new AuthorityEntity(0, "SINGLE_FACTOR_AUTHN_ALLOWED")));
 
         when(profileAppService.findOne(userId)).thenReturn(userEntity);
@@ -114,7 +114,7 @@ public class ProfileControllerTest {
         userEntity.setFirstName("John");
         userEntity.setLastName("Doe");
         userEntity.setEmailAddress("john.doe@example.com");
-        userEntity.setAuthenticators(Collections.emptyList());
+        userEntity.setCredentialRecords(Collections.emptyList());
         userEntity.setAuthorities(Collections.singletonList(new AuthorityEntity(0, "SINGLE_FACTOR_AUTHN_ALLOWED")));
 
         when(profileAppService.create(any())).thenReturn(userEntity);
@@ -161,7 +161,7 @@ public class ProfileControllerTest {
         userEntity.setFirstName("John");
         userEntity.setLastName("Smith");
         userEntity.setEmailAddress("john.smith@example.com");
-        userEntity.setAuthenticators(Collections.emptyList());
+        userEntity.setCredentialRecords(Collections.emptyList());
         userEntity.setAuthorities(Collections.singletonList(new AuthorityEntity(0, "SINGLE_FACTOR_AUTHN_ALLOWED")));
 
         when(profileAppService.update(anyInt(), any())).thenReturn(userEntity);

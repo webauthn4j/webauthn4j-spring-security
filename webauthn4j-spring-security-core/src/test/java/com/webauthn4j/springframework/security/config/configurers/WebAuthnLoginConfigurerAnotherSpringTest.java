@@ -24,8 +24,8 @@ import com.webauthn4j.data.client.challenge.DefaultChallenge;
 import com.webauthn4j.metadata.converter.jackson.WebAuthnMetadataJSONModule;
 import com.webauthn4j.springframework.security.DefaultUserVerificationStrategy;
 import com.webauthn4j.springframework.security.UserVerificationStrategy;
-import com.webauthn4j.springframework.security.authenticator.InMemoryWebAuthnAuthenticatorManager;
-import com.webauthn4j.springframework.security.authenticator.WebAuthnAuthenticatorService;
+import com.webauthn4j.springframework.security.credential.InMemoryWebAuthnCredentialRecordManager;
+import com.webauthn4j.springframework.security.credential.WebAuthnCredentialRecordService;
 import com.webauthn4j.springframework.security.challenge.ChallengeRepository;
 import com.webauthn4j.springframework.security.converter.jackson.WebAuthn4JSpringSecurityJSONModule;
 import com.webauthn4j.springframework.security.endpoint.AssertionOptionsEndpointFilter;
@@ -106,8 +106,8 @@ public class WebAuthnLoginConfigurerAnotherSpringTest {
             }
 
             @Bean
-            public WebAuthnAuthenticatorService webAuthnAuthenticatorService(){
-                return new InMemoryWebAuthnAuthenticatorManager();
+            public WebAuthnCredentialRecordService webAuthnAuthenticatorService(){
+                return new InMemoryWebAuthnCredentialRecordManager();
             }
 
             @Bean
@@ -128,13 +128,13 @@ public class WebAuthnLoginConfigurerAnotherSpringTest {
             }
 
             @Bean
-            public AttestationOptionsProvider attestationOptionsProvider(RpIdProvider rpIdProvider, WebAuthnAuthenticatorService webAuthnAuthenticatorService, ChallengeRepository challengeRepository){
-                return new AttestationOptionsProviderImpl(rpIdProvider, webAuthnAuthenticatorService, challengeRepository);
+            public AttestationOptionsProvider attestationOptionsProvider(RpIdProvider rpIdProvider, WebAuthnCredentialRecordService webAuthnCredentialRecordService, ChallengeRepository challengeRepository){
+                return new AttestationOptionsProviderImpl(rpIdProvider, webAuthnCredentialRecordService, challengeRepository);
             }
 
             @Bean
-            public AssertionOptionsProvider assertionOptionsProvider(RpIdProvider rpIdProvider, WebAuthnAuthenticatorService webAuthnAuthenticatorService, ChallengeRepository challengeRepository){
-                return new AssertionOptionsProviderImpl(rpIdProvider, webAuthnAuthenticatorService, challengeRepository);
+            public AssertionOptionsProvider assertionOptionsProvider(RpIdProvider rpIdProvider, WebAuthnCredentialRecordService webAuthnCredentialRecordService, ChallengeRepository challengeRepository){
+                return new AssertionOptionsProviderImpl(rpIdProvider, webAuthnCredentialRecordService, challengeRepository);
             }
 
             @Bean

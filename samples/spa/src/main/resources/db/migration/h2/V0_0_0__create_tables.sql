@@ -25,7 +25,7 @@ CREATE TABLE m_authority (
 );
 
 -- Authenticator table  --
-CREATE TABLE m_authenticator(
+CREATE TABLE m_credential_record(
   id                     INTEGER       NOT NULL AUTO_INCREMENT,
   name                   VARCHAR(32)   NOT NULL,
   user_id                INTEGER       NOT NULL  REFERENCES m_user(id),
@@ -45,7 +45,7 @@ CREATE TABLE m_authenticator(
 
 -- Transport table  --
 CREATE TABLE m_transport (
-  authenticator_id  INTEGER        NOT NULL REFERENCES  m_authenticator(id),
+  credential_record_id  INTEGER        NOT NULL REFERENCES  m_credential_record(id),
   transport         VARCHAR(32)    NOT NULL
 );
 

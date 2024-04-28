@@ -24,7 +24,7 @@ import com.webauthn4j.data.extension.authenticator.AuthenticationExtensionsAuthe
 import com.webauthn4j.data.extension.authenticator.RegistrationExtensionAuthenticatorOutput;
 import com.webauthn4j.data.extension.client.AuthenticationExtensionsClientOutputs;
 import com.webauthn4j.data.extension.client.RegistrationExtensionClientOutput;
-import com.webauthn4j.springframework.security.authenticator.WebAuthnAuthenticator;
+import com.webauthn4j.springframework.security.credential.WebAuthnCredentialRecord;
 import com.webauthn4j.springframework.security.webauthn.sample.infrastructure.util.jpa.converter.*;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -35,8 +35,8 @@ import java.util.Set;
  * Authenticator model
  */
 @Entity
-@Table(name = "m_authenticator")
-public class AuthenticatorEntity implements WebAuthnAuthenticator {
+@Table(name = "m_credential_record")
+public class CredentialRecordEntity implements WebAuthnCredentialRecord {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -54,7 +54,7 @@ public class AuthenticatorEntity implements WebAuthnAuthenticator {
     private boolean backedUp;
 
     @ElementCollection(fetch = FetchType.EAGER)
-    @CollectionTable(name = "m_transport", joinColumns = @JoinColumn(name = "authenticator_id"))
+    @CollectionTable(name = "m_transport", joinColumns = @JoinColumn(name = "credential_record_id"))
     @Column(name = "transport")
     @Convert(converter = AuthenticatorTransportConverter.class)
     private Set<AuthenticatorTransport> transports;

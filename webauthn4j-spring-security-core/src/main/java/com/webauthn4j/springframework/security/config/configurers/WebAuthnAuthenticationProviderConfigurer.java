@@ -18,7 +18,7 @@ package com.webauthn4j.springframework.security.config.configurers;
 
 import com.webauthn4j.WebAuthnManager;
 import com.webauthn4j.springframework.security.WebAuthnAuthenticationProvider;
-import com.webauthn4j.springframework.security.authenticator.WebAuthnAuthenticatorService;
+import com.webauthn4j.springframework.security.credential.WebAuthnCredentialRecordService;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.SecurityConfigurerAdapter;
 import org.springframework.security.config.annotation.authentication.ProviderManagerBuilder;
@@ -31,27 +31,27 @@ import org.springframework.util.Assert;
  */
 public class WebAuthnAuthenticationProviderConfigurer<
         B extends ProviderManagerBuilder<B>,
-        A extends WebAuthnAuthenticatorService,
+        A extends WebAuthnCredentialRecordService,
         V extends WebAuthnManager>
         extends SecurityConfigurerAdapter<AuthenticationManager, B> {
 
     //~ Instance fields
     // ================================================================================================
-    private A webAuthnAuthenticatorService;
+    private A webAuthnCredentialRecordService;
     private final V webAuthnManager;
 
     /**
      * Constructor
      *
-     * @param webAuthnAuthenticatorService {@link WebAuthnAuthenticatorService}
+     * @param webAuthnCredentialRecordService {@link WebAuthnCredentialRecordService}
      * @param webAuthnManager      {@link WebAuthnManager}
      */
-    public WebAuthnAuthenticationProviderConfigurer(A webAuthnAuthenticatorService, V webAuthnManager) {
+    public WebAuthnAuthenticationProviderConfigurer(A webAuthnCredentialRecordService, V webAuthnManager) {
 
-        Assert.notNull(webAuthnAuthenticatorService, "webAuthnAuthenticatorService must not be null");
+        Assert.notNull(webAuthnCredentialRecordService, "webAuthnCredentialRecordService must not be null");
         Assert.notNull(webAuthnManager, "webAuthnManager must not be null");
 
-        this.webAuthnAuthenticatorService = webAuthnAuthenticatorService;
+        this.webAuthnCredentialRecordService = webAuthnCredentialRecordService;
         this.webAuthnManager = webAuthnManager;
     }
 
@@ -60,7 +60,7 @@ public class WebAuthnAuthenticationProviderConfigurer<
 
     @Override
     public void configure(B builder) {
-        WebAuthnAuthenticationProvider authenticationProvider = new WebAuthnAuthenticationProvider(webAuthnAuthenticatorService, webAuthnManager);
+        WebAuthnAuthenticationProvider authenticationProvider = new WebAuthnAuthenticationProvider(webAuthnCredentialRecordService, webAuthnManager);
         authenticationProvider = postProcess(authenticationProvider);
         builder.authenticationProvider(authenticationProvider);
     }

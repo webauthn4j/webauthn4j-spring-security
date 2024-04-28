@@ -14,16 +14,16 @@
  * limitations under the License.
  */
 
-package com.webauthn4j.springframework.security.authenticator;
+package com.webauthn4j.springframework.security.credential;
 
 import com.webauthn4j.credential.CredentialRecord;
 
 /**
- * Models core authenticator information retrieved by a {@link WebAuthnAuthenticatorService}
+ * Models core credential record information retrieved by a {@link WebAuthnCredentialRecordService}
  *
- * @see WebAuthnAuthenticatorService
+ * @see WebAuthnCredentialRecordService
  */
-public interface WebAuthnAuthenticator extends CredentialRecord {
+public interface WebAuthnCredentialRecord extends CredentialRecord {
 
     /**
      * Return a principal that represents user
