@@ -58,6 +58,10 @@ public class AppSpecificMapper {
     private AuthenticatorEntity mapForCreate(AuthenticatorForm authenticatorForm) {
         AuthenticatorEntity authenticatorEntity = new AuthenticatorEntity();
         authenticatorEntity.setName(authenticatorForm.getName());
+        authenticatorEntity.setClientData(authenticatorForm.getClientData().getCollectedClientData());
+        authenticatorEntity.setUvInitialized(authenticatorForm.getAttestationObject().getAttestationObject().getAuthenticatorData().isFlagUV());
+        authenticatorEntity.setBackupEligible(authenticatorForm.getAttestationObject().getAttestationObject().getAuthenticatorData().isFlagBE());
+        authenticatorEntity.setBackedUp(authenticatorForm.getAttestationObject().getAttestationObject().getAuthenticatorData().isFlagBS());
         authenticatorEntity.setAttestationStatement(authenticatorForm.getAttestationObject().getAttestationObject().getAttestationStatement());
         authenticatorEntity.setAttestedCredentialData(authenticatorForm.getAttestationObject().getAttestationObject().getAuthenticatorData().getAttestedCredentialData());
         return authenticatorEntity;

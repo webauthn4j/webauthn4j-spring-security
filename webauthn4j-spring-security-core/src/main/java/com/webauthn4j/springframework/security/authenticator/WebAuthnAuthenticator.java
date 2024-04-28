@@ -16,14 +16,14 @@
 
 package com.webauthn4j.springframework.security.authenticator;
 
-import com.webauthn4j.authenticator.Authenticator;
+import com.webauthn4j.credential.CredentialRecord;
 
 /**
  * Models core authenticator information retrieved by a {@link WebAuthnAuthenticatorService}
  *
  * @see WebAuthnAuthenticatorService
  */
-public interface WebAuthnAuthenticator extends Authenticator {
+public interface WebAuthnAuthenticator extends CredentialRecord {
 
     /**
      * Return a principal that represents user

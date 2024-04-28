@@ -17,9 +17,12 @@
 package com.webauthn4j.springframework.security.authenticator;
 
 import com.webauthn4j.authenticator.AuthenticatorImpl;
+import com.webauthn4j.credential.CredentialRecordImpl;
 import com.webauthn4j.data.AuthenticatorTransport;
+import com.webauthn4j.data.attestation.AttestationObject;
 import com.webauthn4j.data.attestation.authenticator.AttestedCredentialData;
 import com.webauthn4j.data.attestation.statement.AttestationStatement;
+import com.webauthn4j.data.client.CollectedClientData;
 import com.webauthn4j.data.extension.authenticator.AuthenticationExtensionsAuthenticatorOutputs;
 import com.webauthn4j.data.extension.authenticator.RegistrationExtensionAuthenticatorOutput;
 import com.webauthn4j.data.extension.client.AuthenticationExtensionsClientOutputs;
@@ -32,7 +35,7 @@ import java.util.Set;
 /**
  * An implementation of {@link WebAuthnAuthenticator}
  */
-public class WebAuthnAuthenticatorImpl extends AuthenticatorImpl implements WebAuthnAuthenticator {
+public class WebAuthnAuthenticatorImpl extends CredentialRecordImpl implements WebAuthnAuthenticator {
 
     // ~ Instance fields
     // ================================================================================================
@@ -42,8 +45,65 @@ public class WebAuthnAuthenticatorImpl extends AuthenticatorImpl implements WebA
     // ~ Constructor
     // ========================================================================================================
 
+
     /**
      * Constructor
+     *
+     * @param name                    authenticator's friendly name
+     * @param userPrincipal           principal that represents user
+     * @param attestationObject       attestation object
+     * @param clientData              client data
+     * @param clientExtensions        client extensions
+     * @param transports              transports
+     */
+    public WebAuthnAuthenticatorImpl(
+            String name,
+            Serializable userPrincipal,
+            AttestationObject attestationObject,
+            CollectedClientData clientData,
+            AuthenticationExtensionsClientOutputs<RegistrationExtensionClientOutput> clientExtensions,
+            Set<AuthenticatorTransport> transports) {
+        super(attestationObject, clientData, clientExtensions, transports);
+        this.name = name;
+        this.userPrincipal = userPrincipal;
+    }
+
+    /**
+     * Constructor
+     *
+     * @param name                    authenticator's friendly name
+     * @param userPrincipal           principal that represents user
+     * @param uvInitialized           uv initialized
+     * @param backupEligible          backup eligible
+     * @param backupState             backup state
+     * @param counter                 counter
+     * @param attestedCredentialData  attested credential data
+     * @param authenticatorExtensions authenticator extensions
+     * @param clientData              client data
+     * @param clientExtensions        client extensions
+     * @param transports              transports
+     */
+    public WebAuthnCredentialRecordImpl(
+            String name,
+            Serializable userPrincipal,
+            AttestationStatement attestationStatement,
+            Boolean uvInitialized,
+            Boolean backupEligible,
+            Boolean backupState,
+            long counter,
+            AttestedCredentialData attestedCredentialData,
+            AuthenticationExtensionsAuthenticatorOutputs<RegistrationExtensionAuthenticatorOutput> authenticatorExtensions,
+            CollectedClientData clientData,
+            AuthenticationExtensionsClientOutputs<RegistrationExtensionClientOutput> clientExtensions,
+            Set<AuthenticatorTransport> transports) {
+        super(attestationStatement, uvInitialized, backupEligible, backupState, counter, attestedCredentialData, authenticatorExtensions, clientData, clientExtensions, transports);
+        this.name = name;
+        this.userPrincipal = userPrincipal;
+    }
+
+    /**
+     * Constructor
+     * This constructor is left for backward-compatibility with WebAuthnAuthenticatorImpl
      *
      * @param name                    authenticator's friendly name
      * @param userPrincipal           principal that represents user
@@ -64,13 +124,14 @@ public class WebAuthnAuthenticatorImpl extends AuthenticatorImpl implements WebA
             Set<AuthenticatorTransport> transports,
             AuthenticationExtensionsClientOutputs<RegistrationExtensionClientOutput> clientExtensions,
             AuthenticationExtensionsAuthenticatorOutputs<RegistrationExtensionAuthenticatorOutput> authenticatorExtensions) {
-        super(attestedCredentialData, attestationStatement, counter, transports, clientExtensions, authenticatorExtensions);
+        super(attestationStatement, null, null, null, counter, attestedCredentialData, authenticatorExtensions, null, clientExtensions, transports);
         this.setName(name);
         this.userPrincipal = userPrincipal;
     }
 
     /**
      * Constructor
+     * This constructor is left for backward-compatibility with WebAuthnAuthenticatorImpl
      *
      * @param name                    authenticator's friendly name
      * @param userPrincipal           principal that represents user
@@ -86,6 +147,8 @@ public class WebAuthnAuthenticatorImpl extends AuthenticatorImpl implements WebA
             long counter) {
         this(name, userPrincipal, attestedCredentialData, attestationStatement, counter, null, null, null);
     }
+
+
 
     // ~ Methods
     // ========================================================================================================

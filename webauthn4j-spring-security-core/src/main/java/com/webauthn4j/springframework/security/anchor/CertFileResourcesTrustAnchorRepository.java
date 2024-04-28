@@ -16,6 +16,7 @@
 
 package com.webauthn4j.springframework.security.anchor;
 
+import com.webauthn4j.anchor.TrustAnchorRepository;
 import com.webauthn4j.data.attestation.authenticator.AAGUID;
 import com.webauthn4j.util.AssertUtil;
 import com.webauthn4j.util.CertificateUtil;
@@ -26,19 +27,14 @@ import java.io.IOException;
 import java.io.UncheckedIOException;
 import java.security.cert.TrustAnchor;
 import java.security.cert.X509Certificate;
-import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
- * An implementation of {@link com.webauthn4j.anchor.TrustAnchorsProvider} that loads {@link TrustAnchor}(s) from X.509 certificate file in Spring {@link Resource}
- * @deprecated
+ * An implementation of {@link com.webauthn4j.anchor.TrustAnchorRepository} that loads {@link TrustAnchor}(s) from X.509 certificate file in Spring {@link Resource}
  */
-@Deprecated
-@SuppressWarnings("deprecation")
-public class CertFileResourcesTrustAnchorsProvider extends com.webauthn4j.anchor.CachingTrustAnchorsProviderBase implements InitializingBean {
+public class CertFileResourcesTrustAnchorRepository implements TrustAnchorRepository, InitializingBean {
 
     // ~ Instance fields
     // ================================================================================================
@@ -48,10 +44,10 @@ public class CertFileResourcesTrustAnchorsProvider extends com.webauthn4j.anchor
     // ~ Constructor
     // ========================================================================================================
 
-    public CertFileResourcesTrustAnchorsProvider() {
+    public CertFileResourcesTrustAnchorRepository() {
     }
 
-    public CertFileResourcesTrustAnchorsProvider(List<Resource> certificates) {
+    public CertFileResourcesTrustAnchorRepository(List<Resource> certificates) {
         this.certificates = certificates;
     }
 
@@ -67,19 +63,21 @@ public class CertFileResourcesTrustAnchorsProvider extends com.webauthn4j.anchor
         AssertUtil.notNull(certificates, "certificates must not be null");
     }
 
-    /**
-     * Retrieves {@link TrustAnchor}s from {@link Resource}s.
-     *
-     * @return null key {@link TrustAnchor} {@link Set} value {@link Map}
-     */
     @Override
-    protected Map<AAGUID, Set<TrustAnchor>> loadTrustAnchors() {
+    public Set<TrustAnchor> find(AAGUID aaguid) {
         checkConfig();
-        Set<TrustAnchor> trustAnchors = certificates.stream().map(this::loadTrustAnchor).collect(Collectors.toSet());
-        return Collections.singletonMap(AAGUID.NULL, trustAnchors);
+        return certificates.stream().map(this::loadTrustAnchor).collect(Collectors.toSet());
     }
 
+    @Override
+    public Set<TrustAnchor> find(byte[] bytes) {
+        checkConfig();
+        return certificates.stream().map(this::loadTrustAnchor).collect(Collectors.toSet());
+    }
+
+
     public List<Resource> getCertificates() {
+        checkConfig();
         return certificates;
     }
 
@@ -95,4 +93,5 @@ public class CertFileResourcesTrustAnchorsProvider extends com.webauthn4j.anchor
             throw new UncheckedIOException(e);
         }
     }
+
 }

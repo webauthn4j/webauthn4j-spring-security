@@ -19,6 +19,7 @@ package com.webauthn4j.springframework.security.webauthn.sample.domain.entity;
 import com.webauthn4j.data.AuthenticatorTransport;
 import com.webauthn4j.data.attestation.authenticator.AttestedCredentialData;
 import com.webauthn4j.data.attestation.statement.AttestationStatement;
+import com.webauthn4j.data.client.CollectedClientData;
 import com.webauthn4j.data.extension.authenticator.AuthenticationExtensionsAuthenticatorOutputs;
 import com.webauthn4j.data.extension.authenticator.RegistrationExtensionAuthenticatorOutput;
 import com.webauthn4j.data.extension.client.AuthenticationExtensionsClientOutputs;
@@ -48,6 +49,10 @@ public class AuthenticatorEntity implements WebAuthnAuthenticator {
 
     private long counter;
 
+    private boolean uvInitialized;
+    private boolean backupEligible;
+    private boolean backedUp;
+
     @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(name = "m_transport", joinColumns = @JoinColumn(name = "authenticator_id"))
     @Column(name = "transport")
@@ -69,6 +74,10 @@ public class AuthenticatorEntity implements WebAuthnAuthenticator {
     @Lob
     @Convert(converter = AttestationStatementConverter.class)
     private AttestationStatement attestationStatement;
+
+    @Lob
+    @Convert(converter = CollectedClientDataConverter.class)
+    private CollectedClientData clientData;
 
     @Lob
     @Convert(converter = ClientExtensionsConverter.class)
@@ -161,5 +170,44 @@ public class AuthenticatorEntity implements WebAuthnAuthenticator {
 
     public void setAuthenticatorExtensions(AuthenticationExtensionsAuthenticatorOutputs<RegistrationExtensionAuthenticatorOutput>  authenticatorExtensions) {
         this.authenticatorExtensions = authenticatorExtensions;
+    }
+
+    @Override
+    public CollectedClientData getClientData() {
+        return this.clientData;
+    }
+
+    public void setClientData(CollectedClientData clientData) {
+        this.clientData = clientData;
+    }
+
+    @Override
+    public Boolean isUvInitialized() {
+        return this.uvInitialized;
+    }
+
+    @Override
+    public void setUvInitialized(boolean value) {
+        this.uvInitialized = value;
+    }
+
+    @Override
+    public  Boolean isBackupEligible() {
+        return this.backupEligible;
+    }
+
+    @Override
+    public void setBackupEligible(boolean value) {
+        this.backupEligible = value;
+    }
+
+    @Override
+    public Boolean isBackedUp() {
+        return this.backedUp;
+    }
+
+    @Override
+    public void setBackedUp(boolean value) {
+        this.backedUp = value;
     }
 }
