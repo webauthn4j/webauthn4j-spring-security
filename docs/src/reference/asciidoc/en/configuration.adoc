@@ -36,25 +36,36 @@ public class WebSecurityConfig {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http, AuthenticationManager authenticationManager) throws Exception {
+
+        http.authenticationManager(authenticationManager);
         // WebAuthn Login
-        http.apply(WebAuthnLoginConfigurer.webAuthnLogin())
-            .loginPage("/login")
-            .usernameParameter("username")
-            .passwordParameter("rawPassword")
-            .credentialIdParameter("credentialId")
-            .clientDataJSONParameter("clientDataJSON")
-            .authenticatorDataParameter("authenticatorData")
-            .signatureParameter("signature")
-            .clientExtensionsJSONParameter("clientExtensionsJSON")
-            .loginProcessingUrl("/login")
-            .rpId("example.com")
-            .attestationOptionsEndpoint()
-                .attestationOptionsProvider(attestationOptionsProvider)
-                .and()
-            .assertionOptionsEndpoint()
-                .assertionOptionsProvider(assertionOptionsProvider)
-            .and()
-        .authenticationManager(authenticationManager);
+        http.with(WebAuthnLoginConfigurer.webAuthnLogin(), (customizer) ->{
+            customizer
+                    .loginPage("/login")
+                    .usernameParameter("username")
+                    .passwordParameter("password")
+                    .credentialIdParameter("credentialId")
+                    .clientDataJSONParameter("clientDataJSON")
+                    .authenticatorDataParameter("authenticatorData")
+                    .signatureParameter("signature")
+                    .clientExtensionsJSONParameter("clientExtensionsJSON")
+                    .loginProcessingUrl("/login")
+                    .attestationOptionsEndpoint()
+                        .rp()
+                            .name("WebAuthn4J Spring Security Sample")
+                        .and()
+                        .pubKeyCredParams(
+                                new PublicKeyCredentialParameters(PublicKeyCredentialType.PUBLIC_KEY, COSEAlgorithmIdentifier.RS256), // Windows Hello
+                                new PublicKeyCredentialParameters(PublicKeyCredentialType.PUBLIC_KEY, COSEAlgorithmIdentifier.ES256) // FIDO U2F Key, etc
+                        )
+                        .extensions()
+                            .credProps(true)
+                    .and()
+                    .assertionOptionsEndpoint()
+                    .and()
+                    .successHandler(authenticationSuccessHandler)
+                    .failureHandler(authenticationFailureHandler);
+        });
     }
 }
 ----
@@ -144,8 +155,10 @@ public class WebSecurityConfig {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http, AuthenticationManager authenticationManager) throws Exception {
+        http.authenticationManager(authenticationManager);
         // WebAuthn Login
-        http.apply(WebAuthnLoginConfigurer.webAuthnLogin())
+        http.with(WebAuthnLoginConfigurer.webAuthnLogin(), (customizer) ->{
+            customizer
             .rpId("example.com")
             .attestationOptionsEndpoint()
                 .attestationOptionsProvider(attestationOptionsProvider)
@@ -172,8 +185,8 @@ public class WebSecurityConfig {
                 .processingUrl("/webauthn/assertion/options")
                 .rpId("example.com")
                 .userVerification(UserVerificationRequirement.PREFERRED)
-            .and()
-        .authenticationManager(authenticationManager);
+            .and();
+        });
     }
 }
 
@@ -192,13 +205,16 @@ public class WebSecurityConfig {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http, AuthenticationManager authenticationManager) throws Exception {
+
         // WebAuthn Login
-        http.apply(WebAuthnLoginConfigurer.webAuthnLogin())
+        http.with(WebAuthnLoginConfigurer.webAuthnLogin(), (customizer) ->{
+            customizer
             .attestationOptionsEndpoint()
                 .attestationOptionsProvider(attestationOptionsProvider)
                 .processingUrl("/webauthn/attestation/options")
                 .processingUrl("/webauthn/attestation/options")
-                .user(new MyPublicKeyCredentialUserEntityProvider()) // put your PublicKeyCredentialUserEntityProvider implementation
+                .user(new MyPublicKeyCredentialUserEntityProvider()); // put your PublicKeyCredentialUserEntityProvider implementation
+        });
     }
 }
 ----
