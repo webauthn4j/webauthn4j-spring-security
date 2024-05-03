@@ -24,8 +24,8 @@ import com.webauthn4j.converter.util.ObjectConverter;
 import com.webauthn4j.data.attestation.AttestationObject;
 import com.webauthn4j.data.client.CollectedClientData;
 import com.webauthn4j.springframework.security.WebAuthnRegistrationRequestValidator;
-import com.webauthn4j.springframework.security.authenticator.WebAuthnAuthenticatorImpl;
-import com.webauthn4j.springframework.security.authenticator.WebAuthnAuthenticatorManager;
+import com.webauthn4j.springframework.security.credential.WebAuthnCredentialRecordImpl;
+import com.webauthn4j.springframework.security.credential.WebAuthnCredentialRecordManager;
 import com.webauthn4j.springframework.security.fido.server.validator.ServerPublicKeyCredentialValidator;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -47,7 +47,7 @@ public class FidoServerAttestationResultEndpointFilter extends ServerEndpointFil
     public static final String FILTER_URL = "/webauthn/attestation/result";
 
     private final UserDetailsService userDetailsService;
-    private final WebAuthnAuthenticatorManager webAuthnAuthenticatorManager;
+    private final WebAuthnCredentialRecordManager webAuthnAuthenticatorManager;
     private final AttestationObjectConverter attestationObjectConverter;
     private final CollectedClientDataConverter collectedClientDataConverter;
     private final WebAuthnRegistrationRequestValidator webAuthnRegistrationRequestValidator;
@@ -61,7 +61,7 @@ public class FidoServerAttestationResultEndpointFilter extends ServerEndpointFil
     public FidoServerAttestationResultEndpointFilter(
             ObjectConverter objectConverter,
             UserDetailsService userDetailsService,
-            WebAuthnAuthenticatorManager webAuthnAuthenticatorManager,
+            WebAuthnCredentialRecordManager webAuthnAuthenticatorManager,
             WebAuthnRegistrationRequestValidator webAuthnRegistrationRequestValidator) {
         super(FILTER_URL, objectConverter);
         this.attestationObjectConverter = new AttestationObjectConverter(objectConverter);
@@ -115,15 +115,15 @@ public class FidoServerAttestationResultEndpointFilter extends ServerEndpointFil
                 usernameNotFoundHandler.onUsernameNotFound(loginUsername);
             }
             UserDetails userDetails = userDetailsService.loadUserByUsername(loginUsername);
-            WebAuthnAuthenticatorImpl webAuthnAuthenticator =
-                    new WebAuthnAuthenticatorImpl(
+            WebAuthnCredentialRecordImpl webAuthnAuthenticator =
+                    new WebAuthnCredentialRecordImpl(
                             "Authenticator",
                             loginUsername,
                             attestationObject.getAuthenticatorData().getAttestedCredentialData(),
                             attestationObject.getAttestationStatement(),
                             attestationObject.getAuthenticatorData().getSignCount()
                     );
-            webAuthnAuthenticatorManager.createAuthenticator(webAuthnAuthenticator);
+            webAuthnAuthenticatorManager.createCredentialRecord(webAuthnAuthenticator);
             return new AttestationResultSuccessResponse();
         }
         catch (DataConversionException e){

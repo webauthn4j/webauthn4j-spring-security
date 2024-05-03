@@ -25,46 +25,44 @@ import java.io.IOException;
 import java.io.UncheckedIOException;
 import java.security.cert.TrustAnchor;
 import java.util.Collections;
-import java.util.Map;
 import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-@Deprecated
 public class CertFileResourcesTrustAnchorsProviderTest {
 
 
     @Test
-    public void loadTrustAnchors_with_pemFile_test() {
-        CertFileResourcesTrustAnchorsProvider trustAnchorProvider = new CertFileResourcesTrustAnchorsProvider();
+    public void find_AAGUID_NULL_from_pemFile_test() {
+        CertFileResourcesTrustAnchorRepository target = new CertFileResourcesTrustAnchorRepository();
         Resource resource = new ClassPathResource("certs/3tier-test-root-CA.pem");
-        trustAnchorProvider.setCertificates(Collections.singletonList(resource));
-        Map<AAGUID, Set<TrustAnchor>> trustAnchors = trustAnchorProvider.loadTrustAnchors();
+        target.setCertificates(Collections.singletonList(resource));
+        Set<TrustAnchor> trustAnchors = target.find(AAGUID.NULL);
         assertThat(trustAnchors).hasSize(1);
     }
 
     @Test
-    public void loadTrustAnchors_with_derFile_test() {
-        CertFileResourcesTrustAnchorsProvider trustAnchorProvider = new CertFileResourcesTrustAnchorsProvider();
+    public void find_AAGUID_NULL_from_derFile_test() {
+        CertFileResourcesTrustAnchorRepository target = new CertFileResourcesTrustAnchorRepository();
         Resource resource = new ClassPathResource("certs/3tier-test-root-CA.der");
-        trustAnchorProvider.setCertificates(Collections.singletonList(resource));
-        Map<AAGUID, Set<TrustAnchor>> trustAnchors = trustAnchorProvider.loadTrustAnchors();
+        target.setCertificates(Collections.singletonList(resource));
+        Set<TrustAnchor> trustAnchors = target.find(AAGUID.NULL);
         assertThat(trustAnchors).hasSize(1);
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void afterPropertiesSet_test() {
-        CertFileResourcesTrustAnchorsProvider trustAnchorProvider = new CertFileResourcesTrustAnchorsProvider();
-        trustAnchorProvider.afterPropertiesSet();
+        CertFileResourcesTrustAnchorRepository target = new CertFileResourcesTrustAnchorRepository();
+        target.afterPropertiesSet();
     }
 
     @Test(expected = UncheckedIOException.class)
     public void loadTrustAnchor_test() throws IOException {
-        CertFileResourcesTrustAnchorsProvider trustAnchorProvider = new CertFileResourcesTrustAnchorsProvider();
+        CertFileResourcesTrustAnchorRepository target = new CertFileResourcesTrustAnchorRepository();
         Resource resource = mock(Resource.class);
         when(resource.getInputStream()).thenThrow(IOException.class);
-        trustAnchorProvider.loadTrustAnchor(resource);
+        target.loadTrustAnchor(resource);
     }
 }

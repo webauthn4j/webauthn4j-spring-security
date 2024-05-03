@@ -21,8 +21,8 @@ import com.webauthn4j.data.attestation.statement.COSEAlgorithmIdentifier;
 import com.webauthn4j.data.client.challenge.Challenge;
 import com.webauthn4j.data.client.challenge.DefaultChallenge;
 import com.webauthn4j.data.extension.client.AuthenticationExtensionsClientInputs;
-import com.webauthn4j.springframework.security.authenticator.WebAuthnAuthenticator;
-import com.webauthn4j.springframework.security.authenticator.WebAuthnAuthenticatorService;
+import com.webauthn4j.springframework.security.credential.WebAuthnCredentialRecord;
+import com.webauthn4j.springframework.security.credential.WebAuthnCredentialRecordService;
 import com.webauthn4j.springframework.security.challenge.ChallengeRepository;
 import com.webauthn4j.springframework.security.exception.PrincipalNotFoundException;
 import org.assertj.core.util.Lists;
@@ -45,15 +45,15 @@ public class AttestationOptionsProviderImplTest {
         byte[] credentialId = new byte[]{0x01, 0x23, 0x45};
         Set<AuthenticatorTransport> transports = Collections.singleton(AuthenticatorTransport.INTERNAL);
         RpIdProviderImpl rpIdProvider = new RpIdProviderImpl();
-        WebAuthnAuthenticatorService authenticatorService = mock(WebAuthnAuthenticatorService.class);
-        WebAuthnAuthenticator authenticator = mock(WebAuthnAuthenticator.class, RETURNS_DEEP_STUBS);
+        WebAuthnCredentialRecordService authenticatorService = mock(WebAuthnCredentialRecordService.class);
+        WebAuthnCredentialRecord authenticator = mock(WebAuthnCredentialRecord.class, RETURNS_DEEP_STUBS);
         when(authenticator.getTransports()).thenReturn(transports);
-        List<WebAuthnAuthenticator> authenticators = Collections.singletonList(authenticator);
+        List<WebAuthnCredentialRecord> authenticators = Collections.singletonList(authenticator);
         ChallengeRepository challengeRepository = mock(ChallengeRepository.class);
 
         MockHttpServletRequest mockRequest = new MockHttpServletRequest();
         mockRequest.setServerName("example.com");
-        when(authenticatorService.loadAuthenticatorsByUserPrincipal(any())).thenReturn(authenticators);
+        when(authenticatorService.loadCredentialRecordsByUserPrincipal(any())).thenReturn(authenticators);
         when(authenticator.getAttestedCredentialData().getCredentialId()).thenReturn(credentialId);
         when(challengeRepository.loadOrGenerateChallenge(mockRequest)).thenReturn(challenge);
 
@@ -79,12 +79,12 @@ public class AttestationOptionsProviderImplTest {
     public void getAttestationOptions_with_non_existing_principal_test(){
         Challenge challenge = new DefaultChallenge();
         RpIdProviderImpl rpIdProvider = new RpIdProviderImpl();
-        WebAuthnAuthenticatorService authenticatorService = mock(WebAuthnAuthenticatorService.class);
+        WebAuthnCredentialRecordService authenticatorService = mock(WebAuthnCredentialRecordService.class);
         ChallengeRepository challengeRepository = mock(ChallengeRepository.class);
 
         MockHttpServletRequest mockRequest = new MockHttpServletRequest();
         mockRequest.setServerName("example.com");
-        when(authenticatorService.loadAuthenticatorsByUserPrincipal(any())).thenThrow(new PrincipalNotFoundException("dummy"));
+        when(authenticatorService.loadCredentialRecordsByUserPrincipal(any())).thenThrow(new PrincipalNotFoundException("dummy"));
         when(challengeRepository.loadOrGenerateChallenge(mockRequest)).thenReturn(challenge);
 
         AttestationOptionsProviderImpl optionsProvider = new AttestationOptionsProviderImpl(rpIdProvider, authenticatorService, challengeRepository);
@@ -106,7 +106,7 @@ public class AttestationOptionsProviderImplTest {
 
     @Test
     public void getRpId_with_static_rpId(){
-        WebAuthnAuthenticatorService authenticatorService = mock(WebAuthnAuthenticatorService.class);
+        WebAuthnCredentialRecordService authenticatorService = mock(WebAuthnCredentialRecordService.class);
         ChallengeRepository challengeRepository = mock(ChallengeRepository.class);
         AttestationOptionsProviderImpl optionsProvider = new AttestationOptionsProviderImpl(authenticatorService, challengeRepository);
         optionsProvider.setRpId("example.com");
@@ -119,7 +119,7 @@ public class AttestationOptionsProviderImplTest {
     @Test
     public void getRpId_with_rpIdProvider(){
         RpIdProvider rpIdProvider = (HttpServletRequest) -> "example.com";
-        WebAuthnAuthenticatorService authenticatorService = mock(WebAuthnAuthenticatorService.class);
+        WebAuthnCredentialRecordService authenticatorService = mock(WebAuthnCredentialRecordService.class);
         ChallengeRepository challengeRepository = mock(ChallengeRepository.class);
         AttestationOptionsProviderImpl optionsProvider = new AttestationOptionsProviderImpl(rpIdProvider, authenticatorService, challengeRepository);
 
@@ -130,7 +130,7 @@ public class AttestationOptionsProviderImplTest {
 
     @Test
     public void getter_setter_test() {
-        WebAuthnAuthenticatorService authenticatorService = mock(WebAuthnAuthenticatorService.class);
+        WebAuthnCredentialRecordService authenticatorService = mock(WebAuthnCredentialRecordService.class);
         ChallengeRepository challengeRepository = mock(ChallengeRepository.class);
         AttestationOptionsProviderImpl optionsProvider = new AttestationOptionsProviderImpl(authenticatorService, challengeRepository);
 

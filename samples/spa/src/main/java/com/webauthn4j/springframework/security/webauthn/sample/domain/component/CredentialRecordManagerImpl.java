@@ -16,10 +16,10 @@
 
 package com.webauthn4j.springframework.security.webauthn.sample.domain.component;
 
-import com.webauthn4j.springframework.security.authenticator.WebAuthnAuthenticator;
-import com.webauthn4j.springframework.security.authenticator.WebAuthnAuthenticatorService;
+import com.webauthn4j.springframework.security.credential.WebAuthnCredentialRecord;
+import com.webauthn4j.springframework.security.credential.WebAuthnCredentialRecordService;
 import com.webauthn4j.springframework.security.exception.CredentialIdNotFoundException;
-import com.webauthn4j.springframework.security.webauthn.sample.domain.entity.AuthenticatorEntity;
+import com.webauthn4j.springframework.security.webauthn.sample.domain.entity.CredentialRecordEntity;
 import com.webauthn4j.springframework.security.webauthn.sample.domain.repository.AuthenticatorEntityRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,31 +33,31 @@ import java.util.List;
 
 @Transactional
 @Component
-public class AuthenticatorManagerImpl implements WebAuthnAuthenticatorService {
+public class CredentialRecordManagerImpl implements WebAuthnCredentialRecordService {
 
-    private final Logger logger = LoggerFactory.getLogger(AuthenticatorManagerImpl.class);
+    private final Logger logger = LoggerFactory.getLogger(CredentialRecordManagerImpl.class);
 
     private final AuthenticatorEntityRepository authenticatorEntityRepository;
 
-    public AuthenticatorManagerImpl(AuthenticatorEntityRepository authenticatorEntityRepository) {
+    public CredentialRecordManagerImpl(AuthenticatorEntityRepository authenticatorEntityRepository) {
         this.authenticatorEntityRepository = authenticatorEntityRepository;
     }
 
     @Override
     public void updateCounter(byte[] credentialId, long counter) throws CredentialIdNotFoundException {
-        AuthenticatorEntity authenticatorEntity = authenticatorEntityRepository.findOneByCredentialId(credentialId)
+        CredentialRecordEntity authenticatorEntity = authenticatorEntityRepository.findOneByCredentialId(credentialId)
                 .orElseThrow(() -> new CredentialIdNotFoundException("AuthenticatorEntity not found"));
         authenticatorEntity.setCounter(counter);
     }
 
     @Override
-    public WebAuthnAuthenticator loadAuthenticatorByCredentialId(byte[] credentialId) {
+    public WebAuthnCredentialRecord loadCredentialRecordByCredentialId(byte[] credentialId) {
         return authenticatorEntityRepository.findOneByCredentialId(credentialId)
                 .orElseThrow(() -> new CredentialIdNotFoundException("AuthenticatorEntity not found"));
     }
 
     @Override
-    public List<WebAuthnAuthenticator> loadAuthenticatorsByUserPrincipal(Object principal) {
+    public List<WebAuthnCredentialRecord> loadCredentialRecordsByUserPrincipal(Object principal) {
         String username;
         if(principal == null){
             return Collections.emptyList();

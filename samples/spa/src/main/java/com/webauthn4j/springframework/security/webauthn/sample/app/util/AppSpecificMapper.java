@@ -20,7 +20,7 @@ import com.webauthn4j.springframework.security.webauthn.sample.app.api.Authentic
 import com.webauthn4j.springframework.security.webauthn.sample.app.api.ProfileCreateForm;
 import com.webauthn4j.springframework.security.webauthn.sample.app.api.ProfileForm;
 import com.webauthn4j.springframework.security.webauthn.sample.app.api.ProfileUpdateForm;
-import com.webauthn4j.springframework.security.webauthn.sample.domain.entity.AuthenticatorEntity;
+import com.webauthn4j.springframework.security.webauthn.sample.domain.entity.CredentialRecordEntity;
 import com.webauthn4j.springframework.security.webauthn.sample.domain.entity.AuthorityEntity;
 import com.webauthn4j.springframework.security.webauthn.sample.domain.entity.UserEntity;
 import com.webauthn4j.springframework.security.webauthn.sample.domain.exception.WebAuthnSampleEntityNotFoundException;
@@ -49,27 +49,31 @@ public class AppSpecificMapper {
 
         // authenticators
         profileForm.setAuthenticators(new ArrayList<>());
-        mapToAuthenticatorFormList(userEntity.getAuthenticators(), profileForm.getAuthenticators());
+        mapToAuthenticatorFormList(userEntity.getCredentialRecords(), profileForm.getAuthenticators());
         profileForm.setSingleFactorAuthenticationAllowed(userEntity.getAuthorities().stream().anyMatch(authorityEntity -> authorityEntity.getAuthority().equals("SINGLE_FACTOR_AUTHN_ALLOWED")));
 
         return profileForm;
     }
 
-    private AuthenticatorEntity mapForCreate(AuthenticatorForm authenticatorForm) {
-        AuthenticatorEntity authenticatorEntity = new AuthenticatorEntity();
+    private CredentialRecordEntity mapForCreate(AuthenticatorForm authenticatorForm) {
+        CredentialRecordEntity authenticatorEntity = new CredentialRecordEntity();
         authenticatorEntity.setName(authenticatorForm.getName());
+        authenticatorEntity.setClientData(authenticatorForm.getClientData().getCollectedClientData());
+        authenticatorEntity.setUvInitialized(authenticatorForm.getAttestationObject().getAttestationObject().getAuthenticatorData().isFlagUV());
+        authenticatorEntity.setBackupEligible(authenticatorForm.getAttestationObject().getAttestationObject().getAuthenticatorData().isFlagBE());
+        authenticatorEntity.setBackedUp(authenticatorForm.getAttestationObject().getAttestationObject().getAuthenticatorData().isFlagBS());
         authenticatorEntity.setAttestationStatement(authenticatorForm.getAttestationObject().getAttestationObject().getAttestationStatement());
         authenticatorEntity.setAttestedCredentialData(authenticatorForm.getAttestationObject().getAttestationObject().getAuthenticatorData().getAttestedCredentialData());
         return authenticatorEntity;
     }
 
-    private AuthenticatorEntity mapForUpdate(AuthenticatorForm authenticatorForm, AuthenticatorEntity authenticatorEntity) {
+    private CredentialRecordEntity mapForUpdate(AuthenticatorForm authenticatorForm, CredentialRecordEntity authenticatorEntity) {
         authenticatorEntity.setName(authenticatorForm.getName());
         // attestationStatement and attestedCredentialData won't be updated
         return authenticatorEntity;
     }
 
-    private AuthenticatorForm mapToAuthenticatorForm(AuthenticatorEntity authenticatorEntity) {
+    private AuthenticatorForm mapToAuthenticatorForm(CredentialRecordEntity authenticatorEntity) {
         AuthenticatorForm authenticatorForm = new AuthenticatorForm();
         authenticatorForm.setId(authenticatorEntity.getId());
         authenticatorForm.setCredentialId(Base64UrlUtil.encodeToString(authenticatorEntity.getAttestedCredentialData().getCredentialId()));
@@ -87,9 +91,9 @@ public class AppSpecificMapper {
         userEntity.setPassword(passwordEncoder.encode(profileCreateForm.getPassword()));
 
         // authenticators
-        userEntity.setAuthenticators(new ArrayList<>());
-        mapToAuthenticatorListForCreate(profileCreateForm.getAuthenticators(), userEntity.getAuthenticators());
-        userEntity.getAuthenticators().forEach(authenticatorEntity -> authenticatorEntity.setUser(userEntity));
+        userEntity.setCredentialRecords(new ArrayList<>());
+        mapToAuthenticatorListForCreate(profileCreateForm.getAuthenticators(), userEntity.getCredentialRecords());
+        userEntity.getCredentialRecords().forEach(authenticatorEntity -> authenticatorEntity.setUser(userEntity));
 
         // authorities
         List<AuthorityEntity> authorities = new ArrayList<>();
@@ -109,8 +113,8 @@ public class AppSpecificMapper {
 
         // authenticators
         List<AuthenticatorForm> authenticatorForms = profileUpdateForm.getAuthenticators();
-        mapToAuthenticatorListForUpdate(authenticatorForms, userEntity.getAuthenticators());
-        userEntity.getAuthenticators().forEach(authenticatorEntity -> authenticatorEntity.setUser(userEntity));
+        mapToAuthenticatorListForUpdate(authenticatorForms, userEntity.getCredentialRecords());
+        userEntity.getCredentialRecords().forEach(authenticatorEntity -> authenticatorEntity.setUser(userEntity));
 
         // authorities
         List<AuthorityEntity> authorities = userEntity.getAuthorities();
@@ -129,21 +133,21 @@ public class AppSpecificMapper {
         return userEntity;
     }
 
-    private List<AuthenticatorForm> mapToAuthenticatorFormList(List<AuthenticatorEntity> authenticatorEntities, List<AuthenticatorForm> authenticatorForms) {
-        for (AuthenticatorEntity authenticatorEntity : authenticatorEntities) {
+    private List<AuthenticatorForm> mapToAuthenticatorFormList(List<CredentialRecordEntity> authenticatorEntities, List<AuthenticatorForm> authenticatorForms) {
+        for (CredentialRecordEntity authenticatorEntity : authenticatorEntities) {
             authenticatorForms.add(mapToAuthenticatorForm(authenticatorEntity));
         }
         return authenticatorForms;
     }
 
-    private List<AuthenticatorEntity> mapToAuthenticatorListForCreate(List<AuthenticatorForm> authenticatorForms, List<AuthenticatorEntity> authenticatorEntities) {
+    private List<CredentialRecordEntity> mapToAuthenticatorListForCreate(List<AuthenticatorForm> authenticatorForms, List<CredentialRecordEntity> authenticatorEntities) {
         for (AuthenticatorForm authenticatorForm : authenticatorForms) {
             authenticatorEntities.add(mapForCreate(authenticatorForm));
         }
         return authenticatorEntities;
     }
 
-    private List<AuthenticatorEntity> mapToAuthenticatorListForUpdate(List<AuthenticatorForm> authenticatorForms, List<AuthenticatorEntity> authenticatorEntities) {
+    private List<CredentialRecordEntity> mapToAuthenticatorListForUpdate(List<AuthenticatorForm> authenticatorForms, List<CredentialRecordEntity> authenticatorEntities) {
         int[] sortedKeptIds = authenticatorForms.stream()
                 .filter(authenticator -> authenticator.getId() != null)
                 .mapToInt(AuthenticatorForm::getId).sorted().toArray();
@@ -155,7 +159,7 @@ public class AppSpecificMapper {
             }
             // update existing authenticator
             else {
-                AuthenticatorEntity correspondingAuthenticatorEntity =
+                CredentialRecordEntity correspondingAuthenticatorEntity =
                         authenticatorEntities.stream().filter(item -> item.getId().equals(id))
                                 .findFirst().orElseThrow(() -> new WebAuthnSampleEntityNotFoundException("Corresponding authenticator is not found."));
                 mapForUpdate(authenticatorForm, correspondingAuthenticatorEntity);

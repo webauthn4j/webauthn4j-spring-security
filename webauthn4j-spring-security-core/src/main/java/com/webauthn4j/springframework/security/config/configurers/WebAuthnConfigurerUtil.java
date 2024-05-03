@@ -22,7 +22,7 @@ import com.webauthn4j.converter.util.ObjectConverter;
 import com.webauthn4j.metadata.converter.jackson.WebAuthnMetadataJSONModule;
 import com.webauthn4j.springframework.security.DefaultUserVerificationStrategy;
 import com.webauthn4j.springframework.security.UserVerificationStrategy;
-import com.webauthn4j.springframework.security.authenticator.WebAuthnAuthenticatorService;
+import com.webauthn4j.springframework.security.credential.WebAuthnCredentialRecordService;
 import com.webauthn4j.springframework.security.challenge.ChallengeRepository;
 import com.webauthn4j.springframework.security.challenge.HttpSessionChallengeRepository;
 import com.webauthn4j.springframework.security.converter.jackson.WebAuthn4JSpringSecurityJSONModule;
@@ -64,14 +64,14 @@ class WebAuthnConfigurerUtil {
     /**
      * Get {@link RpIdProvider} from SharedObject or ApplicationContext. if nothing hit, throw exception
      */
-    static <H extends HttpSecurityBuilder<H>> WebAuthnAuthenticatorService getWebAuthnAuthenticatorServiceOrThrowException(H http){
-        WebAuthnAuthenticatorService webAuthnAuthenticatorService = http.getSharedObject(WebAuthnAuthenticatorService.class);
-        if (webAuthnAuthenticatorService != null) {
-            return webAuthnAuthenticatorService;
+    static <H extends HttpSecurityBuilder<H>> WebAuthnCredentialRecordService getWebAuthnCredentialRecordServiceOrThrowException(H http){
+        WebAuthnCredentialRecordService webAuthnCredentialRecordService = http.getSharedObject(WebAuthnCredentialRecordService.class);
+        if (webAuthnCredentialRecordService != null) {
+            return webAuthnCredentialRecordService;
         }
         ApplicationContext applicationContext = http.getSharedObject(ApplicationContext.class);
-        // WebAuthnAuthenticatorService must be provided manually. If not, let it throw exception.
-        return applicationContext.getBean(WebAuthnAuthenticatorService.class);
+        // WebAuthnCredentialRecordService must be provided manually. If not, let it throw exception.
+        return applicationContext.getBean(WebAuthnCredentialRecordService.class);
     }
 
     /**
@@ -106,7 +106,7 @@ class WebAuthnConfigurerUtil {
         ApplicationContext applicationContext = http.getSharedObject(ApplicationContext.class);
         String[] beanNames = applicationContext.getBeanNamesForType(AttestationOptionsProvider.class);
         if(beanNames.length == 0){
-            attestationOptionsProvider = new AttestationOptionsProviderImpl(getRpIdProviderOrNull(http), getWebAuthnAuthenticatorServiceOrThrowException(http), getChallengeRepositoryOrCreateNew(http));
+            attestationOptionsProvider = new AttestationOptionsProviderImpl(getRpIdProviderOrNull(http), getWebAuthnCredentialRecordServiceOrThrowException(http), getChallengeRepositoryOrCreateNew(http));
         }
         else {
             attestationOptionsProvider = applicationContext.getBean(AttestationOptionsProvider.class);
@@ -126,7 +126,7 @@ class WebAuthnConfigurerUtil {
         ApplicationContext applicationContext = http.getSharedObject(ApplicationContext.class);
         String[] beanNames = applicationContext.getBeanNamesForType(AssertionOptionsProvider.class);
         if(beanNames.length == 0){
-            return new AssertionOptionsProviderImpl(getRpIdProviderOrNull(http), getWebAuthnAuthenticatorServiceOrThrowException(http), getChallengeRepositoryOrCreateNew(http));
+            return new AssertionOptionsProviderImpl(getRpIdProviderOrNull(http), getWebAuthnCredentialRecordServiceOrThrowException(http), getChallengeRepositoryOrCreateNew(http));
         }
         else {
             return applicationContext.getBean(AssertionOptionsProvider.class);

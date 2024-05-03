@@ -14,41 +14,41 @@
  * limitations under the License.
  */
 
-package com.webauthn4j.springframework.security.authenticator;
+package com.webauthn4j.springframework.security.credential;
 
 import com.webauthn4j.springframework.security.exception.CredentialIdNotFoundException;
 
 import java.util.List;
 
 /**
- * Core interface for manipulating persisted authenticator
+ * Core interface for manipulating persisted credential record
  */
-public interface WebAuthnAuthenticatorService {
+public interface WebAuthnCredentialRecordService {
 
     /**
-     * Updates Authenticator counter
+     * Updates credential record counter
      *
      * @param credentialId credentialId
      * @param counter      counter
-     * @throws CredentialIdNotFoundException if the authenticator could not be found
+     * @throws CredentialIdNotFoundException if the credential record could not be found
      */
     @SuppressWarnings("squid:RedundantThrowsDeclarationCheck")
     void updateCounter(byte[] credentialId, long counter) throws CredentialIdNotFoundException;
 
     /**
-     * Load {@link WebAuthnAuthenticator} by credentialId
+     * Load {@link WebAuthnCredentialRecord} by credentialId
      * @param credentialId credentialId
-     * @return {@link WebAuthnAuthenticator}
-     * @throws CredentialIdNotFoundException if the authenticator could not be found
+     * @return {@link WebAuthnCredentialRecord}
+     * @throws CredentialIdNotFoundException if the credential record could not be found
      */
     @SuppressWarnings("squid:RedundantThrowsDeclarationCheck")
-    WebAuthnAuthenticator loadAuthenticatorByCredentialId(byte[] credentialId) throws CredentialIdNotFoundException;
+    WebAuthnCredentialRecord loadCredentialRecordByCredentialId(byte[] credentialId) throws CredentialIdNotFoundException;
 
     /**
-     * Load {@link WebAuthnAuthenticator} list by user principal
+     * Load {@link WebAuthnCredentialRecord} list by user principal
      * @param principal user principal
-     * @return {@link WebAuthnAuthenticator} list
+     * @return {@link WebAuthnCredentialRecord} list
      */
-    List<WebAuthnAuthenticator> loadAuthenticatorsByUserPrincipal(Object principal);
+    List<WebAuthnCredentialRecord> loadCredentialRecordsByUserPrincipal(Object principal);
 
 }

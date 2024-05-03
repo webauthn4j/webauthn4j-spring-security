@@ -17,8 +17,8 @@
 package com.webauthn4j.springframework.security.config.configurers;
 
 
-import com.webauthn4j.springframework.security.authenticator.InMemoryWebAuthnAuthenticatorManager;
-import com.webauthn4j.springframework.security.authenticator.WebAuthnAuthenticatorService;
+import com.webauthn4j.springframework.security.credential.InMemoryWebAuthnCredentialRecordManager;
+import com.webauthn4j.springframework.security.credential.WebAuthnCredentialRecordService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -82,8 +82,8 @@ public class WebAuthnLoginConfigurerMinimalConfigSpringTest {
         @Configuration
         static class BeanConfig {
             @Bean
-            public WebAuthnAuthenticatorService webAuthnAuthenticatorService(){
-                return new InMemoryWebAuthnAuthenticatorManager();
+            public WebAuthnCredentialRecordService webAuthnAuthenticatorService(){
+                return new InMemoryWebAuthnCredentialRecordManager();
             }
 
             @Bean(name = "mvcHandlerMappingIntrospector")

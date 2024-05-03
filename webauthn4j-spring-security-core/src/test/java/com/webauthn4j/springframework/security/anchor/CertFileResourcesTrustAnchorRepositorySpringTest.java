@@ -32,16 +32,16 @@ import java.util.Collections;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@Deprecated
+
 @RunWith(SpringRunner.class)
-public class CertFileResourcesTrustAnchorsProviderSpringTest {
+public class CertFileResourcesTrustAnchorRepositorySpringTest {
 
     @Autowired
-    private CertFileResourcesTrustAnchorsProvider target;
+    private CertFileResourcesTrustAnchorRepository target;
 
     @Test
-    public void loadTrustAnchors_test() {
-        assertThat(target.loadTrustAnchors().get(AAGUID.NULL)).isNotNull();
+    public void find_test() {
+        assertThat(target.find(AAGUID.NULL)).isNotNull();
     }
 
     @Test
@@ -53,9 +53,9 @@ public class CertFileResourcesTrustAnchorsProviderSpringTest {
     public static class config {
 
         @Bean
-        public CertFileResourcesTrustAnchorsProvider certFileResourcesTrustAnchorProvider() throws CertificateEncodingException {
+        public CertFileResourcesTrustAnchorRepository certFileResourcesTrustAnchorRepository() throws CertificateEncodingException {
             Resource x509Resource = new ByteArrayResource(TestAttestationUtil.load2tierTestAuthenticatorAttestationCertificate().getEncoded());
-            return new CertFileResourcesTrustAnchorsProvider(Collections.singletonList(x509Resource));
+            return new CertFileResourcesTrustAnchorRepository(Collections.singletonList(x509Resource));
         }
     }
 

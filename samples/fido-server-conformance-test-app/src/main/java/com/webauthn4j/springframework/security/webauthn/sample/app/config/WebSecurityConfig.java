@@ -23,8 +23,8 @@ import com.webauthn4j.data.PublicKeyCredentialType;
 import com.webauthn4j.data.attestation.statement.COSEAlgorithmIdentifier;
 import com.webauthn4j.springframework.security.WebAuthnAuthenticationProvider;
 import com.webauthn4j.springframework.security.WebAuthnRegistrationRequestValidator;
-import com.webauthn4j.springframework.security.authenticator.WebAuthnAuthenticatorManager;
-import com.webauthn4j.springframework.security.authenticator.WebAuthnAuthenticatorService;
+import com.webauthn4j.springframework.security.credential.WebAuthnCredentialRecordManager;
+import com.webauthn4j.springframework.security.credential.WebAuthnCredentialRecordService;
 import com.webauthn4j.springframework.security.challenge.ChallengeRepository;
 import com.webauthn4j.springframework.security.config.configurers.WebAuthnLoginConfigurer;
 import com.webauthn4j.springframework.security.fido.server.endpoint.FidoServerAssertionOptionsEndpointFilter;
@@ -84,13 +84,13 @@ WebSecurityConfig {
     private ServerPropertyProvider serverPropertyProvider;
 
     @Autowired
-    private WebAuthnAuthenticatorManager webAuthnAuthenticatorManager;
+    private WebAuthnCredentialRecordManager webAuthnAuthenticatorManager;
 
     @Autowired
     private ChallengeRepository challengeRepository;
 
     @Bean
-    public WebAuthnAuthenticationProvider webAuthnAuthenticationProvider(WebAuthnAuthenticatorService authenticatorService, WebAuthnManager webAuthnManager){
+    public WebAuthnAuthenticationProvider webAuthnAuthenticationProvider(WebAuthnCredentialRecordService authenticatorService, WebAuthnManager webAuthnManager){
         return new WebAuthnAuthenticationProvider(authenticatorService, webAuthnManager);
     }
 

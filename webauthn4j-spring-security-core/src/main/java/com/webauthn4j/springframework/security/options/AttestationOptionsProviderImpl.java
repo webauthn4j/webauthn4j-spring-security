@@ -19,7 +19,7 @@ package com.webauthn4j.springframework.security.options;
 import com.webauthn4j.data.*;
 import com.webauthn4j.data.extension.client.AuthenticationExtensionsClientInputs;
 import com.webauthn4j.data.extension.client.RegistrationExtensionClientInput;
-import com.webauthn4j.springframework.security.authenticator.WebAuthnAuthenticatorService;
+import com.webauthn4j.springframework.security.credential.WebAuthnCredentialRecordService;
 import com.webauthn4j.springframework.security.challenge.ChallengeRepository;
 import com.webauthn4j.springframework.security.exception.PrincipalNotFoundException;
 import com.webauthn4j.springframework.security.extension.AuthenticationExtensionsClientInputsProvider;
@@ -50,25 +50,25 @@ public class AttestationOptionsProviderImpl implements AttestationOptionsProvide
 
     private RpIdProvider rpIdProvider;
     private PublicKeyCredentialUserEntityProvider publicKeyCredentialUserEntityProvider = new DefaultPublicKeyCredentialUserEntityProvider();
-    private final WebAuthnAuthenticatorService authenticatorService;
+    private final WebAuthnCredentialRecordService webAuthnCredentialRecordService;
     private final ChallengeRepository challengeRepository;
     private AuthenticationExtensionsClientInputsProvider<RegistrationExtensionClientInput> registrationExtensionsProvider = new DefaultRegistrationExtensionsProvider();
 
     // ~ Constructors
     // ===================================================================================================
 
-    public AttestationOptionsProviderImpl(RpIdProvider rpIdProvider, WebAuthnAuthenticatorService authenticatorService, ChallengeRepository challengeRepository) {
+    public AttestationOptionsProviderImpl(RpIdProvider rpIdProvider, WebAuthnCredentialRecordService webAuthnCredentialRecordService, ChallengeRepository challengeRepository) {
 
-        Assert.notNull(authenticatorService, "authenticatorService must not be null");
+        Assert.notNull(webAuthnCredentialRecordService, "webAuthnCredentialRecordService must not be null");
         Assert.notNull(challengeRepository, "challengeRepository must not be null");
 
         this.rpIdProvider = rpIdProvider;
-        this.authenticatorService = authenticatorService;
+        this.webAuthnCredentialRecordService = webAuthnCredentialRecordService;
         this.challengeRepository = challengeRepository;
     }
 
-    public AttestationOptionsProviderImpl(WebAuthnAuthenticatorService authenticatorService, ChallengeRepository challengeRepository) {
-        this(null, authenticatorService, challengeRepository);
+    public AttestationOptionsProviderImpl(WebAuthnCredentialRecordService webAuthnCredentialRecordService, ChallengeRepository challengeRepository) {
+        this(null, webAuthnCredentialRecordService, challengeRepository);
     }
 
 
@@ -180,8 +180,8 @@ public class AttestationOptionsProviderImpl implements AttestationOptionsProvide
         this.registrationExtensionsProvider = registrationExtensionsProvider;
     }
 
-    public WebAuthnAuthenticatorService getAuthenticatorService() {
-        return authenticatorService;
+    public WebAuthnCredentialRecordService getWebAuthnCredentialRecordService() {
+        return webAuthnCredentialRecordService;
     }
 
     public void setPublicKeyCredentialUserEntityProvider(PublicKeyCredentialUserEntityProvider publicKeyCredentialUserEntityProvider) {
@@ -202,8 +202,8 @@ public class AttestationOptionsProviderImpl implements AttestationOptionsProvide
             return Collections.emptyList();
         }
         try {
-            return getAuthenticatorService().loadAuthenticatorsByUserPrincipal(authentication.getName()).stream()
-                    .map(authenticator -> new PublicKeyCredentialDescriptor(PublicKeyCredentialType.PUBLIC_KEY, authenticator.getAttestedCredentialData().getCredentialId(), authenticator.getTransports()))
+            return getWebAuthnCredentialRecordService().loadCredentialRecordsByUserPrincipal(authentication.getName()).stream()
+                    .map(credentialRecord -> new PublicKeyCredentialDescriptor(PublicKeyCredentialType.PUBLIC_KEY, credentialRecord.getAttestedCredentialData().getCredentialId(), credentialRecord.getTransports()))
                     .collect(Collectors.toList());
         } catch (PrincipalNotFoundException e) {
             return Collections.emptyList();

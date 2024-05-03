@@ -93,7 +93,7 @@ public class WebAuthnAssertionAuthenticationToken extends AbstractAuthentication
     public void setAuthenticated(boolean isAuthenticated) {
         if (isAuthenticated) {
             throw new IllegalArgumentException(
-                    "Cannot set this authenticator to trusted");
+                    "Cannot set this credential record to trusted");
         }
 
         super.setAuthenticated(false);

@@ -19,11 +19,12 @@ package com.webauthn4j.springframework.security.webauthn.sample.domain.entity;
 import com.webauthn4j.data.AuthenticatorTransport;
 import com.webauthn4j.data.attestation.authenticator.AttestedCredentialData;
 import com.webauthn4j.data.attestation.statement.AttestationStatement;
+import com.webauthn4j.data.client.CollectedClientData;
 import com.webauthn4j.data.extension.authenticator.AuthenticationExtensionsAuthenticatorOutputs;
 import com.webauthn4j.data.extension.authenticator.RegistrationExtensionAuthenticatorOutput;
 import com.webauthn4j.data.extension.client.AuthenticationExtensionsClientOutputs;
 import com.webauthn4j.data.extension.client.RegistrationExtensionClientOutput;
-import com.webauthn4j.springframework.security.authenticator.WebAuthnAuthenticator;
+import com.webauthn4j.springframework.security.credential.WebAuthnCredentialRecord;
 import com.webauthn4j.springframework.security.webauthn.sample.infrastructure.util.jpa.converter.*;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -34,8 +35,8 @@ import java.util.Set;
  * Authenticator model
  */
 @Entity
-@Table(name = "m_authenticator")
-public class AuthenticatorEntity implements WebAuthnAuthenticator {
+@Table(name = "m_credential_record")
+public class CredentialRecordEntity implements WebAuthnCredentialRecord {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -48,8 +49,12 @@ public class AuthenticatorEntity implements WebAuthnAuthenticator {
 
     private long counter;
 
+    private boolean uvInitialized;
+    private boolean backupEligible;
+    private boolean backedUp;
+
     @ElementCollection(fetch = FetchType.EAGER)
-    @CollectionTable(name = "m_transport", joinColumns = @JoinColumn(name = "authenticator_id"))
+    @CollectionTable(name = "m_transport", joinColumns = @JoinColumn(name = "credential_record_id"))
     @Column(name = "transport")
     @Convert(converter = AuthenticatorTransportConverter.class)
     private Set<AuthenticatorTransport> transports;
@@ -69,6 +74,10 @@ public class AuthenticatorEntity implements WebAuthnAuthenticator {
     @Lob
     @Convert(converter = AttestationStatementConverter.class)
     private AttestationStatement attestationStatement;
+
+    @Lob
+    @Convert(converter = CollectedClientDataConverter.class)
+    private CollectedClientData clientData;
 
     @Lob
     @Convert(converter = ClientExtensionsConverter.class)
@@ -161,5 +170,44 @@ public class AuthenticatorEntity implements WebAuthnAuthenticator {
 
     public void setAuthenticatorExtensions(AuthenticationExtensionsAuthenticatorOutputs<RegistrationExtensionAuthenticatorOutput>  authenticatorExtensions) {
         this.authenticatorExtensions = authenticatorExtensions;
+    }
+
+    @Override
+    public CollectedClientData getClientData() {
+        return this.clientData;
+    }
+
+    public void setClientData(CollectedClientData clientData) {
+        this.clientData = clientData;
+    }
+
+    @Override
+    public Boolean isUvInitialized() {
+        return this.uvInitialized;
+    }
+
+    @Override
+    public void setUvInitialized(boolean value) {
+        this.uvInitialized = value;
+    }
+
+    @Override
+    public  Boolean isBackupEligible() {
+        return this.backupEligible;
+    }
+
+    @Override
+    public void setBackupEligible(boolean value) {
+        this.backupEligible = value;
+    }
+
+    @Override
+    public Boolean isBackedUp() {
+        return this.backedUp;
+    }
+
+    @Override
+    public void setBackedUp(boolean value) {
+        this.backedUp = value;
     }
 }

@@ -22,9 +22,9 @@ import com.webauthn4j.data.AuthenticationRequest;
 import com.webauthn4j.data.attestation.authenticator.AttestedCredentialData;
 import com.webauthn4j.data.attestation.statement.AttestationStatement;
 import com.webauthn4j.server.ServerProperty;
-import com.webauthn4j.springframework.security.authenticator.WebAuthnAuthenticator;
-import com.webauthn4j.springframework.security.authenticator.WebAuthnAuthenticatorImpl;
-import com.webauthn4j.springframework.security.authenticator.WebAuthnAuthenticatorService;
+import com.webauthn4j.springframework.security.credential.WebAuthnCredentialRecord;
+import com.webauthn4j.springframework.security.credential.WebAuthnCredentialRecordImpl;
+import com.webauthn4j.springframework.security.credential.WebAuthnCredentialRecordService;
 import com.webauthn4j.springframework.security.exception.BadChallengeException;
 import com.webauthn4j.springframework.security.exception.CredentialIdNotFoundException;
 import org.junit.Before;
@@ -50,7 +50,7 @@ import static org.mockito.Mockito.*;
  */
 public class WebAuthnAuthenticationProviderTest {
 
-    private final WebAuthnAuthenticatorService authenticatorService = mock(WebAuthnAuthenticatorService.class);
+    private final WebAuthnCredentialRecordService authenticatorService = mock(WebAuthnCredentialRecordService.class);
 
     private final WebAuthnManager webAuthnManager = mock(WebAuthnManager.class);
 
@@ -90,15 +90,15 @@ public class WebAuthnAuthenticationProviderTest {
         byte[] credentialId = new byte[32];
         GrantedAuthority grantedAuthority = new SimpleGrantedAuthority("ROLE_ADMIN");
         UserDetails webAuthnPrincipal = new TestUserDetailsImpl("dummy", Collections.singletonList(grantedAuthority));
-        WebAuthnAuthenticator webAuthnAuthenticator = mock(WebAuthnAuthenticator.class, RETURNS_DEEP_STUBS);
-        when(webAuthnAuthenticator.getUserPrincipal()).thenReturn(webAuthnPrincipal);
-        when(webAuthnAuthenticator.getAttestedCredentialData().getCredentialId()).thenReturn(credentialId);
+        WebAuthnCredentialRecord webAuthnCredentialRecord = mock(WebAuthnCredentialRecord.class, RETURNS_DEEP_STUBS);
+        when(webAuthnCredentialRecord.getUserPrincipal()).thenReturn(webAuthnPrincipal);
+        when(webAuthnCredentialRecord.getAttestedCredentialData().getCredentialId()).thenReturn(credentialId);
 
         //When
         WebAuthnAuthenticationRequest request = mock(WebAuthnAuthenticationRequest.class);
         WebAuthnAuthenticationParameters parameters = mock(WebAuthnAuthenticationParameters.class);
         when(request.getCredentialId()).thenReturn(credentialId);
-        when(authenticatorService.loadAuthenticatorByCredentialId(credentialId)).thenReturn(webAuthnAuthenticator);
+        when(authenticatorService.loadCredentialRecordByCredentialId(credentialId)).thenReturn(webAuthnCredentialRecord);
         when(parameters.getServerProperty()).thenReturn(mock(ServerProperty.class));
         Authentication token = new WebAuthnAssertionAuthenticationToken(request, parameters, null);
         Authentication authenticatedToken = authenticationProvider.authenticate(token);
@@ -120,11 +120,11 @@ public class WebAuthnAuthenticationProviderTest {
     public void authenticate_with_BadChallengeException_from_authenticationContextValidator_test() {
         //Given
         byte[] credentialId = new byte[32];
-        WebAuthnAuthenticatorImpl authenticator = mock(WebAuthnAuthenticatorImpl.class, RETURNS_DEEP_STUBS);
-        WebAuthnAuthenticator webAuthnAuthenticator = mock(WebAuthnAuthenticator.class);
+        WebAuthnCredentialRecordImpl authenticator = mock(WebAuthnCredentialRecordImpl.class, RETURNS_DEEP_STUBS);
+        WebAuthnCredentialRecord webAuthnCredentialRecord = mock(WebAuthnCredentialRecord.class);
         when(authenticator.getAttestedCredentialData().getCredentialId()).thenReturn(credentialId);
-        when(webAuthnAuthenticator.getAttestedCredentialData()).thenReturn(mock(AttestedCredentialData.class));
-        when(webAuthnAuthenticator.getAttestationStatement()).thenReturn(mock(AttestationStatement.class));
+        when(webAuthnCredentialRecord.getAttestedCredentialData()).thenReturn(mock(AttestedCredentialData.class));
+        when(webAuthnCredentialRecord.getAttestationStatement()).thenReturn(mock(AttestationStatement.class));
 
         doThrow(com.webauthn4j.validator.exception.BadChallengeException.class).when(webAuthnManager).validate((AuthenticationRequest) any(), any());
 
@@ -132,7 +132,7 @@ public class WebAuthnAuthenticationProviderTest {
         WebAuthnAuthenticationRequest request = mock(WebAuthnAuthenticationRequest.class);
         WebAuthnAuthenticationParameters parameters = mock(WebAuthnAuthenticationParameters.class);
         when(request.getCredentialId()).thenReturn(credentialId);
-        when(authenticatorService.loadAuthenticatorByCredentialId(credentialId)).thenReturn(webAuthnAuthenticator);
+        when(authenticatorService.loadCredentialRecordByCredentialId(credentialId)).thenReturn(webAuthnCredentialRecord);
         when(parameters.getServerProperty()).thenReturn(mock(ServerProperty.class));
         Authentication token = new WebAuthnAssertionAuthenticationToken(request, parameters, null);
         authenticationProvider.authenticate(token);
@@ -140,18 +140,18 @@ public class WebAuthnAuthenticationProviderTest {
 
 
     @Test
-    public void retrieveAuthenticator_test() {
+    public void retrieveCredentialRecord_test() {
         byte[] credentialId = new byte[0];
-        WebAuthnAuthenticator expectedAuthenticator = mock(WebAuthnAuthenticator.class);
+        WebAuthnCredentialRecord expectedAuthenticator = mock(WebAuthnCredentialRecord.class);
 
         //Given
-        when(authenticatorService.loadAuthenticatorByCredentialId(credentialId)).thenReturn(expectedAuthenticator);
+        when(authenticatorService.loadCredentialRecordByCredentialId(credentialId)).thenReturn(expectedAuthenticator);
 
         //When
-        WebAuthnAuthenticator webAuthnAuthenticator = authenticationProvider.retrieveAuthenticator(credentialId);
+        WebAuthnCredentialRecord webAuthnCredentialRecord = authenticationProvider.retrieveCredentialRecord(credentialId);
 
         //Then
-        assertThat(webAuthnAuthenticator).isEqualTo(expectedAuthenticator);
+        assertThat(webAuthnCredentialRecord).isEqualTo(expectedAuthenticator);
 
     }
 
@@ -160,10 +160,10 @@ public class WebAuthnAuthenticationProviderTest {
         byte[] credentialId = new byte[0];
 
         //Given
-        when(authenticatorService.loadAuthenticatorByCredentialId(credentialId)).thenThrow(CredentialIdNotFoundException.class);
+        when(authenticatorService.loadCredentialRecordByCredentialId(credentialId)).thenThrow(CredentialIdNotFoundException.class);
 
         //When
-        authenticationProvider.retrieveAuthenticator(credentialId);
+        authenticationProvider.retrieveCredentialRecord(credentialId);
     }
 
     @Test(expected = CredentialIdNotFoundException.class)
@@ -171,11 +171,11 @@ public class WebAuthnAuthenticationProviderTest {
         byte[] credentialId = new byte[0];
 
         //Given
-        when(authenticatorService.loadAuthenticatorByCredentialId(credentialId)).thenThrow(CredentialIdNotFoundException.class);
+        when(authenticatorService.loadCredentialRecordByCredentialId(credentialId)).thenThrow(CredentialIdNotFoundException.class);
 
         //When
         authenticationProvider.setHideCredentialIdNotFoundExceptions(false);
-        authenticationProvider.retrieveAuthenticator(credentialId);
+        authenticationProvider.retrieveCredentialRecord(credentialId);
     }
 
     @Test(expected = InternalAuthenticationServiceException.class)
@@ -183,11 +183,11 @@ public class WebAuthnAuthenticationProviderTest {
         byte[] credentialId = new byte[0];
 
         //Given
-        when(authenticatorService.loadAuthenticatorByCredentialId(credentialId)).thenThrow(RuntimeException.class);
+        when(authenticatorService.loadCredentialRecordByCredentialId(credentialId)).thenThrow(RuntimeException.class);
 
         //When
         authenticationProvider.setHideCredentialIdNotFoundExceptions(false);
-        authenticationProvider.retrieveAuthenticator(credentialId);
+        authenticationProvider.retrieveCredentialRecord(credentialId);
     }
 
     @Test(expected = InternalAuthenticationServiceException.class)
@@ -195,11 +195,11 @@ public class WebAuthnAuthenticationProviderTest {
         byte[] credentialId = new byte[0];
 
         //Given
-        when(authenticatorService.loadAuthenticatorByCredentialId(credentialId)).thenReturn(null);
+        when(authenticatorService.loadCredentialRecordByCredentialId(credentialId)).thenReturn(null);
 
         //When
         authenticationProvider.setHideCredentialIdNotFoundExceptions(false);
-        authenticationProvider.retrieveAuthenticator(credentialId);
+        authenticationProvider.retrieveCredentialRecord(credentialId);
     }
 
     @Test

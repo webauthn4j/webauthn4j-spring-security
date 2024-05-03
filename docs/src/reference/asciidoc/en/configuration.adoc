@@ -98,8 +98,8 @@ If you set up two-step authentication combined with password authentication, you
 
 ==== Persistence layer integration
 
-WebAuthn4J Spring Security looks up an authenticator through the `WebAuthnAuthenticatorService` interface.
-Please set a class implementing `WebAuthnAuthenticatorService` to the `WebAuthnAuthenticationProvider`.
+WebAuthn4J Spring Security looks up an authenticator through the `WebAuthnCredentialRecordService` interface.
+Please set a class implementing `WebAuthnCredentialRecordService` to the `WebAuthnAuthenticationProvider`.
 Speaking of Java Config, it can be set through a constructor of `WebAuthnAuthenticationProviderConfigurer`.
 
 === Client interface
