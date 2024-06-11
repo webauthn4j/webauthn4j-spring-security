@@ -105,7 +105,7 @@ public class WebAuthnAuthenticationProviderTest {
 
         ArgumentCaptor<AuthenticationRequest> requestCaptor = ArgumentCaptor.forClass(AuthenticationRequest.class);
         ArgumentCaptor<AuthenticationParameters> parameterCaptor = ArgumentCaptor.forClass(AuthenticationParameters.class);
-        verify(webAuthnManager).validate(requestCaptor.capture(), parameterCaptor.capture());
+        verify(webAuthnManager).verify(requestCaptor.capture(), parameterCaptor.capture());
 
 
         assertThat(authenticatedToken.getPrincipal()).isEqualTo(webAuthnPrincipal);
@@ -126,7 +126,7 @@ public class WebAuthnAuthenticationProviderTest {
         when(webAuthnCredentialRecord.getAttestedCredentialData()).thenReturn(mock(AttestedCredentialData.class));
         when(webAuthnCredentialRecord.getAttestationStatement()).thenReturn(mock(AttestationStatement.class));
 
-        doThrow(com.webauthn4j.validator.exception.BadChallengeException.class).when(webAuthnManager).validate((AuthenticationRequest) any(), any());
+        doThrow(com.webauthn4j.verifier.exception.BadChallengeException.class).when(webAuthnManager).verify((AuthenticationRequest) any(), any());
 
         //When
         WebAuthnAuthenticationRequest request = mock(WebAuthnAuthenticationRequest.class);

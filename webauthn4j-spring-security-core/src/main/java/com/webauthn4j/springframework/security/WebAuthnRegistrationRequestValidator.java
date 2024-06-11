@@ -78,7 +78,7 @@ public class WebAuthnRegistrationRequestValidator {
                 createRegistrationParameters(httpServletRequest);
 
         try {
-            RegistrationData response = webAuthnManager.validate(webAuthnRegistrationRequest, webAuthnRegistrationParameters);
+            RegistrationData response = webAuthnManager.verify(webAuthnRegistrationRequest, webAuthnRegistrationParameters);
             return new WebAuthnRegistrationRequestValidationResponse(
                     response.getCollectedClientData(),
                     response.getAttestationObject(),

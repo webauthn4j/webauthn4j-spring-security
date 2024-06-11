@@ -19,7 +19,7 @@ package com.webauthn4j.springframework.security.webauthn.sample.app.api.validato
 import com.webauthn4j.springframework.security.webauthn.sample.app.api.AuthenticatorForm;
 import com.webauthn4j.springframework.security.webauthn.sample.app.api.ProfileUpdateForm;
 import com.webauthn4j.springframework.security.webauthn.sample.app.api.validator.AuthenticatorFormValidator;
-import com.webauthn4j.validator.exception.ValidationException;
+import com.webauthn4j.verifier.exception.VerificationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
@@ -59,7 +59,7 @@ public class ProfileUpdateFormValidator implements Validator {
             for (AuthenticatorForm authenticator : form.getAuthenticators()) {
                 try {
                     authenticatorFormValidator.validate(request, authenticator, errors);
-                } catch (ValidationException exception) {
+                } catch (VerificationException exception) {
                     errors.rejectValue("authenticators", "e.ProfileUpdateFormValidator.invalidAuthenticator", "AuthenticatorEntity is invalid.");
                 }
             }

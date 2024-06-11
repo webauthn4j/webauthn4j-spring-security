@@ -33,27 +33,27 @@ public class ExceptionUtilTest {
     public void wrapWithAuthenticationException_test() {
 
         Map<WebAuthnException, Class<?>> map = new HashMap<>();
-        map.put(new com.webauthn4j.validator.exception.BadAaguidException("dummy"), BadAaguidException.class);
-        map.put(new com.webauthn4j.validator.exception.BadAlgorithmException("dummy"), BadAlgorithmException.class);
-        map.put(new com.webauthn4j.validator.exception.BadAttestationStatementException("dummy"), BadAttestationStatementException.class);
-        map.put(new com.webauthn4j.validator.exception.KeyDescriptionValidationException("dummy"), KeyDescriptionValidationException.class);
-        map.put(new com.webauthn4j.validator.exception.BadChallengeException("dummy"), BadChallengeException.class);
-        map.put(new com.webauthn4j.validator.exception.BadOriginException("dummy"), BadOriginException.class);
-        map.put(new com.webauthn4j.validator.exception.BadRpIdException("dummy"), BadRpIdException.class);
-        map.put(new com.webauthn4j.validator.exception.BadSignatureException("dummy"), BadSignatureException.class);
+        map.put(new com.webauthn4j.verifier.exception.BadAaguidException("dummy"), BadAaguidException.class);
+        map.put(new com.webauthn4j.verifier.exception.BadAlgorithmException("dummy"), BadAlgorithmException.class);
+        map.put(new com.webauthn4j.verifier.exception.BadAttestationStatementException("dummy"), BadAttestationStatementException.class);
+        map.put(new com.webauthn4j.verifier.exception.KeyDescriptionValidationException("dummy"), KeyDescriptionValidationException.class);
+        map.put(new com.webauthn4j.verifier.exception.BadChallengeException("dummy"), BadChallengeException.class);
+        map.put(new com.webauthn4j.verifier.exception.BadOriginException("dummy"), BadOriginException.class);
+        map.put(new com.webauthn4j.verifier.exception.BadRpIdException("dummy"), BadRpIdException.class);
+        map.put(new com.webauthn4j.verifier.exception.BadSignatureException("dummy"), BadSignatureException.class);
         map.put(new com.webauthn4j.metadata.exception.BadStatusException("dummy"), BadStatusException.class);
-        map.put(new com.webauthn4j.validator.exception.CertificateException("dummy"), CertificateException.class);
-        map.put(new com.webauthn4j.validator.exception.ConstraintViolationException("dummy"), ConstraintViolationException.class);
-        map.put(new com.webauthn4j.validator.exception.MaliciousCounterValueException("dummy"), MaliciousCounterValueException.class);
-        map.put(new com.webauthn4j.validator.exception.InconsistentClientDataTypeException("dummy"), InconsistentClientDataTypeException.class);
-        map.put(new com.webauthn4j.validator.exception.MissingChallengeException("dummy"), MissingChallengeException.class);
-        map.put(new com.webauthn4j.validator.exception.PublicKeyMismatchException("dummy"), PublicKeyMismatchException.class);
-        map.put(new com.webauthn4j.validator.exception.SelfAttestationProhibitedException("dummy"), SelfAttestationProhibitedException.class);
-        map.put(new com.webauthn4j.validator.exception.TokenBindingException("dummy"), TokenBindingException.class);
-        map.put(new com.webauthn4j.validator.exception.TrustAnchorNotFoundException("dummy"), TrustAnchorNotFoundException.class);
-        map.put(new com.webauthn4j.validator.exception.UnexpectedExtensionException("dummy"), UnexpectedExtensionException.class);
-        map.put(new com.webauthn4j.validator.exception.UserNotPresentException("dummy"), UserNotPresentException.class);
-        map.put(new com.webauthn4j.validator.exception.UserNotVerifiedException("dummy"), UserNotVerifiedException.class);
+        map.put(new com.webauthn4j.verifier.exception.CertificateException("dummy"), CertificateException.class);
+        map.put(new com.webauthn4j.verifier.exception.ConstraintViolationException("dummy"), ConstraintViolationException.class);
+        map.put(new com.webauthn4j.verifier.exception.MaliciousCounterValueException("dummy"), MaliciousCounterValueException.class);
+        map.put(new com.webauthn4j.verifier.exception.InconsistentClientDataTypeException("dummy"), InconsistentClientDataTypeException.class);
+        map.put(new com.webauthn4j.verifier.exception.MissingChallengeException("dummy"), MissingChallengeException.class);
+        map.put(new com.webauthn4j.verifier.exception.PublicKeyMismatchException("dummy"), PublicKeyMismatchException.class);
+        map.put(new com.webauthn4j.verifier.exception.SelfAttestationProhibitedException("dummy"), SelfAttestationProhibitedException.class);
+        map.put(new com.webauthn4j.verifier.exception.TokenBindingException("dummy"), TokenBindingException.class);
+        map.put(new com.webauthn4j.verifier.exception.TrustAnchorNotFoundException("dummy"), TrustAnchorNotFoundException.class);
+        map.put(new com.webauthn4j.verifier.exception.UnexpectedExtensionException("dummy"), UnexpectedExtensionException.class);
+        map.put(new com.webauthn4j.verifier.exception.UserNotPresentException("dummy"), UserNotPresentException.class);
+        map.put(new com.webauthn4j.verifier.exception.UserNotVerifiedException("dummy"), UserNotVerifiedException.class);
         map.put(new ExceptionUtilTest.UnknownValidationException("dummy"), ValidationException.class);
         map.put(new com.webauthn4j.converter.exception.DataConversionException("dummy"), DataConversionException.class);
         map.put(new com.webauthn4j.util.exception.WebAuthnException("dummy"), AuthenticationServiceException.class);
@@ -63,7 +63,7 @@ public class ExceptionUtilTest {
         }
     }
 
-    static class UnknownValidationException extends com.webauthn4j.validator.exception.ValidationException {
+    static class UnknownValidationException extends com.webauthn4j.verifier.exception.VerificationException {
 
         UnknownValidationException(String message) {
             super(message);

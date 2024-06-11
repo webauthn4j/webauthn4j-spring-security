@@ -101,7 +101,7 @@ public class WebSecurityBeanConfig {
     public WebAuthnManager webAuthnManager(ObjectConverter objectConverter) {
 
         WebAuthnManager webAuthnManager = WebAuthnManager.createNonStrictWebAuthnManager(objectConverter);
-        webAuthnManager.getAuthenticationDataValidator().setCrossOriginAllowed(true);
+        webAuthnManager.getAuthenticationDataVerifier().setCrossOriginAllowed(true);
         return webAuthnManager;
     }
 
