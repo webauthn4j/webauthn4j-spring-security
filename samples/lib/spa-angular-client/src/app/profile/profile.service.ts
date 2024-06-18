@@ -15,7 +15,7 @@
  */
 
 import {Injectable, OnInit} from '@angular/core';
-import {HttpClient} from "@angular/common/http";
+import { HttpClient } from "@angular/common/http";
 import {RegisteringAuthenticatorViewModel} from "../webauthn/registering-authenticator.view-model";
 import {WebAuthnService} from "../webauthn/web-authn.service";
 import {Observable} from "rxjs/internal/Observable";
