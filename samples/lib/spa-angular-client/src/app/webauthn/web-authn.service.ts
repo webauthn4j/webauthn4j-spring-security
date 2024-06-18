@@ -18,7 +18,7 @@
 // DO NOT REMOVE: The above comment is mandatory to use webappsec-credential-management type definition
 
 import {Injectable} from '@angular/core';
-import {HttpClient} from "@angular/common/http";
+import { HttpClient } from "@angular/common/http";
 import * as base64url from "./base64url";
 import {WebAuthn4NgCredentialCreationOptions} from "./web-authn-4-ng-credential-creation-options";
 import {WebAuthn4NgCredentialRequestOptions} from "./web-authn-4-ng-credential-request-options";

@@ -24,7 +24,7 @@ import {RouterModule} from "@angular/router";
 import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
 import {NgbModule} from "@ng-bootstrap/ng-bootstrap"
 import {FormsModule} from "@angular/forms";
-import {HTTP_INTERCEPTORS, HttpClientModule} from "@angular/common/http";
+import { HTTP_INTERCEPTORS, provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
 import {AuthenticatorLoginComponent} from './authenticator-login/authenticator-login.component';
 import {PasswordLoginComponent} from './password-login/password-login.component';
 import {DashboardComponent} from "./dashboard/dashboard.component";
@@ -38,8 +38,7 @@ import {AuthGuard} from "./auth/auth.guard";
 import {AuthInterceptor} from "./auth/auth.interceptor";
 import {ResidentKeyRequirementDialogComponent} from './resident-key-requirement-dialog/resident-key-requirement-dialog.component';
 
-@NgModule({
-    declarations: [
+@NgModule({ declarations: [
         AppComponent,
         LoginComponent,
         AuthenticatorLoginComponent,
@@ -53,22 +52,17 @@ import {ResidentKeyRequirementDialogComponent} from './resident-key-requirement-
         HeaderComponent,
         ResidentKeyRequirementDialogComponent
     ],
-    imports: [
-        BrowserModule,
-        BrowserAnimationsModule,
-        AppRoutingModule,
-        HttpClientModule,
-        FormsModule,
-        NgbModule
-    ],
     exports: [
         RouterModule
     ],
-    providers: [
+    bootstrap: [AppComponent], imports: [BrowserModule,
+        BrowserAnimationsModule,
+        AppRoutingModule,
+        FormsModule,
+        NgbModule], providers: [
         AuthGuard,
         { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
-    ],
-    bootstrap: [AppComponent]
-})
+        provideHttpClient(withInterceptorsFromDi()),
+    ] })
 export class AppModule {
 }
