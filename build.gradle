@@ -20,7 +20,7 @@ buildscript {
         springBootVersion = '3.3.0'
         sonarqubeVersion = '5.0.0.4638'
         asciidoctorGradleVersion = "4.0.2"
-        artifactoryVersion = '5.2.0'
+        artifactoryVersion = '5.2.2'
         bintrayVersion = '1.8.5'
         httpBuilderVersion = '0.7.2'
 
