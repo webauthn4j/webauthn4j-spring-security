@@ -45,7 +45,7 @@
     "@types/base64-arraybuffer": "^0.2.0",
     "@types/jasmine": "~5.1.4",
     "@types/jasminewd2": "~2.0.13",
-    "@types/node": "^20.13.0",
+    "@types/node": "^20.14.5",
     "@types/uuid": "^9.0.8",
     "@types/webappsec-credential-management": "^0.6.8",
     "codelyzer": "^6.0.2",
