@@ -66,3 +66,18 @@ jobs:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         run: if not "${{ secrets.SONAR_TOKEN }}" == "" gradlew jacocoTestReport sonar check javadoc asciidoc -Dsonar.organization=webauthn4j -Dsonar.host.url=https://sonarcloud.io -Dsonar.token=${{ secrets.SONAR_TOKEN }}
         shell: cmd
+
+  auto-merge:
+    name: Auto Merge
+    runs-on: ubuntu-latest
+    if: ${{ github.actor == 'dependabot[bot]' }}
+    permissions:
+      contents: write
+      pull-requests: write
+    env:
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Merge
+        run: gh pr merge "${GITHUB_HEAD_REF}" --merge --auto
