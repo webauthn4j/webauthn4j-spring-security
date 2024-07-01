@@ -19,7 +19,7 @@ package com.webauthn4j.springframework.security.webauthn.sample.app.security;
 import com.webauthn4j.data.extension.SingleValueExtensionInputBase;
 import com.webauthn4j.data.extension.client.AuthenticationExtensionClientInput;
 import com.webauthn4j.data.extension.client.RegistrationExtensionClientInput;
-import com.webauthn4j.validator.exception.ConstraintViolationException;
+import com.webauthn4j.verifier.exception.ConstraintViolationException;
 
 import java.io.Serializable;
 

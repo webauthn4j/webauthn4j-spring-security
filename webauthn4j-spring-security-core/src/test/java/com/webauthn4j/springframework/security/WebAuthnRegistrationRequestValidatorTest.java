@@ -58,7 +58,7 @@ public class WebAuthnRegistrationRequestValidatorTest {
 
 
     @Test
-    public void validate_test() {
+    public void verify_test() {
         WebAuthnRegistrationRequestValidator target = new WebAuthnRegistrationRequestValidator(
                 webAuthnManager, serverPropertyProvider
         );
@@ -69,7 +69,7 @@ public class WebAuthnRegistrationRequestValidatorTest {
         CollectedClientData collectedClientData = mock(CollectedClientData.class);
         AttestationObject attestationObject = mock(AttestationObject.class);
         AuthenticationExtensionsClientOutputs<RegistrationExtensionClientOutput> clientExtensionOutputs = new AuthenticationExtensionsClientOutputs<>();
-        when(webAuthnManager.validate(any(RegistrationRequest.class), any(RegistrationParameters.class))).thenReturn(
+        when(webAuthnManager.verify(any(RegistrationRequest.class), any(RegistrationParameters.class))).thenReturn(
                 new RegistrationData(attestationObject, null, collectedClientData, null, clientExtensionOutputs, null));
 
         MockHttpServletRequest mockHttpServletRequest = new MockHttpServletRequest();
@@ -85,7 +85,7 @@ public class WebAuthnRegistrationRequestValidatorTest {
 
         ArgumentCaptor<RegistrationRequest> registrationRequestArgumentCaptor = ArgumentCaptor.forClass(RegistrationRequest.class);
         ArgumentCaptor<RegistrationParameters> registrationParametersArgumentCaptor = ArgumentCaptor.forClass(RegistrationParameters.class);
-        verify(webAuthnManager).validate(registrationRequestArgumentCaptor.capture(), registrationParametersArgumentCaptor.capture());
+        verify(webAuthnManager).verify(registrationRequestArgumentCaptor.capture(), registrationParametersArgumentCaptor.capture());
         RegistrationRequest registrationRequest = registrationRequestArgumentCaptor.getValue();
         RegistrationParameters registrationParameters = registrationParametersArgumentCaptor.getValue();
 
@@ -107,7 +107,7 @@ public class WebAuthnRegistrationRequestValidatorTest {
         CollectedClientData collectedClientData = mock(CollectedClientData.class);
         AttestationObject attestationObject = mock(AttestationObject.class);
         AuthenticationExtensionsClientOutputs<RegistrationExtensionClientOutput> clientExtensionOutputs = new AuthenticationExtensionsClientOutputs<>();
-        when(webAuthnManager.validate(any(RegistrationRequest.class), any(RegistrationParameters.class))).thenReturn(
+        when(webAuthnManager.verify(any(RegistrationRequest.class), any(RegistrationParameters.class))).thenReturn(
                 new RegistrationData(attestationObject, null, collectedClientData, null, clientExtensionOutputs, null));
 
         MockHttpServletRequest mockHttpServletRequest = new MockHttpServletRequest();
@@ -122,7 +122,7 @@ public class WebAuthnRegistrationRequestValidatorTest {
 
         ArgumentCaptor<RegistrationRequest> registrationRequestArgumentCaptor = ArgumentCaptor.forClass(RegistrationRequest.class);
         ArgumentCaptor<RegistrationParameters> registrationParametersArgumentCaptor = ArgumentCaptor.forClass(RegistrationParameters.class);
-        verify(webAuthnManager).validate(registrationRequestArgumentCaptor.capture(), registrationParametersArgumentCaptor.capture());
+        verify(webAuthnManager).verify(registrationRequestArgumentCaptor.capture(), registrationParametersArgumentCaptor.capture());
         RegistrationRequest registrationRequest = registrationRequestArgumentCaptor.getValue();
         RegistrationParameters registrationParameters = registrationParametersArgumentCaptor.getValue();
 
@@ -141,7 +141,7 @@ public class WebAuthnRegistrationRequestValidatorTest {
         WebAuthnRegistrationRequestValidator target = new WebAuthnRegistrationRequestValidator(
                 webAuthnManager, serverPropertyProvider
         );
-        when(webAuthnManager.validate(any(RegistrationRequest.class), any(RegistrationParameters.class))).thenThrow(new com.webauthn4j.validator.exception.BadAttestationStatementException("dummy"));
+        when(webAuthnManager.verify(any(RegistrationRequest.class), any(RegistrationParameters.class))).thenThrow(new com.webauthn4j.verifier.exception.BadAttestationStatementException("dummy"));
 
         MockHttpServletRequest mockHttpServletRequest = new MockHttpServletRequest();
         mockHttpServletRequest.setScheme("https");

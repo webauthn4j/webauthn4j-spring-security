@@ -142,7 +142,7 @@ public class WebAuthnAuthenticationProvider implements AuthenticationProvider {
         );
 
         try {
-            webAuthnManager.validate(authenticationRequest, authenticationParameters);
+            webAuthnManager.verify(authenticationRequest, authenticationParameters);
         } catch (WebAuthnException e) {
             throw ExceptionUtil.wrapWithAuthenticationException(e);
         }

@@ -41,16 +41,16 @@ import com.webauthn4j.springframework.security.webauthn.sample.app.security.Exam
 import com.webauthn4j.springframework.security.webauthn.sample.app.security.ExampleExtensionClientInput;
 import com.webauthn4j.util.Base64Util;
 import com.webauthn4j.util.CertificateUtil;
-import com.webauthn4j.validator.attestation.statement.androidkey.AndroidKeyAttestationStatementValidator;
-import com.webauthn4j.validator.attestation.statement.androidsafetynet.AndroidSafetyNetAttestationStatementValidator;
-import com.webauthn4j.validator.attestation.statement.apple.AppleAnonymousAttestationStatementValidator;
-import com.webauthn4j.validator.attestation.statement.none.NoneAttestationStatementValidator;
-import com.webauthn4j.validator.attestation.statement.packed.PackedAttestationStatementValidator;
-import com.webauthn4j.validator.attestation.statement.tpm.TPMAttestationStatementValidator;
-import com.webauthn4j.validator.attestation.statement.u2f.FIDOU2FAttestationStatementValidator;
-import com.webauthn4j.validator.attestation.trustworthiness.certpath.CertPathTrustworthinessValidator;
-import com.webauthn4j.validator.attestation.trustworthiness.certpath.DefaultCertPathTrustworthinessValidator;
-import com.webauthn4j.validator.attestation.trustworthiness.self.DefaultSelfAttestationTrustworthinessValidator;
+import com.webauthn4j.verifier.attestation.statement.androidkey.AndroidKeyAttestationStatementVerifier;
+import com.webauthn4j.verifier.attestation.statement.androidsafetynet.AndroidSafetyNetAttestationStatementVerifier;
+import com.webauthn4j.verifier.attestation.statement.apple.AppleAnonymousAttestationStatementVerifier;
+import com.webauthn4j.verifier.attestation.statement.none.NoneAttestationStatementVerifier;
+import com.webauthn4j.verifier.attestation.statement.packed.PackedAttestationStatementVerifier;
+import com.webauthn4j.verifier.attestation.statement.tpm.TPMAttestationStatementVerifier;
+import com.webauthn4j.verifier.attestation.statement.u2f.FIDOU2FAttestationStatementVerifier;
+import com.webauthn4j.verifier.attestation.trustworthiness.certpath.CertPathTrustworthinessVerifier;
+import com.webauthn4j.verifier.attestation.trustworthiness.certpath.DefaultCertPathTrustworthinessVerifier;
+import com.webauthn4j.verifier.attestation.trustworthiness.self.DefaultSelfAttestationTrustworthinessVerifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.Resource;
@@ -124,21 +124,21 @@ public class WebSecurityBeanConfig {
 
     @Bean
     public WebAuthnManager webAuthnManager(
-            CertPathTrustworthinessValidator certPathTrustworthinessValidator,
+            CertPathTrustworthinessVerifier certPathTrustworthinessVerifier,
             ObjectConverter objectConverter
     ) {
         return new WebAuthnManager(
                 Arrays.asList(
-                        new PackedAttestationStatementValidator(),
-                        new FIDOU2FAttestationStatementValidator(),
-                        new AndroidKeyAttestationStatementValidator(),
-                        new AndroidSafetyNetAttestationStatementValidator(),
-                        new TPMAttestationStatementValidator(),
-                        new AppleAnonymousAttestationStatementValidator(),
-                        new NoneAttestationStatementValidator()
+                        new PackedAttestationStatementVerifier(),
+                        new FIDOU2FAttestationStatementVerifier(),
+                        new AndroidKeyAttestationStatementVerifier(),
+                        new AndroidSafetyNetAttestationStatementVerifier(),
+                        new TPMAttestationStatementVerifier(),
+                        new AppleAnonymousAttestationStatementVerifier(),
+                        new NoneAttestationStatementVerifier()
                 ),
-                certPathTrustworthinessValidator,
-                new DefaultSelfAttestationTrustworthinessValidator(),
+                certPathTrustworthinessVerifier,
+                new DefaultSelfAttestationTrustworthinessVerifier(),
                 objectConverter
         );
     }
@@ -182,12 +182,12 @@ public class WebSecurityBeanConfig {
     }
 
     @Bean
-    public DefaultCertPathTrustworthinessValidator defaultCertPathTrustworthinessValidator(
+    public DefaultCertPathTrustworthinessVerifier defaultCertPathTrustworthinessVerifier(
             MetadataStatementsBasedTrustAnchorRepository metadataStatementsBasedTrustAnchorRepository,
             MetadataBLOBBasedTrustAnchorRepository metadataBLOBBasedTrustAnchorRepository) {
-        DefaultCertPathTrustworthinessValidator defaultCertPathTrustworthinessValidator = new DefaultCertPathTrustworthinessValidator(new AggregatingTrustAnchorRepository(metadataStatementsBasedTrustAnchorRepository, metadataBLOBBasedTrustAnchorRepository));
-        defaultCertPathTrustworthinessValidator.setFullChainProhibited(true);
-        return defaultCertPathTrustworthinessValidator;
+        DefaultCertPathTrustworthinessVerifier defaultCertPathTrustworthinessVerifier = new DefaultCertPathTrustworthinessVerifier(new AggregatingTrustAnchorRepository(metadataStatementsBasedTrustAnchorRepository, metadataBLOBBasedTrustAnchorRepository));
+        defaultCertPathTrustworthinessVerifier.setFullChainProhibited(true);
+        return defaultCertPathTrustworthinessVerifier;
     }
 
     public X509Certificate mds3TestRootCertificate(){
