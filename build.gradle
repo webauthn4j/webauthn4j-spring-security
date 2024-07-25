@@ -19,7 +19,7 @@ buildscript {
         //Plugins
         springBootVersion = '3.3.1'
         sonarqubeVersion = '5.1.0.4882'
-        asciidoctorGradleVersion = "4.0.2"
+        asciidoctorGradleVersion = "4.0.3"
 
         //Libraries
         webauthn4jVersion = '0.25.0.RELEASE'
