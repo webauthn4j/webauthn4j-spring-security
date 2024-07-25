@@ -20,9 +20,6 @@ buildscript {
         springBootVersion = '3.3.1'
         sonarqubeVersion = '5.1.0.4882'
         asciidoctorGradleVersion = "4.0.2"
-        artifactoryVersion = '5.2.3'
-        bintrayVersion = '1.8.5'
-        httpBuilderVersion = '0.7.2'
 
         //Libraries
         webauthn4jVersion = '0.25.0.RELEASE'
@@ -56,15 +53,11 @@ buildscript {
         classpath("org.springframework.boot:spring-boot-gradle-plugin:$springBootVersion")
         classpath("org.sonarsource.scanner.gradle:sonarqube-gradle-plugin:$sonarqubeVersion")
         classpath("org.asciidoctor:asciidoctor-gradle-jvm:$asciidoctorGradleVersion")
-        classpath("org.jfrog.buildinfo:build-info-extractor-gradle:$artifactoryVersion")
-        classpath("com.jfrog.bintray.gradle:gradle-bintray-plugin:$bintrayVersion")
-        classpath("org.codehaus.groovy.modules.http-builder:http-builder:$httpBuilderVersion")
     }
 
 }
 
 apply plugin: 'org.sonarqube'
-apply plugin: 'com.jfrog.artifactory'
 apply plugin: 'org.asciidoctor.jvm.convert'
 
 
