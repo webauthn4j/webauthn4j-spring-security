@@ -39,7 +39,7 @@ buildscript {
         webDriverManagerVersion = '5.9.1'
         // To use WebAuthn WebDriver extension, alpha release is used here.
         // When stable version is released, and Spring Boot BOM includes it, this need to be removed.
-        seleniumVersion = '4.22.0'
+        seleniumVersion = '4.23.0'
 
     }
 
