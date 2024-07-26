@@ -36,7 +36,7 @@ buildscript {
         log4jdbcVersion = '0.2.7'
         dbunitVersion = '2.8.0'
         springTestDbunitVersion = '1.3.0'
-        webDriverManagerVersion = '5.9.1'
+        webDriverManagerVersion = '5.9.2'
         // To use WebAuthn WebDriver extension, alpha release is used here.
         // When stable version is released, and Spring Boot BOM includes it, this need to be removed.
         seleniumVersion = '4.23.0'
