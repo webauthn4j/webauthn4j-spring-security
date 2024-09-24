@@ -76,8 +76,8 @@ WebAuthn4J Spring Security can be configured through Spring Security Java Config
 public class WebSecurityConfig {
 
     @Bean
-    public WebAuthnAuthenticationProvider webAuthnAuthenticationProvider(WebAuthnAuthenticatorService authenticatorService, WebAuthnManager webAuthnManager){
-        return new WebAuthnAuthenticationProvider(authenticatorService, webAuthnManager);
+    public WebAuthnAuthenticationProvider webAuthnAuthenticationProvider(WebAuthnCredentialRecordService webAuthnCredentialRecordService, WebAuthnManager webAuthnManager){
+        return new WebAuthnAuthenticationProvider(webAuthnCredentialRecordService, webAuthnManager);
     }
 
     @Bean
