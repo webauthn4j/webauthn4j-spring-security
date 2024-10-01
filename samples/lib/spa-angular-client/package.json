@@ -24,7 +24,7 @@
     "@angular/core": "^18.1.0",
     "@angular/forms": "^18.1.0",
     "@angular/localize": "^18.1.0",
-    "@angular/platform-browser": "^18.1.0",
+    "@angular/platform-browser": "^18.2.6",
     "@angular/platform-browser-dynamic": "^18.1.0",
     "@angular/router": "^18.1.0",
     "@fortawesome/fontawesome-free": "^6.5.2",
