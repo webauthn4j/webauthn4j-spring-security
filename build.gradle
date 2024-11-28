@@ -22,7 +22,7 @@ buildscript {
         asciidoctorGradleVersion = "4.0.3"
 
         //Libraries
-        webauthn4jVersion = '0.25.1.RELEASE'
+        webauthn4jVersion = '0.26.0.RELEASE'
         springSecurityVersion = '6.0.2'
         hibernateValidatorVersion = '8.0.1.Final'
         thymeleafVersion = '3.0.4.RELEASE'
