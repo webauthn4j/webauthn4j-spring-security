@@ -138,7 +138,7 @@ public class WebAuthnLoginConfigurerSpringTest {
         mvc
                 .perform(get("/webauthn/attestation/options").with(user("john")))
                 .andExpect(authenticated())
-                .andExpect(content().json("{\"rp\":{\"id\":\"example.com\",\"name\":\"example\"},\"user\":{\"id\":\"am9obg==\",\"name\":\"john\",\"displayName\":\"john\"},\"challenge\":\"aFglXMZdQTKD4krvNzJBzA\",\"pubKeyCredParams\":[{\"type\":\"public-key\",\"alg\":-7},{\"type\":\"public-key\",\"alg\":-65535}],\"timeout\":10000,\"excludeCredentials\":[],\"authenticatorSelection\":{\"authenticatorAttachment\":\"cross-platform\",\"requireResidentKey\":false,\"residentKey\":\"preferred\",\"userVerification\":\"preferred\"},\"attestation\":\"direct\",\"extensions\":{\"uvm\":true,\"credProps\":true,\"extensionProvider\":\"/webauthn/attestation/options\",\"unknown\":true}}", true))
+                .andExpect(content().json("{\"rp\":{\"id\":\"example.com\",\"name\":\"example\"},\"user\":{\"id\":\"am9obg\",\"name\":\"john\",\"displayName\":\"john\"},\"challenge\":\"aFglXMZdQTKD4krvNzJBzA\",\"pubKeyCredParams\":[{\"type\":\"public-key\",\"alg\":-7},{\"type\":\"public-key\",\"alg\":-65535}],\"timeout\":10000,\"excludeCredentials\":[],\"authenticatorSelection\":{\"authenticatorAttachment\":\"cross-platform\",\"requireResidentKey\":false,\"residentKey\":\"preferred\",\"userVerification\":\"preferred\"},\"attestation\":\"direct\",\"extensions\":{\"uvm\":true,\"credProps\":true,\"extensionProvider\":\"/webauthn/attestation/options\",\"unknown\":true}}", true))
                 .andExpect(status().isOk());
     }
 
