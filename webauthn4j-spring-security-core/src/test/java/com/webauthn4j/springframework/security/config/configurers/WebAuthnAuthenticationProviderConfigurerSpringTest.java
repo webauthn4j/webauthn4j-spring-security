@@ -39,6 +39,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.web.servlet.handler.HandlerMappingIntrospector;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.mock;
 
 @RunWith(SpringRunner.class)
 public class WebAuthnAuthenticationProviderConfigurerSpringTest {
@@ -55,8 +56,10 @@ public class WebAuthnAuthenticationProviderConfigurerSpringTest {
     @EnableWebSecurity
     static class Config {
 
-        @MockBean
-        private WebAuthnCredentialRecordService authenticatorService;
+        @Bean
+        public WebAuthnCredentialRecordService webAuthnCredentialRecordService(){
+            return mock(WebAuthnCredentialRecordService.class);
+        }
 
         @Bean
         public ChallengeRepository challengeRepository() {
@@ -100,8 +103,8 @@ public class WebAuthnAuthenticationProviderConfigurerSpringTest {
         }
 
         @Bean
-        public AuthenticationManager authenticationManager(){
-            return new ProviderManager(new WebAuthnAuthenticationProvider(authenticatorService, WebAuthnManager.createNonStrictWebAuthnManager()));
+        public AuthenticationManager authenticationManager(WebAuthnCredentialRecordService webAuthnCredentialRecordService) {
+            return new ProviderManager(new WebAuthnAuthenticationProvider(webAuthnCredentialRecordService, WebAuthnManager.createNonStrictWebAuthnManager()));
         }
 
         @Bean(name = "mvcHandlerMappingIntrospector")
