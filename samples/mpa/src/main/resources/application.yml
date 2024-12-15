@@ -1,5 +1,0 @@
-server:
-  servlet:
-    session:
-      tracking-modes: cookie
-  forward-headers-strategy: framework

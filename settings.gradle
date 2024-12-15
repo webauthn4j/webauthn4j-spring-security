@@ -17,8 +17,3 @@
 include 'webauthn4j-spring-security-core'
 include 'webauthn4j-spring-security-metadata'
 include 'webauthn4j-spring-security-test'
-
-include 'samples:lib:spa-angular-client'
-include 'samples:spa'
-include 'samples:fido-server-conformance-test-app'
-include 'samples:mpa'
