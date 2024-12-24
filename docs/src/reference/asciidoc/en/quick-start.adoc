@@ -1,13 +1,12 @@
 
 == Quick start
 
-WebAuthn4J Spring Security contains a sample application which demonstrates its major functionality.
-
+Sample applications demonstrating WebAuthn4J Spring Security major functionalities are available in https://github.com/webauthn4j/webauthn4j-spring-security-samples[webauthn4j-spring-security-samples].
 It can be launched with the following command.
 
 [source,bash]
 ----
-./gradlew samples:spa:bootRun
+./gradlew spa:bootRun
 ----
 
 image::images/login.png[login view]

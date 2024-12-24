@@ -58,7 +58,9 @@ git clone https://github.com/webauthn4j/webauthn4j-spring-security
 ./gradlew build
 ```
 
-### Execute sample application
+## sample applications
+
+Sample applications are available in [webauthn4j-spring-security-samples](https://github.com/webauthn4j/webauthn4j-spring-security-samples)
 
 ```bash
 ./gradlew samples:spa:bootRun
