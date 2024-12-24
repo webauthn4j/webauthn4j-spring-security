@@ -1,7 +1,7 @@
 
 == Sample application
 
-WebAuthn4J Spring Security contains a sample application demonstrating its major functionalities.
+Sample applications demonstrating WebAuthn4J Spring Security major functionalities are available in https://github.com/webauthn4j/webauthn4j-spring-security-samples[webauthn4j-spring-security-samples].
 Sample SPA is a demo of Single Page Application. Sample MPA is a demo of traditional Multi Page Application.
 Sample SPA is explained below.
 
@@ -11,7 +11,7 @@ Sample application can be executed by following command.
 
 [source,bash]
 ----
-./gradlew samples:spa:bootRun
+./gradlew spa:bootRun
 ----
 
 === User and authenticator registration

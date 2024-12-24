@@ -1,7 +1,7 @@
 
 == サンプルアプリケーション
 
-webauthn4j-spring-securityは主要機能をデモするサンプルアプリケーションを含みます。
+webauthn4j-spring-securityの主要機能をデモするサンプルアプリケーションは、 https://github.com/webauthn4j/webauthn4j-spring-security-samples[webauthn4j-spring-security-samples] に存在します。
 Single Page Applicationのデモである、Sample SPAと、従来型のMulti Page Applicationである、Sample MPAです。以下ではSample SPAについて説明します。
 
 === サンプルアプリケーションの実行
@@ -10,7 +10,7 @@ Single Page Applicationのデモである、Sample SPAと、従来型のMulti Pa
 
 [source,bash]
 ----
-./gradlew samples:spa:bootRun
+./gradlew spa:bootRun
 ----
 
 === ユーザーおよび認証デバイスの登録
