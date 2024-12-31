@@ -43,8 +43,8 @@ self-contained bootstrap mechanism for the build.
 
 ### Prerequisites
 
-- Java8 or later
-- Spring Framework 5.0 or later
+- Java17 or later
+- Spring Framework 6.0 or later
 
 ### Checkout sources
 
