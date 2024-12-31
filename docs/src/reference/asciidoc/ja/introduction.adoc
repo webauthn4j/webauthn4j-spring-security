@@ -13,18 +13,18 @@ Spring Securityで保護されたWebアプリケーションに対して、Web A
 WebAuthnのアサーションの検証に関わるコアの処理は https://github.com/webauthn4j/webauthn4j[WebAuthn4J] という別のプロジェクトで開発を進めています。
 WebAuthn4Jは、 全ての構成証明ステートメント（Attestation）をサポートしながら、外部ライブラリへの依存関係は最小限に抑えたポータブルなJavaライブラリです。
 
-==== Spring Security WebAuthnとの関係
+==== Spring SecurityのPasskeyサポートとの関係
 
-Spring Security WebAuthnという姉妹プロジェクトも存在します。Spring Security WebAuthnは、Spring Security本体へのマージを目指してSpring Securityプロジェクトの方針に則って開発されている一方、
-WebAuthn4J Spring Securityは、WebAuthn4Jのプロジェクトとして、WebAuthn4Jライブラリの機能を最大限に、またより早く取り込むことを目的に開発を進めています。
+Spring Security 6.4から、Passkeysサポートが追加されました。こちらもWebAuthn4Jライブラリを使用していますが、Spring Securityプロジェクトでメンテナンスされています。
+一方、このWebAuthn4J Spring Securityは、WebAuthn4Jプロジェクトによってメンテナンスされています。
 
 === 要件
 
 ==== 言語・フレームワーク
 
-* Java8以降
-* Spring Framework 5以降
-* Spring Security 5以降
+* Java17以降
+* Spring Framework 6以降
+* Spring Security 6以降
 
 ==== 動作環境
 

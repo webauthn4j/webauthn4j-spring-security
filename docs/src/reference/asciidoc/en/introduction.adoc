@@ -16,18 +16,18 @@ WebAuthn4J Spring Security is a Spring Security extension module to provide Web 
 WebAuthn4J Spring Security uses https://github.com/webauthn4j/webauthn4j[WebAuthn4J] for WebAuthn attestation and assertion verification.
 WebAuthn4J is a portable Java library that supports all the attestation statements, but has minimal dependencies on external libraries.
 
-==== Spring Security WebAuthn
+==== Spring Security Passkeys
 
-There is also a sister project called Spring Security WebAuthn. Spring Security WebAuthn is developed according to Spring Security project's policy, aiming to be merged into Spring Security upstream.
-WebAuthn4J Spring Security is developed as a WebAuthn4J project with the aim of maximizing the functions of the WebAuthn4J library.
+Since Spring Security 6.4, https://docs.spring.io/spring-security/reference/servlet/authentication/passkeys.html[passkey support has been added to `spring-security-web`]. It uses the WebAuthn4J library too, but is maintained by the Spring Security project.
+On the other hand, this WebAuthn4J Spring Security is maintained by the WebAuthn4J project.
 
 === Requirements
 
 ==== Language & Framework
 
-* Java8 or later
-* Spring Framework 5 or later
-* Spring Security 5 or later
+* Java17 or later
+* Spring Framework 6 or later
+* Spring Security 6 or later
 
 ==== Environment
 
