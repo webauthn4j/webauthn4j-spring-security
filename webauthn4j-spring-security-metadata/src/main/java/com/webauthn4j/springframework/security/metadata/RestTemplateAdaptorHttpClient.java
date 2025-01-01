@@ -17,8 +17,16 @@
 package com.webauthn4j.springframework.security.metadata;
 
 import com.webauthn4j.metadata.HttpClient;
+import com.webauthn4j.metadata.exception.MDSException;
+import org.springframework.core.io.Resource;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
 import org.springframework.util.Assert;
 import org.springframework.web.client.RestTemplate;
+
+import java.io.IOException;
+import java.util.Objects;
 
 /**
  * An {@link HttpClient} implementation with Spring {@link RestTemplate}
@@ -36,7 +44,13 @@ public class RestTemplateAdaptorHttpClient implements HttpClient {
      * {@inheritDoc}
      */
     @Override
-    public String fetch(String url) {
-        return restTemplate.getForObject(url, String.class);
+    public Response fetch(String url) {
+        ResponseEntity<Resource> entity = restTemplate.getForEntity(url, Resource.class);
+        Resource resource = Objects.requireNonNull(entity.getBody());
+        try {
+            return new Response(entity.getStatusCode().value(), resource.getInputStream());
+        } catch (IOException e) {
+            throw new MDSException("Failed to fetch " + url, e);
+        }
     }
 }
