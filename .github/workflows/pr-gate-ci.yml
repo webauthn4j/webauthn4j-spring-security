@@ -17,7 +17,7 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v1
+        uses: actions/checkout@v4
 
       - name: Set up JDK ${{ matrix.java_version }}
         uses: actions/setup-java@v1
@@ -37,7 +37,7 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v1
+        uses: actions/checkout@v4
 
       - name: Set up JDK ${{ matrix.java_version }}
         uses: actions/setup-java@v1
@@ -57,7 +57,7 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v1
+        uses: actions/checkout@v4
 
       - name: Set up JDK ${{ matrix.java_version }}
         uses: actions/setup-java@v1
@@ -82,6 +82,6 @@ jobs:
       GH_TOKEN: ${{ github.token }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       - name: Merge
         run: gh pr merge "${GITHUB_HEAD_REF}" --merge --auto
