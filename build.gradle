@@ -22,7 +22,7 @@ buildscript {
         asciidoctorGradleVersion = "4.0.4"
 
         //Libraries
-        webauthn4jVersion = '0.28.5.RELEASE'
+        webauthn4jVersion = '0.28.6.RELEASE'
         springSecurityVersion = '6.0.2'
 
     }
