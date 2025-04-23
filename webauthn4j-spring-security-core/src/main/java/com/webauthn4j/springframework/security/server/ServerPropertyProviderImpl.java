@@ -58,7 +58,7 @@ public class ServerPropertyProviderImpl implements ServerPropertyProvider {
         String effectiveRpId = getRpId(request);
         Challenge challenge = challengeRepository.loadOrGenerateChallenge(request);
 
-        return new ServerProperty(origin, effectiveRpId, challenge, null); // tokenBinding is not supported by Servlet API as of 4.0
+        return new ServerProperty(origin, effectiveRpId, challenge);
     }
 
     public String getRpId() {
