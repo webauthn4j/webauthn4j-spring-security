@@ -58,7 +58,7 @@ public class RegistrationValidationTest {
 
     @Test
     public void validate_test() {
-        ServerProperty serverProperty = new ServerProperty(origin, rpId, challenge, null);
+        ServerProperty serverProperty = new ServerProperty(origin, rpId, challenge);
         when(serverPropertyProvider.provide(any())).thenReturn(serverProperty);
 
 

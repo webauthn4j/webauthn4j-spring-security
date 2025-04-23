@@ -32,8 +32,7 @@ public class WebAuthnAuthenticationParametersTest {
         ServerProperty serverProperty = new ServerProperty(
                 new Origin("https://example.com"),
                 "example.com",
-                challenge,
-                new byte[]{0x43, 0x21}
+                challenge
         );
         WebAuthnAuthenticationParameters parameters = new WebAuthnAuthenticationParameters(
                 serverProperty,
@@ -52,8 +51,7 @@ public class WebAuthnAuthenticationParametersTest {
                 new ServerProperty(
                         new Origin("https://example.com"),
                         "example.com",
-                        challenge,
-                        new byte[]{0x43, 0x21}
+                        challenge
                 ),
                 true,
                 true
@@ -62,8 +60,7 @@ public class WebAuthnAuthenticationParametersTest {
                 new ServerProperty(
                         new Origin("https://example.com"),
                         "example.com",
-                        challenge,
-                        new byte[]{0x43, 0x21}
+                        challenge
                 ),
                 true,
                 true
