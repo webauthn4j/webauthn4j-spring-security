@@ -14,25 +14,23 @@
  * limitations under the License.
  */
 
-group 'com.webauthn4j'
-version "${webAuthn4JSpringSecurityVersion}"
+group = "com.webauthn4j"
+version = "${rootProject.extra["webAuthn4JSpringSecurityVersion"]}"
 
 description = "WebAuthn4J Spring Security Thymeleaf Extension library"
 
 dependencies {
-    implementation project(':webauthn4j-spring-security-core')
+    implementation(project(":webauthn4j-spring-security-core"))
     implementation("com.fasterxml.jackson.core:jackson-databind")
     implementation("com.fasterxml.jackson.dataformat:jackson-dataformat-cbor")
     implementation("org.slf4j:slf4j-api")
 
-
     //Test
-    testImplementation('org.projectlombok:lombok')
-    testImplementation('org.springframework:spring-webmvc')
-    testImplementation('org.springframework.boot:spring-boot-starter-test')
-    testImplementation('org.springframework.security:spring-security-test')
-    testImplementation('junit:junit')
-    testImplementation('org.mockito:mockito-core')
-    testImplementation('org.assertj:assertj-core')
-
+    testImplementation("org.projectlombok:lombok")
+    testImplementation("org.springframework:spring-webmvc")
+    testImplementation("org.springframework.boot:spring-boot-starter-test")
+    testImplementation("org.springframework.security:spring-security-test")
+    testImplementation("junit:junit")
+    testImplementation("org.mockito:mockito-core")
+    testImplementation("org.assertj:assertj-core")
 }

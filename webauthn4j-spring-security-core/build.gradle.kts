@@ -14,20 +14,20 @@
  * limitations under the License.
  */
 
-group 'com.webauthn4j'
-version "${webAuthn4JSpringSecurityVersion}"
+group = "com.webauthn4j"
+version = "${rootProject.extra["webAuthn4JSpringSecurityVersion"]}"
 
 description = "WebAuthn4J Spring Security Core library"
 
 dependencies {
     // WebAuthn4J
-    api("com.webauthn4j:webauthn4j-core")
-    api("com.webauthn4j:webauthn4j-metadata")
+    api(libs.webauthn4j.core)
+    api(libs.webauthn4j.metadata)
 
     // Spring Security
-    api('org.springframework.security:spring-security-core')
-    api('org.springframework.security:spring-security-config')
-    api('org.springframework.security:spring-security-web')
+    api("org.springframework.security:spring-security-core")
+    api("org.springframework.security:spring-security-config")
+    api("org.springframework.security:spring-security-web")
 
     // Spring Framework
     api("org.springframework:spring-core")
@@ -36,21 +36,20 @@ dependencies {
     implementation("org.springframework:spring-aop")
     implementation("org.springframework:spring-jdbc")
 
-    api('jakarta.servlet:jakarta.servlet-api')
+    api("jakarta.servlet:jakarta.servlet-api")
     implementation("org.slf4j:slf4j-api")
 
     implementation("com.fasterxml.jackson.core:jackson-databind")
     implementation("com.fasterxml.jackson.dataformat:jackson-dataformat-cbor")
 
     //Test
-    testImplementation("com.webauthn4j:webauthn4j-test")
-    testImplementation('org.projectlombok:lombok')
+    testImplementation(libs.webauthn4j.test)
+    testImplementation("org.projectlombok:lombok")
     testImplementation("org.springframework:spring-webmvc")
-    testImplementation('org.springframework.boot:spring-boot-starter-test')
-    testImplementation('org.springframework.security:spring-security-test')
-    testImplementation('com.h2database:h2')
-    testImplementation('junit:junit')
-    testImplementation('org.mockito:mockito-core')
-    testImplementation('org.assertj:assertj-core')
-
+    testImplementation("org.springframework.boot:spring-boot-starter-test")
+    testImplementation("org.springframework.security:spring-security-test")
+    testImplementation("com.h2database:h2")
+    testImplementation("junit:junit")
+    testImplementation("org.mockito:mockito-core")
+    testImplementation("org.assertj:assertj-core")
 }
