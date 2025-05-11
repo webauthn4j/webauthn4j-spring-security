@@ -1,0 +1,58 @@
+[versions]
+
+slf4j = "2.0.17"
+jackson = "2.19.0"
+
+webauthn4j = "0.29.1.RELEASE"
+
+# spring
+
+spring-boot = "3.4.5"
+spring-security = "6.0.2"
+
+# webauthn4j-test dependencies
+
+bouncycastle = "1.80"
+
+# Build dependencies
+
+jetbrains-annotations = "26.0.2"
+asciidoctor = "4.0.4"
+
+# Test dependencies
+
+spring-boot-bom = "3.3.4"
+sonarqube = "6.1.0.5360"
+
+[libraries]
+# WebAuthn4J
+webauthn4j-core = { module = "com.webauthn4j:webauthn4j-core", version.ref = "webauthn4j" }
+webauthn4j-test = { module = "com.webauthn4j:webauthn4j-test", version.ref = "webauthn4j" }
+webauthn4j-metadata = { module = "com.webauthn4j:webauthn4j-metadata", version.ref = "webauthn4j" }
+
+# Spring
+
+spring-boot-dependencies = { module = "org.springframework.boot:spring-boot-dependencies", version.ref = "spring-boot" }
+spring-security-bom = { module = "org.springframework.security:spring-security-bom", version.ref = "spring-security" }
+
+# Third-party libraries
+
+slf4j-api = { group = "org.slf4j", name = "slf4j-api", version.ref = "slf4j"}
+jackson-databind = { module = "com.fasterxml.jackson.core:jackson-databind", version.ref = "jackson" }
+jackson-datatype-jsr310 = { group = "com.fasterxml.jackson.datatype", name = "jackson-datatype-jsr310", version.ref = "jackson"}
+jackson-dataformat-cbor = { group = "com.fasterxml.jackson.dataformat", name = "jackson-dataformat-cbor", version.ref = "jackson"}
+
+# webauthn4j-test dependencies
+bouncycastle-bcprov-jdk15to18 = { group = "org.bouncycastle", name = "bcprov-jdk15to18", version.ref = "bouncycastle"}
+bouncycastle-bcpkix-jdk15to18 = { group = "org.bouncycastle", name = "bcpkix-jdk15to18", version.ref = "bouncycastle"}
+
+# Build dependencies
+jetbrains-annotations = { module = "org.jetbrains:annotations", version.ref = "jetbrains-annotations" }
+
+# test dependencies
+spring-boot-bom = { module = "org.springframework.boot:spring-boot-dependencies", version.ref = "spring-boot-bom" }
+
+
+[plugins]
+asciidoctor = { id = "org.asciidoctor.jvm.convert", version.ref = "asciidoctor"}
+sonarqube = { id = "org.sonarqube", version.ref = "sonarqube" }

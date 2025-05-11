@@ -14,6 +14,6 @@
  * limitations under the License.
  */
 
-include 'webauthn4j-spring-security-core'
-include 'webauthn4j-spring-security-metadata'
-include 'webauthn4j-spring-security-test'
+include("webauthn4j-spring-security-core")
+include("webauthn4j-spring-security-metadata")
+include("webauthn4j-spring-security-test")

@@ -14,23 +14,22 @@
  * limitations under the License.
  */
 
-group 'com.webauthn4j'
-version "${webAuthn4JSpringSecurityVersion}"
+group = "com.webauthn4j"
+version = "${rootProject.extra["webAuthn4JSpringSecurityVersion"]}"
 
 description = "WebAuthn4J Spring Security test library"
 
 dependencies {
-    implementation project(':webauthn4j-spring-security-core')
-    implementation('junit:junit')
+    implementation(project(":webauthn4j-spring-security-core"))
+    implementation("junit:junit")
 
     //Test
-    testImplementation('org.mockito:mockito-core')
-    testImplementation('org.assertj:assertj-core')
-    testImplementation('org.springframework.boot:spring-boot-starter-test')
-    testImplementation('org.springframework.security:spring-security-test')
-
+    testImplementation("org.mockito:mockito-core")
+    testImplementation("org.assertj:assertj-core")
+    testImplementation("org.springframework.boot:spring-boot-starter-test")
+    testImplementation("org.springframework.security:spring-security-test")
 }
 
-sonar {
-    skipProject = true
+sonarqube {
+    isSkipProject = true
 }
