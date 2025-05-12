@@ -289,10 +289,12 @@ tasks.register<AsciidoctorTask>("generateReferenceEN") {
 sonarqube {
     properties {
         property("sonar.projectKey", "webauthn4j-spring-security")
-        property("sonar.issue.ignore.multicriteria", "e1,e2")
+        property("sonar.issue.ignore.multicriteria", "e1,e2,e3")
         property("sonar.issue.ignore.multicriteria.e1.ruleKey", "java:S110")
         property("sonar.issue.ignore.multicriteria.e1.resourceKey", "**/*.java")
         property("sonar.issue.ignore.multicriteria.e2.ruleKey", "java:S1452")
         property("sonar.issue.ignore.multicriteria.e2.resourceKey", "**/*.java")
+        property("sonar.issue.ignore.multicriteria.e3.ruleKey", "kotlin:S6474")
+        property("sonar.issue.ignore.multicriteria.e3.resourceKey", "**/*.kts")
     }
 }
