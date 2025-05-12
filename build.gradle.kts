@@ -238,6 +238,8 @@ subprojects {
                         password = mavenCentralPassword
                         url = "https://central.sonatype.com/api/v1/publisher/"
                         stagingRepository(layout.buildDirectory.dir("local-staging").get().asFile.absolutePath)
+                        retryDelay = 10
+                        maxRetries = 1000
                     }
                 }
             }
