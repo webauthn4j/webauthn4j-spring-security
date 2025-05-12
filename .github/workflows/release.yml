@@ -42,6 +42,7 @@ jobs:
           ./gradlew build javadoc asciidoc
 
       - name: Commit changes
+        shell: bash
         run: |
           VERSION=$(grep "webAuthn4JSpringSecurityVersion" gradle.properties | cut -d'=' -f2)
           git config user.name "webauthn4j-bot"
@@ -50,15 +51,18 @@ jobs:
           git commit --allow-empty -m "Release ${VERSION}"
 
       - name: Push commit
+        shell: bash
         run: |
           git push
 
       - name: Tag commit
+        shell: bash
         run: |
           VERSION=$(grep "webAuthn4JSpringSecurityVersion" gradle.properties | cut -d'=' -f2)
           git tag "${VERSION}.RELEASE"
 
       - name: Push tag
+        shell: bash
         run: |
           VERSION=$(grep "webAuthn4JSpringSecurityVersion" gradle.properties | cut -d'=' -f2)
           git push origin "${VERSION}.RELEASE"
