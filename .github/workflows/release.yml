@@ -43,7 +43,7 @@ jobs:
 
       - name: Commit changes
         run: |
-          VERSION=$(grep "webAuthn4JCTAPVersion" gradle.properties | cut -d'=' -f2)
+          VERSION=$(grep "webAuthn4JSpringSecurityVersion" gradle.properties | cut -d'=' -f2)
           git config user.name "webauthn4j-bot"
           git config user.email  "info@webauthn4j.com"
           git add .
