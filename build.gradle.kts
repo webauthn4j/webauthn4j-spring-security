@@ -15,6 +15,9 @@
  */
 
 import org.asciidoctor.gradle.jvm.AsciidoctorTask
+import org.jreleaser.model.Active
+import java.net.URI
+import java.nio.charset.StandardCharsets
 
 plugins {
     id("java-library")
@@ -22,13 +25,18 @@ plugins {
     id("maven-publish")
     id("jacoco")
 
+    id(libs.plugins.jreleaser.get().pluginId) version libs.versions.jreleaser
     id(libs.plugins.asciidoctor.get().pluginId) version libs.versions.asciidoctor
     id(libs.plugins.sonarqube.get().pluginId) version libs.versions.sonarqube
 }
 
+private val webAuthn4JSpringSecurityVersion: String by project
+private val isSnapshot: Boolean = (findProperty("isSnapshot") as? String)?.toBoolean() ?: true
+private val effectiveVersion = getEffectiveVersion()
+
 allprojects{
     group = "com.webauthn4j"
-    version = "${project.property("webAuthn4JSpringSecurityVersion")}"
+    version = effectiveVersion
 }
 
 repositories {
@@ -40,10 +48,29 @@ subprojects {
     apply(plugin = "jacoco")
     apply(plugin = "signing")
     apply(plugin = "maven-publish")
+    apply(plugin = "org.jreleaser")
+
+    repositories {
+        mavenCentral()
+        maven { url = uri("https://oss.sonatype.org/content/repositories/snapshots") }
+        maven { url = uri("https://jitpack.io") }
+    }
+
+    dependencies {
+
+        // BOM
+        implementation(platform(rootProject.libs.spring.boot.dependencies))
+        implementation (platform(rootProject.libs.spring.security.bom))
+    }
+
+    java {
+        sourceCompatibility = JavaVersion.VERSION_17
+    }
 
     tasks.withType<JavaCompile> {
         options.compilerArgs.addAll(listOf(
             "-Xlint:unchecked",
+            "-Werror",
             "-Xlint:cast",
             "-Xlint:classfile",
             "-Xlint:dep-ann",
@@ -155,16 +182,12 @@ subprojects {
 
         repositories {
             maven {
-                name = "mavenCentral"
-                url = uri("https://oss.sonatype.org/service/local/staging/deploy/maven2")
-                credentials {
-                    username = mavenCentralUser
-                    password = mavenCentralPassword
-                }
+                name = "localStaging"
+                url = layout.buildDirectory.dir("local-staging").get().asFile.toURI()
             }
             maven {
                 name = "snapshot"
-                url = uri("https://oss.sonatype.org/content/repositories/snapshots")
+                url = URI("https://central.sonatype.com/repository/maven-snapshots/")
                 credentials {
                     username = mavenCentralUser
                     password = mavenCentralPassword
@@ -182,51 +205,115 @@ subprojects {
         onlyIf { pgpSigningKey != null && pgpSigningKeyPassphrase != null }
     }
 
-    val webAuthn4JSpringSecurityVersion = project.property("webAuthn4JSpringSecurityVersion") as String
     tasks.named("publishStandardPublicationToSnapshotRepository") {
-        onlyIf { webAuthn4JSpringSecurityVersion.endsWith("-SNAPSHOT") }
+        onlyIf { isSnapshot }
     }
 
-    tasks.named("publishStandardPublicationToMavenCentralRepository") {
-        onlyIf { !webAuthn4JSpringSecurityVersion.endsWith("-SNAPSHOT") }
-    }
 
-    java {
-        sourceCompatibility = JavaVersion.VERSION_17
-    }
+    jreleaser {
+        project {
+            authors.set(listOf("Yoshikazu Nojima"))
+            license = "Apache-2.0"
+            links {
+                homepage = githubUrl
+            }
+            version = effectiveVersion
+        }
 
-    tasks.withType<JavaCompile> {
-        options.compilerArgs.addAll(listOf("-Xlint:unchecked", "-Werror"))
-    }
+        release{
+            github{
+                token.set("dummy")
+                skipRelease = true
+                skipTag = true
+            }
+        }
 
-    repositories {
-        mavenCentral()
-        maven { url = uri("https://oss.sonatype.org/content/repositories/snapshots") }
-        maven { url = uri("https://jitpack.io") }
-    }
-
-    dependencies {
-
-        // BOM
-        implementation(platform(rootProject.libs.spring.boot.dependencies))
-        implementation (platform(rootProject.libs.spring.security.bom))
+        deploy {
+            maven {
+                mavenCentral {
+                    this.register("mavenCentral"){
+                        active = Active.RELEASE
+                        sign = false // artifacts are signed by gradle native feature. signing by jreleaser is not required.
+                        username = mavenCentralUser
+                        password = mavenCentralPassword
+                        url = "https://central.sonatype.com/api/v1/publisher/"
+                        stagingRepository(layout.buildDirectory.dir("local-staging").get().asFile.absolutePath)
+                    }
+                }
+            }
+        }
     }
 }
 
+tasks.register("bumpPatchVersion"){
+    group = "documentation"
+
+    doLast{
+        val regex = Regex("""^webAuthn4JSpringSecurityVersion=.*$""", RegexOption.MULTILINE)
+        val bumpedVersion = bumpPatchVersion(webAuthn4JSpringSecurityVersion)
+        val replacement = "webAuthn4JSpringSecurityVersion=${bumpedVersion}"
+
+        val file = file("gradle.properties")
+        val original = file.readText(StandardCharsets.UTF_8)
+        if (!regex.containsMatchIn(original)) {
+            throw GradleException("webAuthn4JSpringSecurityVersion property not found in gradle.properties")
+        }
+        val updated = original.replaceFirst(regex, replacement)
+        file.writeText(updated, StandardCharsets.UTF_8)
+    }
+}
+
+
 tasks.register("updateVersionsInDocuments") {
     group = "documentation"
-    val regex = "<webauthn4j-spring-security\\.version>.*</webauthn4j-spring-security\\.version>"
-    val latestReleasedWebAuthn4JSpringSecurityVersion = project.property("latestReleasedWebAuthn4JSpringSecurityVersion")
-    val replacement = "<webauthn4j-spring-security\\.version>$latestReleasedWebAuthn4JSpringSecurityVersion</webauthn4j-spring-security.version>"
 
-    val files = listOf(
-        file("README.md"),
-        file("docs/src/reference/asciidoc/en/introduction.adoc"),
-        file("docs/src/reference/asciidoc/ja/introduction.adoc")
-    )
-    files.forEach { file ->
-        val updated = file.readText(Charsets.UTF_8).replace(regex.toRegex(), replacement)
-        file.writeText(updated, Charsets.UTF_8)
+    doLast {
+        val regex = "<webauthn4j-spring-security\\.version>.*</webauthn4j-spring-security\\.version>"
+        val replacement = "<webauthn4j-spring-security\\.version>$effectiveVersion</webauthn4j-spring-security.version>"
+
+        val files = listOf(
+            file("README.md"),
+            file("docs/src/reference/asciidoc/en/introduction.adoc"),
+            file("docs/src/reference/asciidoc/ja/introduction.adoc")
+        )
+        files.forEach { file ->
+            val updated = file.readText(Charsets.UTF_8).replace(regex.toRegex(), replacement)
+            file.writeText(updated, Charsets.UTF_8)
+        }
+    }
+}
+
+tasks.register("switchToSnapshot"){
+    group = "documentation"
+
+    doLast{
+        val regex = Regex("""^isSnapshot=.*$""", RegexOption.MULTILINE)
+        val replacement = "isSnapshot=true"
+
+        val file = file("gradle.properties")
+        val original = file.readText(StandardCharsets.UTF_8)
+        if (!regex.containsMatchIn(original)) {
+            throw GradleException("isSnapshot property not found in gradle.properties")
+        }
+        val updated = original.replaceFirst(regex, replacement)
+        file.writeText(updated, StandardCharsets.UTF_8)
+    }
+}
+
+tasks.register("switchToRelease"){
+    group = "documentation"
+
+    doLast{
+        val regex = Regex("""^isSnapshot=.*$""", RegexOption.MULTILINE)
+        val replacement = "isSnapshot=false"
+
+        val file = file("gradle.properties")
+        val original = file.readText(StandardCharsets.UTF_8)
+        if (!regex.containsMatchIn(original)) {
+            throw GradleException("isSnapshot property not found in gradle.properties")
+        }
+        val updated = original.replaceFirst(regex, replacement)
+        file.writeText(updated, StandardCharsets.UTF_8)
     }
 }
 
@@ -297,4 +384,22 @@ sonarqube {
         property("sonar.issue.ignore.multicriteria.e3.ruleKey", "kotlin:S6474")
         property("sonar.issue.ignore.multicriteria.e3.resourceKey", "**/*.*")
     }
+}
+
+private fun getEffectiveVersion(): String{
+    return when {
+        isSnapshot -> webAuthn4JSpringSecurityVersion.plus("-SNAPSHOT")
+        else -> webAuthn4JSpringSecurityVersion.plus(".RELEASE")
+    }
+}
+
+private fun bumpPatchVersion(version: String): String {
+    val parts = version.split(".")
+    require(parts.size == 3) { "Version must be in the format 'X.Y.Z': $version" }
+
+    val major = parts[0].toInt()
+    val minor = parts[1].toInt()
+    val patch = parts[2].toInt() + 1
+
+    return "$major.$minor.$patch"
 }

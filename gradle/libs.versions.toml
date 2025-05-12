@@ -5,6 +5,8 @@ jackson = "2.19.0"
 
 webauthn4j = "0.29.1.RELEASE"
 
+jreleaser = "1.18.0"
+
 # spring
 
 spring-boot = "3.4.5"
@@ -54,5 +56,6 @@ spring-boot-bom = { module = "org.springframework.boot:spring-boot-dependencies"
 
 
 [plugins]
+jreleaser = { id = "org.jreleaser", version.ref = "jreleaser" }
 asciidoctor = { id = "org.asciidoctor.jvm.convert", version.ref = "asciidoctor"}
 sonarqube = { id = "org.sonarqube", version.ref = "sonarqube" }
