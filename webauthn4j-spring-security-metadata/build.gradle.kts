@@ -14,9 +14,6 @@
  * limitations under the License.
  */
 
-group = "com.webauthn4j"
-version = "${rootProject.extra["webAuthn4JSpringSecurityVersion"]}"
-
 description = "WebAuthn4J Spring Security Thymeleaf Extension library"
 
 dependencies {
