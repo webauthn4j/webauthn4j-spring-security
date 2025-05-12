@@ -57,6 +57,8 @@ jobs:
       - name: Push commit
         shell: bash
         run: |
+          git fetch
+          git rebase origin/master
           git push
 
       - name: Tag commit
@@ -69,6 +71,8 @@ jobs:
         shell: bash
         run: |
           VERSION=$(grep "webAuthn4JSpringSecurityVersion" gradle.properties | cut -d'=' -f2)
+          git fetch
+          git rebase origin/master
           git push origin "${VERSION}.RELEASE"
 
 

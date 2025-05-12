@@ -54,4 +54,6 @@ jobs:
 
       - name: Push commit
         run: |
+          git fetch
+          git rebase origin/master
           git push
