@@ -37,6 +37,10 @@ jobs:
         run: |
           ./gradlew switchToRelease
 
+      - name: Update versions in documents
+        run: |
+          ./gradlew updateVersionsInDocuments
+
       - name: Build with Gradle
         run: |
           ./gradlew build javadoc asciidoc

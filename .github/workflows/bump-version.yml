@@ -45,10 +45,6 @@ jobs:
         run: |
           ./gradlew switchToSnapshot
 
-      - name: Update versions in documents
-        run: |
-          ./gradlew updateVersionsInDocuments
-
       - name: Commit changes
         run: |
           git config user.name "webauthn4j-bot"
