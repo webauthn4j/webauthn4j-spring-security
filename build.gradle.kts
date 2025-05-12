@@ -295,6 +295,6 @@ sonarqube {
         property("sonar.issue.ignore.multicriteria.e2.ruleKey", "java:S1452")
         property("sonar.issue.ignore.multicriteria.e2.resourceKey", "**/*.java")
         property("sonar.issue.ignore.multicriteria.e3.ruleKey", "kotlin:S6474")
-        property("sonar.issue.ignore.multicriteria.e3.resourceKey", "**/*.kts")
+        property("sonar.issue.ignore.multicriteria.e3.resourceKey", "**/*.*")
     }
 }
