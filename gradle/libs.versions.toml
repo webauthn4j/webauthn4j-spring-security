@@ -5,7 +5,7 @@ jackson = "2.19.1"
 
 webauthn4j = "0.29.3.RELEASE"
 
-jreleaser = "1.18.0"
+jreleaser = "1.19.0"
 
 # spring
 
