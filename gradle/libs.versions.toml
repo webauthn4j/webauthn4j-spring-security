@@ -3,7 +3,7 @@
 slf4j = "2.0.17"
 jackson = "2.19.1"
 
-webauthn4j = "0.29.3.RELEASE"
+webauthn4j = "0.29.4.RELEASE"
 
 jreleaser = "1.19.0"
 
