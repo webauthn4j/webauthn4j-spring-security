@@ -9,7 +9,7 @@ jreleaser = "1.21.0"
 
 # spring
 
-spring-boot = "3.4.5"
+spring-boot = "4.0.0"
 spring-security = "6.0.2"
 
 # webauthn4j-test dependencies
@@ -23,7 +23,7 @@ asciidoctor = "4.0.5"
 
 # Test dependencies
 
-spring-boot-bom = "3.4.5"
+spring-boot-bom = "4.0.0"
 sonarqube = "7.2.1.6560"
 
 [libraries]
