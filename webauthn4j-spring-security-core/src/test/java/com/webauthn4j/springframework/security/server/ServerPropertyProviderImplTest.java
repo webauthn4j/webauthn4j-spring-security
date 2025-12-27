@@ -36,6 +36,7 @@ public class ServerPropertyProviderImplTest {
     private final RpIdProvider rpIdProvider = mock(RpIdProvider.class);
     private final ServerPropertyProviderImpl target = new ServerPropertyProviderImpl(rpIdProvider, challengeRepository);
 
+    @Deprecated
     @Test
     public void provide_test() {
         MockHttpServletRequest request = new MockHttpServletRequest();

@@ -58,7 +58,7 @@ public class ServerPropertyProviderImpl implements ServerPropertyProvider {
         String effectiveRpId = getRpId(request);
         Challenge challenge = challengeRepository.loadOrGenerateChallenge(request);
 
-        return new ServerProperty(origin, effectiveRpId, challenge);
+        return ServerProperty.builder().origin(origin).rpId(effectiveRpId).challenge(challenge).build();
     }
 
     public String getRpId() {
