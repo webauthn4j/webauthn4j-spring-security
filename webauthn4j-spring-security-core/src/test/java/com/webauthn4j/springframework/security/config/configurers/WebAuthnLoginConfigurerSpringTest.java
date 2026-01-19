@@ -48,7 +48,6 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import org.springframework.web.servlet.handler.HandlerMappingIntrospector;
 
 import static org.mockito.Mockito.*;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.anonymous;
@@ -59,6 +58,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+@SuppressWarnings("deprecation")
 @RunWith(SpringRunner.class)
 public class WebAuthnLoginConfigurerSpringTest {
 
@@ -297,10 +297,7 @@ public class WebAuthnLoginConfigurerSpringTest {
                 return new AuthenticationTrustResolverImpl();
             }
 
-            @Bean(name = "mvcHandlerMappingIntrospector")
-            public HandlerMappingIntrospector mvcHandlerMappingIntrospector() {
-                return new HandlerMappingIntrospector();
-            }
+
 
         }
 

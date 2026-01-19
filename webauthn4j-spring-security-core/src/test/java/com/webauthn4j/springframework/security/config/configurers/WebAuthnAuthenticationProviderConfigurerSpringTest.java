@@ -27,7 +27,7 @@ import com.webauthn4j.springframework.security.server.ServerPropertyProviderImpl
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -36,11 +36,11 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.web.servlet.handler.HandlerMappingIntrospector;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 
+@SuppressWarnings("deprecation")
 @RunWith(SpringRunner.class)
 public class WebAuthnAuthenticationProviderConfigurerSpringTest {
 
@@ -107,9 +107,6 @@ public class WebAuthnAuthenticationProviderConfigurerSpringTest {
             return new ProviderManager(new WebAuthnAuthenticationProvider(webAuthnCredentialRecordService, WebAuthnManager.createNonStrictWebAuthnManager()));
         }
 
-        @Bean(name = "mvcHandlerMappingIntrospector")
-        public HandlerMappingIntrospector mvcHandlerMappingIntrospector() {
-            return new HandlerMappingIntrospector();
-        }
+
     }
 }

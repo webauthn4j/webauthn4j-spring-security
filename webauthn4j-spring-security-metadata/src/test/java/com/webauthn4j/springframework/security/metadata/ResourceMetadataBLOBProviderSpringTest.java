@@ -36,6 +36,7 @@ import java.io.UncheckedIOException;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
+@SuppressWarnings("deprecation")
 @RunWith(SpringRunner.class)
 public class ResourceMetadataBLOBProviderSpringTest {
 

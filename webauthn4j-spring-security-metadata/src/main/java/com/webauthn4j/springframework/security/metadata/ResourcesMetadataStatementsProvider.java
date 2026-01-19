@@ -22,7 +22,7 @@ import com.webauthn4j.metadata.data.statement.MetadataStatement;
 import com.webauthn4j.util.AssertUtil;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.core.io.Resource;
-import org.springframework.lang.NonNull;
+import org.jspecify.annotations.NonNull;
 
 import java.io.IOException;
 import java.io.UncheckedIOException;

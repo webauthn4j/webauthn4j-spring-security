@@ -31,13 +31,13 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import org.springframework.web.servlet.handler.HandlerMappingIntrospector;
 
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user;
 import static org.springframework.security.test.web.servlet.response.SecurityMockMvcResultMatchers.authenticated;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+@SuppressWarnings("deprecation")
 @RunWith(SpringRunner.class)
 public class WebAuthnLoginConfigurerMinimalConfigSpringTest {
 
@@ -86,10 +86,7 @@ public class WebAuthnLoginConfigurerMinimalConfigSpringTest {
                 return new InMemoryWebAuthnCredentialRecordManager();
             }
 
-            @Bean(name = "mvcHandlerMappingIntrospector")
-            public HandlerMappingIntrospector mvcHandlerMappingIntrospector() {
-                return new HandlerMappingIntrospector();
-            }
+
 
         }
 

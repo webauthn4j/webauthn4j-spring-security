@@ -33,6 +33,7 @@ import java.util.Collections;
 import static org.assertj.core.api.Assertions.assertThat;
 
 
+@SuppressWarnings("deprecation")
 @RunWith(SpringRunner.class)
 public class CertFileResourcesTrustAnchorRepositorySpringTest {
 

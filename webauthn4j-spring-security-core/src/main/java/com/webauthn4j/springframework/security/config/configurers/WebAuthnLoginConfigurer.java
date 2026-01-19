@@ -39,7 +39,8 @@ import org.springframework.security.config.annotation.web.configurers.AbstractAu
 import org.springframework.security.web.authentication.ForwardAuthenticationFailureHandler;
 import org.springframework.security.web.authentication.ForwardAuthenticationSuccessHandler;
 import org.springframework.security.web.session.SessionManagementFilter;
-import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+import org.springframework.security.web.servlet.util.matcher.PathPatternRequestMatcher;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.web.util.matcher.RequestMatcher;
 import org.springframework.util.Assert;
 
@@ -121,7 +122,7 @@ public final class WebAuthnLoginConfigurer<H extends HttpSecurityBuilder<H>> ext
      * {@inheritDoc}
      */
     @Override
-    public void configure(H http) throws Exception {
+    public void configure(H http) {
         super.configure(http);
 
         if (objectConverter == null) {
@@ -430,7 +431,7 @@ public final class WebAuthnLoginConfigurer<H extends HttpSecurityBuilder<H>> ext
      */
     @Override
     protected RequestMatcher createLoginProcessingUrlMatcher(String loginProcessingUrl) {
-        return new AntPathRequestMatcher(loginProcessingUrl, "POST");
+        return PathPatternRequestMatcher.pathPattern(HttpMethod.POST, loginProcessingUrl);
     }
 
     /**
