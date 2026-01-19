@@ -29,11 +29,11 @@ public class WebAuthnAuthenticationParametersTest {
     @Test
     public void getter_test() {
         Challenge challenge = new DefaultChallenge();
-        ServerProperty serverProperty = new ServerProperty(
-                new Origin("https://example.com"),
-                "example.com",
-                challenge
-        );
+        ServerProperty serverProperty = ServerProperty.builder()
+                .origin(new Origin("https://example.com"))
+                .rpId("example.com")
+                .challenge(challenge)
+                .build();
         WebAuthnAuthenticationParameters parameters = new WebAuthnAuthenticationParameters(
                 serverProperty,
                 true,
@@ -48,20 +48,20 @@ public class WebAuthnAuthenticationParametersTest {
     public void equals_hashCode_test() {
         Challenge challenge = new DefaultChallenge();
         WebAuthnAuthenticationParameters parametersA = new WebAuthnAuthenticationParameters(
-                new ServerProperty(
-                        new Origin("https://example.com"),
-                        "example.com",
-                        challenge
-                ),
+                ServerProperty.builder()
+                        .origin(new Origin("https://example.com"))
+                        .rpId("example.com")
+                        .challenge(challenge)
+                        .build(),
                 true,
                 true
         );
         WebAuthnAuthenticationParameters parametersB = new WebAuthnAuthenticationParameters(
-                new ServerProperty(
-                        new Origin("https://example.com"),
-                        "example.com",
-                        challenge
-                ),
+                ServerProperty.builder()
+                        .origin(new Origin("https://example.com"))
+                        .rpId("example.com")
+                        .challenge(challenge)
+                        .build(),
                 true,
                 true
         );
