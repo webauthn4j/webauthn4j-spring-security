@@ -22,7 +22,7 @@ import com.webauthn4j.springframework.security.credential.WebAuthnCredentialReco
 import com.webauthn4j.springframework.security.exception.CredentialIdNotFoundException;
 import com.webauthn4j.springframework.security.exception.PrincipalNotFoundException;
 import com.webauthn4j.test.TestDataUtil;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 

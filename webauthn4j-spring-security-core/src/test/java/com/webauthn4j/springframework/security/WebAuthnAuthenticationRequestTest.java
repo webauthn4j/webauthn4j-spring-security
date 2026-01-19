@@ -20,7 +20,7 @@ import com.webauthn4j.converter.AuthenticatorDataConverter;
 import com.webauthn4j.converter.util.ObjectConverter;
 import com.webauthn4j.data.client.ClientDataType;
 import com.webauthn4j.test.TestDataUtil;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

@@ -26,7 +26,7 @@ import com.webauthn4j.springframework.security.credential.WebAuthnCredentialReco
 import com.webauthn4j.springframework.security.challenge.ChallengeRepository;
 import com.webauthn4j.springframework.security.exception.PrincipalNotFoundException;
 import org.assertj.core.util.Lists;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 

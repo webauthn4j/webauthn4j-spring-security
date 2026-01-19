@@ -34,8 +34,8 @@ import com.webauthn4j.springframework.security.options.AttestationOptionsProvide
 import com.webauthn4j.springframework.security.server.ServerPropertyProvider;
 import com.webauthn4j.springframework.security.server.ServerPropertyProviderImpl;
 import org.assertj.core.api.Assertions;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -45,7 +45,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.web.FilterChainProxy;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
@@ -58,8 +58,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@SuppressWarnings("deprecation")
-@RunWith(SpringRunner.class)
+@ExtendWith(SpringExtension.class)
 public class WebAuthnLoginConfigurerSpringTest {
 
     @Autowired

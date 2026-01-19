@@ -21,7 +21,7 @@ import com.fasterxml.jackson.dataformat.cbor.CBORFactory;
 import com.webauthn4j.converter.util.ObjectConverter;
 import com.webauthn4j.data.PublicKeyCredentialDescriptor;
 import com.webauthn4j.data.PublicKeyCredentialUserEntity;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

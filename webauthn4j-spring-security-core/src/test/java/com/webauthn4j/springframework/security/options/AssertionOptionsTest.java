@@ -23,7 +23,7 @@ import com.webauthn4j.data.UserVerificationRequirement;
 import com.webauthn4j.data.client.challenge.Challenge;
 import com.webauthn4j.data.client.challenge.DefaultChallenge;
 import com.webauthn4j.util.CollectionUtil;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.Collections;
 import java.util.List;

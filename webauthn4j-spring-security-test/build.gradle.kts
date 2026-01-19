@@ -18,7 +18,7 @@ description = "WebAuthn4J Spring Security test library"
 
 dependencies {
     implementation(project(":webauthn4j-spring-security-core"))
-    implementation("junit:junit")
+    implementation("org.junit.jupiter:junit-jupiter")
 
     //Test
     testImplementation("org.mockito:mockito-core")

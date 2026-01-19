@@ -18,7 +18,7 @@ package com.webauthn4j.springframework.security.challenge;
 
 import com.webauthn4j.data.client.challenge.Challenge;
 import jakarta.servlet.http.HttpSession;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpSession;
 

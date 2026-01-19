@@ -20,15 +20,15 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.cbor.CBORFactory;
 import com.webauthn4j.converter.util.ObjectConverter;
 import com.webauthn4j.metadata.converter.jackson.WebAuthnMetadataJSONModule;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.core.io.support.ResourcePatternUtils;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.io.IOException;
 import java.io.UncheckedIOException;
@@ -36,8 +36,7 @@ import java.io.UncheckedIOException;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-@SuppressWarnings("deprecation")
-@RunWith(SpringRunner.class)
+@ExtendWith(SpringExtension.class)
 public class ResourceMetadataBLOBProviderSpringTest {
 
     @Autowired

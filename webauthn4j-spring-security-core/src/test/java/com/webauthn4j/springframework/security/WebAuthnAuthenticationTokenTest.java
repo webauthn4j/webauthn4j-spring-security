@@ -17,7 +17,7 @@
 package com.webauthn4j.springframework.security;
 
 import org.assertj.core.api.Assertions;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.springframework.security.core.userdetails.UserDetails;
 import test.TestUserDetailsImpl;
 

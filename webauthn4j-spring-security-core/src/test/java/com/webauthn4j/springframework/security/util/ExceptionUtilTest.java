@@ -19,7 +19,7 @@ package com.webauthn4j.springframework.security.util;
 import com.webauthn4j.springframework.security.exception.*;
 import com.webauthn4j.springframework.security.util.internal.ExceptionUtil;
 import com.webauthn4j.util.exception.WebAuthnException;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.springframework.security.authentication.AuthenticationServiceException;
 
 import java.util.HashMap;
