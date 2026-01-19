@@ -19,7 +19,7 @@ package com.webauthn4j.springframework.security.authenticator;
 import com.webauthn4j.data.attestation.authenticator.AttestedCredentialData;
 import com.webauthn4j.data.attestation.statement.AttestationStatement;
 import com.webauthn4j.springframework.security.credential.WebAuthnCredentialRecordImpl;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.io.Serializable;

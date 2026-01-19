@@ -28,27 +28,25 @@ import com.webauthn4j.server.ServerProperty;
 import com.webauthn4j.springframework.security.exception.BadAttestationStatementException;
 import com.webauthn4j.springframework.security.server.ServerPropertyProvider;
 import com.webauthn4j.util.Base64UrlUtil;
-import org.junit.Rule;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnit;
-import org.mockito.junit.MockitoRule;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.mock.web.MockHttpServletRequest;
 
 import java.util.Collections;
 import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.*;
 
 /**
  * Test for WebAuthnRegistrationRequestValidator
  */
+@ExtendWith(MockitoExtension.class)
 public class WebAuthnRegistrationRequestValidatorTest {
-
-    @Rule
-    public MockitoRule mockito = MockitoJUnit.rule();
 
     @Mock
     private WebAuthnManager webAuthnManager;
@@ -132,7 +130,7 @@ public class WebAuthnRegistrationRequestValidatorTest {
         assertThat(registrationParameters.getServerProperty()).isEqualTo(serverProperty);
     }
 
-    @Test(expected = BadAttestationStatementException.class)
+    @Test
     public void validate_caught_exception_test() {
 
         ServerProperty serverProperty = mock(ServerProperty.class);
@@ -152,7 +150,8 @@ public class WebAuthnRegistrationRequestValidatorTest {
         Set<String> transports = Collections.emptySet();
         String clientExtensionsJSON = "clientExtensionsJSON";
 
-        target.validate(mockHttpServletRequest, clientDataBase64, attestationObjectBase64, transports, clientExtensionsJSON);
-
+        assertThatThrownBy(() ->
+            target.validate(mockHttpServletRequest, clientDataBase64, attestationObjectBase64, transports, clientExtensionsJSON)
+        ).isInstanceOf(BadAttestationStatementException.class);
     }
 }

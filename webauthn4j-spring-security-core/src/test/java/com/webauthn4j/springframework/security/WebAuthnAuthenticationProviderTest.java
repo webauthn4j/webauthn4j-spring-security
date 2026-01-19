@@ -27,8 +27,8 @@ import com.webauthn4j.springframework.security.credential.WebAuthnCredentialReco
 import com.webauthn4j.springframework.security.credential.WebAuthnCredentialRecordService;
 import com.webauthn4j.springframework.security.exception.BadChallengeException;
 import com.webauthn4j.springframework.security.exception.CredentialIdNotFoundException;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.InternalAuthenticationServiceException;
@@ -43,6 +43,7 @@ import test.TestUserDetailsImpl;
 import java.util.Collections;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.*;
 
 /**
@@ -57,7 +58,7 @@ public class WebAuthnAuthenticationProviderTest {
     private WebAuthnAuthenticationProvider authenticationProvider
             = new WebAuthnAuthenticationProvider(authenticatorService, webAuthnManager);
 
-    @Before
+    @BeforeEach
     public void setup() {
         authenticationProvider = new WebAuthnAuthenticationProvider(authenticatorService, webAuthnManager);
     }
@@ -65,19 +66,23 @@ public class WebAuthnAuthenticationProviderTest {
     /**
      * Verifies that an unsupported authentication token will be rejected.
      */
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void authenticate_with_invalid_authenticationToken() {
         Authentication token = new UsernamePasswordAuthenticationToken("username", "password");
-        authenticationProvider.authenticate(token);
+        assertThatThrownBy(() ->
+            authenticationProvider.authenticate(token)
+        ).isInstanceOf(IllegalArgumentException.class);
     }
 
     /**
      * Verifies that the authentication token without credentials will be rejected.
      */
-    @Test(expected = BadCredentialsException.class)
+    @Test
     public void authenticate_with_authenticationToken_without_args() {
         Authentication token = new WebAuthnAssertionAuthenticationToken(null, null, null);
-        authenticationProvider.authenticate(token);
+        assertThatThrownBy(() ->
+            authenticationProvider.authenticate(token)
+        ).isInstanceOf(BadCredentialsException.class);
     }
 
 
@@ -116,7 +121,7 @@ public class WebAuthnAuthenticationProviderTest {
     /**
      * Verifies that validation fails if ValidationException is thrown from authenticationContextValidator
      */
-    @Test(expected = BadChallengeException.class)
+    @Test
     public void authenticate_with_BadChallengeException_from_authenticationContextValidator_test() {
         //Given
         byte[] credentialId = new byte[32];
@@ -135,7 +140,9 @@ public class WebAuthnAuthenticationProviderTest {
         when(authenticatorService.loadCredentialRecordByCredentialId(credentialId)).thenReturn(webAuthnCredentialRecord);
         when(parameters.getServerProperty()).thenReturn(mock(ServerProperty.class));
         Authentication token = new WebAuthnAssertionAuthenticationToken(request, parameters, null);
-        authenticationProvider.authenticate(token);
+        assertThatThrownBy(() ->
+            authenticationProvider.authenticate(token)
+        ).isInstanceOf(BadChallengeException.class);
     }
 
 
@@ -155,7 +162,7 @@ public class WebAuthnAuthenticationProviderTest {
 
     }
 
-    @Test(expected = BadCredentialsException.class)
+    @Test
     public void retrieveWebAuthnUserDetails_test_with_CredentialIdNotFoundException() {
         byte[] credentialId = new byte[0];
 
@@ -163,10 +170,12 @@ public class WebAuthnAuthenticationProviderTest {
         when(authenticatorService.loadCredentialRecordByCredentialId(credentialId)).thenThrow(CredentialIdNotFoundException.class);
 
         //When
-        authenticationProvider.retrieveCredentialRecord(credentialId);
+        assertThatThrownBy(() ->
+            authenticationProvider.retrieveCredentialRecord(credentialId)
+        ).isInstanceOf(BadCredentialsException.class);
     }
 
-    @Test(expected = CredentialIdNotFoundException.class)
+    @Test
     public void retrieveWebAuthnUserDetails_test_with_CredentialIdNotFoundException_and_hideCredentialIdNotFoundExceptions_option_false() {
         byte[] credentialId = new byte[0];
 
@@ -175,10 +184,12 @@ public class WebAuthnAuthenticationProviderTest {
 
         //When
         authenticationProvider.setHideCredentialIdNotFoundExceptions(false);
-        authenticationProvider.retrieveCredentialRecord(credentialId);
+        assertThatThrownBy(() ->
+            authenticationProvider.retrieveCredentialRecord(credentialId)
+        ).isInstanceOf(CredentialIdNotFoundException.class);
     }
 
-    @Test(expected = InternalAuthenticationServiceException.class)
+    @Test
     public void retrieveWebAuthnUserDetails_test_with_RuntimeException_from_webAuthnAuthenticatorService() {
         byte[] credentialId = new byte[0];
 
@@ -187,10 +198,12 @@ public class WebAuthnAuthenticationProviderTest {
 
         //When
         authenticationProvider.setHideCredentialIdNotFoundExceptions(false);
-        authenticationProvider.retrieveCredentialRecord(credentialId);
+        assertThatThrownBy(() ->
+            authenticationProvider.retrieveCredentialRecord(credentialId)
+        ).isInstanceOf(InternalAuthenticationServiceException.class);
     }
 
-    @Test(expected = InternalAuthenticationServiceException.class)
+    @Test
     public void retrieveWebAuthnUserDetails_test_with_null_from_webAuthnAuthenticatorService() {
         byte[] credentialId = new byte[0];
 
@@ -199,7 +212,9 @@ public class WebAuthnAuthenticationProviderTest {
 
         //When
         authenticationProvider.setHideCredentialIdNotFoundExceptions(false);
-        authenticationProvider.retrieveCredentialRecord(credentialId);
+        assertThatThrownBy(() ->
+            authenticationProvider.retrieveCredentialRecord(credentialId)
+        ).isInstanceOf(InternalAuthenticationServiceException.class);
     }
 
     @Test

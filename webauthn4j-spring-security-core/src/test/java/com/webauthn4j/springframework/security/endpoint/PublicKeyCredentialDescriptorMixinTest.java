@@ -23,7 +23,7 @@ import com.webauthn4j.converter.util.ObjectConverter;
 import com.webauthn4j.data.AuthenticatorTransport;
 import com.webauthn4j.data.PublicKeyCredentialDescriptor;
 import com.webauthn4j.data.PublicKeyCredentialType;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.Collections;
 

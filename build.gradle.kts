@@ -114,6 +114,10 @@ subprojects {
         }
     }
 
+    tasks.withType<Test> {
+        useJUnitPlatform()
+    }
+
     fun getVariable(envName: String, propertyName: String): String?{
         return if (System.getenv(envName) != null && System.getenv(envName).isNotEmpty()) {
             System.getenv(envName)

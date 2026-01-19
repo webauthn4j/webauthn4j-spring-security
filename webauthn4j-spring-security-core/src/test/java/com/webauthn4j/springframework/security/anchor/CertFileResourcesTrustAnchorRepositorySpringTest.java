@@ -18,14 +18,14 @@ package com.webauthn4j.springframework.security.anchor;
 
 import com.webauthn4j.data.attestation.authenticator.AAGUID;
 import com.webauthn4j.test.TestAttestationUtil;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.Resource;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.security.cert.CertificateEncodingException;
 import java.util.Collections;
@@ -33,7 +33,7 @@ import java.util.Collections;
 import static org.assertj.core.api.Assertions.assertThat;
 
 
-@RunWith(SpringRunner.class)
+@ExtendWith(SpringExtension.class)
 public class CertFileResourcesTrustAnchorRepositorySpringTest {
 
     @Autowired

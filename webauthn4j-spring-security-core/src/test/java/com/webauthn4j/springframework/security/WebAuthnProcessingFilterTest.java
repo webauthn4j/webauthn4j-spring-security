@@ -19,13 +19,12 @@ package com.webauthn4j.springframework.security;
 import com.webauthn4j.server.ServerProperty;
 import com.webauthn4j.springframework.security.server.ServerPropertyProvider;
 import com.webauthn4j.util.Base64UrlUtil;
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Spy;
-import org.mockito.junit.MockitoJUnit;
-import org.mockito.junit.MockitoRule;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -34,15 +33,14 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.AuthorityUtils;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.*;
 
 /**
  * Test for WebAuthnProcessingFilter
  */
+@ExtendWith(MockitoExtension.class)
 public class WebAuthnProcessingFilterTest {
-
-    @Rule
-    public MockitoRule mockito = MockitoJUnit.rule();
 
     private ServerPropertyProvider serverPropertyProvider;
     private UserVerificationStrategy userVerificationStrategy;
@@ -55,7 +53,7 @@ public class WebAuthnProcessingFilterTest {
 
     private final ArgumentCaptor<Authentication> captor = ArgumentCaptor.forClass(Authentication.class);
 
-    @Before
+    @BeforeEach
     public void setup() {
         serverPropertyProvider = mock(ServerPropertyProvider.class);
         userVerificationStrategy = new DefaultUserVerificationStrategy();
@@ -235,15 +233,16 @@ public class WebAuthnProcessingFilterTest {
     }
 
 
-    @Test(expected = AuthenticationServiceException.class)
+    @Test
     public void attemptAuthentication_test_with_wrong_port() {
 
         //Given
         mockHttpServletRequest.setMethod("GET");
-        when(authenticationManager.authenticate(captor.capture())).thenReturn(null);
 
         //When
-        target.attemptAuthentication(mockHttpServletRequest, mockHttpServletResponse);
+        assertThatThrownBy(() ->
+            target.attemptAuthentication(mockHttpServletRequest, mockHttpServletResponse)
+        ).isInstanceOf(AuthenticationServiceException.class);
     }
 
     @Test

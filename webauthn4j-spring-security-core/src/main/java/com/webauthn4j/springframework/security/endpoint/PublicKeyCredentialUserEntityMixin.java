@@ -22,7 +22,7 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.webauthn4j.springframework.security.converter.jackson.deserializer.ByteArraySerializer;
 import com.webauthn4j.springframework.security.converter.jackson.serializer.ByteArrayDeserializer;
-import org.springframework.lang.NonNull;
+import org.jspecify.annotations.NonNull;
 
 /**
  * A mix-in for {@link com.webauthn4j.data.PublicKeyCredentialUserEntity} not to fix

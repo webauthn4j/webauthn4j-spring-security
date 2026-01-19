@@ -17,7 +17,7 @@
 package com.webauthn4j.springframework.security.anchor;
 
 import com.webauthn4j.data.attestation.authenticator.AAGUID;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 
@@ -28,6 +28,7 @@ import java.util.Collections;
 import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -52,17 +53,21 @@ public class CertFileResourcesTrustAnchorsProviderTest {
         assertThat(trustAnchors).hasSize(1);
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void afterPropertiesSet_test() {
         CertFileResourcesTrustAnchorRepository target = new CertFileResourcesTrustAnchorRepository();
-        target.afterPropertiesSet();
+        assertThatThrownBy(() ->
+            target.afterPropertiesSet()
+        ).isInstanceOf(IllegalArgumentException.class);
     }
 
-    @Test(expected = UncheckedIOException.class)
+    @Test
     public void loadTrustAnchor_test() throws IOException {
         CertFileResourcesTrustAnchorRepository target = new CertFileResourcesTrustAnchorRepository();
         Resource resource = mock(Resource.class);
         when(resource.getInputStream()).thenThrow(IOException.class);
-        target.loadTrustAnchor(resource);
+        assertThatThrownBy(() ->
+            target.loadTrustAnchor(resource)
+        ).isInstanceOf(UncheckedIOException.class);
     }
 }

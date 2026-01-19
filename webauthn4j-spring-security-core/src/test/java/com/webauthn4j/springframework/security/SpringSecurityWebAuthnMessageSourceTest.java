@@ -16,7 +16,7 @@
 
 package com.webauthn4j.springframework.security;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.springframework.context.support.MessageSourceAccessor;
 
 import static org.assertj.core.api.Assertions.assertThat;

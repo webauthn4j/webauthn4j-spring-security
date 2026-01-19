@@ -30,7 +30,7 @@ import com.webauthn4j.test.authenticator.webauthn.PackedAuthenticator;
 import com.webauthn4j.test.authenticator.webauthn.WebAuthnAuthenticatorAdaptor;
 import com.webauthn4j.test.client.ClientPlatform;
 import com.webauthn4j.util.Base64UrlUtil;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.springframework.mock.web.MockHttpServletRequest;
 
 import java.util.Collections;

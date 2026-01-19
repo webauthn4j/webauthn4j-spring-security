@@ -23,7 +23,7 @@ import com.webauthn4j.data.extension.client.AuthenticationExtensionsClientInputs
 import com.webauthn4j.springframework.security.credential.WebAuthnCredentialRecord;
 import com.webauthn4j.springframework.security.credential.WebAuthnCredentialRecordService;
 import com.webauthn4j.springframework.security.challenge.ChallengeRepository;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 

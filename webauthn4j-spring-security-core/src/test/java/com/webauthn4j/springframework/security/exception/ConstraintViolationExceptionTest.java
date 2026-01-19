@@ -16,7 +16,7 @@
 
 package com.webauthn4j.springframework.security.exception;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThatCode;
 

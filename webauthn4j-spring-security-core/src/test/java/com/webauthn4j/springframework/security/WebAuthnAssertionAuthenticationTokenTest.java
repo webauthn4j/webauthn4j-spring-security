@@ -16,20 +16,22 @@
 
 package com.webauthn4j.springframework.security;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.mock;
 
 public class WebAuthnAssertionAuthenticationTokenTest {
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void setAuthenticated_with_true_test() {
         WebAuthnAuthenticationRequest request = mock(WebAuthnAuthenticationRequest.class);
         WebAuthnAuthenticationParameters parameters = mock(WebAuthnAuthenticationParameters.class);
         WebAuthnAssertionAuthenticationToken token = new WebAuthnAssertionAuthenticationToken(request, parameters, null);
-        token.setAuthenticated(true);
-        assertThat(token.isAuthenticated()).isTrue();
+        assertThatThrownBy(() ->
+            token.setAuthenticated(true)
+        ).isInstanceOf(IllegalArgumentException.class);
     }
 
     @Test

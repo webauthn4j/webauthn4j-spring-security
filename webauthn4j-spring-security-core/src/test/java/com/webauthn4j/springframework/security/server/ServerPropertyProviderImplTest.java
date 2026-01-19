@@ -23,7 +23,7 @@ import com.webauthn4j.server.ServerProperty;
 import com.webauthn4j.springframework.security.challenge.ChallengeRepository;
 import com.webauthn4j.springframework.security.options.RpIdProvider;
 import com.webauthn4j.springframework.security.options.RpIdProviderImpl;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.springframework.mock.web.MockHttpServletRequest;
 
 import static org.assertj.core.api.Assertions.assertThat;
