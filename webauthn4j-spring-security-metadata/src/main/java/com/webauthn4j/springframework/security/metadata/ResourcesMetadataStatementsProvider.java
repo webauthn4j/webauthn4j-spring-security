@@ -70,7 +70,7 @@ public class ResourcesMetadataStatementsProvider implements MetadataStatementsPr
     private void load(){
         metadataStatements = resources.stream().map(resource -> {
             try {
-                return objectConverter.getJsonConverter().readValue(resource.getInputStream(), MetadataStatement.class);
+                return objectConverter.getJsonMapper().readValue(resource.getInputStream(), MetadataStatement.class);
             }
             catch (IOException e) {
                 throw new UncheckedIOException(e);
