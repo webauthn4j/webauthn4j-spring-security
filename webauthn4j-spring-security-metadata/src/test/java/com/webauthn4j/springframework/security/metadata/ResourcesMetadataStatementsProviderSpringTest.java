@@ -15,6 +15,9 @@ import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.core.io.support.ResourcePatternUtils;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
+import tools.jackson.core.exc.StreamReadException;
+import tools.jackson.databind.json.JsonMapper;
+import tools.jackson.dataformat.cbor.CBORMapper;
 
 import java.io.UncheckedIOException;
 import java.util.Collections;
@@ -58,7 +61,7 @@ public class ResourcesMetadataStatementsProviderSpringTest {
         Resource resource = ResourcePatternUtils.getResourcePatternResolver(resourceLoader).getResource("classpath:metadata/BrokenMetadataItem.json");
         ResourcesMetadataStatementsProvider provider = new ResourcesMetadataStatementsProvider(new ObjectConverter());
         provider.setResources(Collections.singletonList(resource));
-        assertThatThrownBy(provider::provide).isInstanceOf(DataConversionException.class);
+        assertThatThrownBy(provider::provide).isInstanceOf(StreamReadException.class);
     }
 
     @Configuration
@@ -67,9 +70,10 @@ public class ResourcesMetadataStatementsProviderSpringTest {
         private final ObjectConverter objectConverter;
 
         public Config() {
-            ObjectMapper jsonMapper = new ObjectMapper();
-            jsonMapper.registerModule(new WebAuthnMetadataJSONModule());
-            ObjectMapper cborMapper = new ObjectMapper(new CBORFactory());
+            JsonMapper jsonMapper = JsonMapper.builder()
+                    .addModule(new WebAuthnMetadataJSONModule())
+                    .build();
+            CBORMapper cborMapper = CBORMapper.builder().build();
             objectConverter = new ObjectConverter(jsonMapper, cborMapper);
         }
 
