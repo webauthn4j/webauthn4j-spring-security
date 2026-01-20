@@ -3,7 +3,7 @@
 slf4j = "2.0.17"
 jackson = "2.21.0"
 
-webauthn4j = "0.30.2.RELEASE"
+webauthn4j = "jackson3-SNAPSHOT"
 
 jreleaser = "1.21.0"
 
@@ -28,9 +28,9 @@ sonarqube = "7.2.2.6593"
 
 [libraries]
 # WebAuthn4J
-webauthn4j-core = { module = "com.webauthn4j:webauthn4j-core", version.ref = "webauthn4j" }
-webauthn4j-test = { module = "com.webauthn4j:webauthn4j-test", version.ref = "webauthn4j" }
-webauthn4j-metadata = { module = "com.webauthn4j:webauthn4j-metadata", version.ref = "webauthn4j" }
+webauthn4j-core = { module = "com.github.webauthn4j.webauthn4j:webauthn4j-core", version.ref = "webauthn4j" }
+webauthn4j-test = { module = "com.github.webauthn4j.webauthn4j:webauthn4j-test", version.ref = "webauthn4j" }
+webauthn4j-metadata = { module = "com.github.webauthn4j.webauthn4j:webauthn4j-metadata", version.ref = "webauthn4j" }
 
 # Spring
 
