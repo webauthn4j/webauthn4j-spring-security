@@ -16,12 +16,12 @@
 
 package com.webauthn4j.springframework.security.endpoint;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.dataformat.cbor.CBORFactory;
 import com.webauthn4j.converter.util.ObjectConverter;
 import com.webauthn4j.data.PublicKeyCredentialDescriptor;
 import com.webauthn4j.data.PublicKeyCredentialUserEntity;
 import org.junit.jupiter.api.Test;
+import tools.jackson.databind.json.JsonMapper;
+import tools.jackson.dataformat.cbor.CBORMapper;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -29,15 +29,16 @@ public class PublicKeyCredentialUserEntityMixinTest {
 
     @Test
     public void serialize_deserialize_test(){
-        ObjectMapper jsonMapper = new ObjectMapper();
-        jsonMapper.addMixIn(PublicKeyCredentialDescriptor.class, PublicKeyCredentialDescriptorMixin.class);
-        jsonMapper.addMixIn(PublicKeyCredentialUserEntity.class, PublicKeyCredentialUserEntityMixin.class);
-        ObjectMapper cborMapper = new ObjectMapper(new CBORFactory());
+        JsonMapper jsonMapper = JsonMapper.builder()
+                .addMixIn(PublicKeyCredentialDescriptor.class, PublicKeyCredentialDescriptorMixin.class)
+                .addMixIn(PublicKeyCredentialUserEntity.class, PublicKeyCredentialUserEntityMixin.class)
+                .build();
+        CBORMapper cborMapper = CBORMapper.builder().build();
         ObjectConverter objectConverter = new ObjectConverter(jsonMapper, cborMapper);
 
         PublicKeyCredentialUserEntity publicKeyCredentialUserEntity = new PublicKeyCredentialUserEntity(new byte[32], "name", "displayName");
-        String json = objectConverter.getJsonConverter().writeValueAsString(publicKeyCredentialUserEntity);
+        String json = objectConverter.getJsonMapper().writeValueAsString(publicKeyCredentialUserEntity);
         assertThat(json).isEqualTo("{\"id\":\"AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\",\"name\":\"name\",\"displayName\":\"displayName\"}");
-        assertThat(objectConverter.getJsonConverter().readValue(json, PublicKeyCredentialUserEntity.class)).isEqualTo(publicKeyCredentialUserEntity);
+        assertThat(objectConverter.getJsonMapper().readValue(json, PublicKeyCredentialUserEntity.class)).isEqualTo(publicKeyCredentialUserEntity);
     }
 }

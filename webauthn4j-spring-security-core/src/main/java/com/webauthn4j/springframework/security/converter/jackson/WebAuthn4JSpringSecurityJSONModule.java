@@ -16,11 +16,11 @@
 
 package com.webauthn4j.springframework.security.converter.jackson;
 
-import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.webauthn4j.data.PublicKeyCredentialDescriptor;
 import com.webauthn4j.data.PublicKeyCredentialUserEntity;
 import com.webauthn4j.springframework.security.endpoint.PublicKeyCredentialDescriptorMixin;
 import com.webauthn4j.springframework.security.endpoint.PublicKeyCredentialUserEntityMixin;
+import tools.jackson.databind.module.SimpleModule;
 
 public class WebAuthn4JSpringSecurityJSONModule extends SimpleModule {
 

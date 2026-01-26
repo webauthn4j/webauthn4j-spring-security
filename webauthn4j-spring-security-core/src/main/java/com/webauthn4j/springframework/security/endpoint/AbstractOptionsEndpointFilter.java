@@ -44,14 +44,14 @@ public abstract class AbstractOptionsEndpointFilter extends GenericFilterBean {
     private String filterProcessesUrl;
 
     protected MessageSourceAccessor messages = SpringSecurityMessageSource.getAccessor();
-    protected JsonConverter jsonConverter;
+    protected ObjectConverter objectConverter;
     private AuthenticationTrustResolver trustResolver;
 
     // ~ Constructors
     // ===================================================================================================
 
     protected AbstractOptionsEndpointFilter(ObjectConverter objectConverter) {
-        this.jsonConverter = objectConverter.getJsonConverter();
+        this.objectConverter = objectConverter;
         this.trustResolver = new AuthenticationTrustResolverImpl();
     }
 
@@ -65,7 +65,7 @@ public abstract class AbstractOptionsEndpointFilter extends GenericFilterBean {
 
     private void checkConfig() {
         Assert.notNull(getFilterProcessesUrl(), "filterProcessesUrl must not be null");
-        Assert.notNull(jsonConverter, "jsonConverter must not be null");
+        Assert.notNull(objectConverter, "objectConverter must not be null");
         Assert.notNull(trustResolver, "trustResolver must not be null");
     }
 
@@ -86,7 +86,7 @@ public abstract class AbstractOptionsEndpointFilter extends GenericFilterBean {
     }
 
     void writeResponse(HttpServletResponse httpServletResponse, Serializable options) throws IOException {
-        String responseText = jsonConverter.writeValueAsString(options);
+        String responseText = objectConverter.getJsonMapper().writeValueAsString(options);
         httpServletResponse.setContentType("application/json");
         httpServletResponse.getWriter().print(responseText);
     }
@@ -101,7 +101,7 @@ public abstract class AbstractOptionsEndpointFilter extends GenericFilterBean {
             errorResponse = new ErrorResponse("The server encountered an internal error");
             statusCode = HttpServletResponse.SC_INTERNAL_SERVER_ERROR;
         }
-        String errorResponseText = jsonConverter.writeValueAsString(errorResponse);
+        String errorResponseText = objectConverter.getJsonMapper().writeValueAsString(errorResponse);
         httpServletResponse.setContentType("application/json");
         httpServletResponse.getWriter().print(errorResponseText);
         httpServletResponse.setStatus(statusCode);
