@@ -16,8 +16,6 @@
 
 package com.webauthn4j.springframework.security.config.configurers;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.dataformat.cbor.CBORFactory;
 import com.webauthn4j.converter.util.ObjectConverter;
 import com.webauthn4j.metadata.converter.jackson.WebAuthnMetadataJSONModule;
 import com.webauthn4j.springframework.security.DefaultUserVerificationStrategy;
@@ -35,6 +33,8 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.security.authentication.AuthenticationTrustResolver;
 import org.springframework.security.authentication.AuthenticationTrustResolverImpl;
 import org.springframework.security.config.annotation.web.HttpSecurityBuilder;
+import tools.jackson.databind.json.JsonMapper;
+import tools.jackson.dataformat.cbor.CBORMapper;
 
 /**
  * Internal utility for WebAuthn Configurers
@@ -144,10 +144,11 @@ class WebAuthnConfigurerUtil {
         ApplicationContext applicationContext = http.getSharedObject(ApplicationContext.class);
         String[] beanNames = applicationContext.getBeanNamesForType(ObjectConverter.class);
         if (beanNames.length == 0) {
-            ObjectMapper jsonMapper = new ObjectMapper();
-            jsonMapper.registerModule(new WebAuthnMetadataJSONModule());
-            jsonMapper.registerModule(new WebAuthn4JSpringSecurityJSONModule());
-            ObjectMapper cborMapper = new ObjectMapper(new CBORFactory());
+            JsonMapper jsonMapper = JsonMapper.builder()
+                    .addModule(new WebAuthnMetadataJSONModule())
+                    .addModule(new WebAuthn4JSpringSecurityJSONModule())
+                    .build();
+            CBORMapper cborMapper = CBORMapper.builder().build();
             return new ObjectConverter(jsonMapper, cborMapper);
         } else {
             return applicationContext.getBean(ObjectConverter.class);

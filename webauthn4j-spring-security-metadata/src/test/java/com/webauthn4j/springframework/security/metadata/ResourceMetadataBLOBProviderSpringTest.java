@@ -20,6 +20,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.cbor.CBORFactory;
 import com.webauthn4j.converter.util.ObjectConverter;
 import com.webauthn4j.metadata.converter.jackson.WebAuthnMetadataJSONModule;
+import com.webauthn4j.springframework.security.converter.jackson.WebAuthn4JSpringSecurityJSONModule;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,6 +30,8 @@ import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.core.io.support.ResourcePatternUtils;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
+import tools.jackson.databind.json.JsonMapper;
+import tools.jackson.dataformat.cbor.CBORMapper;
 
 import java.io.IOException;
 import java.io.UncheckedIOException;
@@ -69,9 +72,10 @@ public class ResourceMetadataBLOBProviderSpringTest {
         private final ObjectConverter objectConverter;
 
         public Config() {
-            ObjectMapper jsonMapper = new ObjectMapper();
-            jsonMapper.registerModule(new WebAuthnMetadataJSONModule());
-            ObjectMapper cborMapper = new ObjectMapper(new CBORFactory());
+            JsonMapper jsonMapper = JsonMapper.builder()
+                    .addModule(new WebAuthnMetadataJSONModule())
+                    .build();
+            CBORMapper cborMapper = CBORMapper.builder().build();
             objectConverter = new ObjectConverter(jsonMapper, cborMapper);
         }
 

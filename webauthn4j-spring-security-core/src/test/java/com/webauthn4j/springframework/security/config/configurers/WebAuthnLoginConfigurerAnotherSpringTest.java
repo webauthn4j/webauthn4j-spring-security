@@ -43,6 +43,8 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import tools.jackson.databind.json.JsonMapper;
+import tools.jackson.dataformat.cbor.CBORMapper;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
@@ -97,10 +99,11 @@ public class WebAuthnLoginConfigurerAnotherSpringTest {
 
             @Bean
             public ObjectConverter objectConverter(){
-                ObjectMapper jsonMapper = new ObjectMapper();
-                jsonMapper.registerModule(new WebAuthnMetadataJSONModule());
-                jsonMapper.registerModule(new WebAuthn4JSpringSecurityJSONModule());
-                ObjectMapper cborMapper = new ObjectMapper(new CBORFactory());
+                JsonMapper jsonMapper = JsonMapper.builder()
+                        .addModule(new WebAuthnMetadataJSONModule())
+                        .addModule(new WebAuthn4JSpringSecurityJSONModule())
+                        .build();
+                CBORMapper cborMapper = CBORMapper.builder().build();
                 return new ObjectConverter(jsonMapper, cborMapper);
             }
 
