@@ -10,7 +10,7 @@ jreleaser = "1.21.0"
 # spring
 
 spring-boot = "4.0.2"
-spring-security = "7.0.1"
+spring-security = "7.0.3"
 
 # webauthn4j-test dependencies
 
