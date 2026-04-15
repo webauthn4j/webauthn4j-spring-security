@@ -14,7 +14,7 @@ spring-security = "7.0.4"
 
 # webauthn4j-test dependencies
 
-bouncycastle = "1.83"
+bouncycastle = "1.84"
 
 # Build dependencies
 
