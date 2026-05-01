@@ -24,7 +24,7 @@ asciidoctor = "4.0.5"
 # Test dependencies
 
 spring-boot-bom = "4.0.6"
-sonarqube = "7.2.3.7755"
+sonarqube = "7.3.0.8198"
 
 [libraries]
 # WebAuthn4J
