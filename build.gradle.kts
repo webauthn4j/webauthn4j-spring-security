@@ -63,6 +63,20 @@ subprojects {
         implementation (platform(rootProject.libs.spring.security.bom))
     }
 
+    val jitpackWebauthn4jVersion = findProperty("jitpackWebauthn4jVersion") as? String
+    if (jitpackWebauthn4jVersion != null) {
+        configurations.all {
+            resolutionStrategy.dependencySubstitution {
+                substitute(module("com.webauthn4j:webauthn4j-core"))
+                    .using(module("com.github.webauthn4j.webauthn4j:webauthn4j-core:$jitpackWebauthn4jVersion"))
+                substitute(module("com.webauthn4j:webauthn4j-test"))
+                    .using(module("com.github.webauthn4j.webauthn4j:webauthn4j-test:$jitpackWebauthn4jVersion"))
+                substitute(module("com.webauthn4j:webauthn4j-metadata"))
+                    .using(module("com.github.webauthn4j.webauthn4j:webauthn4j-metadata:$jitpackWebauthn4jVersion"))
+            }
+        }
+    }
+
     java {
         sourceCompatibility = JavaVersion.VERSION_17
     }
