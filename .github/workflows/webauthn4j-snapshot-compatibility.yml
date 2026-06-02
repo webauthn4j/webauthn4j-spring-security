@@ -34,5 +34,22 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
 
+      - name: Wait for JitPack build
+        run: |
+          HASH=${{ steps.webauthn4j-commit.outputs.hash }}
+          POM_URL="https://jitpack.io/com/github/webauthn4j/webauthn4j/webauthn4j-core/${HASH}/webauthn4j-core-${HASH}.pom"
+          echo "Waiting for JitPack build: $POM_URL"
+          for i in $(seq 1 30); do
+            STATUS=$(curl -s -o /dev/null -w "%{http_code}" --max-time 60 "$POM_URL")
+            if [ "$STATUS" = "200" ]; then
+              echo "JitPack build ready"
+              exit 0
+            fi
+            echo "Attempt $i/30: HTTP $STATUS, waiting 30s..."
+            sleep 30
+          done
+          echo "::error::JitPack build timed out after 15 minutes"
+          exit 1
+
       - name: Run tests
         run: ./gradlew check -PjitpackWebauthn4jVersion=${{ steps.webauthn4j-commit.outputs.hash }}
