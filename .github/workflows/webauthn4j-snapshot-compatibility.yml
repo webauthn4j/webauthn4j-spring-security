@@ -1,0 +1,38 @@
+name: WebAuthn4J Snapshot Compatibility Test
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '0 12 * * *'
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  compatibility-test:
+    name: Test with WebAuthn4J master snapshot
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v5
+        with:
+          distribution: 'temurin'
+          java-version: 17
+          cache: 'gradle'
+
+      - name: Get latest webauthn4j commit hash
+        id: webauthn4j-commit
+        run: |
+          COMMIT_HASH=$(gh api repos/webauthn4j/webauthn4j/commits/master --jq '.sha' | head -c 10)
+          echo "hash=$COMMIT_HASH" >> "$GITHUB_OUTPUT"
+          echo "Using webauthn4j commit: $COMMIT_HASH"
+        env:
+          GH_TOKEN: ${{ github.token }}
+
+      - name: Run tests
+        run: ./gradlew check -PjitpackWebauthn4jVersion=${{ steps.webauthn4j-commit.outputs.hash }}
