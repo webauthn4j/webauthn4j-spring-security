@@ -1,7 +1,6 @@
 [versions]
 
 slf4j = "2.0.18"
-jackson = "3.0.3"
 
 webauthn4j = "0.31.6.RELEASE"
 
@@ -24,6 +23,7 @@ asciidoctor = "4.0.5"
 # Test dependencies
 
 spring-boot-bom = "4.0.6"
+
 sonarqube = "7.3.0.8198"
 
 [libraries]
@@ -40,9 +40,6 @@ spring-security-bom = { module = "org.springframework.security:spring-security-b
 # Third-party libraries
 
 slf4j-api = { group = "org.slf4j", name = "slf4j-api", version.ref = "slf4j"}
-jackson-databind = { module = "com.fasterxml.jackson.core:jackson-databind", version.ref = "jackson" }
-jackson-datatype-jsr310 = { group = "com.fasterxml.jackson.datatype", name = "jackson-datatype-jsr310", version.ref = "jackson"}
-jackson-dataformat-cbor = { group = "com.fasterxml.jackson.dataformat", name = "jackson-dataformat-cbor", version.ref = "jackson"}
 
 # webauthn4j-test dependencies
 bouncycastle-bcprov-jdk15to18 = { group = "org.bouncycastle", name = "bcprov-jdk15to18", version.ref = "bouncycastle"}
