@@ -40,7 +40,7 @@ jobs:
           POM_URL="https://jitpack.io/com/github/webauthn4j/webauthn4j/webauthn4j-core/${HASH}/webauthn4j-core-${HASH}.pom"
           echo "Waiting for JitPack build: $POM_URL"
           for i in $(seq 1 30); do
-            STATUS=$(curl -s -o /dev/null -w "%{http_code}" --max-time 60 "$POM_URL")
+            STATUS=$(curl -s -o /dev/null -w "%{http_code}" --max-time 60 "$POM_URL" || true)
             if [ "$STATUS" = "200" ]; then
               echo "JitPack build ready"
               exit 0
