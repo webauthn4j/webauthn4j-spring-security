@@ -1,6 +1,6 @@
 [versions]
 
-slf4j = "2.0.18"
+slf4j = "2.0.19"
 
 webauthn4j = "0.31.10.RELEASE"
 
